@@ -1,0 +1,27 @@
+CREATE TABLE IF NOT EXISTS photo (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    url VARCHAR(255) NOT NULL UNIQUE
+)
+
+CREATE TABLE IF NOT EXISTS users (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email_encrypted VARBINARY(255) NOT NULL,
+    email_hash CHAR(64) NOT NULL UNIQUE,
+    contact_encrypted VARBINARY(255) NOT NULL,
+    contact_hash CHAR(64) NOT NULL UNIQUE,
+    password VARCHAR(60) NOT NULL,
+    is_client BOOLEAN NOT NULL DEFAULT 1,
+    is_active BOOLEAN NOT NULL DEFAULT 1,
+    fk_photo_ID INT UNIQUE,
+    FOREIGN KEY (fk_photo_ID) REFERENCES photo(ID)
+)
+
+CREATE TABLE IF NOT EXISTS trainer (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    cref_number CHAR(11) NOT NULL UNIQUE,   
+    description TEXT,
+    fk_user_ID INT NOT NULL UNIQUE,
+    FOREIGN KEY (fk_user_ID) REFERENCES users(ID)
+)
