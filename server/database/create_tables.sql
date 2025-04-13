@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS users (
     email_notification_permission BOOLEAN NOT NULL DEFAULT 1,
     device_notification_permission BOOLEAN NOT NULL DEFAULT 1,
     is_english BOOLEAN NOT NULL DEFAULT 0,
-    fk_media_ID INT NOT NULL UNIQUE,
+    fk_media_ID INT UNIQUE,
     FOREIGN KEY (fk_media_ID) REFERENCES media(ID),
     INDEX idx_name (name),
     INDEX idx_fk_media_ID (fk_media_ID)
@@ -172,6 +172,35 @@ CREATE TABLE IF NOT EXISTS exercise_set (
     INDEX idx_fk_set_type_ID (fk_set_type_ID)
 )
 
+CREATE TABLE IF NOT EXISTS cardio_option (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(50) NOT NULL UNIQUE,
+    fk_media_ID INT NOT NULL UNIQUE,
+    FOREIGN KEY (fk_media_ID) REFERENCES media(ID),
+    INDEX idx_fk_media_ID (fk_media_ID)
+)
+
+CREATE TABLE IF NOT EXISTS cardio_session (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    session_time TIME NOT NULL, 
+    duration_minutes INT NOT NULL, 
+    note TEXT, 
+    fk_training_day_ID INT NOT NULL, 
+    fk_cardio_option_ID INT NOT NULL, 
+    fk_cardio_intensity_ID INT NOT NULL,
+    FOREIGN KEY (fk_training_day_ID) REFERENCES training_day(ID),
+    FOREIGN KEY (fk_cardio_option_ID) REFERENCES cardio_option(ID),
+    FOREIGN KEY (fk_cardio_intensity_ID) REFERENCES cardio_intensity(ID),
+    INDEX idx_fk_training_day_ID (fk_training_day_ID),
+    INDEX idx_fk_cardio_option_ID (fk_cardio_option_ID),
+    INDEX idx_fk_cardio_intensity_ID (fk_cardio_intensity_ID)
+)
+
+CREATE TABLE IF NOT EXISTS cardio_intensity (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    intensity VARCHAR(50) NOT NULL UNIQUE
+)
+
 CREATE TABLE IF NOT EXISTS payment_plan (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL,
@@ -202,4 +231,32 @@ CREATE TABLE IF NOT EXISTS payment_plan_benefit (
     FOREIGN KEY (fk_payment_plan_ID) REFERENCES payment_plan(ID),
     UNIQUE (fk_payment_plan_ID, benefit_text),
     INDEX idx_fk_payment_plan_ID (fk_payment_plan_ID)
+)
+
+CREATE TABLE IF NOT EXISTS body_composition (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    body_fat_percent DECIMAL(4,2) NOT NULL,
+    lean_mass_percent DECIMAL(4,2) NOT NULL, 
+    water_percent DECIMAL(4,2) NOT NULL,
+    result_date DATE NOT NULL, 
+    note TEXT, 
+    fk_user_ID INT NOT NULL,
+    fk_trainer_ID INT NOT NULL, 
+    FOREIGN KEY (fk_user_ID) REFERENCES user(ID),
+    FOREIGN KEY (fk_trainer_ID) REFERENCES user(ID),
+    UNIQUE (result_date, fk_user_ID, fk_trainer_ID),
+    INDEX idx_fk_user_ID (fk_user_ID),
+    INDEX idx_fk_trainer_ID (fk_trainer_ID)
+)
+
+CREATE TABLE IF NOT EXISTS exercise_set_log (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    performed_weight_kg DECIMAL(5,2),
+    performed_reps TINYINT,
+    target_weight_kg DECIMAL(5,2),
+    target_reps TINYINT,
+    log_date DATE NOT NULL, 
+    fk_exercise_set_ID INT NOT NULL, 
+    FOREIGN KEY (fk_exercise_set_ID) REFERENCES exercise_set(ID),
+    INDEX idx_fk_exercise_set_ID (fk_exercise_set_ID)
 )
