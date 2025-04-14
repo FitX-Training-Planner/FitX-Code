@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS media (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     url VARCHAR(255) NOT NULL UNIQUE
-)
+);
 
 CREATE TABLE IF NOT EXISTS users (
     ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS users (
     FOREIGN KEY (fk_media_ID) REFERENCES media(ID),
     INDEX idx_name (name),
     INDEX idx_fk_media_ID (fk_media_ID)
-)
+);
 
 CREATE TABLE IF NOT EXISTS trainer (
     ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS trainer (
     fk_user_ID INT NOT NULL UNIQUE,
     FOREIGN KEY (fk_user_ID) REFERENCES users(ID),
     INDEX idx_fk_user_ID (fk_user_ID)
-)
+);
 
 CREATE TABLE IF NOT EXISTS rating (
     ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS rating (
     UNIQUE (fk_user_ID, fk_trainer_ID),
     INDEX idx_fk_trainer_ID (fk_trainer_ID),
     INDEX idx_fk_user_ID (fk_user_ID)
-)
+);
 
 CREATE TABLE IF NOT EXISTS complaint (
     ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS complaint (
     UNIQUE (fk_user_ID, fk_trainer_ID),
     INDEX idx_fk_trainer_ID (fk_trainer_ID),
     INDEX idx_fk_user_ID (fk_user_ID)
-)
+);
 
 CREATE TABLE IF NOT EXISTS muscle_group (
     ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS muscle_group (
     fk_media_ID INT NOT NULL UNIQUE,
     FOREIGN KEY (fk_media_ID) REFERENCES media(ID),
     INDEX idx_fk_media_ID (fk_media_ID)
-)
+);
 
 CREATE TABLE IF NOT EXISTS exercise (
     ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS exercise (
     fk_media_ID INT NOT NULL UNIQUE,
     FOREIGN KEY (fk_media_ID) REFERENCES media(ID),
     INDEX idx_fk_media_ID (fk_media_ID)
-)
+);
 
 CREATE TABLE IF NOT EXISTS exercise_muscle_group (
     ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -87,18 +87,18 @@ CREATE TABLE IF NOT EXISTS exercise_muscle_group (
     UNIQUE (fk_exercise_ID, fk_muscle_group_ID),
     INDEX idx_fk_exercise_ID (fk_exercise_ID),
     INDEX idx_fk_muscle_group_ID (fk_muscle_group_ID)
-)
+);
 
 CREATE TABLE IF NOT EXISTS exercise_location (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL UNIQUE
-)
+);
 
 CREATE TABLE IF NOT EXISTS training_technique (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL UNIQUE,
     description varchar(255) NOT NULL UNIQUE
-)
+);
 
 CREATE TABLE IF NOT EXISTS training_plan (
     ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -111,7 +111,7 @@ CREATE TABLE IF NOT EXISTS training_plan (
     UNIQUE (name, fk_user_ID, fk_trainer_ID),
     INDEX idx_fk_user_ID (fk_user_ID),
     INDEX idx_fk_trainer_ID_fk_user_ID (fk_trainer_ID, fk_user_ID)
-)
+);
 
 CREATE TABLE IF NOT EXISTS training_day (
     ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -121,7 +121,7 @@ CREATE TABLE IF NOT EXISTS training_day (
     fk_plan_ID INT NOT NULL,
     FOREIGN KEY (fk_plan_ID) REFERENCES training_plan(ID),
     INDEX idx_fk_plan_ID (fk_plan_ID)
-)
+);
 
 CREATE TABLE IF NOT EXISTS training_day_step (
     ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -130,7 +130,7 @@ CREATE TABLE IF NOT EXISTS training_day_step (
     FOREIGN KEY (fk_training_day_ID) REFERENCES training_day(ID),
     UNIQUE (order_in_day, fk_training_day_ID),
     INDEX idx_fk_training_day_ID (fk_training_day_ID)
-)
+);
 
 CREATE TABLE IF NOT EXISTS step_exercise (
     ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -146,13 +146,13 @@ CREATE TABLE IF NOT EXISTS step_exercise (
     INDEX idx_fk_training_day_step_ID (fk_training_day_step_ID),
     INDEX idx_fk_exercise_ID (fk_exercise_ID),
     INDEX idx_fk_exercise_location_ID (fk_exercise_location_ID)
-)
+);
 
 CREATE TABLE IF NOT EXISTS set_type (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(20) NOT NULL UNIQUE,
     description VARCHAR(100) NOT NULL UNIQUE
-)
+);
 
 CREATE TABLE IF NOT EXISTS exercise_set (
     ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -170,7 +170,7 @@ CREATE TABLE IF NOT EXISTS exercise_set (
     INDEX idx_fk_step_exercise_ID (fk_step_exercise_ID),
     INDEX idx_fk_training_technique_ID (fk_training_technique_ID),
     INDEX idx_fk_set_type_ID (fk_set_type_ID)
-)
+);
 
 CREATE TABLE IF NOT EXISTS cardio_option (
     ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -178,12 +178,17 @@ CREATE TABLE IF NOT EXISTS cardio_option (
     fk_media_ID INT NOT NULL UNIQUE,
     FOREIGN KEY (fk_media_ID) REFERENCES media(ID),
     INDEX idx_fk_media_ID (fk_media_ID)
-)
+);
+
+CREATE TABLE IF NOT EXISTS cardio_intensity (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    intensity VARCHAR(50) NOT NULL UNIQUE
+);
 
 CREATE TABLE IF NOT EXISTS cardio_session (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     session_time TIME NOT NULL, 
-    duration_minutes INT NOT NULL, 
+    duration_minutes TINYINT NOT NULL,
     note TEXT, 
     fk_training_day_ID INT NOT NULL, 
     fk_cardio_option_ID INT NOT NULL, 
@@ -194,12 +199,7 @@ CREATE TABLE IF NOT EXISTS cardio_session (
     INDEX idx_fk_training_day_ID (fk_training_day_ID),
     INDEX idx_fk_cardio_option_ID (fk_cardio_option_ID),
     INDEX idx_fk_cardio_intensity_ID (fk_cardio_intensity_ID)
-)
-
-CREATE TABLE IF NOT EXISTS cardio_intensity (
-    ID INT PRIMARY KEY AUTO_INCREMENT,
-    intensity VARCHAR(50) NOT NULL UNIQUE
-)
+);
 
 CREATE TABLE IF NOT EXISTS payment_plan (
     ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -211,7 +211,7 @@ CREATE TABLE IF NOT EXISTS payment_plan (
     FOREIGN KEY (fk_trainer_ID) REFERENCES trainer(ID),
     UNIQUE (name, fk_trainer_ID),
     INDEX idx_fk_trainer_ID (fk_trainer_ID)
-)
+);
 
 CREATE TABLE IF NOT EXISTS payment_installment (
     ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -222,7 +222,7 @@ CREATE TABLE IF NOT EXISTS payment_installment (
     FOREIGN KEY (fk_payment_plan_ID) REFERENCES payment_plan(ID),
     UNIQUE (fk_payment_plan_ID, installments_count, installment_price),
     INDEX idx_fk_payment_plan_ID (fk_payment_plan_ID)
-)
+);
 
 CREATE TABLE IF NOT EXISTS payment_plan_benefit (
     ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -231,7 +231,7 @@ CREATE TABLE IF NOT EXISTS payment_plan_benefit (
     FOREIGN KEY (fk_payment_plan_ID) REFERENCES payment_plan(ID),
     UNIQUE (fk_payment_plan_ID, benefit_text),
     INDEX idx_fk_payment_plan_ID (fk_payment_plan_ID)
-)
+);
 
 CREATE TABLE IF NOT EXISTS body_composition (
     ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -242,12 +242,12 @@ CREATE TABLE IF NOT EXISTS body_composition (
     note TEXT, 
     fk_user_ID INT NOT NULL,
     fk_trainer_ID INT NOT NULL, 
-    FOREIGN KEY (fk_user_ID) REFERENCES user(ID),
-    FOREIGN KEY (fk_trainer_ID) REFERENCES user(ID),
+    FOREIGN KEY (fk_user_ID) REFERENCES users(ID),
+    FOREIGN KEY (fk_trainer_ID) REFERENCES users(ID),
     UNIQUE (result_date, fk_user_ID, fk_trainer_ID),
     INDEX idx_fk_user_ID (fk_user_ID),
     INDEX idx_fk_trainer_ID (fk_trainer_ID)
-)
+);
 
 CREATE TABLE IF NOT EXISTS exercise_set_log (
     ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -259,4 +259,4 @@ CREATE TABLE IF NOT EXISTS exercise_set_log (
     fk_exercise_set_ID INT NOT NULL, 
     FOREIGN KEY (fk_exercise_set_ID) REFERENCES exercise_set(ID),
     INDEX idx_fk_exercise_set_ID (fk_exercise_set_ID)
-)
+);
