@@ -12,21 +12,35 @@
   --large-text-size: 19px;
 }
 
-h1,
-h2, 
-h3,
-h4,
-h5,
-h6 {
-  font-family: "Roboto", sans-serif;
-} 
-
-body {
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 1px;
+}
+
+h1 {
+  font-size: var(--large-title-size);
+  letter-spacing: 2px;
+}
+
+h2, h3 {
+  font-size: var(--title-size);
+}
+
+h4, h5, h6 {
+  font-size: var(--small-title-size);
+}
+
+body {
   font-family: "Raleway", "Open Sans";
   font-variant-numeric: lining-nums;
+  color: var(--dark-color);
+  font-size: var(--text-size);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
