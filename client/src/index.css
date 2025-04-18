@@ -12,10 +12,21 @@
   --large-text-size: 19px;
 }
 
+h1,
+h2, 
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Roboto", sans-serif;
+} 
+
 body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: "Raleway", "Open Sans";
+  font-variant-numeric: lining-nums;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

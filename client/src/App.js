@@ -11,12 +11,9 @@ function App() {
         a
       </div>
       <div style={{backgroundColor: "#f4f4f4"}}>
-        <p style={{fontSize: "var(--small-text-size"}}>
-          A vida é feita de momentos simples. Aproveite cada um deles com alegria, coragem e um coração cheio de esperança.        </p>
-        <p style={{fontSize: "var(--text-size"}}>
-          A vida é feita de momentos simples. Aproveite cada um deles com alegria, coragem e um coração cheio de esperança.        </p>
-        <p style={{fontSize: "var(--large-text-size"}}>
-          A vida é feita de momentos simples. Aproveite cada um deles com alegria, coragem e um coração cheio de esperança.        </p>
+        <h1>
+          papapa@gmail.com
+        </h1>
       </div>
       <div style={{backgroundColor: "#000000"}}>
         a
