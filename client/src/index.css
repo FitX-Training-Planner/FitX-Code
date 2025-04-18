@@ -1,3 +1,17 @@
+:root {
+  --theme-color: #0056e8;
+  --light-theme-color: #2274ff;
+  --dark-theme-color: #002462;
+  --dark-color: #000000;
+  --light-color: #f4f4f4;
+  --title-size: 48px;
+  --small-title-size: 32px;
+  --large-title-size: 72px;
+  --text-size: 16px;
+  --small-text-size: 13px;
+  --large-text-size: 19px;
+}
+
 body {
   margin: 0;
   padding: 0;
