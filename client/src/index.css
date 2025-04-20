@@ -4,18 +4,21 @@
   --dark-theme-color: #002462;
   --dark-color: #000000;
   --light-color: #f4f4f4;
+  --dark-alert-color: rgb(255, 0, 0);
+  --light-alert-color: ;
   --title-size: 48px;
   --small-title-size: 32px;
   --large-title-size: 72px;
-  --text-size: 16px;
-  --small-text-size: 13px;
-  --large-text-size: 19px;
+  --text-size: 14px;
+  --small-text-size: 12px;
+  --large-text-size: 18px;
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  letter-spacing: 0.5px;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -43,4 +46,8 @@ body {
   font-size: var(--text-size);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+  display: block;
 }

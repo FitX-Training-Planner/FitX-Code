@@ -1,0 +1,42 @@
+.text_input > label {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 0.5em;
+    font-size: var(--large-text-size);
+    font-weight: bold;
+    width: 100%;
+    padding: 0 12px;
+    margin-bottom: 0.2em;
+}
+
+.text_input > label > img {
+    height: 1em;
+    width: 1em;
+}
+
+.text_input > label > p {
+    line-height: 1em;
+}
+
+.text_input > input {
+    outline: none;
+    border-radius: 15px;
+    padding: 0.8em;
+    width: 100%;
+    font-size: var(--text-size);
+    border: 1px solid var(--dark-color);
+    background-color: var(--light-color);
+}
+
+.text_input > p {
+    font-size: var(--small-text-size);
+    color: var(--dark-alert-color);
+    visibility: hidden;
+    width: 100%;
+    padding: 0 12px;
+}
+
+.text_input > p.visible {
+    visibility: visible;
+}
