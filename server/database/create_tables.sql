@@ -224,6 +224,37 @@ CREATE TABLE IF NOT EXISTS payment_installment (
     INDEX idx_fk_payment_plan_ID (fk_payment_plan_ID)
 );
 
+CREATE TABLE IF NOT EXISTS payment_method (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(30) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS payment_transaction_status (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    status VARCHAR(30) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS payment_transaction (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    amount DECIMAL(7,2) NOT NULL,
+    criation_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    update_date DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    mercadopago_transaction_ID VARCHAR(100) UNIQUE,
+    receipt_url TEXT,
+    fk_payment_plan_ID INT NOT NULL,
+    fk_payment_method_ID INT NOT NULL,
+    fk_payment_transaction_status_ID INT NOT NULL,
+    fk_users_ID INT NOT NULL,
+    FOREIGN KEY (fk_payment_plan_ID) REFERENCES payment_plan(ID),
+    FOREIGN KEY (fk_payment_method_ID) REFERENCES payment_method(ID),
+    FOREIGN KEY (fk_payment_transaction_status_ID) REFERENCES payment_transaction_status(ID),
+    FOREIGN KEY (fk_users_ID) REFERENCES users(ID),
+    INDEX idx_fk_payment_plan_ID (fk_payment_plan_ID),
+    INDEX idx_fk_payment_method_ID (fk_payment_method_ID),
+    INDEX idx_payment_transaction_status_ID (payment_transaction_status_ID),
+    INDEX idx_users_ID (users_ID)
+);
+
 CREATE TABLE IF NOT EXISTS payment_plan_benefit (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     benefit_text VARCHAR(100) NOT NULL,
