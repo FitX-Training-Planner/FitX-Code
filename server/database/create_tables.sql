@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS users (
     user_password VARCHAR(60) NOT NULL,
     is_client BOOLEAN NOT NULL DEFAULT 1,
     is_active BOOLEAN NOT NULL DEFAULT 1,
+    is_female_model_preferred BOOLEAN DEFAULT 0,
     is_dark_theme BOOLEAN NOT NULL DEFAULT 0,
     is_complainter_visible BOOLEAN NOT NULL DEFAULT 1,
     is_rater_visible BOOLEAN NOT NULL DEFAULT 1,
@@ -62,9 +63,12 @@ CREATE TABLE IF NOT EXISTS complaint (
 CREATE TABLE IF NOT EXISTS muscle_group (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL UNIQUE,
-    fk_media_ID INT NOT NULL UNIQUE,
-    FOREIGN KEY (fk_media_ID) REFERENCES media(ID),
-    INDEX idx_fk_media_ID (fk_media_ID)
+    fk_male_model_media_ID INT NOT NULL UNIQUE,
+    fk_female_model_media_ID INT NOT NULL UNIQUE,
+    FOREIGN KEY (fk_male_model_media_ID) REFERENCES media(ID),
+    FOREIGN KEY (fk_female_model_media_ID) REFERENCES media(ID),
+    INDEX idx_fk_male_model_media_ID (fk_male_model_media_ID),
+    INDEX idx_fk_female_model_media_ID (fk_female_model_media_ID)
 );
 
 CREATE TABLE IF NOT EXISTS exercise (
@@ -238,7 +242,7 @@ CREATE TABLE IF NOT EXISTS payment_transaction (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     amount DECIMAL(7,2) NOT NULL,
     criation_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    update_date DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    update_date DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     mercadopago_transaction_ID VARCHAR(100) UNIQUE,
     receipt_url TEXT,
     fk_payment_plan_ID INT NOT NULL,
@@ -290,4 +294,26 @@ CREATE TABLE IF NOT EXISTS exercise_set_log (
     fk_exercise_set_ID INT NOT NULL, 
     FOREIGN KEY (fk_exercise_set_ID) REFERENCES exercise_set(ID),
     INDEX idx_fk_exercise_set_ID (fk_exercise_set_ID)
+);
+
+CREATE TABLE chat (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    update_date DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    fk_user_ID INT NOT NULL,
+    fk_trainer_ID INT NOT NULL,
+    FOREIGN KEY (fk_user_ID) REFERENCES users(ID),
+    FOREIGN KEY (fk_trainer_ID) REFERENCES trainer(ID),
+    UNIQUE (fk_trainer_ID, fk_user_ID),
+    INDEX idx_fk_user_ID_update_date (fk_user_ID, update_date),
+    INDEX idx_fk_trainer_ID_fk_user_ID (fk_trainer_ID, fk_user_ID)
+);
+
+CREATE TABLE message (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    content TEXT,
+    is_from_trainer BOOLEAN NOT NULL,
+    creation_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    fk_chat_ID INT NOT NULL,
+    FOREIGN KEY (fk_chat_ID) REFERENCES chat(ID),
+    INDEX idx_chat_ID_creation_date (fk_chat_ID, creation_date)
 );
