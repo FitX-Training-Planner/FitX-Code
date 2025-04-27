@@ -248,15 +248,15 @@ CREATE TABLE IF NOT EXISTS payment_transaction (
     fk_payment_plan_ID INT NOT NULL,
     fk_payment_method_ID INT NOT NULL,
     fk_payment_transaction_status_ID INT NOT NULL,
-    fk_users_ID INT NOT NULL,
+    fk_user_ID INT NOT NULL,
     FOREIGN KEY (fk_payment_plan_ID) REFERENCES payment_plan(ID),
     FOREIGN KEY (fk_payment_method_ID) REFERENCES payment_method(ID),
     FOREIGN KEY (fk_payment_transaction_status_ID) REFERENCES payment_transaction_status(ID),
-    FOREIGN KEY (fk_users_ID) REFERENCES users(ID),
+    FOREIGN KEY (fk_user_ID) REFERENCES users(ID),
     INDEX idx_fk_payment_plan_ID (fk_payment_plan_ID),
     INDEX idx_fk_payment_method_ID (fk_payment_method_ID),
-    INDEX idx_payment_transaction_status_ID (payment_transaction_status_ID),
-    INDEX idx_users_ID (users_ID)
+    INDEX idx_payment_transaction_status_ID (fk_payment_transaction_status_ID),
+    INDEX idx_user_ID (fk_user_ID)
 );
 
 CREATE TABLE IF NOT EXISTS payment_plan_benefit (
@@ -278,7 +278,7 @@ CREATE TABLE IF NOT EXISTS body_composition (
     fk_user_ID INT NOT NULL,
     fk_trainer_ID INT NOT NULL, 
     FOREIGN KEY (fk_user_ID) REFERENCES users(ID),
-    FOREIGN KEY (fk_trainer_ID) REFERENCES users(ID),
+    FOREIGN KEY (fk_trainer_ID) REFERENCES trainer(ID),
     UNIQUE (result_date, fk_user_ID, fk_trainer_ID),
     INDEX idx_fk_user_ID (fk_user_ID),
     INDEX idx_fk_trainer_ID (fk_trainer_ID)
