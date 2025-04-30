@@ -73,8 +73,8 @@ CREATE TABLE IF NOT EXISTS muscle_group (
 
 CREATE TABLE IF NOT EXISTS exercise (
     ID INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(50) NOT NULL UNIQUE,
-    alternative_name VARCHAR(50) UNIQUE,
+    technical_name VARCHAR(50) NOT NULL UNIQUE,
+    popular_name VARCHAR(50) UNIQUE,
     description VARCHAR(100) NOT NULL UNIQUE,
     fk_media_ID INT NOT NULL UNIQUE,
     FOREIGN KEY (fk_media_ID) REFERENCES media(ID),
