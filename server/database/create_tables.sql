@@ -75,6 +75,7 @@ CREATE TABLE IF NOT EXISTS exercise (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL UNIQUE,
     description VARCHAR(255) NOT NULL UNIQUE,
+    is_fixed BOOLEAN NOT NULL,
     fk_media_ID INT NOT NULL UNIQUE,
     FOREIGN KEY (fk_media_ID) REFERENCES media(ID),
     INDEX idx_fk_media_ID (fk_media_ID)
