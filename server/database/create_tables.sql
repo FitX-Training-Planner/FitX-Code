@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS muscle_group (
 CREATE TABLE IF NOT EXISTS exercise (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL UNIQUE,
-    description VARCHAR(100) NOT NULL UNIQUE,
+    description VARCHAR(255) NOT NULL UNIQUE,
     fk_media_ID INT NOT NULL UNIQUE,
     FOREIGN KEY (fk_media_ID) REFERENCES media(ID),
     INDEX idx_fk_media_ID (fk_media_ID)
@@ -92,9 +92,59 @@ CREATE TABLE IF NOT EXISTS exercise_muscle_group (
     INDEX idx_fk_muscle_group_ID (fk_muscle_group_ID)
 );
 
+CREATE TABLE IF NOT EXISTS body_position (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    description VARCHAR(30) NOT NULL UNIQUE
+);
+
 CREATE TABLE IF NOT EXISTS exercise_location (
     ID INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(50) NOT NULL UNIQUE
+    name VARCHAR(30) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS pulley_height (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    description VARCHAR(30) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS pulley_attachment (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(30) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS pulley (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    fk_pulley_height_ID INT NOT NULL,
+    fk_pulley_attachment_ID INT NOT NULL,
+    FOREIGN KEY (fk_pulley_height_ID) REFERENCES pulley_height(ID),
+    FOREIGN KEY (fk_pulley_attachment_ID) REFERENCES pulley_attachment(ID),
+    UNIQUE (fk_pulley_height_ID, fk_pulley_attachment_ID),
+    INDEX idx_fk_pulley_height_ID_fk_pulley_attachment_ID (fk_pulley_height_ID, fk_pulley_attachment_ID)
+);
+
+CREATE TABLE IF NOT EXISTS grip_type (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(30) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS grip_width (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    description VARCHAR(30) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS grip (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    fk_grip_type_ID INT NOT NULL,
+    fk_grip_width_ID INT NOT NULL,
+    FOREIGN KEY (fk_grip_type_ID) REFERENCES grip_type(ID),
+    FOREIGN KEY (fk_grip_width_ID) REFERENCES grip_width(ID),
+    UNIQUE (fk_grip_type_ID, fk_grip_width_ID),
+    INDEX idx_fk_grip_type_ID_fk_grip_width_ID (fk_grip_type_ID, fk_grip_width_ID)
+);
+
+CREATE TABLE IF NOT EXISTS laterality (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    type VARCHAR(30) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS training_technique (
@@ -142,13 +192,22 @@ CREATE TABLE IF NOT EXISTS step_exercise (
     fk_training_day_step_ID INT NOT NULL,
     fk_exercise_ID INT NOT NULL,
     fk_exercise_location_ID INT NOT NULL,
+    fk_body_position_ID INT,
+    fk_pulley_ID INT,
+    fk_grip_ID INT,
+    fk_laterality_ID INT,
     FOREIGN KEY (fk_training_day_step_ID) REFERENCES training_day_step(ID),
     FOREIGN KEY (fk_exercise_ID) REFERENCES exercise(ID),
     FOREIGN KEY (fk_exercise_location_ID) REFERENCES exercise_location(ID),
+    FOREIGN KEY (fk_body_position_ID) REFERENCES body_position(ID),
+    FOREIGN KEY (fk_pulley_ID) REFERENCES pulley(ID),
+    FOREIGN KEY (fk_grip_ID) REFERENCES grip(ID),
+    FOREIGN KEY (fk_laterality_ID) REFERENCES laterality(ID),
     UNIQUE (order_in_step, fk_training_day_step_ID),
     INDEX idx_fk_training_day_step_ID (fk_training_day_step_ID),
     INDEX idx_fk_exercise_ID (fk_exercise_ID),
-    INDEX idx_fk_exercise_location_ID (fk_exercise_location_ID)
+    INDEX idx_fk_pulley_ID (fk_pulley_ID)
+    INDEX idx_fk_grip_ID (fk_grip_ID)
 );
 
 CREATE TABLE IF NOT EXISTS set_type (
@@ -164,8 +223,8 @@ CREATE TABLE IF NOT EXISTS exercise_set (
     required_rest_seconds SMALLINT NOT NULL,
     order_in_exercise TINYINT NOT NULL,
     fk_step_exercise_ID INT NOT NULL,
-    fk_training_technique_ID INT,
     fk_set_type_ID INT NOT NULL,
+    fk_training_technique_ID INT,
     FOREIGN KEY (fk_step_exercise_ID) REFERENCES step_exercise(ID),
     FOREIGN KEY (fk_training_technique_ID) REFERENCES training_technique(ID),
     FOREIGN KEY (fk_set_type_ID) REFERENCES set_type(ID),
