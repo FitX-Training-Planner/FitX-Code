@@ -219,8 +219,9 @@ CREATE TABLE IF NOT EXISTS set_type (
 
 CREATE TABLE IF NOT EXISTS exercise_set (
     ID INT PRIMARY KEY AUTO_INCREMENT,
-    min_reps TINYINT NOT NULL,
-    max_reps TINYINT NOT NULL,
+    min_reps TINYINT,
+    max_reps TINYINT,
+    duration_seconds SMALLINT,
     required_rest_seconds SMALLINT NOT NULL,
     order_in_exercise TINYINT NOT NULL,
     fk_step_exercise_ID INT NOT NULL,
