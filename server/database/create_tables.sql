@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS users (
     is_dark_theme BOOLEAN NOT NULL DEFAULT 0,
     is_complainter_visible BOOLEAN NOT NULL DEFAULT 1,
     is_rater_visible BOOLEAN NOT NULL DEFAULT 1,
+    is_contact_visible BOOLEAN NOT NULL DEFAULT 1,
     email_notification_permission BOOLEAN NOT NULL DEFAULT 1,
     device_notification_permission BOOLEAN NOT NULL DEFAULT 1,
     is_english BOOLEAN NOT NULL DEFAULT 0,
@@ -62,7 +63,7 @@ CREATE TABLE IF NOT EXISTS complaint (
 
 CREATE TABLE IF NOT EXISTS muscle_group (
     ID INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(50) NOT NULL UNIQUE,
+    name VARCHAR(30) NOT NULL UNIQUE,
     fk_male_model_media_ID INT NOT NULL UNIQUE,
     fk_female_model_media_ID INT NOT NULL UNIQUE,
     FOREIGN KEY (fk_male_model_media_ID) REFERENCES media(ID),
@@ -95,12 +96,14 @@ CREATE TABLE IF NOT EXISTS exercise_muscle_group (
 
 CREATE TABLE IF NOT EXISTS body_position (
     ID INT PRIMARY KEY AUTO_INCREMENT,
-    description VARCHAR(30) NOT NULL UNIQUE
+    description VARCHAR(60) NOT NULL UNIQUE
 );
 
-CREATE TABLE IF NOT EXISTS exercise_location (
+CREATE TABLE IF NOT EXISTS exercise_equipment (
     ID INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(30) NOT NULL UNIQUE
+    name VARCHAR(30) NOT NULL UNIQUE,
+    description VARCHAR(50) NOT NULL UNIQUE
+
 );
 
 CREATE TABLE IF NOT EXISTS pulley_height (
@@ -151,7 +154,7 @@ CREATE TABLE IF NOT EXISTS laterality (
 CREATE TABLE IF NOT EXISTS training_technique (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL UNIQUE,
-    description varchar(255) NOT NULL UNIQUE
+    description VARCHAR(255) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS training_plan (
@@ -169,7 +172,7 @@ CREATE TABLE IF NOT EXISTS training_plan (
 
 CREATE TABLE IF NOT EXISTS training_day (
     ID INT PRIMARY KEY AUTO_INCREMENT,
-    day_order INT NOT NULL, 
+    order_in_plan TINYINT NOT NULL, 
     is_rest_day BOOLEAN NOT NULL DEFAULT 0,
     note TEXT,
     fk_plan_ID INT NOT NULL,
@@ -207,13 +210,13 @@ CREATE TABLE IF NOT EXISTS step_exercise (
     UNIQUE (order_in_step, fk_training_day_step_ID),
     INDEX idx_fk_training_day_step_ID (fk_training_day_step_ID),
     INDEX idx_fk_exercise_ID (fk_exercise_ID),
-    INDEX idx_fk_pulley_ID (fk_pulley_ID)
+    INDEX idx_fk_pulley_ID (fk_pulley_ID),
     INDEX idx_fk_grip_ID (fk_grip_ID)
 );
 
 CREATE TABLE IF NOT EXISTS set_type (
     ID INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(20) NOT NULL UNIQUE,
+    name VARCHAR(30) NOT NULL UNIQUE,
     description VARCHAR(100) NOT NULL UNIQUE
 );
 
@@ -246,7 +249,8 @@ CREATE TABLE IF NOT EXISTS cardio_option (
 
 CREATE TABLE IF NOT EXISTS cardio_intensity (
     ID INT PRIMARY KEY AUTO_INCREMENT,
-    intensity VARCHAR(50) NOT NULL UNIQUE
+    intensity VARCHAR(50) NOT NULL UNIQUE,
+    description VARCHAR(255) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS cardio_session (
@@ -301,8 +305,8 @@ CREATE TABLE IF NOT EXISTS payment_transaction_status (
 CREATE TABLE IF NOT EXISTS payment_transaction (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     amount DECIMAL(7,2) NOT NULL,
-    criation_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    update_date DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    create_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    update_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     mercadopago_transaction_ID VARCHAR(100) UNIQUE,
     receipt_url TEXT,
     fk_payment_plan_ID INT NOT NULL,
@@ -321,10 +325,10 @@ CREATE TABLE IF NOT EXISTS payment_transaction (
 
 CREATE TABLE IF NOT EXISTS payment_plan_benefit (
     ID INT PRIMARY KEY AUTO_INCREMENT,
-    benefit_text VARCHAR(100) NOT NULL,
+    description VARCHAR(100) NOT NULL,
     fk_payment_plan_ID INT NOT NULL,
     FOREIGN KEY (fk_payment_plan_ID) REFERENCES payment_plan(ID),
-    UNIQUE (fk_payment_plan_ID, benefit_text),
+    UNIQUE (fk_payment_plan_ID, description),
     INDEX idx_fk_payment_plan_ID (fk_payment_plan_ID)
 );
 
@@ -358,7 +362,7 @@ CREATE TABLE IF NOT EXISTS exercise_set_log (
 
 CREATE TABLE chat (
     ID INT PRIMARY KEY AUTO_INCREMENT,
-    update_date DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    update_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     fk_user_ID INT NOT NULL,
     fk_trainer_ID INT NOT NULL,
     FOREIGN KEY (fk_user_ID) REFERENCES users(ID),
@@ -370,10 +374,10 @@ CREATE TABLE chat (
 
 CREATE TABLE message (
     ID INT PRIMARY KEY AUTO_INCREMENT,
-    content TEXT,
+    content TEXT NOT NULL,
     is_from_trainer BOOLEAN NOT NULL,
-    creation_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    create_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     fk_chat_ID INT NOT NULL,
     FOREIGN KEY (fk_chat_ID) REFERENCES chat(ID),
-    INDEX idx_chat_ID_creation_date (fk_chat_ID, creation_date)
+    INDEX idx_chat_ID_create_date (fk_chat_ID, create_date)
 );
