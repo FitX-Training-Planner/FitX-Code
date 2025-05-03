@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS exercise_muscle_group (
 
 CREATE TABLE IF NOT EXISTS body_position (
     ID INT PRIMARY KEY AUTO_INCREMENT,
-    description VARCHAR(60) NOT NULL UNIQUE
+    description VARCHAR(100) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS exercise_equipment (
@@ -116,16 +116,6 @@ CREATE TABLE IF NOT EXISTS pulley_attachment (
     name VARCHAR(30) NOT NULL UNIQUE
 );
 
-CREATE TABLE IF NOT EXISTS pulley (
-    ID INT PRIMARY KEY AUTO_INCREMENT,
-    fk_pulley_height_ID INT NOT NULL,
-    fk_pulley_attachment_ID INT NOT NULL,
-    FOREIGN KEY (fk_pulley_height_ID) REFERENCES pulley_height(ID),
-    FOREIGN KEY (fk_pulley_attachment_ID) REFERENCES pulley_attachment(ID),
-    UNIQUE (fk_pulley_height_ID, fk_pulley_attachment_ID),
-    INDEX idx_fk_pulley_height_ID_fk_pulley_attachment_ID (fk_pulley_height_ID, fk_pulley_attachment_ID)
-);
-
 CREATE TABLE IF NOT EXISTS grip_type (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(30) NOT NULL UNIQUE
@@ -134,16 +124,6 @@ CREATE TABLE IF NOT EXISTS grip_type (
 CREATE TABLE IF NOT EXISTS grip_width (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     description VARCHAR(30) NOT NULL UNIQUE
-);
-
-CREATE TABLE IF NOT EXISTS grip (
-    ID INT PRIMARY KEY AUTO_INCREMENT,
-    fk_grip_type_ID INT NOT NULL,
-    fk_grip_width_ID INT NOT NULL,
-    FOREIGN KEY (fk_grip_type_ID) REFERENCES grip_type(ID),
-    FOREIGN KEY (fk_grip_width_ID) REFERENCES grip_width(ID),
-    UNIQUE (fk_grip_type_ID, fk_grip_width_ID),
-    INDEX idx_fk_grip_type_ID_fk_grip_width_ID (fk_grip_type_ID, fk_grip_width_ID)
 );
 
 CREATE TABLE IF NOT EXISTS laterality (
@@ -195,29 +175,31 @@ CREATE TABLE IF NOT EXISTS step_exercise (
     note TEXT,
     fk_training_day_step_ID INT NOT NULL,
     fk_exercise_ID INT NOT NULL,
-    fk_exercise_location_ID INT NOT NULL,
+    fk_exercise_equipment_ID INT NOT NULL,
     fk_body_position_ID INT,
-    fk_pulley_ID INT,
-    fk_grip_ID INT,
+    fk_pulley_height_ID INT NOT NULL,
+    fk_pulley_attachment_ID INT NOT NULL,
+    fk_grip_type_ID INT,
+    fk_grip_width_ID INT,
     fk_laterality_ID INT,
     FOREIGN KEY (fk_training_day_step_ID) REFERENCES training_day_step(ID),
     FOREIGN KEY (fk_exercise_ID) REFERENCES exercise(ID),
-    FOREIGN KEY (fk_exercise_location_ID) REFERENCES exercise_location(ID),
+    FOREIGN KEY (fk_exercise_equipment_ID) REFERENCES exercise_equipment(ID),
     FOREIGN KEY (fk_body_position_ID) REFERENCES body_position(ID),
-    FOREIGN KEY (fk_pulley_ID) REFERENCES pulley(ID),
-    FOREIGN KEY (fk_grip_ID) REFERENCES grip(ID),
+    FOREIGN KEY (fk_pulley_height_ID) REFERENCES pulley_height(ID),
+    FOREIGN KEY (fk_pulley_attachment_ID) REFERENCES pulley_attachment(ID),
+    FOREIGN KEY (fk_grip_type_ID) REFERENCES grip_type(ID),
+    FOREIGN KEY (fk_grip_width_ID) REFERENCES grip_width(ID),    
     FOREIGN KEY (fk_laterality_ID) REFERENCES laterality(ID),
     UNIQUE (order_in_step, fk_training_day_step_ID),
     INDEX idx_fk_training_day_step_ID (fk_training_day_step_ID),
-    INDEX idx_fk_exercise_ID (fk_exercise_ID),
-    INDEX idx_fk_pulley_ID (fk_pulley_ID),
-    INDEX idx_fk_grip_ID (fk_grip_ID)
+    INDEX idx_fk_exercise_ID (fk_exercise_ID)
 );
 
 CREATE TABLE IF NOT EXISTS set_type (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(30) NOT NULL UNIQUE,
-    description VARCHAR(100) NOT NULL UNIQUE
+    description VARCHAR(150) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS exercise_set (
@@ -249,8 +231,8 @@ CREATE TABLE IF NOT EXISTS cardio_option (
 
 CREATE TABLE IF NOT EXISTS cardio_intensity (
     ID INT PRIMARY KEY AUTO_INCREMENT,
-    intensity VARCHAR(50) NOT NULL UNIQUE,
-    description VARCHAR(255) NOT NULL UNIQUE
+    intensity VARCHAR(30) NOT NULL UNIQUE,
+    description VARCHAR(100) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS cardio_session (
@@ -281,7 +263,7 @@ CREATE TABLE IF NOT EXISTS payment_plan (
     INDEX idx_fk_trainer_ID (fk_trainer_ID)
 );
 
-CREATE TABLE IF NOT EXISTS payment_installment (
+CREATE TABLE IF NOT EXISTS payment_in_installments (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     installments_count TINYINT NOT NULL,
     installment_price DECIMAL(7,2) NOT NULL,
@@ -306,21 +288,39 @@ CREATE TABLE IF NOT EXISTS payment_transaction (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     amount DECIMAL(7,2) NOT NULL,
     create_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    update_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     mercadopago_transaction_ID VARCHAR(100) UNIQUE,
     receipt_url TEXT,
     fk_payment_plan_ID INT NOT NULL,
+    fk_payment_in_installments_ID INT,
     fk_payment_method_ID INT NOT NULL,
     fk_payment_transaction_status_ID INT NOT NULL,
     fk_user_ID INT NOT NULL,
+    fk_trainer_ID INT NOT NULL,
     FOREIGN KEY (fk_payment_plan_ID) REFERENCES payment_plan(ID),
+    FOREIGN KEY (fk_payment_in_installments_ID) REFERENCES payment_in_installments(ID),
     FOREIGN KEY (fk_payment_method_ID) REFERENCES payment_method(ID),
     FOREIGN KEY (fk_payment_transaction_status_ID) REFERENCES payment_transaction_status(ID),
     FOREIGN KEY (fk_user_ID) REFERENCES users(ID),
+    FOREIGN KEY (fk_trainer_ID) REFERENCES trainer(ID),
     INDEX idx_fk_payment_plan_ID (fk_payment_plan_ID),
-    INDEX idx_fk_payment_method_ID (fk_payment_method_ID),
-    INDEX idx_payment_transaction_status_ID (fk_payment_transaction_status_ID),
-    INDEX idx_user_ID (fk_user_ID)
+    INDEX idx_fk_payment_in_installments_ID (fk_payment_in_installments_ID),
+    INDEX idx_fk_user_ID (fk_user_ID),
+    INDEX idx_fk_trainer_ID (fk_trainer_ID)
+);
+
+CREATE TABLE IF NOT EXISTS payment_transaction_installment (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    installment_number TINYINT NOT NULL,
+    amount DECIMAL(7,2) NOT NULL,
+    due_date DATE NOT NULL,
+    payment_date DATE,
+    mercadopago_transaction_ID VARCHAR(100),
+    fk_payment_transaction_ID INT NOT NULL,
+    fk_payment_transaction_status_ID INT NOT NULL, 
+    FOREIGN KEY (fk_payment_transaction_ID) REFERENCES payment_transaction(ID),
+    FOREIGN KEY (fk_payment_transaction_status_ID) REFERENCES payment_transaction_status(ID),
+    UNIQUE(fk_payment_transaction_ID, installment_number),
+    INDEX idx_fk_payment_transaction_ID (fk_payment_transaction_ID)
 );
 
 CREATE TABLE IF NOT EXISTS payment_plan_benefit (
