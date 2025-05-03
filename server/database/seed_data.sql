@@ -260,15 +260,6 @@ INSERT INTO pulley_attachment (name) VALUES
 ('Puxador'),
 ('Tornozeleira');
 
-INSERT INTO pulley (fk_pulley_height_ID, fk_pulley_attachment_ID) VALUES
-(1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (1, 7), (1, 8), (1, 9),
-(2, 1), (2, 2), (2, 3), (2, 4), (2, 5), (2, 6), (2, 7), (2, 8), (2, 9),
-(3, 1), (3, 2), (3, 3), (3, 4), (3, 5), (3, 6), (3, 7), (3, 8), (3, 9),
-(4, 1), (4, 2), (4, 3), (4, 4), (4, 5), (4, 6), (4, 7), (4, 8), (4, 9),
-(5, 1), (5, 2), (5, 3), (5, 4), (5, 5), (5, 6), (5, 7), (5, 8), (5, 9),
-(6, 1), (6, 2), (6, 3), (6, 4), (6, 5), (6, 6), (6, 7), (6, 8), (6, 9),
-(7, 1), (7, 2), (7, 3), (7, 4), (7, 5), (7, 6), (7, 7), (7, 8), (7, 9);
-
 INSERT INTO grip_type (name) VALUES
 ('Pronada'),
 ('Semi-Pronada'),
@@ -281,9 +272,54 @@ INSERT INTO grip_width (description) VALUES
 ('Média'),
 ('Aberta');
 
-INSERT INTO grip (fk_grip_type_ID, fk_grip_width_ID) VALUES
-(1, 1), (1, 2), (1, 3),
-(2, 1), (2, 2), (2, 3),
-(3, 1), (3, 2), (3, 3),
-(4, 1), (4, 2), (4, 3),
-(5, 1), (5, 2), (5, 3);
+INSERT INTO laterality (type) VALUES
+('Bilateral'),
+('Unilateral'),
+('Alternado');
+
+INSERT INTO training_technique (name, description) VALUES 
+('Drop Set', 'Duas ou mais reduções de carga toda vez que atingir a falha em uma série.'),
+('Rest-Pause', 'Duas ou mais pausas curtas toda vez que atingir a falha em uma série.'),
+('Parciais Pós-Série', 'Repetições parciais após atingir a falha em uma série.'),
+('Parciais Fase Alongada', 'Repetições parciais no ponto de maior alongamento do movimento.'),
+('Parciais Fase Contraída', 'Repetições parciais no ponto de maior contração do movimento.'),
+('Repetições Forçadas', 'Repetições realizadas com ajuda após atingir a falha em uma série.'),
+('Repetições Negativas', 'Repetições realizadas com ajuda na fase concêntrica do movimento.'),
+('Cluster Set', 'Pequenas divisões de uma série com pausas curtas entre elas.'),
+('FST-7', 'Sete séries com pausas curtas entre elas e mantendo um alongamento do músculo alvo durante os descansos.'),
+('Dead Stop', 'Repetições com um descanso no ponto de maior alongamento do movimento.'),
+('Pico de Concentração', 'Repetições com uma pausa no ponto de maior contração do movimento.'),
+('Ponto Zero', 'Repetições com uma pausa no ponto de maior alongamento do movimento.');
+
+INSERT INTO set_type (name, description) VALUES 
+('Aquecimento', 'Série de baixa intensidade com o objetivo de lubrificar articulações, ativar os músculos-alvo e aprimorar a conexão neuromuscular.'),
+('Preparatória', 'Série de intensidade moderada utilizada para ajustar a carga das séries principais e reduzir o risco de lesões.'),
+('Trabalho', 'Série efetiva com intensidade suficiente para alcançar ou se aproximar da falha concêntrica dentro da faixa de repetições prescrita.'),
+('Top', 'Série efetiva com intensidade máxima, realizada até a falha concêntrica ou técnica, dentro da faixa de repetições prescrita.');
+
+
+INSERT INTO cardio_option (name, fk_media_ID) VALUES
+('Esteira', NULL),
+('Bicicleta Ergométrica Horizontal', NULL),
+('Bicicleta Ergométrica Vertical', NULL),
+('Elíptico', NULL),
+('Remo Seco', NULL),
+('Simulador de Escada', NULL);
+
+INSERT INTO cardio_intensity (intensity, description) VALUES
+('Zona 1', 'Utilização de 50-60% da frequência cardíaca máxima.'),
+('Zona 2', 'Utilização de 60-70% da frequência cardíaca máxima.'),
+('Zona 3', 'Utilização de 70-80% da frequência cardíaca máxima.'),
+('Zona 4', 'Utilização de 80-90% da frequência cardíaca máxima.'),
+('Zona 5', 'Utilização de 90-100% da frequência cardíaca máxima.'),
+('HIIT', 'Treino intervalado com períodos alternados de alta e baixa intensidade.');
+
+INSERT INTO payment_method (name) VALUES
+('PIX'),
+('Cartão de Crédito'),
+('Cartão de Débito');
+
+INSERT INTO payment_transaction_status (status) VALUES
+('Concluído'),
+('Em andamento'),
+('Atrasado');
