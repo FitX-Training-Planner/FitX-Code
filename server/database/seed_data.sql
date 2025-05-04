@@ -26,7 +26,14 @@ INSERT INTO media (url) VALUES
 ('images/activated_muscles/female/glutes/'),
 ('images/activated_muscles/male/glutes/'),
 ('images/activated_muscles/female/calf/'),
-('images/activated_muscles/male/calf/');
+('images/activated_muscles/male/calf/'),
+('images/cardio_options/elliptical.png'),
+('images/cardio_options/recumbent_exercise_bike.png'),
+('images/cardio_options/upright_exercise_bike.png'),
+('images/cardio_options/rowing_machine.png'),
+('images/cardio_options/stair_simulator.png'),
+('images/cardio_options/treadmill.png');
+
 
 INSERT INTO muscle_group (name, fk_male_model_media_ID, fk_female_model_media_ID) VALUES
 ('Abdômen', 2, 1),
@@ -298,12 +305,12 @@ INSERT INTO set_type (name, description, intensity_level) VALUES
 ('Top', 'Série efetiva com intensidade máxima, realizada até a falha concêntrica ou técnica, dentro da faixa de repetições prescrita.', 5);
 
 INSERT INTO cardio_option (name, fk_media_ID) VALUES
-('Esteira', NULL),
-('Bicicleta Ergométrica Horizontal', NULL),
-('Bicicleta Ergométrica Vertical', NULL),
-('Elíptico', NULL),
-('Remo Seco', NULL),
-('Simulador de Escada', NULL);
+('Esteira', 34),
+('Bicicleta Ergométrica Horizontal', 30),
+('Bicicleta Ergométrica Vertical', 31),
+('Elíptico', 29),
+('Remo Seco', 32),
+('Simulador de Escada', 33);
 
 INSERT INTO cardio_intensity (type, description, intensity_level) VALUES
 ('Zona 1', 'Utilização de 50-60% da frequência cardíaca máxima.', 1),
