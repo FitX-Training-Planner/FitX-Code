@@ -291,12 +291,11 @@ INSERT INTO training_technique (name, description) VALUES
 ('Pico de Concentração', 'Repetições com uma pausa no ponto de maior contração do movimento.'),
 ('Ponto Zero', 'Repetições com uma pausa no ponto de maior alongamento do movimento.');
 
-INSERT INTO set_type (name, description) VALUES 
-('Aquecimento', 'Série de baixa intensidade com o objetivo de lubrificar articulações, ativar os músculos-alvo e aprimorar a conexão neuromuscular.'),
-('Preparatória', 'Série de intensidade moderada utilizada para ajustar a carga das séries principais e reduzir o risco de lesões.'),
-('Trabalho', 'Série efetiva com intensidade suficiente para alcançar ou se aproximar da falha concêntrica dentro da faixa de repetições prescrita.'),
-('Top', 'Série efetiva com intensidade máxima, realizada até a falha concêntrica ou técnica, dentro da faixa de repetições prescrita.');
-
+INSERT INTO set_type (name, description, intensity_level) VALUES 
+('Aquecimento', 'Série de baixa intensidade com o objetivo de lubrificar articulações, ativar os músculos-alvo e aprimorar a conexão neuromuscular.', 2),
+('Preparatória', 'Série de intensidade moderada utilizada para ajustar a carga das séries principais e reduzir o risco de lesões.', 3),
+('Trabalho', 'Série efetiva com intensidade suficiente para alcançar ou se aproximar da falha concêntrica dentro da faixa de repetições prescrita.', 4),
+('Top', 'Série efetiva com intensidade máxima, realizada até a falha concêntrica ou técnica, dentro da faixa de repetições prescrita.', 5);
 
 INSERT INTO cardio_option (name, fk_media_ID) VALUES
 ('Esteira', NULL),
@@ -306,13 +305,13 @@ INSERT INTO cardio_option (name, fk_media_ID) VALUES
 ('Remo Seco', NULL),
 ('Simulador de Escada', NULL);
 
-INSERT INTO cardio_intensity (intensity, description) VALUES
-('Zona 1', 'Utilização de 50-60% da frequência cardíaca máxima.'),
-('Zona 2', 'Utilização de 60-70% da frequência cardíaca máxima.'),
-('Zona 3', 'Utilização de 70-80% da frequência cardíaca máxima.'),
-('Zona 4', 'Utilização de 80-90% da frequência cardíaca máxima.'),
-('Zona 5', 'Utilização de 90-100% da frequência cardíaca máxima.'),
-('HIIT', 'Treino intervalado com períodos alternados de alta e baixa intensidade.');
+INSERT INTO cardio_intensity (type, description, intensity_level) VALUES
+('Zona 1', 'Utilização de 50-60% da frequência cardíaca máxima.', 1),
+('Zona 2', 'Utilização de 60-70% da frequência cardíaca máxima.', 2),
+('Zona 3', 'Utilização de 70-80% da frequência cardíaca máxima.', 3),
+('Zona 4', 'Utilização de 80-90% da frequência cardíaca máxima.', 4),
+('Zona 5', 'Utilização de 90-100% da frequência cardíaca máxima.', 5),
+('HIIT', 'Treino intervalado com períodos alternados de alta e baixa intensidade.', 4);
 
 INSERT INTO payment_method (name) VALUES
 ('PIX'),
