@@ -1,36 +1,10 @@
-import Stack from "./components/containers/Stack";
-import TextInput from "./components/form/fields/TextInput";
+import Login from "./components/pages/Login";
 
 function App() {
   return (
     <>
       <div>
-        <Stack>
-          <TextInput
-            name="name"
-            placeholder="Insira seu nome"
-            labelText="Nogme de usuario"
-            alertMessage="Nome de usuário inválido"
-            value="jajajPPP"
-          />
-
-          <TextInput
-            name="name"
-            placeholder="Insira seu nome"
-            labelText="Nogme de usuario"
-            alertMessage="Nome de usuário inválido"
-            value="jajajPPP"
-            error
-          />
-
-          <TextInput
-            name="name"
-            placeholder="Insira seu nome"
-            labelText="Nogme de usuario"
-            alertMessage="Nome de usuário inválido"
-            value="jajajPPP"
-          />
-        </Stack>
+       <Login/>
       </div>
     </>  
   );
