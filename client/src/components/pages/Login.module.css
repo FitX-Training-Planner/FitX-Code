@@ -1,0 +1,21 @@
+.login_page {
+}
+
+.login_form_container,
+.welcome_container {
+    flex: 1;
+    height: 100dvh;
+}
+
+.login_form_container {
+    padding: 1em;
+}
+
+.title_container > img {
+    height: 4em;
+}
+
+.welcome_container {
+    background-image: linear-gradient(to top, var(--dark-theme-color), var(--theme-color), var(--light-theme-color));
+    
+}
