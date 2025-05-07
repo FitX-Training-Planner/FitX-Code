@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS users (
     email_hash CHAR(64) NOT NULL UNIQUE,
     contact_encrypted VARBINARY(255) NOT NULL,
     contact_hash CHAR(64) NOT NULL UNIQUE,
-    user_password VARCHAR(60) NOT NULL,
+    password VARCHAR(60) NOT NULL,
     is_client BOOLEAN NOT NULL DEFAULT 1,
     is_active BOOLEAN NOT NULL DEFAULT 1,
     is_female_model_preferred BOOLEAN DEFAULT 0,
