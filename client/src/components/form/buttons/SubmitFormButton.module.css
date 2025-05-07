@@ -1,0 +1,11 @@
+.submit_form_button {
+    border: 1px solid var(--dark-color);
+    padding: 0.5em;
+    border-radius: 10px;
+    transition: var(--fast-transition);
+}
+
+.submit_form_button:hover {
+    background-color: var(--light-theme-color) !important;
+    transform: scale(1.05);
+}

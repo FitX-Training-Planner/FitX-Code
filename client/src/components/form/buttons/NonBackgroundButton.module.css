@@ -1,0 +1,21 @@
+.non_background_color {
+    border: none;
+    background: none;
+    position: relative;
+}
+
+.non_background_color::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 1px;
+    background-color: var(--var-color);
+    transition: var(--fast-transition);
+}
+
+.non_background_color:hover::before {
+    left: 0;
+    width: 100%;
+}
