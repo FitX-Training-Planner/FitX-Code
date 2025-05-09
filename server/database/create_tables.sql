@@ -281,11 +281,6 @@ CREATE TABLE IF NOT EXISTS payment_method (
     name VARCHAR(30) NOT NULL UNIQUE
 );
 
-CREATE TABLE IF NOT EXISTS payment_transaction_status (
-    ID INT PRIMARY KEY AUTO_INCREMENT,
-    status VARCHAR(30) NOT NULL UNIQUE
-);
-
 CREATE TABLE IF NOT EXISTS payment_transaction (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     amount DECIMAL(7,2) NOT NULL,
@@ -295,34 +290,17 @@ CREATE TABLE IF NOT EXISTS payment_transaction (
     fk_payment_plan_ID INT NOT NULL,
     fk_payment_in_installments_ID INT,
     fk_payment_method_ID INT NOT NULL,
-    fk_payment_transaction_status_ID INT NOT NULL,
     fk_user_ID INT NOT NULL,
     fk_trainer_ID INT NOT NULL,
     FOREIGN KEY (fk_payment_plan_ID) REFERENCES payment_plan(ID),
     FOREIGN KEY (fk_payment_in_installments_ID) REFERENCES payment_in_installments(ID),
     FOREIGN KEY (fk_payment_method_ID) REFERENCES payment_method(ID),
-    FOREIGN KEY (fk_payment_transaction_status_ID) REFERENCES payment_transaction_status(ID),
     FOREIGN KEY (fk_user_ID) REFERENCES users(ID),
     FOREIGN KEY (fk_trainer_ID) REFERENCES trainer(ID),
     INDEX idx_fk_payment_plan_ID (fk_payment_plan_ID),
     INDEX idx_fk_payment_in_installments_ID (fk_payment_in_installments_ID),
     INDEX idx_fk_user_ID (fk_user_ID),
     INDEX idx_fk_trainer_ID (fk_trainer_ID)
-);
-
-CREATE TABLE IF NOT EXISTS payment_transaction_installment (
-    ID INT PRIMARY KEY AUTO_INCREMENT,
-    installment_number TINYINT NOT NULL,
-    amount DECIMAL(7,2) NOT NULL,
-    due_date DATE NOT NULL,
-    payment_date DATE,
-    mercadopago_transaction_ID VARCHAR(100),
-    fk_payment_transaction_ID INT NOT NULL,
-    fk_payment_transaction_status_ID INT NOT NULL, 
-    FOREIGN KEY (fk_payment_transaction_ID) REFERENCES payment_transaction(ID),
-    FOREIGN KEY (fk_payment_transaction_status_ID) REFERENCES payment_transaction_status(ID),
-    UNIQUE(fk_payment_transaction_ID, installment_number),
-    INDEX idx_fk_payment_transaction_ID (fk_payment_transaction_ID)
 );
 
 CREATE TABLE IF NOT EXISTS payment_plan_benefit (

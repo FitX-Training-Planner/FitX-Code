@@ -323,8 +323,3 @@ INSERT INTO payment_method (name) VALUES
 ('PIX'),
 ('Cartão de Crédito'),
 ('Cartão de Débito');
-
-INSERT INTO payment_transaction_status (status) VALUES
-('Concluído'),
-('Em andamento'),
-('Atrasado');
