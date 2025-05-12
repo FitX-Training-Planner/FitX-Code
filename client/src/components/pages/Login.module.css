@@ -1,14 +1,14 @@
-.login_container {
+.login_page_container {
     position: relative;
     min-height: 100%;
 }
 
-.login_container > .login_form_container {
+.login_page_container > .login_form_container {
     padding: 1em;   
     width: 50%;
 }
 
-.login_container > .welcome_container {
+.login_page_container > .welcome_container {
     position: fixed;
     background: url(../../../public/images/backgrounds/login_welcome_bg.png) center/cover no-repeat;
     width: 50%;

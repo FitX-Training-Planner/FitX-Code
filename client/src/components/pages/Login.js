@@ -55,7 +55,7 @@ function Login() {
             <Stack
                 direction="row"
                 gap="0"
-                className={styles.login_container}
+                className={styles.login_page_container}
             >
                 <SwitchTransition>
                     <CSSTransition

@@ -4,7 +4,7 @@ import SubmitFormButton from "../buttons/SubmitFormButton";
 import CheckBoxInput from "../fields/CheckBoxInput";
 // import styles from "./ConfigForm.module.css";
 
-function ConfigForm({ config, setConfig }) {
+function ConfigForm({ config, setConfig, handleSubmit }) {
     function handleOnChangeConfigData(e) {
         setConfig(prevConfig => ({
             ...prevConfig, 
@@ -13,7 +13,9 @@ function ConfigForm({ config, setConfig }) {
     }
     
     return (
-        <form>
+        <form
+            onSubmit={handleSubmit}
+        >
             <Stack
                 gap="5em"
             >

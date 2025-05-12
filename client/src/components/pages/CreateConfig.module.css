@@ -1,8 +1,52 @@
+.config_page_container {
+    position: relative;
+}
+
+.config_form_container {
+    width: 60%;
+    padding: 2em 1em;
+}
+
+.title_container {
+    border: 10px solid var(--dark-theme-color);
+    background-color: var(--light-theme-color);
+    border-radius: 10em;
+    padding: 1em;
+    position: relative;
+}
+
+.title_container::after {
+    content: "";
+    position: absolute;
+    background: url(../../../public/logo500.png) center/cover no-repeat;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    height: 150%;
+    width: max-content;
+    aspect-ratio: 1 / 1;
+    z-index: -1;
+}
+
 .title_container > p {
     font-size: var(--large-text-size);
 }
 
 .title_container > .config_alert {
     font-size: var(--text-size);
-    color: var(--theme-color);
+    color: var(--light-color);
+}
+
+.config_bg {
+    position: fixed;
+    width: max-content;
+    height: 100%;
+    right: 0;
+    top: 0;
+}
+
+.config_bg > img {
+    filter: drop-shadow(10px 10px 20px black);
+    height: 100%;
+    margin-left: auto;
 }
