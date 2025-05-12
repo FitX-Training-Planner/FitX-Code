@@ -11,7 +11,10 @@ function TextInput({ name, placeholder, labelText, value = "", handleChange, ico
                 htmlFor={name} 
             >
                 {icon &&
-                    <img src={icon} alt={`${labelText} Icon`} />
+                    <img 
+                        src={icon} 
+                        alt={`${labelText} Icon`} 
+                    />
                 }
                 
                 <p>
@@ -19,9 +22,17 @@ function TextInput({ name, placeholder, labelText, value = "", handleChange, ico
                 </p>
             </label>
 
-            <input type="text" id={name} name={name} placeholder={placeholder} value={value} onChange={handleChange} maxLength={maxLength}/>
+            <input 
+                type="text"
+                id={name}
+                name={name}
+                placeholder={placeholder}
+                value={value}
+                onChange={handleChange}
+                maxLength={maxLength}
+            />
 
-            {alertMessage && 
+           {alertMessage && 
                 <p 
                     className={error ? styles.visible : undefined} 
                 >
