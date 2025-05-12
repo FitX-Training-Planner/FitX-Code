@@ -1,15 +1,6 @@
 .stack {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    height: 100%;
+    height: max-content;
     width: 100%;
-}
-
-.column {
-    flex-direction: column;
-}
-
-.row {
-    flex-direction: row;
 }

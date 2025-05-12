@@ -1,10 +1,10 @@
 import styles from "./Stack.module.css";
 
-function Stack({ children, gap = "1em", direction = "column", className }) {
+function Stack({ children, gap = "1em", direction = "column", alignItems = "center", className }) {
     return (
         <div
-            className={`${styles.stack} ${styles[direction]} ${className || undefined}`}
-            style={{ gap }}
+            className={`${styles.stack} ${className || undefined}`}
+            style={{ gap, alignItems, flexDirection: direction }}
         >
             {children}
         </div>

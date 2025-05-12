@@ -1,9 +1,11 @@
 
-function Title({ headingNumber = 1, varColor = "--dark-color", text }) {
+function Title({ headingNumber = 1, varColor = "--dark-color", textAlign = "center", text }) {
     const Heading = `h${headingNumber}`;
 
     return (
-        <Heading style={{ color: `var(${varColor})` }}>
+        <Heading 
+            style={{ color: `var(${varColor})`, textAlign }}
+        >
             {text}
         </Heading>
     );
