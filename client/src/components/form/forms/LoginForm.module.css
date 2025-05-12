@@ -1,0 +1,7 @@
+.title_container > img {
+    height: 4em;
+}
+
+.empty_fields_alert {
+    color: var(--dark-alert-color);
+}
