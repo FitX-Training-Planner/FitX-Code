@@ -1,0 +1,8 @@
+.title_container > p {
+    font-size: var(--large-text-size);
+}
+
+.title_container > .config_alert {
+    font-size: var(--text-size);
+    color: var(--theme-color);
+}

@@ -1,21 +1,38 @@
-.login_page {
+.login_container {
+    position: relative;
+    min-height: 100%;
 }
 
-.login_form_container,
-.welcome_container {
-    flex: 1;
-    height: 100dvh;
+.login_container > .login_form_container {
+    padding: 1em;   
+    width: 50%;
 }
 
-.login_form_container {
-    padding: 1em;
+.login_container > .welcome_container {
+    position: fixed;
+    background: url(../../../public/images/backgrounds/login_welcome_bg.png) center/cover no-repeat;
+    width: 50%;
+    height: 100%;
+    right: 0;
+    top: 0;
+    border-radius: 10% 0 0 10% / 100% 0 0 100%;
+    padding: 1em 3em 1em;
 }
 
-.title_container > img {
-    height: 4em;
+.welcome_title {
+    text-shadow: 1px 1px 2px var(--dark-theme-color);
 }
 
-.welcome_container {
-    background-image: linear-gradient(to top, var(--dark-theme-color), var(--theme-color), var(--light-theme-color));
-    
+.welcome_title > p {
+    font-size: var(--large-text-size); 
+    font-weight: 600;
+}
+
+.welcome_container > img {
+    height: 25em;
+}
+
+.welcome_container > .social_medias {
+    width: max-content;
+    margin-left: auto;
 }

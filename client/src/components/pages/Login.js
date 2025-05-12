@@ -1,14 +1,20 @@
 import styles from "./Login.module.css";
 import Stack from "./../containers/Stack";
 import Title from "../text/Title";
-import TextInput from "../form/fields/TextInput";
-import { useState } from "react";
-import { removeSpaces } from "../../utils/formatters/RemoveSpaces";
-import SubmitButton from "../form/buttons/SubmitFormButton";
-import { Link } from 'react-router-dom';
-import NonBackgroundButton from "../form/buttons/NonBackgroundButton";
+import { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import LoginForm from "../form/forms/LoginForm";
+import SignUpForm from "../form/forms/SignUpForm";
+import { CSSTransition, SwitchTransition } from "react-transition-group";
+import { validateLoginRequestData, validateSignUpRequestData } from "../../utils/validators/FormValidator";
+import ClickableIcon from "../form/buttons/ClickableIcon";
 
 function Login() {
+    const navigate = useNavigate();
+
+    const loginRef = useRef(null);
+    const signUpRef = useRef(null);
+
     const [user, setUser] = useState({
         name: "",
         email: "",
@@ -16,159 +22,135 @@ function Login() {
         password: ""
     });
     const [isLogin, setIsLogin] = useState(true);
+    const [signUpError, setSignUpError] = useState(false);
     const [loginError, setLoginError] = useState(false);
 
-    const LoginForm = () => (
-        <>
-            <TextInput
-                name="email"
-                placeholder="Insira seu e-mail"
-                labelText="E-mail"
-                value={user.email}
-                handleChange={handleOnChangeEmailAndPassword}
-                // icon={}
-                maxLength={255}
-            />
+    function handleOnChangeFormType() {
+        setUser({
+            name: "",
+            email: "",
+            contact: "",
+            password: ""
+        });
 
-            <TextInput
-                name="password"
-                placeholder="Insira sua senha"
-                labelText="Senha"
-                value={user.password}
-                handleChange={handleOnChangeEmailAndPassword}
-                // icon={}
-                alertMessage="E-mail e/ou senha inválidos."
-                error={loginError}
-                maxLength={20}
-            />
+        setIsLogin(prevIsLogin => !prevIsLogin);
 
-            {/* <Link 
-                to="/recoverPassword"
-            >
-                Esqueci minha senha
-            </Link> */}
-        </>
-    )
+        setLoginError(false);
+    }
 
-    const SignUpForm = () => (
-        <>
-            <TextInput
-                name="name"
-                placeholder="Insira seu nome"
-                labelText="Nome"
-                value={user.name}
-                handleChange={handleOnChangeEmailAndPassword}
-                // icon={}
-                alertMessage="O nome deve ter entre 3 e 100 caracteres, sem símbolos ou números."
-                error={false}
-                maxLength={100}
-            />
+    function handleOnLoginSubmit(e) {
+        e.preventDefault();
 
-            <Stack
-                direction="row"
-            >
-                <TextInput
-                    name="email"
-                    placeholder="Insira seu e-mail"
-                    labelText="E-mail"
-                    value={user.email}
-                    handleChange={handleOnChangeEmailAndPassword}
-                    // icon={}
-                    alertMessage={"E-mail inválido."}
-                    error={false}
-                    maxLength={255}
-                />
+        if (!validateLoginRequestData(loginError, setLoginError, user.email, user.password)) return;
+    }
 
-                <TextInput
-                    name="contact"
-                    placeholder="Insira seu número de contato"
-                    labelText="Contato"
-                    value={user.contact}
-                    handleChange={handleOnChangeEmailAndPassword}
-                    // icon={}
-                    alertMessage={"Número de contato inválido."}
-                    error={false}
-                    maxLength={15}
-                />
-            </Stack>
+    function handleOnSignUpSubmit(e) {
+        e.preventDefault();
 
-            <TextInput
-                name="password"
-                placeholder="Insira sua senha"
-                labelText="Senha"
-                value={user.password}
-                handleChange={handleOnChangeEmailAndPassword}
-                // icon={}
-                alertMessage="A senha deve ter entre 10 e 20 caracteres, com no mínimo um símbolo, número e letra."
-                error={false}
-            />
-        </>
-    )
-
-    function handleOnChangeEmailAndPassword(e) {
-        setUser(prevUser => ({...prevUser, [e.target.name]: removeSpaces(e.target.value)}));
+        if (!validateSignUpRequestData(signUpError, setSignUpError, user.name, user.email, user.contact, user.password)) return;
     }
 
     return (
-        <main
-            className={styles.login_page}
-        >
+        <main>
             <Stack
                 direction="row"
                 gap="0"
+                className={styles.login_container}
             >
-                <Stack
-                    gap="3em"
-                    className={styles.login_form_container}
-                >
-                    <Stack
-                        gap="0"
-                        className={styles.title_container}
+                <SwitchTransition>
+                    <CSSTransition
+                        key={isLogin ? "login" : "signUp"}
+                        timeout={1000}
+                        classNames="fade"
+                        nodeRef={isLogin ? loginRef : signUpRef}
                     >
-                        <img 
-                            src="logo180.png" 
-                            alt="FitX Icon"
-                        />
-
-                        <Title
-                            headingNumber={1}
-                            text={isLogin ? "Login" : "Criar Conta"}
-                        />
-                    </Stack>
-
-                    <Stack
-                        gap="3em"
-                    >
-                        <Stack
-                            gap="0.5em"
+                        <div 
+                            ref={isLogin ? loginRef : signUpRef}
+                            className={styles.login_form_container}
                         >
-                            {isLogin ? <LoginForm/> : <SignUpForm/>}
-                        </Stack>
+                            <Stack
+                                gap="3em"
+                            >
+                                {isLogin ? 
+                                    <LoginForm
+                                        user={user}
+                                        setUser={setUser}
+                                        loginError={loginError}
+                                        setLoginError={setLoginError}
+                                        navigate={navigate}
+                                        handleChangeFormType={handleOnChangeFormType}
+                                        handleSubmit={handleOnLoginSubmit}
+                                    />
+                                :
+                                    <SignUpForm
+                                        user={user}
+                                        setUser={setUser}
+                                        setSignUpError={setSignUpError}
+                                        navigate={navigate}
+                                        handleChangeFormType={handleOnChangeFormType}
+                                        handleSubmit={handleOnSignUpSubmit}
+                                    />
+                                }
+                            </Stack>    
+                        </div>
+                    </CSSTransition>
+                </SwitchTransition>
 
-
-                        <Stack>
-                            <SubmitButton
-                                text={isLogin ? "Entrar" : "Criar Conta"}
-                            />
-
-                            <span>
-                                Ou
-                            </span>
-
-                            <NonBackgroundButton
-                                text={isLogin ? "Criar uma conta" : "Entrar em conta já existente"}
-                                handleClick={() => setIsLogin(!isLogin)}
-                                varColor="--theme-color"
-                            />
-                        </Stack>
-                    </Stack>
-                </Stack>
-
-                <div 
+                <Stack
                     className={styles.welcome_container}
                 >
-                    
-                </div>
+                    <Stack
+                        alignItems="start"
+                        className={styles.welcome_title}
+                    >
+                        <Title
+                            headingNumber={2}
+                            text="Bem-Vindo ao FitX"
+                            textAlign="start"
+                        />
+
+
+                        <p>
+                            A melhor plataforma para você, que é um praticante ou treinador de musculação, 
+                            gerir seus treinos.
+                        </p>
+                    </Stack>
+
+                    <img
+                        src="images\backgrounds\login_welcome_illustration.png"
+                        alt="FitX Illustration"
+                    />    
+
+                    <Stack
+                        direction="row"
+                        alignItems="end"
+                        className={styles.social_medias}
+                    >
+                        <ClickableIcon
+                            iconSrc="images/icons/instagram.png"
+                            name="Instagram"
+                            handleClick={() => window.open("https://www.instagram.com/seu_perfil/", "_blank", "noopener,noreferrer")}
+                        />
+
+                        <ClickableIcon
+                            iconSrc="images/icons/youtube.png"
+                            name="Youtube"
+                            handleClick={() => window.open("https://www.youtube.com/c/seu_canal", "_blank", "noopener,noreferrer")}
+                            />
+
+                        <ClickableIcon
+                            iconSrc="images/icons/tiktok.png"
+                            name="TikTok"
+                            handleClick={() =>window.open("https://www.tiktok.com/@seu_perfil", "_blank", "noopener,noreferrer")}
+                            />
+
+                        <ClickableIcon
+                            iconSrc="images/icons/github.png"
+                            name="GitHub"
+                            handleClick={() =>  window.open("https://github.com/FitX-Training-Planner", "_blank", "noopener,noreferrer")}
+                        />
+                    </Stack>
+                </Stack>
             </Stack>
         </main>
     );
