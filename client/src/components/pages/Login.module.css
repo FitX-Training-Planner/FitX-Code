@@ -25,7 +25,7 @@
 
 .welcome_title > p {
     font-size: var(--large-text-size); 
-    font-weight: 600;
+    font-weight: var(--medium-font-weight);
 }
 
 .welcome_container > img {

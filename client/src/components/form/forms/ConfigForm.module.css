@@ -1,0 +1,27 @@
+.config_form_container {
+    height: 100dvh;
+}
+
+.title_and_photo_container,
+.config_form {
+    width: 50%;
+    height: 100%;
+    padding: 2em 1em;
+}
+
+.title_and_photo_container {
+    background: url(../../../../public/images/backgrounds/login_welcome_bg.png) center/cover no-repeat;
+    font-weight: var(--medium-font-weight);
+}
+
+.title_container > p {
+    font-size: var(--large-text-size);
+}
+
+.config_form {
+    overflow-y: auto;
+}
+
+.config_alert {
+    color: var(--light-color);
+}
