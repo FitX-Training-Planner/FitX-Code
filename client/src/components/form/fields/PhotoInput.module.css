@@ -1,0 +1,61 @@
+.label_container {
+    width: max-content;
+}
+
+.label_container > span {
+    font-size: var(--large-text-size);
+    font-weight: bold;
+}
+
+.photo_input > label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 50%;
+    background-color: var(--light-color);
+    cursor: pointer;
+    transition: var(--fast-transition);
+}
+
+.photo_input > label:hover {
+    border-color: var(--light-theme-color);
+    background-color: var(--gray-color);
+}
+
+.photo_input > label > img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    transition: var(--fast-transition);
+}
+
+.photo_input > label:hover > img {
+    transform: scale(1.1);
+}
+
+.photo_input > input {
+    display: none;
+}
+
+.photo_input > p {
+    font-size: var(--small-text-size);
+}
+
+.large {
+    height: 300px;
+    width: 300px;
+    border: 10px solid var(--dark-theme-color);
+}
+
+.medium {
+    height: 200px;
+    width: 200px;
+    border: 7px solid var(--dark-theme-color);
+}
+
+.small {
+    height: 100px;
+    width: 100px;
+    border: 4px solid var(--dark-theme-color);
+}

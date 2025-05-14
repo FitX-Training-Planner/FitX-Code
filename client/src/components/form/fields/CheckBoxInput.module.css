@@ -13,7 +13,7 @@
 .checkbox_input > label {
     width: 3.5em;
     height: 1.5em;
-    background: var(--light-color);
+    background-color: var(--white-color);
     border-radius: 0.75em;
     position: relative;
     cursor: pointer;

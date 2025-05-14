@@ -8,11 +8,10 @@ const CheckBoxInput = ({ name, isChecked = false, handleChange, labelText, descr
         alignItems="start"
         className={styles.checkbox_input}
     >
-        {labelText && 
-            <span>
-                {labelText}
-            </span>
-        }
+        <span>
+            {labelText}
+        </span>
+        
 
         <input
             checked={isChecked}
@@ -20,7 +19,7 @@ const CheckBoxInput = ({ name, isChecked = false, handleChange, labelText, descr
             name={name}
             id={name}
             type="checkbox"
-            />
+        />
 
         <label
             htmlFor={name}

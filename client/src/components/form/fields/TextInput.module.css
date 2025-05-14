@@ -26,7 +26,7 @@
     width: 100%;
     font-size: var(--text-size);
     border: 1px solid var(--dark-color);
-    background-color: var(--light-color);
+    background-color: var(--white-color);
 }
 
 .text_input > p {
