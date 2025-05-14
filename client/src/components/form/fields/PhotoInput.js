@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styles from "./PhotoInput.module.css";
 import Stack from "../../containers/Stack";
-import AlertSign from "../../messages/AlertSign";
+import Alert from "../../messages/Alert";
 
 function PhotoInput({ name, labelText, size = "medium", blobUrl, handleChange }) {
     const userIcon = "images/icons/user.png";
@@ -21,7 +21,7 @@ function PhotoInput({ name, labelText, size = "medium", blobUrl, handleChange })
                 direction="row"
                 className={styles.label_container}
             >
-                <AlertSign
+                <Alert
                     varSize="--text-size"
                     varColor="--dark-color"
                     alertMessage="Selecione uma foto do tipo JPG, JPEG, PNG ou WEBP de até 2mb."

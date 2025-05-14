@@ -19,3 +19,8 @@ export function isPasswordValid(password) {
 
     return passwordRegex.test(password) && password.length <= 20;
 }
+
+export function isPhotoValid(photoFile) {
+    // 2mb
+    return photoFile.size <= 2 * 1024 * 1024;
+}

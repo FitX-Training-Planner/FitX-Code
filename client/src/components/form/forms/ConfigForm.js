@@ -4,7 +4,7 @@ import SubmitFormButton from "../buttons/SubmitFormButton";
 import CheckBoxInput from "../fields/CheckBoxInput";
 import PhotoInput from "../fields/PhotoInput";
 import { isPhotoValid } from "../../../utils/validators/UserValidator";
-import AlertSign from "../../messages/AlertSign";
+import Alert from "../../messages/Alert";
 import styles from "./ConfigForm.module.css";
 
 function ConfigForm({ config, setConfig, handleSubmit }) {
@@ -74,7 +74,7 @@ function ConfigForm({ config, setConfig, handleSubmit }) {
                             direction="row"
                             gap="0.5em"
                         >
-                            <AlertSign
+                            <Alert
                                 varColor="--light-color"
                                 varSize="--small-text-size"
                             />

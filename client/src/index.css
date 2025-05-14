@@ -3,7 +3,9 @@
   --light-theme-color: #2274ff;
   --dark-theme-color: #002462;
   --dark-color: #000000;
+  --gray-color: #5c5c5c;
   --light-color: #f5f5f5;
+  --white-color: #ffffff;
   --dark-alert-color: rgb(255, 0, 0);
   --light-alert-color: ;
   --title-size: 40px;
@@ -14,6 +16,7 @@
   --large-text-size: 18px;
   --fast-transition: all 0.2s;
   --slow-transition: all 1s;
+  --medium-font-weight: 600;
 }
 
 * {
@@ -31,6 +34,10 @@ main {
   height: 100dvh;
   min-height: max-content;
   width: 100%;
+}
+
+main {
+  background-color: var(--light-color);
 }
 
 h1, h2, h3, h4, h5, h6,
