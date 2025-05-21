@@ -43,19 +43,22 @@
 }
 
 .large {
-    height: 300px;
-    width: 300px;
+    --size: 200px; 
+    height: var(--size);
+    width: var(--size);
     border: 10px solid var(--dark-theme-color);
 }
 
 .medium {
-    height: 200px;
-    width: 200px;
+    --size: 120px; 
+    height: var(--size);
+    width: var(--size);
     border: 7px solid var(--dark-theme-color);
 }
 
 .small {
-    height: 100px;
-    width: 100px;
+    --size: 80px; 
+    height: var(--size);
+    width: var(--size);
     border: 4px solid var(--dark-theme-color);
 }

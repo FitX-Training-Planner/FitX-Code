@@ -22,7 +22,6 @@ function PhotoInput({ name, labelText, size = "medium", blobUrl, handleChange })
                 className={styles.label_container}
             >
                 <Alert
-                    varSize="--text-size"
                     varColor="--dark-color"
                     alertMessage="Selecione uma foto do tipo JPG, JPEG, PNG ou WEBP de até 2mb."
                 />

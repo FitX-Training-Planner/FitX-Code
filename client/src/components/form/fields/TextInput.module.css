@@ -1,4 +1,10 @@
+.text_input {
+    --input-border-radius: 15px;
+    --margin-inline: calc(var(--input-border-radius) - 3px);
+}
+
 .text_input > label {
+    --size: 1em;
     display: flex;
     align-items: center;
     justify-content: start;
@@ -6,22 +12,21 @@
     font-size: var(--large-text-size);
     font-weight: bold;
     width: 100%;
-    padding: 0 12px;
+    padding: 0 var(--margin-inline);
     margin-bottom: 0.2em;
 }
 
 .text_input > label > img {
-    height: 1em;
-    width: 1em;
+    height: var(--size);
+    width: var(--size);
 }
 
 .text_input > label > p {
-    line-height: 1em;
+    line-height: var(--size);
 }
 
 .text_input > input {
-    outline: none;
-    border-radius: 15px;
+    border-radius: var(--input-border-radius);
     padding: 0.8em;
     width: 100%;
     font-size: var(--text-size);
@@ -34,7 +39,7 @@
     color: var(--dark-alert-color);
     visibility: hidden;
     width: 100%;
-    padding: 0 12px;
+    padding: 0 var(--margin-inline);
 }
 
 .text_input > p.visible {

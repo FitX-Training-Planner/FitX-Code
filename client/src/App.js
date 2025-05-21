@@ -1,26 +1,36 @@
+import CodeConfirmation from "./components/pages/CodeConfirmation";
 import CreateConfig from "./components/pages/CreateConfig";
+import CreateTrainer from "./components/pages/CreateTrainer";
 import Login from "./components/pages/Login";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route
-          path="/login"
-          element={<Login/>}
-        />
+    <Routes>
+      <Route
+        path="/login"
+        element={<Login />}
+      />
 
-        <Route
-          path="/create-config"
-          element={<CreateConfig/>}
-        />
+      <Route
+        path="/create-config"
+        element={<CreateConfig />}
+      />
 
-        <Route
-          path="/recover-password"
-        />
-      </Routes>
-    </Router>
+      <Route
+        path="/create-trainer"
+        element={<CreateTrainer />}
+      />
+
+      <Route
+        path="/code-confirmation"
+        element={<CodeConfirmation />}
+      />
+
+      <Route
+        path="/recover-password"
+      />
+    </Routes>
   );
 }
 

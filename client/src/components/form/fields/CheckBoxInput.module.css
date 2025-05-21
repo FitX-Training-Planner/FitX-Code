@@ -11,23 +11,27 @@
 }
 
 .checkbox_input > label {
-    width: 3.5em;
-    height: 1.5em;
+    --height: 1.5em;
+    --width: 3.5em;
+    width: var(--width);
+    height: var(--height);
     background-color: var(--white-color);
-    border-radius: 0.75em;
+    border: 1px solid var(--dark-theme-color);
+    border-radius: calc(var(--height) / 2);
     position: relative;
     cursor: pointer;
     transition: var(--fast-transition);
-    border: 1px solid var(--dark-theme-color);
 }
 
 .checkbox_input > label > span {
+    --size: calc(var(--height) - (var(--margin) * 2) - 2px);
+    --margin: 2px;
     content: '';
     position: absolute;
-    top: 2px;
-    left: 2px;
-    width: calc(1.5em - 6px);
-    height: calc(1.5em - 6px);
+    top: var(--margin);
+    left: var(--margin);
+    width: var(--size);
+    height: var(--size);
     background: var(--light-theme-color);
     border-radius: 50%;
     transition: var(--fast-transition);
@@ -39,7 +43,7 @@
 
 .checkbox_input > input:checked + label > span {
     background-color: var(--light-color);
-    transform: translateX(calc(3.5em - 1.5em));
+    transform: translateX(calc(var(--width) - var(--size) - calc(var(--margin) * 2) - 2px));
 }
 
 .checkbox_input > p {
