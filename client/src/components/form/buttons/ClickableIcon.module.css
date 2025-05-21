@@ -1,7 +1,8 @@
 .clickable_icon {
+    --size: 2em;
     background: none;
-    height: 2em;
-    width: 2em;
+    height: var(--size);
+    width: var(--size);
     display: flex;
     justify-content: center;
     align-items: center;

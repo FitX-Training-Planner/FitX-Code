@@ -1,19 +1,25 @@
 import styles from "./Alert.module.css";
+import Tippy from "@tippyjs/react";
+import "tippy.js/dist/tippy.css";
+import "tippy.js/animations/scale.css";
 
-function Alert({ varSize = "--text-size", varColor = "--dark-color", alertMessage }) {
+function Alert({ varColor = "--dark-color", alertMessage }) {
     return (
-        <span
-            className={styles.alert_sign}
-            style={{ "--var-color": `var(${varColor})`, "--var-size": `var(${varSize})` }}
+        <Tippy
+            content={alertMessage}
+            placement="top"
+            animation="scale"
+            arrow
+            theme="custom"
+            disabled={!alertMessage}
         >
-            {alertMessage && 
-                <div 
-                    className={styles.tooltip}
-                >
-                    {alertMessage}
-                </div>
-            }
-        </span>
+            <span 
+                className={styles.alert_sign}
+                style={{ "--var-color": `var(${varColor})` }}
+            >
+                !
+            </span>
+        </Tippy>
     );
 }
 
