@@ -1,0 +1,13 @@
+.code_confirmation_form_container > p {
+    font-size: var(--large-text-size);
+    text-align: center;
+}
+
+.code {
+    width: max-content;
+}
+
+.user_info {
+    font-weight: var(--medium-font-weight);
+    color: var(--light-theme-color);
+}
