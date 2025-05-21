@@ -1,4 +1,4 @@
-import { isContactValid, isEmailValid, isNameValid, isPasswordValid } from "./UserValidator";
+import { isContactValid, isEmailValid, isNameValid, isPasswordValid } from "./userValidator";
 
 export function hasEmptyFieldsInObject(object) {
     return Object.values(object).some(value => value === null || value === "")

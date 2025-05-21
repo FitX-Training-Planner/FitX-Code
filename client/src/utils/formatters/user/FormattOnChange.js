@@ -1,10 +1,10 @@
 import capitalize from "../text/capitalize";
-import removeAccents from "../text/RemoveAccents";
-import removeMultipleSpaces from "../text/RemoveMultipleSpaces";
-import removeNonNumbers from "../text/RemoveNonNumbers";
-import removeNumbers from "../text/RemoveNumbers";
-import removeSpaces from "../text/RemoveSpaces";
-import removeSymbols from "../text/RemoveSymbols";
+import removeAccents from "../text/removeAccents";
+import removeMultipleSpaces from "../text/removeMultipleSpaces";
+import removeNonNumbers from "../text/removeNonNumbers";
+import removeNumbers from "../text/removeNumbers";
+import removeSpaces from "../text/removeSpaces";
+import removeSymbols from "../text/removeSymbols";
 
 export function formattEmailAndPassword(nameOrPassword) {
     return removeSpaces(removeAccents(nameOrPassword));

@@ -15,7 +15,7 @@ export function isContactValid(contact) {
 }
 
 export function isPasswordValid(password) {
-    const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,}$/;
+    const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[-@$!%*?&+#_])[A-Za-z\d-@$!%*?&+#_]{10,}$/;
 
     return passwordRegex.test(password) && password.length <= 20;
 }
