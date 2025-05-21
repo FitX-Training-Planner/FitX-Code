@@ -17,6 +17,8 @@
   --fast-transition: all 0.2s;
   --slow-transition: all 1s;
   --medium-font-weight: 600;
+  --fonts-1: "Roboto", sans-serif;
+  --fonts-2:  "Raleway", "Open Sans";
 }
 
 * {
@@ -42,7 +44,7 @@ main {
 
 h1, h2, h3, h4, h5, h6,
 button {
-  font-family: "Roboto", sans-serif;
+  font-family: var(--fonts-1);
   letter-spacing: 1px;
 }
 
@@ -60,7 +62,7 @@ h4, h5, h6 {
 }
 
 body {
-  font-family: "Raleway", "Open Sans";
+  font-family: var(--fonts-2);
   font-variant-numeric: lining-nums;
   color: var(--dark-color);
   font-size: var(--text-size);
@@ -84,6 +86,17 @@ form {
   height: 100%;
 }
 
+input {
+  outline: none;
+}
+
+p {
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
 .fade-enter {
   opacity: 0;
   transform: translateX(100%);
@@ -105,4 +118,19 @@ form {
   opacity: 0;
   transform: translateX(100%);
   transition: all 1s;
+}
+
+.tippy-box[data-theme~="custom"] {
+  font-size: var(--text-size);
+  background-color: var(--dark-theme-color);
+  color: var(--light-color);
+  border: 1px solid black;
+}
+
+.tippy-box[data-theme~='custom'][data-placement^='top'] > .tippy-arrow::before {
+  border-top-color: var(--dark-theme-color);
+}
+
+.tippy-box[data-theme~='custom'][data-placement^='bottom'] > .tippy-arrow::before {
+  border-bottom-color: var(--dark-theme-color);
 }
