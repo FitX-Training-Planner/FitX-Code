@@ -1,54 +1,115 @@
 import styles from "./Login.module.css";
 import Stack from "./../containers/Stack";
 import Title from "../text/Title";
-import { useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LoginForm from "../form/forms/LoginForm";
 import SignUpForm from "../form/forms/SignUpForm";
 import { CSSTransition, SwitchTransition } from "react-transition-group";
-import { validateLoginRequestData, validateSignUpRequestData } from "../../utils/validators/FormValidator";
+import { validateLoginRequestData, validateSignUpRequestData } from "../../utils/validators/formValidator";
 import ClickableIcon from "../form/buttons/ClickableIcon";
+import useRequest from "../../hooks/useRequest";
+import routes from "shared/apiRoutes.json";
+import { useConfirmIdentityCallback } from "../../app/ConfirmIdentityCallbackProvider";
+import { useSystemMessage } from "../../app/SystemMessageProvider";
+import authUser from "../../utils/requests/auth";
+import { getErrorMessageFromError } from "../../utils/requests/errorMessage";
+import api from "../../api/axios";
 
 function Login() {
     const navigate = useNavigate();
+    
+    const { notify } = useSystemMessage();
+    const { setHandleOnConfirmed } = useConfirmIdentityCallback();
+    const { request: loginRequest } = useRequest();
+    const { request: signUpRequest } = useRequest();
 
     const loginRef = useRef(null);
     const signUpRef = useRef(null);
 
-    const [user, setUser] = useState({
+    const defaultUser = useMemo(() => ({
         name: "",
         email: "",
         contact: "",
         password: ""
-    });
+    }), []);
+
+    const [localUser, setLocalUser] = useState(defaultUser);
     const [isLogin, setIsLogin] = useState(true);
     const [signUpError, setSignUpError] = useState(false);
     const [loginError, setLoginError] = useState(false);
 
-    function handleOnChangeFormType() {
-        setUser({
-            name: "",
-            email: "",
-            contact: "",
-            password: ""
-        });
+    const handleOnChangeFormType = useCallback(() => {
+        setLocalUser(defaultUser);
 
         setIsLogin(prevIsLogin => !prevIsLogin);
 
         setLoginError(false);
-    }
+    }, [defaultUser]);
 
-    function handleOnLoginSubmit(e) {
+    const handleOnLoginSubmit = useCallback((e) => {
         e.preventDefault();
+    
+        if (!validateLoginRequestData(loginError, setLoginError, localUser.email, localUser.password)) return;
+    
+        const loginFormData = new FormData();
+    
+        loginFormData.append(routes.login.formData.email, localUser.email);
+        loginFormData.append(routes.login.formData.password, localUser.password);
+    
+        const postLogin = () => {
+            api.post(routes.login.endPoint, loginFormData);
+        }
+        
+        const handleOnLoginSuccess = (data) => {
+            navigate("/code-confirmation", { state: { localUser: {...localUser, ID: data.userID}, origin: "login" } });
+        };
+        
+        const handleOnLoginError = (err) => {
+            if (err.response?.status === 401) {
+                setLoginError(true);
+            } else {
+                notify(getErrorMessageFromError(err), "error");
+            }
+        };
+    
+        setHandleOnConfirmed(() => (ID, dispatch, navigate, notify, authRequest, setUser) => 
+            authUser(ID, dispatch, navigate, notify, authRequest, setUser)
+        );
+    
+        loginRequest(postLogin, handleOnLoginSuccess, handleOnLoginError);
+    }, [localUser, loginError, loginRequest, navigate, notify, setHandleOnConfirmed]);
 
-        if (!validateLoginRequestData(loginError, setLoginError, user.email, user.password)) return;
-    }
-
-    function handleOnSignUpSubmit(e) {
+    const handleOnSignUpSubmit = useCallback((e) => {
         e.preventDefault();
-
-        if (!validateSignUpRequestData(signUpError, setSignUpError, user.name, user.email, user.contact, user.password)) return;
-    }
+    
+        if (!validateSignUpRequestData(signUpError, setSignUpError, localUser.name, localUser.email, localUser.contact, localUser.password)) return;
+    
+        const signUpFormData = new FormData();
+    
+        signUpFormData.append(routes.signUp.formData.email, localUser.email);
+        signUpFormData.append(routes.signUp.formData.contact, localUser.contact);
+    
+        const postSignUp = () => {
+            api.post(routes.signUp.endPoint, signUpFormData);
+        }
+    
+        const handleOnSignUpSuccess = () => {
+            navigate("/code-confirmation", { state: { localUser, origin: "signUp" } });
+        };
+    
+        const handleOnSignUpError = (err) => {
+            setSignUpError(true);
+    
+            notify(getErrorMessageFromError(err), "error");
+        };
+    
+        setHandleOnConfirmed(() => () => {
+            navigate("/create-config", { state: { localUser } });
+        });
+    
+        signUpRequest(postSignUp, handleOnSignUpSuccess, handleOnSignUpError);
+    }, [localUser, navigate, notify, setHandleOnConfirmed, signUpError, signUpRequest]);
 
     return (
         <main>
@@ -73,8 +134,8 @@ function Login() {
                             >
                                 {isLogin ? 
                                     <LoginForm
-                                        user={user}
-                                        setUser={setUser}
+                                        user={localUser}
+                                        setUser={setLocalUser}
                                         loginError={loginError}
                                         setLoginError={setLoginError}
                                         navigate={navigate}
@@ -83,8 +144,8 @@ function Login() {
                                     />
                                 :
                                     <SignUpForm
-                                        user={user}
-                                        setUser={setUser}
+                                        user={localUser}
+                                        setUser={setLocalUser}
                                         setSignUpError={setSignUpError}
                                         navigate={navigate}
                                         handleChangeFormType={handleOnChangeFormType}

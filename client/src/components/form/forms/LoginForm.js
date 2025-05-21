@@ -1,13 +1,14 @@
 import styles from "./LoginForm.module.css";
-import { formattEmailAndPassword } from "../../../utils/formatters/user/FormattOnChange";
+import { formattEmailAndPassword } from "../../../utils/formatters/user/formattOnChange";
 import Stack from "../../containers/Stack";
 import Title from "../../text/Title";
 import NonBackgroundButton from "../buttons/NonBackgroundButton";
 import SubmitFormButton from "../buttons/SubmitFormButton";
 import TextInput from "../fields/TextInput";
+import { useCallback } from "react";
 
 function LoginForm({ user, setUser, loginError, setLoginError, navigate, handleChangeFormType, handleSubmit }) {
-    function handleOnChangeUserData(e) {
+    const handleOnChangeUserData = useCallback((e) => {
         const value = formattEmailAndPassword(e.target.value);
         
         setLoginError(false);
@@ -16,7 +17,7 @@ function LoginForm({ user, setUser, loginError, setLoginError, navigate, handleC
             ...prevUser, 
             [e.target.name]: value
         }));
-    }
+    }, [setLoginError, setUser]);
     
     return (
         <>

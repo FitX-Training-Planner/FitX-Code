@@ -1,23 +1,100 @@
-import { useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ConfigForm from "../form/forms/ConfigForm";
+import useRequest from "../../hooks/useRequest";
+import routes from "shared/apiRoutes.json";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useSystemMessage } from "../../app/SystemMessageProvider";
+import { setUser } from "../../features/user/userSlice";
+import { useDispatch } from "react-redux";
+import authUser from "../../utils/requests/auth";
+import { getErrorMessageFromError } from "../../utils/requests/errorMessage";
+import api from "../../api/axios";
 
 function CreateConfig() {
-    const [config, setConfig] = useState({
-        is_dark_theme: false,
-        is_complainter_anonymous: false,
-        is_rater_anonymous: false,
-        is_contact_visible: false,
-        email_notification_permission: false,
-        device_notification_permission: false,
-        is_english: false,
-        photoFile: false,
-        photoBlobUrl: null
-    });
+    const location = useLocation();
 
-    function handleOnSubmit(e) {
+    const navigate = useNavigate();
+
+    const hasRun = useRef(false);
+
+    const dispatch = useDispatch();
+
+    const { notify } = useSystemMessage();
+    const { request: postUserRequest } = useRequest();
+    const { request: authRequest } = useRequest();
+
+    const defaultConfig = useMemo(() => ({
+        is_client: true,
+        is_dark_theme: false,
+        is_complainter_anonymous: true,
+        is_rater_anonymous: false,
+        is_contact_visible: true,
+        email_notification_permission: true,
+        device_notification_permission: true,
+        is_english: false,
+        photoFile: null,
+        photoBlobUrl: null
+    }), []);
+
+    const [localUser, setLocalUser] = useState({
+        name: "",
+        email: "",
+        contact: "",
+        password: ""
+    });
+    const [config, setConfig] = useState(defaultConfig);
+
+    useEffect(() => {
+        if (hasRun.current) return;
+        
+        hasRun.current = true;
+
+        const locationUser = location.state?.localUser;
+
+        if (!locationUser) {
+            navigate("/login");
+            
+            notify("As suas informações de usuário não foram encontradas. Tente se registrar novamente.", "error");
+
+            return;
+        }
+
+        setLocalUser(locationUser);
+    }, [location.state, navigate, notify]);
+    
+    const handleOnSubmit = useCallback((e) => {
         e.preventDefault();
 
-    }
+        const postUserFormData = new FormData();
+
+        postUserFormData.append(routes.user.formData.name, localUser.name);
+        postUserFormData.append(routes.user.formData.email, localUser.email);
+        postUserFormData.append(routes.user.formData.contact, localUser.contact);
+        postUserFormData.append(routes.user.formData.password, localUser.password);
+        postUserFormData.append(routes.user.formData.isClient, config.is_client);
+        postUserFormData.append(routes.user.formData.isDarkTheme, config.is_dark_theme);
+        postUserFormData.append(routes.user.formData.isComplainterAnonymous, config.is_complainter_anonymous);
+        postUserFormData.append(routes.user.formData.isRaterAnonymous, config.is_rater_anonymous);
+        postUserFormData.append(routes.user.formData.isContactVisible, config.is_contact_visible);
+        postUserFormData.append(routes.user.formData.emailNotificationPermission, config.email_notification_permission);
+        postUserFormData.append(routes.user.formData.deviceNotificationPermission, config.device_notification_permission);
+        postUserFormData.append(routes.user.formData.isEnglish, config.is_english);
+        postUserFormData.append(routes.user.formData.photoFile, config.photoFile);
+        
+        const postUser = () => {
+            api.post(routes.user.endPoint, postUserFormData);
+        };
+
+        const handleOnPostUserSuccess = (data) => {
+            authUser(data.userID, dispatch, navigate, notify, authRequest, setUser);
+        }
+
+        const handleOnPostUserError = (err) => {
+            notify(getErrorMessageFromError(err), "error");
+        }
+
+        postUserRequest(postUser, handleOnPostUserSuccess, handleOnPostUserError );
+    }, [authRequest, config, dispatch, localUser, navigate, notify, postUserRequest]);
 
     return (
         <main>
@@ -25,16 +102,10 @@ function CreateConfig() {
                 config={config}
                 setConfig={setConfig}
                 handleSubmit={handleOnSubmit}
+                handleChangeToTrainer={() => 
+                    navigate("/create-trainer", { state: { localUser: { ...localUser, config: { ...config, is_client: false } } } })
+                }
             />
-{/* 
-                <div
-                    className={styles.config_bg}
-                >
-                    <img 
-                        src="images/backgrounds/create_config_bg.png"
-                        alt="Background"
-                    />
-                </div> */}
         </main>
     );
 }

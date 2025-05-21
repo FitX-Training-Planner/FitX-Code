@@ -1,13 +1,13 @@
 import styles from "./LoginForm.module.css";
-import { useState } from "react";
-import { formattContact, formattEmailAndPassword, formattName } from "../../../utils/formatters/user/FormattOnChange";
-import { isContactValid, isEmailValid, isNameValid, isPasswordValid } from "../../../utils/validators/UserValidator";
+import { useCallback, useState } from "react";
+import { formattContact, formattEmailAndPassword, formattName } from "../../../utils/formatters/user/formattOnChange";
+import { isContactValid, isEmailValid, isNameValid, isPasswordValid } from "../../../utils/validators/userValidator";
 import Stack from "../../containers/Stack";
 import TextInput from "../fields/TextInput";
 import SubmitFormButton from "../buttons/SubmitFormButton";
 import NonBackgroundButton from "../buttons/NonBackgroundButton";
 import Title from "../../text/Title";
-import { hasEmptyFieldsInObject } from "../../../utils/validators/FormValidator";
+import { hasEmptyFieldsInObject } from "../../../utils/validators/formValidator";
 
 function SignUpForm({ user, setUser, setSignUpError, handleChangeFormType, handleSubmit }) {
     const [errors, setErrors] = useState({
@@ -18,7 +18,7 @@ function SignUpForm({ user, setUser, setSignUpError, handleChangeFormType, handl
         emptyFields: true
     });
     
-    function handleOnChangeUserData(e, formattFunction, dataValidator) {
+    const handleOnChangeUserData = useCallback((e, formattFunction, dataValidator) => {
         const name = e.target.name;
         const value = formattFunction(e.target.value);
 
@@ -36,7 +36,7 @@ function SignUpForm({ user, setUser, setSignUpError, handleChangeFormType, handl
             [name]: value !== "" && !dataValidator(value),
             emptyFields: hasEmptyFieldsInObject(newUser)
         }));
-    };
+    }, [setSignUpError, setUser, user]);
     
     return (
         <>

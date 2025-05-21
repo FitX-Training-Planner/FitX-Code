@@ -3,12 +3,14 @@ import Title from "../../text/Title";
 import SubmitFormButton from "../buttons/SubmitFormButton";
 import CheckBoxInput from "../fields/CheckBoxInput";
 import PhotoInput from "../fields/PhotoInput";
-import { isPhotoValid } from "../../../utils/validators/UserValidator";
+import { isPhotoValid } from "../../../utils/validators/userValidator";
 import Alert from "../../messages/Alert";
 import styles from "./ConfigForm.module.css";
+import { useCallback } from "react";
+import NonBackgroundButton from "../buttons/NonBackgroundButton";
 
-function ConfigForm({ config, setConfig, handleSubmit }) {
-    function handleOnChangeUserPhoto(e) {
+function ConfigForm({ config, setConfig, handleSubmit, handleChangeToTrainer }) {
+    const handleOnChangeUserPhoto = useCallback((e) => {
         const file = e.target.files[0];
 
         if (!file) return;
@@ -22,14 +24,14 @@ function ConfigForm({ config, setConfig, handleSubmit }) {
             [e.target.name]: file,
             photoBlobUrl: newBlobUrl
         }));
-    };
+    }, [setConfig]);
 
-    function handleOnChangeConfigData(e) {
+    const handleOnChangeConfigData = useCallback((e) => {
         setConfig(prevConfig => ({
             ...prevConfig, 
             [e.target.name]: e.target.checked
         }));
-    }
+    }, [setConfig]);
     
     return (
         <form
@@ -67,7 +69,7 @@ function ConfigForm({ config, setConfig, handleSubmit }) {
                         handleChange={handleOnChangeUserPhoto}
                     />
 
-                    <p
+                    <div
                         className={styles.config_alert}
                     >
                         <Stack
@@ -81,7 +83,7 @@ function ConfigForm({ config, setConfig, handleSubmit }) {
                             
                             Você sempre pode alterar suas configurações após criar sua conta.
                         </Stack>
-                    </p>
+                    </div>
                 </Stack>
 
                 <Stack
@@ -183,9 +185,19 @@ function ConfigForm({ config, setConfig, handleSubmit }) {
                         </Stack>
                     </Stack>
 
-                    <SubmitFormButton
-                        text="Confirmar"
-                    />
+                    <Stack
+                        gap="2em"
+                    >
+                        <SubmitFormButton
+                            text="Confirmar"
+                        />
+
+                        <NonBackgroundButton
+                            text="Quero me registrar como treinador"
+                            varColor="--theme-color"
+                            handleClick={handleChangeToTrainer}
+                        />
+                    </Stack>
                 </Stack>
             </Stack>
         </form>
