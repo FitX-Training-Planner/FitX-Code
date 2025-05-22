@@ -138,13 +138,22 @@ CREATE TABLE IF NOT EXISTS training_plan (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL,
     note TEXT,
-    fk_user_ID INT NOT NULL,
     fk_trainer_ID INT NOT NULL,
-    FOREIGN KEY (fk_user_ID) REFERENCES users(ID),
     FOREIGN KEY (fk_trainer_ID) REFERENCES trainer(ID),
-    UNIQUE (name, fk_user_ID, fk_trainer_ID),
+    UNIQUE (name, fk_trainer_ID),
+    INDEX idx_fk_trainer_ID (fk_trainer_ID)
+);
+
+CREATE TABLE IF NOT EXISTS training_plan_user (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    create_date DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    fk_user_ID INT NOT NULL,
+    fk_training_plan_ID INT NOT NULL,
+    FOREIGN KEY (fk_user_ID) REFERENCES users(ID),
+    FOREIGN KEY (fk_training_plan_ID) REFERENCES training_plan(ID),
+    UNIQUE (fk_user_ID, fk_training_plan_ID),
     INDEX idx_fk_user_ID (fk_user_ID),
-    INDEX idx_fk_trainer_ID_fk_user_ID (fk_trainer_ID, fk_user_ID)
+    INDEX idx_fk_training_plan_ID_fk_user_ID (fk_training_plan_ID, fk_user_ID)
 );
 
 CREATE TABLE IF NOT EXISTS training_day (
@@ -333,11 +342,13 @@ CREATE TABLE IF NOT EXISTS exercise_set_log (
     target_reps TINYINT,
     log_date DATE NOT NULL, 
     fk_exercise_set_ID INT NOT NULL, 
+    fk_training_plan_user_ID INT NOT NULL,
     FOREIGN KEY (fk_exercise_set_ID) REFERENCES exercise_set(ID),
-    INDEX idx_fk_exercise_set_ID (fk_exercise_set_ID)
+    FOREIGN KEY (fk_training_plan_user_ID) REFERENCES training_plan_user(ID),
+    INDEX idx_fk_exercise_set_ID_fk_training_plan_user_ID (fk_exercise_set_ID, fk_training_plan_user_ID)
 );
 
-CREATE TABLE chat (
+CREATE TABLE IF NOT EXISTS chat (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     update_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     fk_user_ID INT NOT NULL,
@@ -349,7 +360,7 @@ CREATE TABLE chat (
     INDEX idx_fk_trainer_ID_fk_user_ID (fk_trainer_ID, fk_user_ID)
 );
 
-CREATE TABLE message (
+CREATE TABLE IF NOT EXISTS message (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     content TEXT NOT NULL,
     is_from_trainer BOOLEAN NOT NULL,
@@ -358,3 +369,23 @@ CREATE TABLE message (
     FOREIGN KEY (fk_chat_ID) REFERENCES chat(ID),
     INDEX idx_chat_ID_create_date (fk_chat_ID, create_date)
 );
+
+CREATE TABLE IF NOT EXISTS body_composition_exam {
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    url VARCHAR(255) NOT NULL UNIQUE,
+    create_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    fk_user_ID INT NOT NULL,
+    FOREIGN KEY (fk_user_ID) REFERENCES users(ID),
+    INDEX idx_fk_user_ID (fk_user_ID)
+}
+
+CREATE TABLE IF NOT EXISTS body_composition_exam_send {
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    send_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    fk_body_composition_exam_ID INT NOT NULL,
+    fk_trainer_ID INT NOT NULL,
+    FOREIGN KEY (fk_trainer_ID) REFERENCES trainer(ID),
+    FOREIGN KEY (fk_body_composition_exam_ID) REFERENCES body_composition_exam(ID),
+    UNIQUE (fk_trainer_ID, fk_body_composition_exam_ID),
+    INDEX idx_fk_trainer_ID_fk_body_composition_exam_ID (fk_trainer_ID, fk_body_composition_exam_ID)
+}
