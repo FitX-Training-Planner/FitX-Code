@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import userReducer from "../features/user/userSlice";
+import userReducer from "../slices/user/userSlice";
 
 const storagedUser = localStorage.getItem("FitXUser");
 

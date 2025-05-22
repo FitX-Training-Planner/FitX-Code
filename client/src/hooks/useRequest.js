@@ -1,10 +1,12 @@
+import { useState } from "react";
 import toast from "react-hot-toast";
-import { useLoading } from "../app/LoadingProvider";
 
 export default function useRequest() {
-    const { setLoading } = useLoading();
+    const [loading, setLoading] = useState(false);
 
-    async function request(request, handleSuccess, handleError) {
+    async function request(request, handleSuccess, handleError, loadingMessage, SuccessMessage, errorMessage) {
+        if (loading) return;
+
         setLoading(true);
 
         const wrappedRequest = () => async () => {
@@ -25,9 +27,9 @@ export default function useRequest() {
             await toast.promise(
                 wrappedRequest(),
                 {
-                    loading: "Carregando...",
-                    success: "Operação concluída!",
-                    error: "A operação falhou! Tente novamente.",
+                    loading: `${loadingMessage}...`,
+                    success: SuccessMessage,
+                    error: errorMessage
                 },
                 {
                     style: {
