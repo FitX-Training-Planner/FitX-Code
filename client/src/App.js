@@ -8,6 +8,11 @@ function App() {
   return (
     <Routes>
       <Route
+        exact
+        path="/"
+      />
+
+      <Route
         path="/login"
         element={<Login />}
       />

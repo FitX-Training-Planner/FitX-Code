@@ -80,22 +80,17 @@ function SignUpForm({ user, setUser, setSignUpError, handleChangeFormType, handl
                             maxLength={100}
                         />
 
-                        <Stack
-                            direction="row"
-                            alignItems="start"
-                        >
-                            <TextInput
-                                name="email"
-                                placeholder="Insira seu e-mail"
-                                labelText="E-mail"
-                                value={user.email}
-                                handleChange={(e) => handleOnChangeUserData(e, formattEmailAndPassword, isEmailValid)}
-                                // icon={}
-                                alertMessage="E-mail inválido."
-                                error={errors.email}
-                                maxLength={254}
-                            />
-                        </Stack>
+                        <TextInput
+                            name="email"
+                            placeholder="Insira seu e-mail"
+                            labelText="E-mail"
+                            value={user.email}
+                            handleChange={(e) => handleOnChangeUserData(e, formattEmailAndPassword, isEmailValid)}
+                            // icon={}
+                            alertMessage="E-mail inválido."
+                            error={errors.email}
+                            maxLength={254}
+                        />
 
                         <TextInput
                             name="password"
