@@ -9,7 +9,6 @@ const initialState = {
         is_dark_theme: false,
         is_complainter_anonymous: true,
         is_rater_anonymous: false,
-        is_contact_visible: true,
         email_notification_permission: true,
         device_notification_permission: true,
         is_english: false,

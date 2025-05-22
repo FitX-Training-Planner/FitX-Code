@@ -12,7 +12,6 @@ const CheckBoxInput = ({ name, isChecked = false, handleChange, labelText, descr
             {labelText}
         </span>
         
-
         <input
             checked={isChecked}
             onChange={handleChange}

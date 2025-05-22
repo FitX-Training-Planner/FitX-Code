@@ -3,7 +3,7 @@ import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
 
-function Alert({ varColor = "--dark-color", alertMessage }) {
+function Alert({ varColor = "--text-color", alertMessage }) {
     return (
         <Tippy
             content={alertMessage}

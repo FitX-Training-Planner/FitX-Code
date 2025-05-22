@@ -1,5 +1,5 @@
 
-function Title({ headingNumber = 1, varColor = "--dark-color", textAlign = "center", text }) {
+function Title({ headingNumber = 1, varColor = "--text-color", textAlign = "center", text }) {
     const Heading = `h${headingNumber}`;
 
     return (

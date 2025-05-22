@@ -15,10 +15,12 @@ import { useSystemMessage } from "../../app/SystemMessageProvider";
 import authUser from "../../utils/requests/auth";
 import { getErrorMessageFromError } from "../../utils/requests/errorMessage";
 import api from "../../api/axios";
+import useWindowSize from "../../hooks/useWindowSize";
 
 function Login() {
     const navigate = useNavigate();
     
+    const { width } = useWindowSize();
     const { notify } = useSystemMessage();
     const { setHandleOnConfirmed } = useConfirmIdentityCallback();
     const { request: loginRequest } = useRequest();
@@ -30,7 +32,6 @@ function Login() {
     const defaultUser = useMemo(() => ({
         name: "",
         email: "",
-        contact: "",
         password: ""
     }), []);
 
@@ -77,18 +78,17 @@ function Login() {
             authUser(ID, dispatch, navigate, notify, authRequest, setUser)
         );
     
-        loginRequest(postLogin, handleOnLoginSuccess, handleOnLoginError);
+        loginRequest(postLogin, handleOnLoginSuccess, handleOnLoginError, "Logando", "Logado!", "Falha ao logar!");
     }, [localUser, loginError, loginRequest, navigate, notify, setHandleOnConfirmed]);
 
     const handleOnSignUpSubmit = useCallback((e) => {
         e.preventDefault();
     
-        if (!validateSignUpRequestData(signUpError, setSignUpError, localUser.name, localUser.email, localUser.contact, localUser.password)) return;
+        if (!validateSignUpRequestData(signUpError, setSignUpError, localUser.name, localUser.email, localUser.password)) return;
     
         const signUpFormData = new FormData();
     
         signUpFormData.append(routes.signUp.formData.email, localUser.email);
-        signUpFormData.append(routes.signUp.formData.contact, localUser.contact);
     
         const postSignUp = () => {
             api.post(routes.signUp.endPoint, signUpFormData);
@@ -108,7 +108,7 @@ function Login() {
             navigate("/create-config", { state: { localUser } });
         });
     
-        signUpRequest(postSignUp, handleOnSignUpSuccess, handleOnSignUpError);
+        signUpRequest(postSignUp, handleOnSignUpSuccess, handleOnSignUpError, "Checando dados", "Dados válidados!", "Falha ao checar dados!");
     }, [localUser, navigate, notify, setHandleOnConfirmed, signUpError, signUpRequest]);
 
     return (
@@ -128,6 +128,7 @@ function Login() {
                         <div 
                             ref={isLogin ? loginRef : signUpRef}
                             className={styles.login_form_container}
+                            style={{ width: width <= 640 && "100%" }}
                         >
                             <Stack
                                 gap="3em"
@@ -157,61 +158,64 @@ function Login() {
                     </CSSTransition>
                 </SwitchTransition>
 
-                <Stack
-                    className={styles.welcome_container}
-                >
+                {width > 640 &&
                     <Stack
-                        alignItems="start"
-                        className={styles.welcome_title}
+                        className={styles.welcome_container}
                     >
-                        <Title
-                            headingNumber={2}
-                            text="Bem-Vindo ao FitX"
-                            textAlign="start"
-                        />
-
-
-                        <p>
-                            A melhor plataforma para você, que é um praticante ou treinador de musculação, 
-                            gerir seus treinos.
-                        </p>
-                    </Stack>
-
-                    <img
-                        src="images\backgrounds\login_welcome_illustration.png"
-                        alt="FitX Illustration"
-                    />    
-
-                    <Stack
-                        direction="row"
-                        alignItems="end"
-                        className={styles.social_medias}
-                    >
-                        <ClickableIcon
-                            iconSrc="images/icons/instagram.png"
-                            name="Instagram"
-                            handleClick={() => window.open("https://www.instagram.com/seu_perfil/", "_blank", "noopener,noreferrer")}
-                        />
-
-                        <ClickableIcon
-                            iconSrc="images/icons/youtube.png"
-                            name="Youtube"
-                            handleClick={() => window.open("https://www.youtube.com/c/seu_canal", "_blank", "noopener,noreferrer")}
+                        <Stack
+                            alignItems="start"
+                            className={styles.welcome_title}
+                        >
+                            <Title
+                                headingNumber={2}
+                                text="Bem-Vindo ao FitX"
+                                varColor="--dark-color"
+                                textAlign="start"
                             />
 
-                        <ClickableIcon
-                            iconSrc="images/icons/tiktok.png"
-                            name="TikTok"
-                            handleClick={() =>window.open("https://www.tiktok.com/@seu_perfil", "_blank", "noopener,noreferrer")}
+
+                            <p>
+                                A melhor plataforma para você, que é um praticante ou treinador de musculação, 
+                                gerir seus treinos.
+                            </p>
+                        </Stack>
+
+                        <img
+                            src="images\backgrounds\login_welcome_illustration.png"
+                            alt="FitX Illustration"
+                        />    
+
+                        <Stack
+                            direction="row"
+                            alignItems="end"
+                            className={styles.social_medias}
+                        >
+                            <ClickableIcon
+                                iconSrc="images/icons/instagram.png"
+                                name="Instagram"
+                                handleClick={() => window.open("https://www.instagram.com/seu_perfil/", "_blank", "noopener,noreferrer")}
                             />
 
-                        <ClickableIcon
-                            iconSrc="images/icons/github.png"
-                            name="GitHub"
-                            handleClick={() =>  window.open("https://github.com/FitX-Training-Planner", "_blank", "noopener,noreferrer")}
-                        />
+                            <ClickableIcon
+                                iconSrc="images/icons/youtube.png"
+                                name="Youtube"
+                                handleClick={() => window.open("https://www.youtube.com/c/seu_canal", "_blank", "noopener,noreferrer")}
+                                />
+
+                            <ClickableIcon
+                                iconSrc="images/icons/tiktok.png"
+                                name="TikTok"
+                                handleClick={() =>window.open("https://www.tiktok.com/@seu_perfil", "_blank", "noopener,noreferrer")}
+                                />
+
+                            <ClickableIcon
+                                iconSrc="images/icons/github.png"
+                                name="GitHub"
+                                handleClick={() =>  window.open("https://github.com/FitX-Training-Planner", "_blank", "noopener,noreferrer")}
+                            />
+                        </Stack>
                     </Stack>
-                </Stack>
+                }
             </Stack>
         </main>
     );

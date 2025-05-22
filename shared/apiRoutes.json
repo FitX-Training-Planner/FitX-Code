@@ -9,8 +9,7 @@
     "signUp": {
         "endPoint": "/sign-up", 
         "formData": {
-            "email": "email",
-            "contact": "contact"
+            "email": "email"
         }
     },
     "user": {
@@ -18,13 +17,11 @@
         "formData": {
             "name": "name",
             "email": "email",
-            "contact": "contact",
             "password": "password",
             "isClient": "is_client",
             "isDarkTheme": "is_dark_theme",
             "isComplainterAnonymous": "is_complainter_anonymous",
             "isRaterAnonymous": "is_rater_anonymous",
-            "isContactVisible": "is_contact_visible",
             "emailNotificationPermission": "email_notification_permission",
             "deviceNotificationPermission": "device_notification_permission",
             "isEnglish": "is_english",
@@ -41,9 +38,7 @@
         "endPoint": "/identity-confirmation",
         "formData": {
             "email": "email",
-            "contact": "contact",
-            "emailCode": "emailCode",
-            "contactCode": "contactCode"
+            "code": "code"
         }
     }
 }

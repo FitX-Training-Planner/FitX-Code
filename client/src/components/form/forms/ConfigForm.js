@@ -8,8 +8,11 @@ import Alert from "../../messages/Alert";
 import styles from "./ConfigForm.module.css";
 import { useCallback } from "react";
 import NonBackgroundButton from "../buttons/NonBackgroundButton";
+import useWindowSize from "../../../hooks/useWindowSize";
 
 function ConfigForm({ config, setConfig, handleSubmit, handleChangeToTrainer }) {
+    const { width } = useWindowSize();
+
     const handleOnChangeUserPhoto = useCallback((e) => {
         const file = e.target.files[0];
 
@@ -36,16 +39,17 @@ function ConfigForm({ config, setConfig, handleSubmit, handleChangeToTrainer }) 
     return (
         <form
             onSubmit={handleSubmit}
-            className={styles.config_form_container}
+            className={width > 640 ? styles.config_form_container : undefined}
         >
             <Stack
-                direction="row"
+                direction={width > 640 ? "row" : "column"}
                 gap="0"
-                className={styles.config_form_container}
+                className={width > 640 ? styles.config_form_container : undefined}
             >
                 <Stack
                     gap="3em"
                     className={styles.title_and_photo_container}
+                    extraStyles={width < 640 ? { width: "100%" } : { width: "50%" }}
                 >
                     <Stack
                         gap="2em"
@@ -54,6 +58,7 @@ function ConfigForm({ config, setConfig, handleSubmit, handleChangeToTrainer }) 
                         <Title
                             headingNumber={1}
                             text="Configuração de Perfil"
+                            varColor="--dark-color"
                         />
 
                         <p>
@@ -69,26 +74,24 @@ function ConfigForm({ config, setConfig, handleSubmit, handleChangeToTrainer }) 
                         handleChange={handleOnChangeUserPhoto}
                     />
 
-                    <div
+                    <Stack
+                        direction="row"
+                        gap="0.5em"
                         className={styles.config_alert}
                     >
-                        <Stack
-                            direction="row"
-                            gap="0.5em"
-                        >
-                            <Alert
-                                varColor="--light-color"
-                                varSize="--small-text-size"
-                            />
-                            
-                            Você sempre pode alterar suas configurações após criar sua conta.
-                        </Stack>
-                    </div>
+                        <Alert
+                            varColor="--white-color"
+                            varSize="--small-text-size"
+                        />
+                        
+                        Você sempre pode alterar suas configurações após criar sua conta.
+                    </Stack>
                 </Stack>
 
                 <Stack
                     className={styles.config_form}
                     gap="4em"
+                    extraStyles={width < 640 ? { width: "100%", overflowY: "unset" } : { width: "50%", overflowY: "auto" }}
                 >
                     <Stack
                         gap="3em"
@@ -115,14 +118,6 @@ function ConfigForm({ config, setConfig, handleSubmit, handleChangeToTrainer }) 
                                 isChecked={config.is_rater_anonymous}
                                 handleChange={handleOnChangeConfigData}
                                 description="Habilite para que seu perfil não seja exibido nas avaliações que você fizer."
-                            />
-
-                            <CheckBoxInput
-                                name="is_contact_visible"
-                                labelText="Contato Visível"
-                                isChecked={config.is_contact_visible}
-                                handleChange={handleOnChangeConfigData}
-                                description="Habilite para que seu número de contato seja exibido no seu perfil."
                             />
                         </Stack>
                     </Stack>

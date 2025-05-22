@@ -1,4 +1,4 @@
-import { isContactValid, isEmailValid, isNameValid, isPasswordValid } from "./userValidator";
+import { isEmailValid, isNameValid, isPasswordValid } from "./userValidator";
 
 export function hasEmptyFieldsInObject(object) {
     return Object.values(object).some(value => value === null || value === "")
@@ -22,16 +22,16 @@ export function validateLoginRequestData(loginError, setLoginError, email, passw
     return true;
 }
 
-export function validateSignUpRequestData(signUpError, setSignUpError, name, email, contact, password) {
+export function validateSignUpRequestData(signUpError, setSignUpError, name, email, password) {
     if (signUpError) return false;
 
-    if (hasEmptyFieldsInObject({name, email, contact, password})) {
+    if (hasEmptyFieldsInObject({name, email, password})) {
         setSignUpError(true);
 
         return false;
     }
 
-    if (!(isNameValid(name) && isEmailValid(email) && isContactValid(contact) && isPasswordValid(password))) {
+    if (!(isNameValid(name) && isEmailValid(email) && isPasswordValid(password))) {
         setSignUpError(true);
 
         return false;

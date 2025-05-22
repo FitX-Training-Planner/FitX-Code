@@ -4,7 +4,7 @@ import useRequest from "../../hooks/useRequest";
 import routes from "shared/apiRoutes.json";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSystemMessage } from "../../app/SystemMessageProvider";
-import { setUser } from "../../features/user/userSlice";
+import { setUser } from "../../slices/user/userSlice";
 import { useDispatch } from "react-redux";
 import authUser from "../../utils/requests/auth";
 import { getErrorMessageFromError } from "../../utils/requests/errorMessage";
@@ -28,7 +28,6 @@ function CreateConfig() {
         is_dark_theme: false,
         is_complainter_anonymous: true,
         is_rater_anonymous: false,
-        is_contact_visible: true,
         email_notification_permission: true,
         device_notification_permission: true,
         is_english: false,
@@ -39,7 +38,6 @@ function CreateConfig() {
     const [localUser, setLocalUser] = useState({
         name: "",
         email: "",
-        contact: "",
         password: ""
     });
     const [config, setConfig] = useState(defaultConfig);
@@ -69,13 +67,11 @@ function CreateConfig() {
 
         postUserFormData.append(routes.user.formData.name, localUser.name);
         postUserFormData.append(routes.user.formData.email, localUser.email);
-        postUserFormData.append(routes.user.formData.contact, localUser.contact);
         postUserFormData.append(routes.user.formData.password, localUser.password);
         postUserFormData.append(routes.user.formData.isClient, config.is_client);
         postUserFormData.append(routes.user.formData.isDarkTheme, config.is_dark_theme);
         postUserFormData.append(routes.user.formData.isComplainterAnonymous, config.is_complainter_anonymous);
         postUserFormData.append(routes.user.formData.isRaterAnonymous, config.is_rater_anonymous);
-        postUserFormData.append(routes.user.formData.isContactVisible, config.is_contact_visible);
         postUserFormData.append(routes.user.formData.emailNotificationPermission, config.email_notification_permission);
         postUserFormData.append(routes.user.formData.deviceNotificationPermission, config.device_notification_permission);
         postUserFormData.append(routes.user.formData.isEnglish, config.is_english);
@@ -93,7 +89,7 @@ function CreateConfig() {
             notify(getErrorMessageFromError(err), "error");
         }
 
-        postUserRequest(postUser, handleOnPostUserSuccess, handleOnPostUserError );
+        postUserRequest(postUser, handleOnPostUserSuccess, handleOnPostUserError, "Criando usuário", "Usuário criado!", "Falha ao criar usuário!");
     }, [authRequest, config, dispatch, localUser, navigate, notify, postUserRequest]);
 
     return (

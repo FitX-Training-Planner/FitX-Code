@@ -4,7 +4,6 @@
 
 .title_and_photo_container,
 .config_form {
-    width: 50%;
     height: 100%;
     padding: 2em 1em;
 }
@@ -17,12 +16,10 @@
 .title_container > p {
     font-size: var(--large-text-size);
     text-align: center;
-}
-
-.config_form {
-    overflow-y: auto;
+    color: var(--dark-color);
 }
 
 .config_alert {
-    color: var(--light-color);
+    color: var(--white-color);
+    justify-content: center;
 }

@@ -1,5 +1,6 @@
 .label_container {
     width: max-content;
+    color: var(--dark-color);
 }
 
 .label_container > span {
@@ -13,7 +14,7 @@
     align-items: center;
     overflow: hidden;
     border-radius: 50%;
-    background-color: var(--light-color);
+    background-color: var(--white-color);
     cursor: pointer;
     transition: var(--fast-transition);
 }

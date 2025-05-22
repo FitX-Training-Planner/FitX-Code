@@ -8,12 +8,6 @@ export function isEmailValid(email) {
     return emailRegex.test(email) && email.length <= 254;
 }
 
-export function isContactValid(contact) {
-    const contactRegex = /^\(\d{2}\)\s9\d{4}-\d{4}$/;
-
-    return contactRegex.test(contact) && contact.length <= 15;
-}
-
 export function isPasswordValid(password) {
     const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[-@$!%*?&+#_])[A-Za-z\d-@$!%*?&+#_]{10,}$/;
 

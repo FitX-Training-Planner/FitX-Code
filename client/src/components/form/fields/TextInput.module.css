@@ -30,13 +30,14 @@
     padding: 0.8em;
     width: 100%;
     font-size: var(--text-size);
-    border: 1px solid var(--dark-color);
-    background-color: var(--white-color);
+    border: 1px solid var(--text-color);
+    color: var(--text-color);
+    background-color: transparent;
 }
 
 .text_input > p {
     font-size: var(--small-text-size);
-    color: var(--dark-alert-color);
+    color: var(--alert-color);
     visibility: hidden;
     width: 100%;
     padding: 0 var(--margin-inline);

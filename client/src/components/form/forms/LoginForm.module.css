@@ -3,5 +3,5 @@
 }
 
 .empty_fields_alert {
-    color: var(--dark-alert-color);
+    color: var(--alert-color);
 }

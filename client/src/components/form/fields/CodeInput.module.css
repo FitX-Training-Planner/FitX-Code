@@ -6,7 +6,7 @@
     border: 2px solid var(--theme-color);
     padding: var(--padding);
     color: var(--theme-color);
-    background-color: var(--white-color);
+    background-color: transparent;
     text-align: center;
     width: calc(var(--large-title-size) + 0.05em + var(--padding));
     transition: var(--fast-transition);

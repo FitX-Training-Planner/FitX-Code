@@ -69,7 +69,7 @@ function LoginForm({ user, setUser, loginError, setLoginError, navigate, handleC
                     <NonBackgroundButton
                         text="Esqueci minha senha"
                         handleClick={() => navigate("/recover-password")}
-                        varColor="--dark-alert-color"
+                        varColor="--alert-color"
                     />
 
                     <Stack>

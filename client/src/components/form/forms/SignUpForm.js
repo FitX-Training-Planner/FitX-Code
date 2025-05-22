@@ -1,7 +1,7 @@
 import styles from "./LoginForm.module.css";
 import { useCallback, useState } from "react";
-import { formattContact, formattEmailAndPassword, formattName } from "../../../utils/formatters/user/formattOnChange";
-import { isContactValid, isEmailValid, isNameValid, isPasswordValid } from "../../../utils/validators/userValidator";
+import { formattEmailAndPassword, formattName } from "../../../utils/formatters/user/formattOnChange";
+import { isEmailValid, isNameValid, isPasswordValid } from "../../../utils/validators/userValidator";
 import Stack from "../../containers/Stack";
 import TextInput from "../fields/TextInput";
 import SubmitFormButton from "../buttons/SubmitFormButton";
@@ -13,7 +13,6 @@ function SignUpForm({ user, setUser, setSignUpError, handleChangeFormType, handl
     const [errors, setErrors] = useState({
         name: false,
         email: false,
-        contact: false,
         password: false,
         emptyFields: true
     });
@@ -95,18 +94,6 @@ function SignUpForm({ user, setUser, setSignUpError, handleChangeFormType, handl
                                 alertMessage="E-mail inválido."
                                 error={errors.email}
                                 maxLength={254}
-                            />
-
-                            <TextInput
-                                name="contact"
-                                placeholder="(xx) 9xxxx-xxxx"
-                                labelText="Contato"
-                                value={user.contact}
-                                handleChange={(e) => handleOnChangeUserData(e, formattContact, isContactValid)}
-                                // icon={}
-                                alertMessage="Número de contato inválido."
-                                error={errors.contact}
-                                maxLength={15}
                             />
                         </Stack>
 

@@ -25,5 +25,5 @@ export default function authUser(ID, dispatch, navigate, notify, authRequest, se
         notify(getErrorMessageFromError(err), "error");
     };
 
-    authRequest(postAuth, handleOnAuthSuccess, handleOnAuthError);
+    authRequest(postAuth, handleOnAuthSuccess, handleOnAuthError, "Autenticando", "Autenticado!", "Falha ao autenticar!");
 };
