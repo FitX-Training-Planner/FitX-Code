@@ -22,6 +22,12 @@ client/npm-debug.log*
 client/yarn-debug.log*
 client/yarn-error.log*
 
+# env
+client/.env
+
 # server items
 # venv
 server/venv
+
+# env
+server/.env
