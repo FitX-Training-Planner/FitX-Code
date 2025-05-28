@@ -1,0 +1,70 @@
+from ..database.models import Users
+from ..utils.user import hash_email, check_password
+import random
+import string
+from ..utils.user import hash_email
+from ..__init__ import redis_client
+from flask_jwt_extended import create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies
+from datetime import timedelta
+from sqlalchemy.orm import joinedload
+from ..exceptions.api_error import ApiError
+
+def check_login(db, email, password):
+    email_hash = hash_email(email)
+
+    user = db.query(Users).options(joinedload(Users.trainer)).filter(Users.email_hash == email_hash).first()
+
+    if user is None or not check_password(password, user.password):
+        raise ApiError("E-mail ou senha inválidos.", 401)
+    
+    if user.trainer:
+        return {"ID": user.trainer.ID, "isClient": False}
+
+    return {"ID": user.ID, "isClient": True}
+
+def generate_code(email):
+    code = "".join(random.choices(string.ascii_uppercase + string.digits, k=4))
+
+    email_hash = hash_email(email)
+
+    redis_client.setex(f"verify_code:{email_hash}", 120, code)
+
+    return code 
+
+def verify_code(email, code):
+    email_hash = hash_email(email)
+
+    saved_code = redis_client.get(f"verify_code:{email_hash}")
+
+    if saved_code is None:
+        raise ApiError("O código expirou.", 400)
+    
+    if not saved_code == code.upper():
+        raise ApiError("Código inválido.", 400)
+
+    return True
+
+def set_jwt_cookies(ID, is_client, response):
+    identity = {
+        "ID": ID,
+        "isClient": is_client 
+    }
+
+    set_jwt_refresh_cookies(identity, response)
+    set_jwt_access_cookies(identity, response)
+
+    return response
+
+def set_jwt_access_cookies(identity, response):
+    access_token = create_access_token(identity=identity, expires_delta=timedelta(minutes=15))
+
+    set_access_cookies(response, access_token)
+
+    return response
+
+def set_jwt_refresh_cookies(identity, response):
+    refresh_token = create_refresh_token(identity=identity, expires_delta=timedelta(days=30))
+
+    set_refresh_cookies(response, refresh_token)
+
+    return response
