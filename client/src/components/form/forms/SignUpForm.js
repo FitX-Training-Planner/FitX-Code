@@ -18,11 +18,11 @@ function SignUpForm({ user, setUser, setSignUpError, handleChangeFormType, handl
     });
     
     const handleOnChangeUserData = useCallback((e, formattFunction, dataValidator) => {
+        setSignUpError(false);
+        
         const name = e.target.name;
         const value = formattFunction(e.target.value);
-
-        setSignUpError(false);
-
+        
         const newUser = {
             ...user, 
             [name]: value
@@ -81,6 +81,7 @@ function SignUpForm({ user, setUser, setSignUpError, handleChangeFormType, handl
                         />
 
                         <TextInput
+                            type="email"
                             name="email"
                             placeholder="Insira seu e-mail"
                             labelText="E-mail"
@@ -93,6 +94,7 @@ function SignUpForm({ user, setUser, setSignUpError, handleChangeFormType, handl
                         />
 
                         <TextInput
+                            type="password"
                             name="password"
                             placeholder="Insira sua senha"
                             labelText="Senha"

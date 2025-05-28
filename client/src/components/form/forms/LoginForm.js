@@ -9,9 +9,9 @@ import { useCallback } from "react";
 
 function LoginForm({ user, setUser, loginError, setLoginError, navigate, handleChangeFormType, handleSubmit }) {
     const handleOnChangeUserData = useCallback((e) => {
-        const value = formattEmailAndPassword(e.target.value);
-        
         setLoginError(false);
+        
+        const value = formattEmailAndPassword(e.target.value);
         
         setUser(prevUser => ({
             ...prevUser, 
@@ -44,6 +44,7 @@ function LoginForm({ user, setUser, loginError, setLoginError, navigate, handleC
                         gap="0.5em"
                     >
                         <TextInput
+                            type="email"
                             name="email"
                             placeholder="Insira seu e-mail"
                             labelText="E-mail"
@@ -54,6 +55,7 @@ function LoginForm({ user, setUser, loginError, setLoginError, navigate, handleC
                         />
 
                         <TextInput
+                            type="password"
                             name="password"
                             placeholder="Insira sua senha"
                             labelText="Senha"

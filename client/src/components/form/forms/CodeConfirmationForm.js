@@ -7,7 +7,7 @@ import removeAccents from "../../../utils/formatters/text/removeAccents";
 import removeSymbols from "../../../utils/formatters/text/removeSymbols";
 import removeSpaces from "../../../utils/formatters/text/removeSpaces";
 
-function CodeConfirmationForm({ code, setCode, email, handleSubmit }) {
+function CodeConfirmationForm({ code, setCode, email, handleSubmit, setError }) {
     const inputRefs = useRef([]);
 
     const handleOnKeyDownCode = useCallback((e, order) => {
@@ -41,6 +41,8 @@ function CodeConfirmationForm({ code, setCode, email, handleSubmit }) {
     }, [code]);
 
     const handleOnChangeCode = useCallback((e, order) => {
+        setError(false);
+
         const value = e.target.value
             .slice(-1)
             .toUpperCase();
@@ -60,7 +62,7 @@ function CodeConfirmationForm({ code, setCode, email, handleSubmit }) {
                 inputRefs.current[order + 1]?.focus();
             }, 0);
         }
-    }, [code, setCode]);
+    }, [code.length, setCode, setError]);
 
     return (
         <form
