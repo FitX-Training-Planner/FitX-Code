@@ -18,3 +18,15 @@ export function isPhotoValid(photoFile) {
     // 2mb
     return photoFile.size <= 2 * 1024 * 1024;
 }
+
+export function isCREFValid(cref) {
+    const CREFRegex = /^[0-9]{6}-(P|G)$/;
+
+    return CREFRegex.test(cref);
+}
+
+export function isTrainerDescriptionValid(description) {
+    const lineBreakCount = (description.match(/\n/g) || []).length;
+
+    return description.length <= 1200 && lineBreakCount < 15;
+}

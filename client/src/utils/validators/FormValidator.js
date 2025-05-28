@@ -1,4 +1,4 @@
-import { isEmailValid, isNameValid, isPasswordValid } from "./userValidator";
+import { isCREFValid, isEmailValid, isNameValid, isPasswordValid, isTrainerDescriptionValid } from "./userValidator";
 
 export function hasEmptyFieldsInObject(object) {
     return Object.values(object).some(value => value === null || value === "")
@@ -7,7 +7,7 @@ export function hasEmptyFieldsInObject(object) {
 export function validateLoginRequestData(loginError, setLoginError, email, password) {
     if (loginError) return false;
 
-    if (hasEmptyFieldsInObject({email, password})) {
+    if (hasEmptyFieldsInObject({ email, password })) {
         setLoginError(true);
 
         return false;
@@ -25,7 +25,7 @@ export function validateLoginRequestData(loginError, setLoginError, email, passw
 export function validateSignUpRequestData(signUpError, setSignUpError, name, email, password) {
     if (signUpError) return false;
 
-    if (hasEmptyFieldsInObject({name, email, password})) {
+    if (hasEmptyFieldsInObject({ name, email, password })) {
         setSignUpError(true);
 
         return false;
@@ -33,6 +33,36 @@ export function validateSignUpRequestData(signUpError, setSignUpError, name, ema
 
     if (!(isNameValid(name) && isEmailValid(email) && isPasswordValid(password))) {
         setSignUpError(true);
+
+        return false;
+    }
+
+    return true;
+}
+
+export function validateTrainerPostRequestData(trainerError, setTrainerError, crefNumber, description, crefUF) {
+    if (trainerError) return false;
+
+    if (hasEmptyFieldsInObject({ crefNumber, crefUF })) {
+        setTrainerError(true);
+
+        return false;
+    }
+
+    if (!(isCREFValid(crefNumber) && crefUF && isTrainerDescriptionValid(description))) {
+        setTrainerError(true);
+
+        return false;
+    }
+
+    return true;
+}
+
+export function validateCodeRequestData(codeError, setCodeError, code) {
+    if (codeError) return false;
+
+    if (hasEmptyFieldsInObject(code)) {
+        setCodeError(true);
 
         return false;
     }

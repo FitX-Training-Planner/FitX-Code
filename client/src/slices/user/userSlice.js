@@ -2,8 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     name: "",
-    cref_number: "",
-    description: "",
+    cref_number: null,
+    description: null,
     config: {
         is_client: true,
         is_dark_theme: false,
@@ -12,7 +12,7 @@ const initialState = {
         email_notification_permission: true,
         device_notification_permission: true,
         is_english: false,
-        photoUrl: ""
+        photoUrl: null
     }
 };
 
