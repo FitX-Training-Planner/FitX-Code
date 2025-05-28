@@ -1,0 +1,39 @@
+from ..__init__ import fernet, bcrypt, mail
+import hashlib
+from ..database.models import Users
+from ..exceptions.api_error import ApiError
+from flask_mail import Message
+
+def hash_email(email):
+    return hashlib.sha256(email.encode("utf-8")).hexdigest()
+
+def is_email_used(db, email):
+    email_hash = hash_email(email)
+
+    return db.query(Users).filter(Users.email_hash == email_hash).first() is not None
+
+def encrypt_email(email):
+    return fernet.encrypt(email.encode("utf-8"))
+
+def decrypt_email(encrypted_email):
+    return fernet.decrypt(encrypted_email).decode("utf-8")
+
+def hash_password(password):
+    return bcrypt.generate_password_hash(password).decode("utf-8")
+
+def check_password(password, hashed):
+    return bcrypt.check_password_hash(hashed, password)
+
+def send_email(email, template, subject, body_text):
+    try:
+        message = Message(
+            subject=subject, 
+            recipients=[email], 
+            html=template, 
+            body=body_text
+        )
+    
+        mail.send(message)
+
+    except Exception as e:
+        raise ApiError("Erro ao enviar e-mail.", 500)
