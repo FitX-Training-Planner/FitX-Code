@@ -9,7 +9,7 @@ import { CSSTransition, SwitchTransition } from "react-transition-group";
 import { validateLoginRequestData, validateSignUpRequestData } from "../../utils/validators/formValidator";
 import ClickableIcon from "../form/buttons/ClickableIcon";
 import useRequest from "../../hooks/useRequest";
-import routes from "shared/apiRoutes.json";
+import ROUTES from "../../api/routes";
 import { useConfirmIdentityCallback } from "../../app/ConfirmIdentityCallbackProvider";
 import { useSystemMessage } from "../../app/SystemMessageProvider";
 import authUser from "../../utils/requests/auth";
@@ -55,15 +55,19 @@ function Login() {
     
         const loginFormData = new FormData();
     
-        loginFormData.append(routes.login.formData.email, localUser.email);
-        loginFormData.append(routes.login.formData.password, localUser.password);
+        loginFormData.append(ROUTES.login.formData.email, localUser.email);
+        loginFormData.append(ROUTES.login.formData.password, localUser.password);
     
         const postLogin = () => {
-            api.post(routes.login.endPoint, loginFormData);
+            api.post(ROUTES.login.endPoint, loginFormData);
         }
         
         const handleOnLoginSuccess = (data) => {
-            navigate("/code-confirmation", { state: { localUser: {...localUser, ID: data.userID}, origin: "login" } });
+            navigate("/code-confirmation", { state: { localUser: {...localUser, ID: data.ID}, origin: "login" } });
+
+            setHandleOnConfirmed(() => (ID, dispatch, navigate, notify, authRequest, setUser) => 
+                authUser(ID, dispatch, navigate, notify, authRequest, setUser, data.isClient)
+            );
         };
         
         const handleOnLoginError = (err) => {
@@ -73,10 +77,6 @@ function Login() {
                 notify(getErrorMessageFromError(err), "error");
             }
         };
-    
-        setHandleOnConfirmed(() => (ID, dispatch, navigate, notify, authRequest, setUser) => 
-            authUser(ID, dispatch, navigate, notify, authRequest, setUser)
-        );
     
         loginRequest(postLogin, handleOnLoginSuccess, handleOnLoginError, "Logando", "Logado!", "Falha ao logar!");
     }, [localUser, loginError, loginRequest, navigate, notify, setHandleOnConfirmed]);
@@ -88,10 +88,10 @@ function Login() {
     
         const signUpFormData = new FormData();
     
-        signUpFormData.append(routes.signUp.formData.email, localUser.email);
+        signUpFormData.append(ROUTES.signUp.formData.email, localUser.email);
     
         const postSignUp = () => {
-            api.post(routes.signUp.endPoint, signUpFormData);
+            api.post(ROUTES.signUp.endPoint, signUpFormData);
         }
     
         const handleOnSignUpSuccess = () => {
@@ -193,25 +193,25 @@ function Login() {
                             <ClickableIcon
                                 iconSrc="images/icons/instagram.png"
                                 name="Instagram"
-                                handleClick={() => window.open("https://www.instagram.com/seu_perfil/", "_blank", "noopener,noreferrer")}
+                                // handleClick={() => window.open("https://www.instagram.com/seu_perfil/", "_blank", "noopener,noreferrer")}
                             />
 
                             <ClickableIcon
                                 iconSrc="images/icons/youtube.png"
                                 name="Youtube"
-                                handleClick={() => window.open("https://www.youtube.com/c/seu_canal", "_blank", "noopener,noreferrer")}
+                                // handleClick={() => window.open("https://www.youtube.com/c/seu_canal", "_blank", "noopener,noreferrer")}
                                 />
 
                             <ClickableIcon
                                 iconSrc="images/icons/tiktok.png"
                                 name="TikTok"
-                                handleClick={() =>window.open("https://www.tiktok.com/@seu_perfil", "_blank", "noopener,noreferrer")}
+                                // handleClick={() => window.open("https://www.tiktok.com/@seu_perfil", "_blank", "noopener,noreferrer")}
                                 />
 
                             <ClickableIcon
                                 iconSrc="images/icons/github.png"
                                 name="GitHub"
-                                handleClick={() =>  window.open("https://github.com/FitX-Training-Planner", "_blank", "noopener,noreferrer")}
+                                // handleClick={() =>  window.open("https://github.com/FitX-Training-Planner", "_blank", "noopener,noreferrer")}
                             />
                         </Stack>
                     </Stack>

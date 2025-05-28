@@ -6,13 +6,14 @@ import Stack from "../containers/Stack";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSystemMessage } from "../../app/SystemMessageProvider";
 import useRequest from "../../hooks/useRequest";
-import routes from "shared/apiRoutes.json";
+import ROUTES from "../../api/routes";
 import NonBackgroundButton from "../form/buttons/NonBackgroundButton";
 import { useConfirmIdentityCallback } from "../../app/ConfirmIdentityCallbackProvider";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../slices/user/userSlice";
 import { getErrorMessageFromError } from "../../utils/requests/errorMessage";
 import api from "../../api/axios";
+import { validateCodeRequestData } from "../../utils/validators/formValidator";
 
 function CodeConfirmation() {
     const navigate = useNavigate();
@@ -41,14 +42,15 @@ function CodeConfirmation() {
         password: ""
     });    
     const [origin, setOrigin] = useState("login");
+    const [error, setError] = useState(false);
 
     const generateCode = useCallback(email => {
         const generateCodeFormData = new FormData();
 
-        generateCodeFormData.append(routes.identityConfirmation.formData.email, email);
+        generateCodeFormData.append(ROUTES.identityConfirmation.formData.email, email);
 
         const postGenerateCode = () => {
-            api.post(routes.identityConfirmation.endPoint, generateCodeFormData);
+            api.post(ROUTES.identityConfirmation.endPoint, generateCodeFormData);
         }    
 
         const handleOnGenerateCodeSuccess = () => {
@@ -88,22 +90,18 @@ function CodeConfirmation() {
     const handleOnSubmit = useCallback((e) => {
         e.preventDefault();
 
-        if (localUser.email && code.some(unit => !unit.value)) {
-            notify("Preencha todos os campos de cógigo.", "error");
-
-            return;
-        }
+        if (!validateCodeRequestData(error, setError, code)) return;
 
         const confirmCodeFormData = new FormData();
 
-        confirmCodeFormData.append(routes.identityConfirmation.formData.email, localUser.email);
+        confirmCodeFormData.append(ROUTES.identityConfirmation.formData.email, localUser.email);
 
         const formattedCode = code.map(unit => unit.value).join("");
 
-        confirmCodeFormData.append(routes.identityConfirmation.formData.code, formattedCode);
+        confirmCodeFormData.append(ROUTES.identityConfirmation.formData.code, formattedCode);
 
         const postConfirmCode = () => {
-            api.post(routes.identityConfirmation.endPoint, confirmCodeFormData);
+            api.post(ROUTES.identityConfirmation.endPoint, confirmCodeFormData);
         }
 
         const handleOnConfirmCodeSuccess = () => {
@@ -117,7 +115,7 @@ function CodeConfirmation() {
         }
 
         confirmIdentityRequest(postConfirmCode, handleOnConfirmCodeSuccess, handleOnConfirmCodeError, "Enviando código", "Identidade confirmada!", "Falha ao confirmar identidade!");
-    }, [authRequest, code, dispatch, confirmIdentityRequest, handleOnConfirmed, localUser.ID, localUser.email, navigate, notify, origin]);
+    }, [error, code, localUser.email, localUser.ID, confirmIdentityRequest, origin, handleOnConfirmed, dispatch, navigate, notify, authRequest]);
 
     return (
         <main
@@ -137,6 +135,7 @@ function CodeConfirmation() {
                     setCode={setCode}
                     handleSubmit={handleOnSubmit}
                     email={localUser.email}
+                    setError={setError}
                 />
 
                 <NonBackgroundButton

@@ -1,14 +1,15 @@
-import routes from "shared/apiRoutes.json";
+import ROUTES from "../../api/routes";
 import api from "../../api/axios";
 import { getErrorMessageFromError } from "./errorMessage";
 
-export default function authUser(ID, dispatch, navigate, notify, authRequest, setUser) {
+export default function authUser(ID, dispatch, navigate, notify, authRequest, setUser, isClient) {
     const formData = new FormData();
 
-    formData.append(routes.auth.formData.userID, ID);
+    formData.append(ROUTES.auth.formData.ID, ID);
+    formData.append(ROUTES.auth.formData.isClient, isClient);
 
     const postAuth = () => {
-        api.post(routes.auth.endPoint, formData);
+        api.post(ROUTES.auth.endPoint, formData);
     };
 
     const handleOnAuthSuccess = (data) => {

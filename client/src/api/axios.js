@@ -2,7 +2,7 @@ import axios from "axios";
 import history from "../history";
 
 const api = axios.create({
-  baseURL: "http://localhost:5000",
+  baseURL: process.env.REACT_APP_API_BASE_URL,
   timeout: 5000,
   withCredentials: true
 });
