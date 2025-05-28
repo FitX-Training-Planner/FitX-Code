@@ -1,0 +1,59 @@
+.select_container {
+    --padding: 0.8em;
+    width: 100%;
+}
+
+.select_container > label {
+    --size: 1em;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 0.5em;
+    font-size: var(--large-text-size);
+    font-weight: bold;
+    width: 100%;
+    margin-bottom: 0.2em;
+    padding: 0 var(--padding);
+}
+
+.select_container > label > img {
+    height: var(--size);
+    width: var(--size);
+}
+
+.select_container > label > p {
+    line-height: var(--size);
+}
+
+.select,
+.select > ul > li {
+    width: 100%;
+    border: var(--border-size) solid var(--text-color);
+    cursor: pointer;
+    padding: var(--padding);
+}
+
+.select {
+    --border-size: 1px;
+    position: relative;
+    font-size: var(--text-size);
+    border-radius: var(--input-border-radius);
+    color: var(--text-color);
+    background-color: transparent;
+}
+
+.select > ul {
+    position: absolute;
+    top: calc(var(--padding) * 2 + 1em);
+    left: calc(var(--border-size) * -1);
+    background-color: var(--bg-color);
+    width: calc(100% + var(--border-size) * 2);
+    max-height: 15em;
+    list-style: none;
+    overflow-y: auto;
+}
+
+.select > ul > li:hover,
+.active     {
+    filter: brightness(0.5);
+}
