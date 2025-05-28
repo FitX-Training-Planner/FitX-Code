@@ -25,14 +25,23 @@
     line-height: var(--size);
 }
 
-.text_input > input {
-    border-radius: var(--input-border-radius);
+.text_input > :where(input, textarea) {
     padding: 0.8em;
     width: 100%;
     font-size: var(--text-size);
-    border: 1px solid var(--text-color);
     color: var(--text-color);
     background-color: transparent;
+    border: 1px solid var(--text-color);
+}
+
+.text_input > input {
+    border-radius: var(--input-border-radius);
+}
+
+.text_input > textarea {
+    height: 100%;
+    min-height: 10em;
+    resize: none;
 }
 
 .text_input > p {

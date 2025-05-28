@@ -1,7 +1,7 @@
 import Stack from "../../containers/Stack";
 import styles from "./TextInput.module.css";
 
-function TextInput({ name, placeholder, labelText, value = "", handleChange, icon, alertMessage, error = false, maxLength }) {
+function TextInput({ type = "text", name, placeholder, labelText, value = "", handleChange, icon, alertMessage, error = false, maxLength }) {
     return (
         <Stack 
             className={styles.text_input} 
@@ -23,7 +23,7 @@ function TextInput({ name, placeholder, labelText, value = "", handleChange, ico
             </label>
 
             <input 
-                type="text"
+                type={type}
                 id={name}
                 name={name}
                 placeholder={placeholder}

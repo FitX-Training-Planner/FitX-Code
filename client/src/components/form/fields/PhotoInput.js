@@ -3,7 +3,7 @@ import styles from "./PhotoInput.module.css";
 import Stack from "../../containers/Stack";
 import Alert from "../../messages/Alert";
 
-function PhotoInput({ name, labelText, size = "medium", blobUrl, handleChange }) {
+function PhotoInput({ name, labelText, size = "medium", blobUrl, handleChange, disabled = false }) {
     const userIcon = "images/icons/user.png";
 
     const [preview, setPreview] = useState(blobUrl || userIcon);
@@ -16,24 +16,29 @@ function PhotoInput({ name, labelText, size = "medium", blobUrl, handleChange })
         <Stack 
             className={styles.photo_input}
         >
-            <Stack
-                gap="0.5em"
-                direction="row"
-                className={styles.label_container}
-            >
-                <Alert
-                    varColor="--dark-color"
-                    alertMessage="Selecione uma foto do tipo JPG, JPEG, PNG ou WEBP de até 2mb."
-                />
+            {labelText && 
+                <>
+                    <Stack
+                        gap="0.5em"
+                        direction="row"
+                        className={styles.label_container}
+                    >
+                        <Alert
+                            varColor="--dark-color"
+                            alertMessage="Selecione uma foto do tipo JPG, JPEG, PNG ou WEBP de até 2mb."
+                        />
 
-                <span>
-                    {labelText}
-                </span>
-            </Stack>
+                        <span>
+                            {labelText}
+                        </span>
+                    </Stack>
+                </>
+            }
 
             <label
                 htmlFor={name}
                 className={styles[size]}
+                style={{ cursor: disabled ? "default" : "pointer" }}
             >
                 <img
                     src={preview}
@@ -46,8 +51,9 @@ function PhotoInput({ name, labelText, size = "medium", blobUrl, handleChange })
                 type="file"
                 name={name}
                 id={name}
-                onChange={handleChange}
+                onChange={handleChange || undefined}
                 accept=".jpg,.jpeg,.png,.webp"
+                disabled={disabled}
             />
         </Stack>
 
