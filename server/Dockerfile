@@ -10,6 +10,6 @@ COPY . .
 
 ENV FLASK_APP=wsgi.py
 ENV FLASK_RUN_HOST=0.0.0.0
-ENV FLASK_ENV=development
+ENV FLASK_ENV=production
 
-CMD ["flask", "run"]
+CMD ["flask", "run", "--host=0.0.0.0", "--port=8000"]

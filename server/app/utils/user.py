@@ -3,9 +3,12 @@ import hashlib
 from ..database.models import Users
 from ..exceptions.api_error import ApiError
 from flask_mail import Message
+import os
 
 def hash_email(email):
-    return hashlib.sha256(email.encode("utf-8")).hexdigest()
+    combination = (email.lower() + os.getenv("HASHLIB_SALT")).encode("utf-8")
+
+    return hashlib.sha256(combination).hexdigest()
 
 def is_email_used(db, email):
     email_hash = hash_email(email)
