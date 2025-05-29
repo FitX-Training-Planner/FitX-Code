@@ -9,7 +9,6 @@ import { CSSTransition, SwitchTransition } from "react-transition-group";
 import { validateLoginRequestData, validateSignUpRequestData } from "../../utils/validators/formValidator";
 import ClickableIcon from "../form/buttons/ClickableIcon";
 import useRequest from "../../hooks/useRequest";
-import ROUTES from "../../api/routes";
 import { useConfirmIdentityCallback } from "../../app/ConfirmIdentityCallbackProvider";
 import { useSystemMessage } from "../../app/SystemMessageProvider";
 import authUser from "../../utils/requests/auth";
@@ -55,11 +54,11 @@ function Login() {
     
         const loginFormData = new FormData();
     
-        loginFormData.append(ROUTES.login.formData.email, localUser.email);
-        loginFormData.append(ROUTES.login.formData.password, localUser.password);
+        loginFormData.append("email", localUser.email);
+        loginFormData.append("password", localUser.password);
     
         const postLogin = () => {
-            api.post(ROUTES.login.endPoint, loginFormData);
+            api.post("/login", loginFormData);
         }
         
         const handleOnLoginSuccess = (data) => {
@@ -88,10 +87,10 @@ function Login() {
     
         const signUpFormData = new FormData();
     
-        signUpFormData.append(ROUTES.signUp.formData.email, localUser.email);
+        signUpFormData.append("email", localUser.email);
     
         const postSignUp = () => {
-            api.post(ROUTES.signUp.endPoint, signUpFormData);
+            api.post("/sign-up", signUpFormData);
         }
     
         const handleOnSignUpSuccess = () => {

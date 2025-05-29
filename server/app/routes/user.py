@@ -1,10 +1,9 @@
 from flask import Blueprint, jsonify, request
 from ..services.user import get_user_by_id, insert_user, insert_photo
-from ..routes import ROUTES
 from ..database.context_manager import get_db
 from ..exceptions.api_error import ApiError
 
-user_bp = Blueprint("user", __name__, url_prefix=ROUTES["user"]["endPoint"])
+user_bp = Blueprint("user", __name__, url_prefix="/users")
 
 @user_bp.route("/<int:user_id>", methods=["GET"])
 def get_user(user_ID):
@@ -36,23 +35,23 @@ def post_user():
 
             fk_media_ID = None
             
-            photo_file = request.files.get(ROUTES["user"]["formData"]["photoFile"])
+            photo_file = request.files.get("photoFile")
 
             if photo_file:
                 fk_media_ID = insert_photo(db, photo_file)
 
             user_ID = insert_user(
                 db,
-                data.get(ROUTES["user"]["formData"]["name"]),
-                data.get(ROUTES["user"]["formData"]["email"]),
-                data.get(ROUTES["user"]["formData"]["password"]),
-                data.get(ROUTES["user"]["formData"]["isClient"]) == "true",
-                data.get(ROUTES["user"]["formData"]["isDarkTheme"]) == "true",
-                data.get(ROUTES["user"]["formData"]["isComplainterAnonymous"]) == "true",
-                data.get(ROUTES["user"]["formData"]["isRaterAnonymous"]) == "true",
-                data.get(ROUTES["user"]["formData"]["emailNotificationPermission"]) == "true",
-                data.get(ROUTES["user"]["formData"]["deviceNotificationPermission"]) == "true",
-                data.get(ROUTES["user"]["formData"]["isEnglish"]) == "true",
+                data.get("name"),
+                data.get("email"),
+                data.get("password"),
+                data.get("isClient") == "true",
+                data.get("isDarkTheme") == "true",
+                data.get("isComplainterAnonymous") == "true",
+                data.get("isRaterAnonymous") == "true",
+                data.get("emailNotificationPermission") == "true",
+                data.get("deviceNotificationPermission") == "true",
+                data.get("isEnglish") == "true",
                 fk_media_ID
             )
 

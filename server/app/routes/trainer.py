@@ -1,11 +1,10 @@
 from flask import Blueprint, jsonify, request
 from ..services.user import insert_user, insert_photo
 from ..services.trainer import insert_trainer
-from ..routes import ROUTES
 from ..database.context_manager import get_db
 from ..exceptions.api_error import ApiError
 
-trainer_bp = Blueprint("trainer", __name__, url_prefix=ROUTES["trainer"]["endPoint"])
+trainer_bp = Blueprint("trainer", __name__, url_prefix="/trainers")
         
 @trainer_bp.route("/", methods=["POST"])
 def post_trainer():
@@ -17,30 +16,30 @@ def post_trainer():
 
             fk_media_ID = None
             
-            photo_file = request.files.get(ROUTES["trainer"]["formData"]["photoFile"])
+            photo_file = request.files.get("photoFile")
 
             if photo_file:
                 fk_media_ID = insert_photo(db, photo_file)
 
             user_ID = insert_user(
                 db,
-                data.get(ROUTES["user"]["formData"]["name"]),
-                data.get(ROUTES["user"]["formData"]["email"]),
-                data.get(ROUTES["user"]["formData"]["password"]),
-                data.get(ROUTES["user"]["formData"]["isClient"]) == "true",
-                data.get(ROUTES["user"]["formData"]["isDarkTheme"]) == "true",
-                data.get(ROUTES["user"]["formData"]["isComplainterAnonymous"]) == "true",
-                data.get(ROUTES["user"]["formData"]["isRaterAnonymous"]) == "true",
-                data.get(ROUTES["user"]["formData"]["emailNotificationPermission"]) == "true",
-                data.get(ROUTES["user"]["formData"]["deviceNotificationPermission"]) == "true",
-                data.get(ROUTES["user"]["formData"]["isEnglish"]) == "true",
+                data.get("name"),
+                data.get("email"),
+                data.get("password"),
+                data.get("isClient") == "true",
+                data.get("isDarkTheme") == "true",
+                data.get("isComplainterAnonymous") == "true",
+                data.get("isRaterAnonymous") == "true",
+                data.get("emailNotificationPermission") == "true",
+                data.get("deviceNotificationPermission") == "true",
+                data.get("isEnglish") == "true",
                 fk_media_ID
             )
 
             trainer_ID = insert_trainer(
                 db, 
-                data.get(ROUTES["trainer"]["formData"]["crefNumber"]),
-                data.get(ROUTES["trainer"]["formData"]["description"]),
+                data.get("crefNumber"),
+                data.get("description"),
                 user_ID
             )
 

@@ -1,5 +1,4 @@
 from flask import Blueprint, jsonify, request, render_template
-from ..routes import ROUTES
 from ..database.context_manager import get_db
 from ..exceptions.api_error import ApiError
 from ..utils.security import check_login, generate_code, verify_code, set_jwt_cookies, set_jwt_access_cookies
@@ -9,7 +8,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 
 security_bp = Blueprint("security", __name__)
 
-@security_bp.route(ROUTES["login"]["endPoint"], methods=["POST"])
+@security_bp.route("/login", methods=["POST"])
 def login():
     error_message = "Erro na rota de login."
 
@@ -19,8 +18,8 @@ def login():
             
             result = check_login(
                 db,
-                data.get(ROUTES["user"]["formData"]["email"]),
-                data.get(ROUTES["user"]["formData"]["password"])
+                data.get("email"),
+                data.get("password")
             )
 
             return jsonify({"ID": result["ID"], "isClient": result["isClient"]}), 200
@@ -36,7 +35,7 @@ def login():
             return jsonify({"message": str(e)}), 500
 
 
-@security_bp.route(ROUTES["signUp"]["endPoint"], methods=["POST"])
+@security_bp.route("/sign-up", methods=["POST"])
 def sign_up():
     error_message = "Erro na rota de sign up."
 
@@ -44,7 +43,7 @@ def sign_up():
         try:
             data = request.form
             
-            if is_email_used(db, data.get(ROUTES["user"]["formData"]["email"])):
+            if is_email_used(db, data.get("email")):
                 raise ApiError("Já existe uma conta com esse e-mail.", 409)
 
             return "", 204
@@ -59,15 +58,15 @@ def sign_up():
 
             return jsonify({"message": str(e)}), 500
 
-@security_bp.route(ROUTES["identityConfirmation"]["endPoint"], methods=["POST"])
+@security_bp.route("/identity-confirmation", methods=["POST"])
 def identity_confirmation():
     error_message = "Erro na rota de confirmação de identidade."
 
     try:
         data = request.form
 
-        email = data.get(ROUTES["identityConfirmation"]["formData"]["email"])
-        code = data.get(ROUTES["identityConfirmation"]["formData"]["code"])
+        email = data.get("email")
+        code = data.get("code")
 
         if code:
             verify_code(email, code)
@@ -99,14 +98,14 @@ def identity_confirmation():
 
         return jsonify({"message": str(e)}), 500
 
-@security_bp.route(ROUTES["auth"]["endPoint"], methods=["POST"])
+@security_bp.route("/auth", methods=["POST"])
 def auth():
     error_message = "Erro na rota de autenticação."
 
     with get_db() as db:
         try:
-            ID = request.form.get(ROUTES["auth"]["formData"]["ID"])
-            is_client = request.form.get(ROUTES["auth"]["formData"]["isClient"])
+            ID = request.form.get("ID")
+            is_client = request.form.get("isClient")
 
             if not ID or is_client is None:
                 raise ApiError("Dados insuficiente para a autenticação.", 400)

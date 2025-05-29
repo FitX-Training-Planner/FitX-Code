@@ -6,7 +6,6 @@ import Stack from "../containers/Stack";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSystemMessage } from "../../app/SystemMessageProvider";
 import useRequest from "../../hooks/useRequest";
-import ROUTES from "../../api/routes";
 import NonBackgroundButton from "../form/buttons/NonBackgroundButton";
 import { useConfirmIdentityCallback } from "../../app/ConfirmIdentityCallbackProvider";
 import { useDispatch } from "react-redux";
@@ -47,10 +46,10 @@ function CodeConfirmation() {
     const generateCode = useCallback(email => {
         const generateCodeFormData = new FormData();
 
-        generateCodeFormData.append(ROUTES.identityConfirmation.formData.email, email);
+        generateCodeFormData.append("email", email);
 
         const postGenerateCode = () => {
-            api.post(ROUTES.identityConfirmation.endPoint, generateCodeFormData);
+            api.post("/identity-confirmation", generateCodeFormData);
         }    
 
         const handleOnGenerateCodeSuccess = () => {
@@ -94,14 +93,14 @@ function CodeConfirmation() {
 
         const confirmCodeFormData = new FormData();
 
-        confirmCodeFormData.append(ROUTES.identityConfirmation.formData.email, localUser.email);
+        confirmCodeFormData.append("email", localUser.email);
 
         const formattedCode = code.map(unit => unit.value).join("");
 
-        confirmCodeFormData.append(ROUTES.identityConfirmation.formData.code, formattedCode);
+        confirmCodeFormData.append("code", formattedCode);
 
         const postConfirmCode = () => {
-            api.post(ROUTES.identityConfirmation.endPoint, confirmCodeFormData);
+            api.post("/identity-confirmation", confirmCodeFormData);
         }
 
         const handleOnConfirmCodeSuccess = () => {

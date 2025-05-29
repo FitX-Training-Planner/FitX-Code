@@ -1,7 +1,7 @@
 from flask import Flask
 from dotenv import load_dotenv
 from .config import AppConfig, CloudinaryConfig, FernetConfig, RedisConfig, CORSConfig
-from routes import register_routes
+from .routes import register_routes
 import cloudinary
 from flask_bcrypt import Bcrypt
 from cryptography.fernet import Fernet

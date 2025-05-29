@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ConfigForm from "../form/forms/ConfigForm";
 import useRequest from "../../hooks/useRequest";
-import ROUTES from "../../api/routes";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSystemMessage } from "../../app/SystemMessageProvider";
 import { setUser } from "../../slices/user/userSlice";
@@ -65,20 +64,20 @@ function CreateConfig() {
 
         const postUserFormData = new FormData();
 
-        postUserFormData.append(ROUTES.user.formData.name, localUser.name);
-        postUserFormData.append(ROUTES.user.formData.email, localUser.email);
-        postUserFormData.append(ROUTES.user.formData.password, localUser.password);
-        postUserFormData.append(ROUTES.user.formData.isClient, config.is_client);
-        postUserFormData.append(ROUTES.user.formData.isDarkTheme, config.is_dark_theme);
-        postUserFormData.append(ROUTES.user.formData.isComplainterAnonymous, config.is_complainter_anonymous);
-        postUserFormData.append(ROUTES.user.formData.isRaterAnonymous, config.is_rater_anonymous);
-        postUserFormData.append(ROUTES.user.formData.emailNotificationPermission, config.email_notification_permission);
-        postUserFormData.append(ROUTES.user.formData.deviceNotificationPermission, config.device_notification_permission);
-        postUserFormData.append(ROUTES.user.formData.isEnglish, config.is_english);
-        postUserFormData.append(ROUTES.user.formData.photoFile, config.photoFile);
+        postUserFormData.append("name", localUser.name);
+        postUserFormData.append("email", localUser.email);
+        postUserFormData.append("password", localUser.password);
+        postUserFormData.append("isClient", config.is_client);
+        postUserFormData.append("isDarkTheme", config.is_dark_theme);
+        postUserFormData.append("isComplainterAnonymous", config.is_complainter_anonymous);
+        postUserFormData.append("isRaterAnonymous", config.is_rater_anonymous);
+        postUserFormData.append("emailNotificationPermission", config.email_notification_permission);
+        postUserFormData.append("deviceNotificationPermission", config.device_notification_permission);
+        postUserFormData.append("isEnglish", config.is_english);
+        postUserFormData.append("photoFile", config.photoFile);
         
         const postUser = () => {
-            api.post(ROUTES.user.endPoint, postUserFormData);
+            api.post("/users", postUserFormData);
         };
 
         const handleOnPostUserSuccess = (data) => {

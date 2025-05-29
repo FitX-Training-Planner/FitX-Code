@@ -1,15 +1,14 @@
-import ROUTES from "../../api/routes";
 import api from "../../api/axios";
 import { getErrorMessageFromError } from "./errorMessage";
 
 export default function authUser(ID, dispatch, navigate, notify, authRequest, setUser, isClient) {
     const formData = new FormData();
 
-    formData.append(ROUTES.auth.formData.ID, ID);
-    formData.append(ROUTES.auth.formData.isClient, isClient);
+    formData.append("ID", ID);
+    formData.append("isClient", isClient);
 
     const postAuth = () => {
-        api.post(ROUTES.auth.endPoint, formData);
+        api.post("/auth", formData);
     };
 
     const handleOnAuthSuccess = (data) => {

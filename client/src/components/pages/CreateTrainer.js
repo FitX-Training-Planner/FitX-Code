@@ -5,7 +5,6 @@ import TrainerForm from "../form/forms/TrainerForm";
 import { validateTrainerPostRequestData } from "../../utils/validators/formValidator";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSystemMessage } from "../../app/SystemMessageProvider";
-import ROUTES from "../../api/routes";
 import api from "../../api/axios";
 import { getErrorMessageFromError } from "../../utils/requests/errorMessage";
 import authUser from "../../utils/requests/auth";
@@ -79,22 +78,22 @@ function CreateTrainer() {
 
         const postTrainerFormData = new FormData();
 
-        postTrainerFormData.append(ROUTES.user.formData.name, localUser.name);
-        postTrainerFormData.append(ROUTES.user.formData.email, localUser.email);
-        postTrainerFormData.append(ROUTES.user.formData.password, localUser.password);
-        postTrainerFormData.append(ROUTES.user.formData.isClient, localUser.config.is_client);
-        postTrainerFormData.append(ROUTES.user.formData.isDarkTheme, localUser.config.is_dark_theme);
-        postTrainerFormData.append(ROUTES.user.formData.isComplainterAnonymous, localUser.config.is_complainter_anonymous);
-        postTrainerFormData.append(ROUTES.user.formData.isRaterAnonymous, localUser.config.is_rater_anonymous);
-        postTrainerFormData.append(ROUTES.user.formData.emailNotificationPermission, localUser.config.email_notification_permission);
-        postTrainerFormData.append(ROUTES.user.formData.deviceNotificationPermission, localUser.config.device_notification_permission);
-        postTrainerFormData.append(ROUTES.user.formData.isEnglish, localUser.config.is_english);
-        postTrainerFormData.append(ROUTES.user.formData.photoFile, localUser.config.photoFile);
-        postTrainerFormData.append(ROUTES.user.formData.cref_number, `${trainer.cref_number}/${trainer.crefUF}`);
-        postTrainerFormData.append(ROUTES.user.formData.description, trainer.description);
+        postTrainerFormData.append("name", localUser.name);
+        postTrainerFormData.append("email", localUser.email);
+        postTrainerFormData.append("password", localUser.password);
+        postTrainerFormData.append("isClient", localUser.config.is_client);
+        postTrainerFormData.append("isDarkTheme", localUser.config.is_dark_theme);
+        postTrainerFormData.append("isComplainterAnonymous", localUser.config.is_complainter_anonymous);
+        postTrainerFormData.append("isRaterAnonymous", localUser.config.is_rater_anonymous);
+        postTrainerFormData.append("emailNotificationPermission", localUser.config.email_notification_permission);
+        postTrainerFormData.append("deviceNotificationPermission", localUser.config.device_notification_permission);
+        postTrainerFormData.append("isEnglish", localUser.config.is_english);
+        postTrainerFormData.append("photoFile", localUser.config.photoFile);
+        postTrainerFormData.append("crefNumber", `${trainer.cref_number}/${trainer.crefUF}`);
+        postTrainerFormData.append("description", trainer.description);
 
         const postTrainer = () => {
-            api.post(ROUTES.trainer.endPoint, postTrainerFormData);
+            api.post("/trainers", postTrainerFormData);
         };
 
         const handleOnPostTrainerSuccess = (data) => {
