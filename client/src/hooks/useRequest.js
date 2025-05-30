@@ -1,45 +1,33 @@
 import { useState } from "react";
-import toast from "react-hot-toast";
+import { getErrorMessageFromError } from "../utils/requests/errorMessage";
+import { useSystemMessage } from "../app/SystemMessageProvider";
 
 export default function useRequest() {
+    const { notify } = useSystemMessage();
+
     const [loading, setLoading] = useState(false);
 
-    async function request(request, handleSuccess, handleError, loadingMessage, SuccessMessage, errorMessage) {
+    async function request(requestFn, handleSuccess, handleError, loadingMessage, successMessage, errorMessage) {
         if (loading) return;
 
         setLoading(true);
 
-        const wrappedRequest = () => async () => {
-            try {
-                const resp = await request();
-
-                handleSuccess(resp.data);
-            } catch (err) {
-                console.error(err);
-
-                handleError(err);
-
-                throw err; 
-            }
-        };
+        notify(loadingMessage, "loading", "request");
 
         try {
-            await toast.promise(
-                wrappedRequest(),
-                {
-                    loading: `${loadingMessage}...`,
-                    success: SuccessMessage,
-                    error: errorMessage
-                },
-                {
-                    style: {
-                        letterSpacing: "0.5px",
-                        maxWidth: "30em",
-                        textAlign: "justify"
-                    },
-                    position: "top-right"
-                }
-            );
+            const resp = await requestFn();
+
+            handleSuccess(resp.data);
+
+            notify(successMessage, "success", "request");
+        } catch (err) {
+            console.error(err);
+
+            handleError(err);
+
+            notify(errorMessage, "error");
+            
+            notify(getErrorMessageFromError(err), "error", "request");
         } finally {
             setLoading(false);
         }
