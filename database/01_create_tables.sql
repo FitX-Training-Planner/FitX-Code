@@ -15,9 +15,7 @@ CREATE TABLE IF NOT EXISTS users (
     is_complainter_anonymous BOOLEAN NOT NULL DEFAULT 1,
     is_rater_anonymous BOOLEAN NOT NULL DEFAULT 0,
     email_notification_permission BOOLEAN NOT NULL DEFAULT 1,
-    device_notification_permission BOOLEAN NOT NULL DEFAULT 1,
     is_english BOOLEAN NOT NULL DEFAULT 0,
-    device_token VARCHAR(255) NOT NULL, 
     fk_media_ID INT UNIQUE,
     FOREIGN KEY (fk_media_ID) REFERENCES media(ID),
     INDEX idx_name (name),
@@ -146,7 +144,7 @@ CREATE TABLE IF NOT EXISTS training_plan (
 
 CREATE TABLE IF NOT EXISTS training_plan_user (
     ID INT PRIMARY KEY AUTO_INCREMENT,
-    create_date DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    create_date DATE NOT NULL DEFAULT (CURRENT_DATE),
     fk_user_ID INT NOT NULL,
     fk_training_plan_ID INT NOT NULL,
     FOREIGN KEY (fk_user_ID) REFERENCES users(ID),
@@ -370,16 +368,16 @@ CREATE TABLE IF NOT EXISTS message (
     INDEX idx_chat_ID_create_date (fk_chat_ID, create_date)
 );
 
-CREATE TABLE IF NOT EXISTS body_composition_exam {
+CREATE TABLE IF NOT EXISTS body_composition_exam (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     url VARCHAR(255) NOT NULL UNIQUE,
     create_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     fk_user_ID INT NOT NULL,
     FOREIGN KEY (fk_user_ID) REFERENCES users(ID),
     INDEX idx_fk_user_ID (fk_user_ID)
-};
+);
 
-CREATE TABLE IF NOT EXISTS body_composition_exam_send {
+CREATE TABLE IF NOT EXISTS body_composition_exam_send (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     send_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     fk_body_composition_exam_ID INT NOT NULL,
@@ -388,4 +386,4 @@ CREATE TABLE IF NOT EXISTS body_composition_exam_send {
     FOREIGN KEY (fk_body_composition_exam_ID) REFERENCES body_composition_exam(ID),
     UNIQUE (fk_trainer_ID, fk_body_composition_exam_ID),
     INDEX idx_fk_trainer_ID_fk_body_composition_exam_ID (fk_trainer_ID, fk_body_composition_exam_ID)
-};
+);

@@ -127,7 +127,7 @@ INSERT INTO exercise (name, description, is_fixed, fk_media_ID) VALUES
 ('Prancha', 'Deite de bruços e fique levantado com seus braços apoiados no chão com tronco e pernas alinhados.', 1, NULL),
 ('Abdominal Bicicleta', 'Deite com a barriga virada para cima com as pernas e coluna dobradas simulando uma pedalada. Rotacione o tronco e movimente somente a perna.', 1, NULL),
 ('Abdominal Oblíquo na Barra Fixa', 'Segure em uma barra fixa e suba as pernas dobrando a coluna e rotacionando o tronco. Rotacione o tronco e movimente somente a perna e a coluna.', 1, NULL),
-('Abdominal Oblíquo Deitado', 'Deite com a barriga virada para cima, dobre as pernas e suba seu tronco enquanto o rotaciona dobrando a coluna. Rotacione o tronco e movimente somente o tronco e a coluna.', 1, NULL);
+('Abdominal Oblíquo Deitado', 'Deite com a barriga virada para cima, dobre as pernas e suba seu tronco enquanto o rotaciona dobrando a coluna. Rotacione o tronco e movimente somente o tronco e a coluna.', 1, NULL),
 ('Abdominal Escalador', 'Deite de bruços e fique levantado com seus braços apoiados no chão enquanto tenta encostar suas pernas no seu peito. Movimente somente as pernas.', 1, NULL);
 
 INSERT INTO exercise_muscle_group (is_primary, fk_exercise_ID, fk_muscle_group_ID) VALUES
@@ -208,7 +208,7 @@ INSERT INTO exercise_muscle_group (is_primary, fk_exercise_ID, fk_muscle_group_I
 (TRUE, 75, 1),
 (TRUE, 76, 1), (FALSE, 76, 4),
 (TRUE, 77, 1),
-(TRUE, 78, 1),
+(TRUE, 78, 1);
 
 INSERT INTO body_position (description) VALUES
 ('Em pé'),
