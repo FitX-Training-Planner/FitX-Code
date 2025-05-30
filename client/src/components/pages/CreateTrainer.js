@@ -6,7 +6,6 @@ import { validateTrainerPostRequestData } from "../../utils/validators/formValid
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSystemMessage } from "../../app/SystemMessageProvider";
 import api from "../../api/axios";
-import { getErrorMessageFromError } from "../../utils/requests/errorMessage";
 import authUser from "../../utils/requests/auth";
 import { useDispatch } from "react-redux";
 import useRequest from "../../hooks/useRequest";
@@ -38,7 +37,6 @@ function CreateTrainer() {
             is_complainter_anonymous: true,
             is_rater_anonymous: false,
             email_notification_permission: true,
-            device_notification_permission: true,
             is_english: false,
             photoFile: null,
             photoBlobUrl: null
@@ -81,27 +79,25 @@ function CreateTrainer() {
         postTrainerFormData.append("name", localUser.name);
         postTrainerFormData.append("email", localUser.email);
         postTrainerFormData.append("password", localUser.password);
-        postTrainerFormData.append("isClient", localUser.config.is_client);
         postTrainerFormData.append("isDarkTheme", localUser.config.is_dark_theme);
         postTrainerFormData.append("isComplainterAnonymous", localUser.config.is_complainter_anonymous);
         postTrainerFormData.append("isRaterAnonymous", localUser.config.is_rater_anonymous);
         postTrainerFormData.append("emailNotificationPermission", localUser.config.email_notification_permission);
-        postTrainerFormData.append("deviceNotificationPermission", localUser.config.device_notification_permission);
         postTrainerFormData.append("isEnglish", localUser.config.is_english);
         postTrainerFormData.append("photoFile", localUser.config.photoFile);
         postTrainerFormData.append("crefNumber", `${trainer.cref_number}/${trainer.crefUF}`);
         postTrainerFormData.append("description", trainer.description);
 
         const postTrainer = () => {
-            api.post("/trainers", postTrainerFormData);
+            return api.post("/trainers", postTrainerFormData);
         };
 
         const handleOnPostTrainerSuccess = (data) => {
-            authUser(data.trainerID, dispatch, navigate, notify, authRequest, setUser, false);
+            authUser(data.userID, dispatch, navigate, notify, authRequest, setUser, false);
         }
 
-        const handleOnPostTrainerError = (err) => {
-            notify(getErrorMessageFromError(err), "error");
+        const handleOnPostTrainerError = () => {
+            setError(true);
         }
 
         postTrainerRequest(postTrainer, handleOnPostTrainerSuccess, handleOnPostTrainerError, "Criando usuário", "Usuário criado!", "Falha ao criar usuário!");

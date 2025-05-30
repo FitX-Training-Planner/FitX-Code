@@ -10,7 +10,6 @@ import NonBackgroundButton from "../form/buttons/NonBackgroundButton";
 import { useConfirmIdentityCallback } from "../../app/ConfirmIdentityCallbackProvider";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../slices/user/userSlice";
-import { getErrorMessageFromError } from "../../utils/requests/errorMessage";
 import api from "../../api/axios";
 import { validateCodeRequestData } from "../../utils/validators/formValidator";
 
@@ -49,19 +48,11 @@ function CodeConfirmation() {
         generateCodeFormData.append("email", email);
 
         const postGenerateCode = () => {
-            api.post("/identity-confirmation", generateCodeFormData);
-        }    
+            return api.post("/identity-confirmation", generateCodeFormData);
+        }         
 
-        const handleOnGenerateCodeSuccess = () => {
-            notify("Código enviado.");
-        }    
-
-        const handleOnGenerateCodeError = (err) => {
-            notify(getErrorMessageFromError(err), "error");
-        }    
-
-        generateCodeRequest(postGenerateCode, handleOnGenerateCodeSuccess, handleOnGenerateCodeError, "Enviando código", "Código enviado!", "Falha ao enviar código!");
-    }, [generateCodeRequest, notify]);    
+        generateCodeRequest(postGenerateCode, () => undefined, () => undefined, "Enviando código", "Código enviado!", "Falha ao enviar código!");
+    }, [generateCodeRequest]);    
 
     useEffect(() => {
         if (hasRun.current) return;
@@ -100,7 +91,7 @@ function CodeConfirmation() {
         confirmCodeFormData.append("code", formattedCode);
 
         const postConfirmCode = () => {
-            api.post("/identity-confirmation", confirmCodeFormData);
+            return api.post("/identity-confirmation", confirmCodeFormData);
         }
 
         const handleOnConfirmCodeSuccess = () => {
@@ -109,8 +100,8 @@ function CodeConfirmation() {
             : handleOnConfirmed();
         }
 
-        const handleOnConfirmCodeError = (err) => {
-            notify(getErrorMessageFromError(err), "error");
+        const handleOnConfirmCodeError = () => {
+            setError(true);
         }
 
         confirmIdentityRequest(postConfirmCode, handleOnConfirmCodeSuccess, handleOnConfirmCodeError, "Enviando código", "Identidade confirmada!", "Falha ao confirmar identidade!");
@@ -139,7 +130,7 @@ function CodeConfirmation() {
 
                 <NonBackgroundButton
                     text="Reenviar Código"
-                    handleClick={generateCode}
+                    handleClick={() => generateCode(localUser.email)}
                     varColor="--theme-color"
                 />
             </Stack>

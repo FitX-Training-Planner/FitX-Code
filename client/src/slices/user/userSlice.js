@@ -10,7 +10,6 @@ const initialState = {
         is_complainter_anonymous: true,
         is_rater_anonymous: false,
         email_notification_permission: true,
-        device_notification_permission: true,
         is_english: false,
         photoUrl: null
     }

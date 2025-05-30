@@ -51,6 +51,7 @@ export function validateTrainerPostRequestData(trainerError, setTrainerError, cr
 
     if (!(isCREFValid(crefNumber) && crefUF && isTrainerDescriptionValid(description))) {
         setTrainerError(true);
+        console.log("valido")
 
         return false;
     }
@@ -61,11 +62,13 @@ export function validateTrainerPostRequestData(trainerError, setTrainerError, cr
 export function validateCodeRequestData(codeError, setCodeError, code) {
     if (codeError) return false;
 
-    if (hasEmptyFieldsInObject(code)) {
-        setCodeError(true);
+    for (let i = 0; i < code.length; i++) {
+        if (hasEmptyFieldsInObject(code[i])) {
+            setCodeError(true);
 
-        return false;
+            return false;
+        }
     }
-
+        
     return true;
 }

@@ -10,9 +10,7 @@ import { validateLoginRequestData, validateSignUpRequestData } from "../../utils
 import ClickableIcon from "../form/buttons/ClickableIcon";
 import useRequest from "../../hooks/useRequest";
 import { useConfirmIdentityCallback } from "../../app/ConfirmIdentityCallbackProvider";
-import { useSystemMessage } from "../../app/SystemMessageProvider";
 import authUser from "../../utils/requests/auth";
-import { getErrorMessageFromError } from "../../utils/requests/errorMessage";
 import api from "../../api/axios";
 import useWindowSize from "../../hooks/useWindowSize";
 
@@ -20,7 +18,6 @@ function Login() {
     const navigate = useNavigate();
     
     const { width } = useWindowSize();
-    const { notify } = useSystemMessage();
     const { setHandleOnConfirmed } = useConfirmIdentityCallback();
     const { request: loginRequest } = useRequest();
     const { request: signUpRequest } = useRequest();
@@ -58,7 +55,7 @@ function Login() {
         loginFormData.append("password", localUser.password);
     
         const postLogin = () => {
-            api.post("/login", loginFormData);
+            return api.post("/login", loginFormData);
         }
         
         const handleOnLoginSuccess = (data) => {
@@ -72,13 +69,11 @@ function Login() {
         const handleOnLoginError = (err) => {
             if (err.response?.status === 401) {
                 setLoginError(true);
-            } else {
-                notify(getErrorMessageFromError(err), "error");
             }
         };
     
-        loginRequest(postLogin, handleOnLoginSuccess, handleOnLoginError, "Logando", "Logado!", "Falha ao logar!");
-    }, [localUser, loginError, loginRequest, navigate, notify, setHandleOnConfirmed]);
+        loginRequest(postLogin, handleOnLoginSuccess, handleOnLoginError, "Checando dados", "Dados validados!", "Falha ao logar!");
+    }, [localUser, loginError, loginRequest, navigate, setHandleOnConfirmed]);
 
     const handleOnSignUpSubmit = useCallback((e) => {
         e.preventDefault();
@@ -90,25 +85,23 @@ function Login() {
         signUpFormData.append("email", localUser.email);
     
         const postSignUp = () => {
-            api.post("/sign-up", signUpFormData);
+            return api.post("/sign-up", signUpFormData);
         }
     
         const handleOnSignUpSuccess = () => {
             navigate("/code-confirmation", { state: { localUser, origin: "signUp" } });
         };
     
-        const handleOnSignUpError = (err) => {
+        const handleOnSignUpError = () => {
             setSignUpError(true);
-    
-            notify(getErrorMessageFromError(err), "error");
         };
     
         setHandleOnConfirmed(() => () => {
             navigate("/create-config", { state: { localUser } });
         });
     
-        signUpRequest(postSignUp, handleOnSignUpSuccess, handleOnSignUpError, "Checando dados", "Dados válidados!", "Falha ao checar dados!");
-    }, [localUser, navigate, notify, setHandleOnConfirmed, signUpError, signUpRequest]);
+        signUpRequest(postSignUp, handleOnSignUpSuccess, handleOnSignUpError, "Checando dados", "Dados validados!", "Falha ao checar dados!");
+    }, [localUser, navigate, setHandleOnConfirmed, signUpError, signUpRequest]);
 
     return (
         <main>

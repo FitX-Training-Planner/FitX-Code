@@ -140,14 +140,6 @@ function ConfigForm({ config, setConfig, handleSubmit, handleChangeToTrainer }) 
                                 handleChange={handleOnChangeConfigData}
                                 description="Habilite para que você receba nossas notificações por e-mail."
                             />
-
-                            <CheckBoxInput
-                                name="device_notification_permission"
-                                labelText="Notificações pelo Dispositivo"
-                                isChecked={config.device_notification_permission}
-                                handleChange={handleOnChangeConfigData}
-                                description="Habilite para que você receba nossas notificações no seu dispositivo."
-                            />
                         </Stack>
                     </Stack>
 

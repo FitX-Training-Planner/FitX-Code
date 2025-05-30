@@ -6,7 +6,6 @@ import { useSystemMessage } from "../../app/SystemMessageProvider";
 import { setUser } from "../../slices/user/userSlice";
 import { useDispatch } from "react-redux";
 import authUser from "../../utils/requests/auth";
-import { getErrorMessageFromError } from "../../utils/requests/errorMessage";
 import api from "../../api/axios";
 
 function CreateConfig() {
@@ -23,12 +22,10 @@ function CreateConfig() {
     const { request: authRequest } = useRequest();
 
     const defaultConfig = useMemo(() => ({
-        is_client: true,
         is_dark_theme: false,
         is_complainter_anonymous: true,
         is_rater_anonymous: false,
         email_notification_permission: true,
-        device_notification_permission: true,
         is_english: false,
         photoFile: null,
         photoBlobUrl: null
@@ -67,28 +64,22 @@ function CreateConfig() {
         postUserFormData.append("name", localUser.name);
         postUserFormData.append("email", localUser.email);
         postUserFormData.append("password", localUser.password);
-        postUserFormData.append("isClient", config.is_client);
         postUserFormData.append("isDarkTheme", config.is_dark_theme);
         postUserFormData.append("isComplainterAnonymous", config.is_complainter_anonymous);
         postUserFormData.append("isRaterAnonymous", config.is_rater_anonymous);
         postUserFormData.append("emailNotificationPermission", config.email_notification_permission);
-        postUserFormData.append("deviceNotificationPermission", config.device_notification_permission);
         postUserFormData.append("isEnglish", config.is_english);
         postUserFormData.append("photoFile", config.photoFile);
         
         const postUser = () => {
-            api.post("/users", postUserFormData);
+            return api.post("/users", postUserFormData);
         };
 
         const handleOnPostUserSuccess = (data) => {
             authUser(data.userID, dispatch, navigate, notify, authRequest, setUser, true);
         }
 
-        const handleOnPostUserError = (err) => {
-            notify(getErrorMessageFromError(err), "error");
-        }
-
-        postUserRequest(postUser, handleOnPostUserSuccess, handleOnPostUserError, "Criando usuário", "Usuário criado!", "Falha ao criar usuário!");
+        postUserRequest(postUser, handleOnPostUserSuccess, () => undefined, "Criando usuário", "Usuário criado!", "Falha ao criar usuário!");
     }, [authRequest, config, dispatch, localUser, navigate, notify, postUserRequest]);
 
     return (
@@ -98,7 +89,7 @@ function CreateConfig() {
                 setConfig={setConfig}
                 handleSubmit={handleOnSubmit}
                 handleChangeToTrainer={() => 
-                    navigate("/create-trainer", { state: { localUser: { ...localUser, config: { ...config, is_client: false } } } })
+                    navigate("/create-trainer", { state: { localUser: { ...localUser, config } } })
                 }
             />
         </main>

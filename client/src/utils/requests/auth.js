@@ -1,5 +1,4 @@
 import api from "../../api/axios";
-import { getErrorMessageFromError } from "./errorMessage";
 
 export default function authUser(ID, dispatch, navigate, notify, authRequest, setUser, isClient) {
     const formData = new FormData();
@@ -8,7 +7,7 @@ export default function authUser(ID, dispatch, navigate, notify, authRequest, se
     formData.append("isClient", isClient);
 
     const postAuth = () => {
-        api.post("/auth", formData);
+        return api.post("/auth", formData);
     };
 
     const handleOnAuthSuccess = (data) => {
@@ -19,10 +18,8 @@ export default function authUser(ID, dispatch, navigate, notify, authRequest, se
         notify("Você foi autenticado com sucesso. Aproveite o FitX!");
     };
 
-    const handleOnAuthError = (err) => {
+    const handleOnAuthError = () => {
         navigate("/login");
-
-        notify(getErrorMessageFromError(err), "error");
     };
 
     authRequest(postAuth, handleOnAuthSuccess, handleOnAuthError, "Autenticando", "Autenticado!", "Falha ao autenticar!");

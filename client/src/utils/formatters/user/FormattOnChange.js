@@ -32,10 +32,6 @@ export function formattTrainerDescription(description) {
         .replace(/[ \t]+/g, " ")
         .replace(/\n{3,}/g, "\n\n")    
         .replace(/(\n)[ \t]+/g, "$1")
-        .replace(
-            /(https?:\/\/[^\s\n]+)/g,
-            '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
-        );
 
     return formattedDescription;
 }

@@ -78,7 +78,7 @@ function CodeConfirmationForm({ code, setCode, email, handleSubmit, setError }) 
             
                 <Stack>
                     <p>
-                        Código enviado para
+                        Insira o código enviado a 
 
                         <span
                             className={styles.user_info}

@@ -19,7 +19,6 @@
     "react-router-dom": "^7.5.3",
     "react-scripts": "5.0.1",
     "react-transition-group": "^4.4.5",
-    "shared": "file:../shared",
     "tippy.js": "^6.3.7",
     "web-vitals": "^2.1.4"
   },

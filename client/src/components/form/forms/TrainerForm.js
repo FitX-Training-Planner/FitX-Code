@@ -86,7 +86,9 @@ function TrainerForm({ trainer, setTrainer, setTrainerError, handleSubmit }) {
                 />
             </Stack>
             
-            <form onSubmit={handleSubmit}>
+            <form 
+                onSubmit={handleSubmit}
+            >
                 <Stack
                     gap="3em"
                 >
@@ -108,7 +110,7 @@ function TrainerForm({ trainer, setTrainer, setTrainerError, handleSubmit }) {
                             />
 
                             <Select
-                                name="cref_UF"
+                                name="crefUF"
                                 placeholder="Selecione a UF"
                                 labelText="Unidade Federtiva do CREF"
                                 value={trainer.cref_UF}
