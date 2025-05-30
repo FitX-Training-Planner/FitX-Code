@@ -1,8 +1,7 @@
-from app.database.models import Users, Media
+from ..database.models import Users, Media
 from ..utils.user import is_email_used, hash_email, encrypt_email, hash_password
 from ..utils.cloudinary import upload_file
 from sqlalchemy.orm import joinedload
-from ..routes import ROUTES
 from ..exceptions.api_error import ApiError
 
 def get_user_by_id(db, user_id):
@@ -22,7 +21,6 @@ def get_user_by_id(db, user_id):
                 "is_complainter_anonymous": user.is_complainter_anonymous,
                 "is_rater_anonymous": user.is_rater_anonymous,
                 "email_notification_permission": user.email_notification_permission,
-                "device_notification_permission": user.device_notification_permission,
                 "is_english": user.is_english,
                 "photoUrl": user.media.url if user.fk_media_ID and user.media else None
             }
@@ -48,7 +46,6 @@ def insert_user(
     is_complainter_anonymous,
     is_rater_anonymous,
     email_notification_permission,
-    device_notification_permission,
     is_english,
     fk_media_ID
 ):
@@ -73,7 +70,6 @@ def insert_user(
             is_complainter_anonymous=is_complainter_anonymous,
             is_rater_anonymous=is_rater_anonymous,
             email_notification_permission=email_notification_permission,
-            device_notification_permission=device_notification_permission,
             is_english=is_english,
             fk_media_ID=fk_media_ID
         )

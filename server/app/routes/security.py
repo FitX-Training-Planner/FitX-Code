@@ -4,13 +4,13 @@ from ..exceptions.api_error import ApiError
 from ..utils.security import check_login, generate_code, verify_code, set_jwt_cookies, set_jwt_access_cookies
 from ..utils.user import is_email_used, send_email
 from ..services.user import get_user_by_id
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 
 security_bp = Blueprint("security", __name__)
 
 @security_bp.route("/login", methods=["POST"])
 def login():
-    error_message = "Erro na rota de login."
+    error_message = "Erro na rota de login"
 
     with get_db() as db:
         try:
@@ -37,7 +37,7 @@ def login():
 
 @security_bp.route("/sign-up", methods=["POST"])
 def sign_up():
-    error_message = "Erro na rota de sign up."
+    error_message = "Erro na rota de sign up"
 
     with get_db() as db:
         try:
@@ -60,7 +60,7 @@ def sign_up():
 
 @security_bp.route("/identity-confirmation", methods=["POST"])
 def identity_confirmation():
-    error_message = "Erro na rota de confirmação de identidade."
+    error_message = "Erro na rota de confirmação de identidade"
 
     try:
         data = request.form
@@ -74,17 +74,9 @@ def identity_confirmation():
         else:
             generated_code = generate_code(email)
 
-            message = f"""
-                Use o código abaixo para concluir sua verificação. Este código é válido por 2 minutos.
-
-                {generated_code}
-
-                Se você não solicitou este código, ignore este e-mail.
-            """
-
             template = render_template("code_verification.html", code=generated_code)
 
-            send_email(email, template, "Código de Verificação", message)
+            send_email(email, template, "Código de Verificação")
 
         return "", 204 
         
@@ -100,7 +92,7 @@ def identity_confirmation():
 
 @security_bp.route("/auth", methods=["POST"])
 def auth():
-    error_message = "Erro na rota de autenticação."
+    error_message = "Erro na rota de autenticação"
 
     with get_db() as db:
         try:
@@ -132,7 +124,7 @@ def auth():
 @security_bp.route("/token/refresh", methods=["POST"])
 @jwt_required(refresh=True)  
 def refresh_token():
-    error_message = "Erro na rota de atualização do token."
+    error_message = "Erro na rota de atualização do token"
 
     try:
         identity = get_jwt_identity()
@@ -143,7 +135,11 @@ def refresh_token():
         response = ""
         response.status_code = 204
 
-        return set_jwt_access_cookies(identity, response)
+        jwt_data = get_jwt()
+
+        is_client = jwt_data.get("isClient") == "true"
+
+        return set_jwt_access_cookies(identity, {"isClient": is_client}, response)
 
     except ApiError as e:
         print(f"{error_message}: {e}")

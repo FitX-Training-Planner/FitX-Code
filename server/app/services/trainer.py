@@ -10,7 +10,7 @@ def insert_trainer(db, cref_number, decription, fk_user_ID):
         new_trainer = Trainer(
             cref_number=cref_number,
             description=decription,
-            fk_user_Id=fk_user_ID
+            fk_user_ID=fk_user_ID
         )
 
         db.add(new_trainer)

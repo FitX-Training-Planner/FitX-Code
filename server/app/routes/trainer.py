@@ -6,9 +6,9 @@ from ..exceptions.api_error import ApiError
 
 trainer_bp = Blueprint("trainer", __name__, url_prefix="/trainers")
         
-@trainer_bp.route("/", methods=["POST"])
+@trainer_bp.route("", methods=["POST"])
 def post_trainer():
-    error_message = "Erro na rota de criação de treinador."
+    error_message = "Erro na rota de criação de treinador"
 
     with get_db() as db:
         try:
@@ -26,24 +26,23 @@ def post_trainer():
                 data.get("name"),
                 data.get("email"),
                 data.get("password"),
-                data.get("isClient") == "true",
+                False,
                 data.get("isDarkTheme") == "true",
                 data.get("isComplainterAnonymous") == "true",
                 data.get("isRaterAnonymous") == "true",
                 data.get("emailNotificationPermission") == "true",
-                data.get("deviceNotificationPermission") == "true",
                 data.get("isEnglish") == "true",
                 fk_media_ID
             )
 
-            trainer_ID = insert_trainer(
+            insert_trainer(
                 db, 
                 data.get("crefNumber"),
                 data.get("description"),
                 user_ID
             )
 
-            return jsonify({"trainerID": trainer_ID}), 201
+            return jsonify({"userID": user_ID}), 201
 
         except ApiError as e:
             db.rollback()

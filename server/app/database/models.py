@@ -23,9 +23,7 @@ class Users(Base):
     is_complainter_anonymous = Column(Boolean, nullable=False, default=True)
     is_rater_anonymous = Column(Boolean, nullable=False, default=False)
     email_notification_permission = Column(Boolean, nullable=False, default=True)
-    device_notification_permission = Column(Boolean, nullable=False, default=True)
     is_english = Column(Boolean, nullable=False, default=False)
-    device_token = Column(String(255), nullable=False) 
     fk_media_ID = Column(Integer, ForeignKey("media.ID"), index=True, unique=True)  
 
     media = relationship("Media")
@@ -269,7 +267,7 @@ class StepExercise(Base):
     exercise_sets = relationship("ExerciseSet", back_populates="step_exercise")
     
     __table_args__ = (
-        UniqueConstraint("order_in_step", "fk_training_day_step_ID", name="uq_order_in_step_training_day_step_step_exercise")
+        UniqueConstraint("order_in_step", "fk_training_day_step_ID", name="uq_order_in_step_training_day_step_step_exercise"),
     )
 
 class SetType(Base):
@@ -300,7 +298,7 @@ class ExerciseSet(Base):
     exercise_set_logs = relationship("ExerciseSetLog", back_populates="exercise_set")
     
     __table_args__ = (
-        UniqueConstraint("order_in_exercise", "fk_step_exercise_ID", name="uq_order_in_exercise_step_exercise_exercise_set")
+        UniqueConstraint("order_in_exercise", "fk_step_exercise_ID", name="uq_order_in_exercise_step_exercise_exercise_set"),
     )
 
 class CardioOption(Base):
@@ -351,7 +349,7 @@ class PaymentPlan(Base):
     payment_plan_benefits = relationship("PaymentPlanBenefit", back_populates="payment_plan")
     
     __table_args__ = (
-        UniqueConstraint("name", "fk_trainer_ID", name="uq_name_trainer_payment_plan")
+        UniqueConstraint("name", "fk_trainer_ID", name="uq_name_trainer_payment_plan"),
     )
 
 class PaymentInInstallments(Base):
@@ -366,7 +364,7 @@ class PaymentInInstallments(Base):
     payment_plan = relationship("PaymentPlan", back_populates="payment_in_installments")
     
     __table_args__ = (
-        UniqueConstraint("fk_payment_plan_ID", "installments_count", name="uq_payment_plan_installments_count_payment_in_installments")
+        UniqueConstraint("fk_payment_plan_ID", "installments_count", name="uq_payment_plan_installments_count_payment_in_installments"),
     )
 
 class PaymentMethod(Base):
@@ -405,7 +403,7 @@ class PaymentPlanBenefit(Base):
     payment_plan = relationship("PaymentPlan", back_populates="payment_plan_benefits")
     
     __table_args__ = (
-        UniqueConstraint("fk_payment_plan_ID", "description", name="uq_payment_plan_description_payment_plan_benefit")
+        UniqueConstraint("fk_payment_plan_ID", "description", name="uq_payment_plan_description_payment_plan_benefit"),
     )
 
 class BodyComposition(Base):
@@ -424,7 +422,7 @@ class BodyComposition(Base):
     trainer = relationship("Trainer", back_populates="body_compositions")
     
     __table_args__ = (
-        UniqueConstraint("result_date", "fk_user_ID", name="uq_result_date_user_body_composition")
+        UniqueConstraint("result_date", "fk_user_ID", name="uq_result_date_user_body_composition"),
     )
 
 class ExerciseSetLog(Base):
@@ -456,7 +454,7 @@ class Chat(Base):
     messages = relationship("Message", back_populates="chat")
     
     __table_args__ = (
-        UniqueConstraint("fk_trainer_ID", "fk_user_ID", name="uq_trainer_user_chat")
+        UniqueConstraint("fk_trainer_ID", "fk_user_ID", name="uq_trainer_user_chat"),
     )
 
 class Message(Base):
@@ -489,8 +487,8 @@ class BodyCompositionExamSend(Base):
     fk_trainer_ID = Column(Integer, ForeignKey("trainer.ID"), index=True, nullable=False)
     
     trainer = relationship("Trainer", back_populates="body_composition_exam_sends")
-    body_composition_exam = relationship("body_composition_exam")
+    body_composition_exam = relationship("BodyCompositionExam")
     
     __table_args__ = (
-        UniqueConstraint("fk_trainer_ID", "fk_body_composition_exam_ID", name="uq_trainer_body_composition_exam_body_composition_exam_send")
+        UniqueConstraint("fk_trainer_ID", "fk_body_composition_exam_ID", name="uq_trainer_body_composition_exam_body_composition_exam_send"),
     )

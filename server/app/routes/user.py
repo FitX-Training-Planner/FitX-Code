@@ -2,16 +2,21 @@ from flask import Blueprint, jsonify, request
 from ..services.user import get_user_by_id, insert_user, insert_photo
 from ..database.context_manager import get_db
 from ..exceptions.api_error import ApiError
+from flask_jwt_extended import get_jwt_identity
+from ..utils.jwt_decorator import jwt_with_auto_refresh
 
 user_bp = Blueprint("user", __name__, url_prefix="/users")
 
-@user_bp.route("/<int:user_id>", methods=["GET"])
-def get_user(user_ID):
-    error_message = "Erro na rota de recuperação de usuário."
+@user_bp.route("/me", methods=["GET"])
+@jwt_with_auto_refresh
+def get_user():
+    error_message = "Erro na rota de recuperação de usuário"
 
     with get_db() as db:
         try:
-            user = get_user_by_id(db, user_ID)
+            identity = get_jwt_identity()
+
+            user = get_user_by_id(db, identity)
 
             return jsonify(user), 200
 
@@ -25,9 +30,9 @@ def get_user(user_ID):
 
             return jsonify({"message": str(e)}), 500
         
-@user_bp.route("/", methods=["POST"])
+@user_bp.route("", methods=["POST"])
 def post_user():
-    error_message = "Erro na rota de criação de usuário."
+    error_message = "Erro na rota de criação de usuário"
 
     with get_db() as db:
         try:
@@ -45,12 +50,11 @@ def post_user():
                 data.get("name"),
                 data.get("email"),
                 data.get("password"),
-                data.get("isClient") == "true",
+                True,
                 data.get("isDarkTheme") == "true",
                 data.get("isComplainterAnonymous") == "true",
                 data.get("isRaterAnonymous") == "true",
                 data.get("emailNotificationPermission") == "true",
-                data.get("deviceNotificationPermission") == "true",
                 data.get("isEnglish") == "true",
                 fk_media_ID
             )
