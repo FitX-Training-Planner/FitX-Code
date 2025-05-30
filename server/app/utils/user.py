@@ -27,16 +27,17 @@ def hash_password(password):
 def check_password(password, hashed):
     return bcrypt.check_password_hash(hashed, password)
 
-def send_email(email, template, subject, body_text):
+def send_email(email, template, subject):
     try:
         message = Message(
             subject=subject, 
             recipients=[email], 
-            html=template, 
-            body=body_text
+            html=template
         )
     
         mail.send(message)
 
     except Exception as e:
+        print(f"Erro ao enviar e-mail: {e}")
+
         raise ApiError("Erro ao enviar e-mail.", 500)

@@ -42,28 +42,34 @@ def verify_code(email, code):
     if not saved_code == code.upper():
         raise ApiError("Código inválido.", 400)
 
+    redis_client.delete(f"verify_code:{email_hash}")
+
     return True
 
 def set_jwt_cookies(ID, is_client, response):
-    identity = {
-        "ID": ID,
-        "isClient": is_client 
-    }
 
-    set_jwt_refresh_cookies(identity, response)
-    set_jwt_access_cookies(identity, response)
+    set_jwt_refresh_cookies(str(ID), {"isClient": is_client}, response)
+    set_jwt_access_cookies(str(ID), {"isClient": is_client}, response)
 
     return response
 
-def set_jwt_access_cookies(identity, response):
-    access_token = create_access_token(identity=identity, expires_delta=timedelta(minutes=15))
+def set_jwt_access_cookies(identity, additional_claims, response):
+    access_token = create_access_token(
+        identity=identity, 
+        additional_claims=additional_claims,
+        expires_delta=timedelta(minutes=15)
+    )
 
     set_access_cookies(response, access_token)
 
     return response
 
-def set_jwt_refresh_cookies(identity, response):
-    refresh_token = create_refresh_token(identity=identity, expires_delta=timedelta(days=30))
+def set_jwt_refresh_cookies(identity, additional_claims, response):
+    refresh_token = create_refresh_token(
+        identity=identity, 
+        additional_claims=additional_claims,
+        expires_delta=timedelta(days=30)
+    )
 
     set_refresh_cookies(response, refresh_token)
 
