@@ -1,7 +1,5 @@
 from flask import Flask
-from dotenv import load_dotenv
 from .config import AppConfig, CloudinaryConfig, FernetConfig, RedisConfig, CORSConfig
-from .routes import register_routes
 import cloudinary
 from flask_bcrypt import Bcrypt
 from cryptography.fernet import Fernet
@@ -9,8 +7,7 @@ import redis
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_mail import Mail
-
-load_dotenv()
+import os
 
 bcrypt = Bcrypt()
 
@@ -23,7 +20,7 @@ jwt = JWTManager()
 mail = Mail()
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__, template_folder=os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'templates'))
 
     app.config.from_object(AppConfig)
 
@@ -37,6 +34,7 @@ def create_app():
 
     bcrypt.init_app(app)
 
+    from .routes import register_routes
     register_routes(app)
 
     return app

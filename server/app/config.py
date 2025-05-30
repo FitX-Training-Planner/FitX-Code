@@ -1,4 +1,5 @@
 import os
+import base64
 
 class AppConfig:
     SECRET_KEY = os.getenv("SECRET_KEY")
@@ -37,7 +38,7 @@ class CloudinaryConfig:
     }
 
 class FernetConfig:
-    key = os.getenv("FERNET_KEY")
+    key = os.getenv("FERNET_KEY").encode()
 
 class RedisConfig:  
     settings = {
