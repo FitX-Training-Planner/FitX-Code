@@ -1,6 +1,6 @@
 import styles from "./LoginForm.module.css";
 import { useCallback, useState } from "react";
-import { formattEmailAndPassword, formattName } from "../../../utils/formatters/user/formattOnChange";
+import { formattEmailAndPassword, formattName } from "../../../utils/formatters/user/formatOnChange";
 import { isEmailValid, isNameValid, isPasswordValid } from "../../../utils/validators/userValidator";
 import Stack from "../../containers/Stack";
 import TextInput from "../fields/TextInput";

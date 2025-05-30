@@ -1,5 +1,5 @@
 import styles from "./LoginForm.module.css";
-import { formattEmailAndPassword } from "../../../utils/formatters/user/formattOnChange";
+import { formattEmailAndPassword } from "../../../utils/formatters/user/formatOnChange";
 import Stack from "../../containers/Stack";
 import Title from "../../text/Title";
 import NonBackgroundButton from "../buttons/NonBackgroundButton";

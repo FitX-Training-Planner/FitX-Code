@@ -1,6 +1,6 @@
 import styles from "./LoginForm.module.css";
 import { useCallback, useState } from "react";
-import { formattCref, formattTrainerDescription } from "../../../utils/formatters/user/formattOnChange";
+import { formattCref, formattTrainerDescription } from "../../../utils/formatters/user/formatOnChange";
 import { isCREFValid, isTrainerDescriptionValid } from "../../../utils/validators/userValidator";
 import Stack from "../../containers/Stack";
 import TextInput from "../fields/TextInput";
