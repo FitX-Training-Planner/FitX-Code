@@ -19,6 +19,9 @@ class AppConfig:
     MAIL_PASSWORD = os.getenv("MAIL_PASSWORD")
     MAIL_DEFAULT_SENDER = (os.getenv("MAIL_SENDER_NAME"), os.getenv("MAIL_SENDER_EMAIL"))
 
+SQLALCHEMYURL = os.getenv("MYSQL_URL")
+print("SQLALCHEMYURL from env:", SQLALCHEMYURL)
+
 class SQLAlchemyConfig:
     DB_URL = os.getenv("MYSQL_URL")
 
@@ -46,13 +49,10 @@ class RedisConfig:
         "decode_responses": True
     }  
 
-front_end_url = os.getenv("FRONT_END_URL")
-print("FRONT_END_URL from env:", front_end_url)
-
 class CORSConfig:
     settings= {
         "supports_credentials": True,
-        "origins": [front_end_url] if front_end_url else ["*"],
+        "origins": [os.getenv("FRONT_END_URL")],
         "methods": ["GET", "POST", "PUT", "DELETE"],
         "allow_headers": ["Content-Type", "Authorization"]
     }
