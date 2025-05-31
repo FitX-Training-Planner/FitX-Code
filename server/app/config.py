@@ -20,15 +20,12 @@ class AppConfig:
     MAIL_DEFAULT_SENDER = (os.getenv("MAIL_SENDER_NAME"), os.getenv("MAIL_SENDER_EMAIL"))
 
 class SQLAlchemyConfig:
-    DB_HOST = os.getenv("DB_HOST")
-    DB_PORT = os.getenv("DB_PORT")
-    DB_USER = os.getenv("DB_USER")
-    DB_PASSWORD = os.getenv("DB_PASSWORD")
-    DB_NAME = os.getenv("DB_NAME",)
+    DB_URL = os.getenv("MYSQL_URL")
 
-    SQLALCHEMY_DATABASE_URI = (
-        f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-    )
+    if DB_URL and DB_URL.startswith("mysql://"):
+        DB_URL = DB_URL.replace("mysql://", "mysql+pymysql://")
+
+    SQLALCHEMY_DATABASE_URI = DB_URL
 
 class CloudinaryConfig:
     settings = {
@@ -42,10 +39,10 @@ class FernetConfig:
 
 class RedisConfig:  
     settings = {
-        "host": os.getenv("REDIS_HOST"),
-        "port": int(os.getenv("REDIS_PORT")),
-        "db": int(os.getenv("REDIS_DB")),
-        "password": os.getenv("REDIS_PASSWORD"),
+        "host": os.getenv("REDISHOST"),
+        "port": int(os.getenv("REDISPORT")),
+        "db": 0,
+        "password": os.getenv("REDISPASSWORD"),
         "decode_responses": True
     }  
 
