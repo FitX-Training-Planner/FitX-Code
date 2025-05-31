@@ -46,10 +46,13 @@ class RedisConfig:
         "decode_responses": True
     }  
 
+front_end_url = os.getenv("FRONT_END_URL")
+print("FRONT_END_URL from env:", front_end_url)
+
 class CORSConfig:
     settings= {
         "supports_credentials": True,
-        "origins": [os.getenv("FRONT_END_URL")],
+        "origins": [front_end_url] if front_end_url else ["*"],
         "methods": ["GET", "POST", "PUT", "DELETE"],
         "allow_headers": ["Content-Type", "Authorization"]
     }
