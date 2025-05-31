@@ -19,9 +19,6 @@ class AppConfig:
     MAIL_PASSWORD = os.getenv("MAIL_PASSWORD")
     MAIL_DEFAULT_SENDER = (os.getenv("MAIL_SENDER_NAME"), os.getenv("MAIL_SENDER_EMAIL"))
 
-SQLALCHEMYURL = os.getenv("MYSQL_URL")
-print("SQLALCHEMYURL from env:", SQLALCHEMYURL)
-
 class SQLAlchemyConfig:
     DB_URL = os.getenv("MYSQL_URL")
 
