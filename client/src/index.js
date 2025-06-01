@@ -1,7 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { unstable_HistoryRouter as HistoryRouter } from "react-router-dom";
-import history from "./history";
 import { Provider } from "react-redux";
 import { store } from "./app/store.js";
 import "./index.css";
@@ -15,9 +13,7 @@ root.render(
     <Provider store={store} >
       <SystemMessageProvider>
         <ConfirmIdentityCallbackProvider>
-          <HistoryRouter history={history}>
-            <App />
-          </HistoryRouter>
+          <App />
         </ConfirmIdentityCallbackProvider>
       </SystemMessageProvider>
     </Provider>

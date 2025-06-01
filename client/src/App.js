@@ -3,7 +3,7 @@ import CodeConfirmation from "./components/pages/CodeConfirmation";
 import CreateConfig from "./components/pages/CreateConfig";
 import CreateTrainer from "./components/pages/CreateTrainer";
 import Login from "./components/pages/Login";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import api from "./api/axios";
 import useRequest from "./hooks/useRequest";
 import { useDispatch } from "react-redux";
@@ -39,43 +39,45 @@ function App() {
   }, [dispatch, getUserRequest, location.pathname]);
 
   return (
-    <Routes>
-      <Route
-        exact
-        path="/"
-        element={<Home />}
-      />
+    <Router>
+      <Routes>
+        <Route
+          exact
+          path="/"
+          element={<Home />}
+        />
 
-      <Route
-        path="/login"
-        element={<Login />}
-      />
+        <Route
+          path="/login"
+          element={<Login />}
+        />
 
-      <Route
-        path="/create-config"
-        element={<CreateConfig />}
-      />
+        <Route
+          path="/create-config"
+          element={<CreateConfig />}
+        />
 
-      <Route
-        path="/create-trainer"
-        element={<CreateTrainer />}
-      />
+        <Route
+          path="/create-trainer"
+          element={<CreateTrainer />}
+        />
 
-      <Route
-        path="/code-confirmation"
-        element={<CodeConfirmation />}
-      />
+        <Route
+          path="/code-confirmation"
+          element={<CodeConfirmation />}
+        />
 
-      <Route
-        path="/recover-password"
-        element={<RecoverPassword />}
-      />
+        <Route
+          path="/recover-password"
+          element={<RecoverPassword />}
+        />
 
-      <Route
-        path="/trainers/:userID/create-training-plan"
-        element={<CreateTrainingPlan />}
-      />
-    </Routes>
+        <Route
+          path="/trainers/:userID/create-training-plan"
+          element={<CreateTrainingPlan />}
+        />
+      </Routes>
+    </Router>
   );
 }
 
