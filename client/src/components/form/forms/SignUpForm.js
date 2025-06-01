@@ -74,7 +74,7 @@ function SignUpForm({ user, setUser, setSignUpError, handleChangeFormType, handl
                             labelText="Nome"
                             value={user.name}
                             handleChange={(e) => handleOnChangeUserData(e, formattName, isNameValid)}
-                            // icon={}
+                            icon="images/icons/user2.png"
                             alertMessage="O nome deve ter entre 3 e 100 caracteres, sem símbolos ou números."
                             error={errors.name}
                             maxLength={100}
@@ -87,7 +87,7 @@ function SignUpForm({ user, setUser, setSignUpError, handleChangeFormType, handl
                             labelText="E-mail"
                             value={user.email}
                             handleChange={(e) => handleOnChangeUserData(e, formattEmailAndPassword, isEmailValid)}
-                            // icon={}
+                            icon="images/icons/email.png"
                             alertMessage="E-mail inválido."
                             error={errors.email}
                             maxLength={254}
@@ -100,7 +100,7 @@ function SignUpForm({ user, setUser, setSignUpError, handleChangeFormType, handl
                             labelText="Senha"
                             value={user.password}
                             handleChange={(e) => handleOnChangeUserData(e, formattEmailAndPassword, isPasswordValid)}
-                            // icon={}
+                            icon="images/icons/password.png"
                             alertMessage="A senha deve ter entre 10 e 20 caracteres, com no mínimo um símbolo, número e letra."
                             error={errors.password}
                             maxLength={20}

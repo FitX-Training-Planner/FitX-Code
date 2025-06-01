@@ -50,7 +50,7 @@ function LoginForm({ user, setUser, loginError, setLoginError, navigate, handleC
                             labelText="E-mail"
                             value={user.email}
                             handleChange={(e) => handleOnChangeUserData(e)}
-                            // icon={}
+                            icon="images/icons/email.png"
                             maxLength={254}
                         />
 
@@ -61,7 +61,7 @@ function LoginForm({ user, setUser, loginError, setLoginError, navigate, handleC
                             labelText="Senha"
                             value={user.password}
                             handleChange={(e) => handleOnChangeUserData(e)}
-                            // icon={}
+                            icon="images/icons/password.png"
                             alertMessage="E-mail e/ou senha inválidos."
                             error={loginError}
                             maxLength={20}

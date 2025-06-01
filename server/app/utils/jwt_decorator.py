@@ -20,7 +20,7 @@ def jwt_with_auto_refresh(fn):
                 jwt_data = get_jwt()
 
                 if jwt_data.get("type") != "refresh":
-                    raise Exception("Token inválido.")
+                    raise
 
                 identity = get_jwt_identity()
 
@@ -35,6 +35,6 @@ def jwt_with_auto_refresh(fn):
             except Exception as e:
                 print(f"{error_message}: {e}")
 
-                return jsonify({"message": str(e)}), 401
+                return jsonify({"message": "Token inválido ou expirado."}), 401
 
     return wrapper

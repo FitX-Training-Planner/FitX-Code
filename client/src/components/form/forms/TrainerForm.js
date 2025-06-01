@@ -1,5 +1,5 @@
 import styles from "./LoginForm.module.css";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { formattCref, formattTrainerDescription } from "../../../utils/formatters/user/formatOnChange";
 import { isCREFValid, isTrainerDescriptionValid } from "../../../utils/validators/userValidator";
 import Stack from "../../containers/Stack";
@@ -15,7 +15,7 @@ function TrainerForm({ trainer, setTrainer, setTrainerError, handleSubmit }) {
         description: false
     });
 
-    const UFs = [
+    const UFs = useMemo(() => [
         "AC",
         "AL",
         "AP",
@@ -43,7 +43,7 @@ function TrainerForm({ trainer, setTrainer, setTrainerError, handleSubmit }) {
         "SP",
         "SE",
         "TO"
-    ];
+    ], []);
 
     const handleOnChangeTrainerData = useCallback((e, formattFunction, dataValidator) => {
         setTrainerError(false);
@@ -103,7 +103,7 @@ function TrainerForm({ trainer, setTrainer, setTrainerError, handleSubmit }) {
                                 labelText="CREF"
                                 value={trainer.cref_number}
                                 handleChange={(e) => handleOnChangeTrainerData(e, formattCref, isCREFValid)}
-                                // icon={}
+                                icon="images/icons/trainer.png"
                                 alertMessage="Número do CREF inválido."
                                 error={errors.cref_number}
                                 maxLength={8}
@@ -115,7 +115,7 @@ function TrainerForm({ trainer, setTrainer, setTrainerError, handleSubmit }) {
                                 labelText="Unidade Federtiva do CREF"
                                 value={trainer.cref_UF}
                                 handleChange={(e) => handleOnChangeTrainerData(e)}
-                                // icon={}
+                                icon="images/icons/location.png"
                                 options={UFs}
                             />
                         </Stack>
@@ -126,7 +126,7 @@ function TrainerForm({ trainer, setTrainer, setTrainerError, handleSubmit }) {
                             labelText="Descrição Profissional"
                             value={trainer.description}
                             handleChange={(e) => handleOnChangeTrainerData(e, formattTrainerDescription, isTrainerDescriptionValid)}
-                            // icon={}
+                            icon="images/icons/description.png"
                             alertMessage="A descrição profissional não deve ter mais que 1200 caracteres ou 15 quebras de linha."
                             error={errors.description}
                             maxLength={1200}

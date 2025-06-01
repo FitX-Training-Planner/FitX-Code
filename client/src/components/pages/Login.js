@@ -13,6 +13,7 @@ import { useConfirmIdentityCallback } from "../../app/ConfirmIdentityCallbackPro
 import authUser from "../../utils/requests/auth";
 import api from "../../api/axios";
 import useWindowSize from "../../hooks/useWindowSize";
+import { Helmet } from "react-helmet";
 
 function Login() {
     const navigate = useNavigate();
@@ -105,6 +106,10 @@ function Login() {
 
     return (
         <main>
+            <Helmet>
+                <title>Login</title>
+            </Helmet>
+            
             <Stack
                 direction="row"
                 gap="0"

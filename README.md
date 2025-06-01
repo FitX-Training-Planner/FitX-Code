@@ -10,3 +10,9 @@ Este repositório contém o código e documentos relacionados ao projeto FitX, u
 <a href="https://www.flaticon.com/br/icones-gratis/logotipo-do-instagram" title="logotipo do instagram ícones">Logotipo do instagram ícones criados por Pixel perfect - Flaticon</a>
 <a href="https://www.flaticon.com/br/icones-gratis/github" title="github ícones">Github ícones criados por riajulislam - Flaticon</a>
 <a href="https://www.flaticon.com/br/icones-gratis/masculino" title="masculino ícones">Masculino ícones criados por Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/treinadores" title="treinadores ícones">Treinadores ícones criados por Good Ware - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/descricao-do-produto" title="descrição do produto ícones">Descrição do produto ícones criados por Pixel perfect - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/google-maps" title="google maps icons">Google maps icons created by kmg design - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/nome-de-usuario" title="nome de usuário ícones">Nome de usuário ícones criados por Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/email" title="email icons">Email icons created by Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/password" title="password icons">Password icons created by kostop - Flaticon</a>

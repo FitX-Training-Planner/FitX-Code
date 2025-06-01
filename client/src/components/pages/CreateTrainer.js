@@ -12,6 +12,7 @@ import useRequest from "../../hooks/useRequest";
 import { setUser } from "../../slices/user/userSlice";
 import styles from "./CreateTrainer.module.css";
 import useWindowSize from "../../hooks/useWindowSize";
+import { Helmet } from "react-helmet";
 
 function CreateTrainer() {
     const hasRun = useRef(false);
@@ -105,6 +106,10 @@ function CreateTrainer() {
 
     return (
         <main>
+            <Helmet>
+                <title>Criar Treinador</title>
+            </Helmet>
+            
             <Stack
                 direction={width > 640 ? "row" : "column"}
                 className={width > 640 ? styles.create_trainer_page : undefined}
