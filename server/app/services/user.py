@@ -12,16 +12,17 @@ def get_user_by_id(db, user_id):
             raise ApiError("Usuário não encontrado.", 404)
 
         return {
+            "ID": user_id,
             "name": user.name,
-            "cref_number": user.trainer.cref_number if user.trainer else None,
+            "crefNumber": user.trainer.cref_number if user.trainer else None,
             "description": user.trainer.description if user.trainer else None,
             "config": {
-                "is_client": user.is_client,
-                "is_dark_theme": user.is_dark_theme,
-                "is_complainter_anonymous": user.is_complainter_anonymous,
-                "is_rater_anonymous": user.is_rater_anonymous,
-                "email_notification_permission": user.email_notification_permission,
-                "is_english": user.is_english,
+                "isClient": user.is_client,
+                "isDarkTheme": user.is_dark_theme,
+                "isComplainterAnonymous": user.is_complainter_anonymous,
+                "isRaterAnonymous": user.is_rater_anonymous,
+                "emailNotificationPermission": user.email_notification_permission,
+                "isEnglish": user.is_english,
                 "photoUrl": user.media.url if user.fk_media_ID and user.media else None
             }
         }

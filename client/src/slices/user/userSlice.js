@@ -1,16 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+    ID: null,
     name: "",
-    cref_number: null,
+    crefNumber: null,
     description: null,
     config: {
-        is_client: true,
-        is_dark_theme: false,
-        is_complainter_anonymous: true,
-        is_rater_anonymous: false,
-        email_notification_permission: true,
-        is_english: false,
+        isClient: true,
+        isDarkTheme: false,
+        isComplainterAnonymous: true,
+        isRaterAnonymous: false,
+        emailNotificationPermission: true,
+        isEnglish: false,
         photoUrl: null
     }
 };

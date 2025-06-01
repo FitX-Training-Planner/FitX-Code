@@ -12,7 +12,6 @@ import { useDispatch } from "react-redux";
 import { setUser } from "../../slices/user/userSlice";
 import api from "../../api/axios";
 import { validateCodeRequestData } from "../../utils/validators/formValidator";
-import { Helmet } from "react-helmet";
 
 function CodeConfirmation() {
     const navigate = useNavigate();
@@ -42,6 +41,10 @@ function CodeConfirmation() {
     });    
     const [origin, setOrigin] = useState("login");
     const [error, setError] = useState(false);
+
+    useEffect(() => {
+        document.title = "Confirmar Identidade";
+    }, []);
 
     const generateCode = useCallback(email => {
         const generateCodeFormData = new FormData();
@@ -112,10 +115,6 @@ function CodeConfirmation() {
         <main
             className={styles.code_confirmation_page}
         >
-            <Helmet>
-                <title>Confirmar Identidade</title>
-            </Helmet>
-
             <Stack
                 className={styles.code_confirmation_container}
                 gap="2em"

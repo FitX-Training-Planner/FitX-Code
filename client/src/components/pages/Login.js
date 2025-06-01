@@ -1,7 +1,7 @@
 import styles from "./Login.module.css";
 import Stack from "./../containers/Stack";
 import Title from "../text/Title";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LoginForm from "../form/forms/LoginForm";
 import SignUpForm from "../form/forms/SignUpForm";
@@ -13,7 +13,6 @@ import { useConfirmIdentityCallback } from "../../app/ConfirmIdentityCallbackPro
 import authUser from "../../utils/requests/auth";
 import api from "../../api/axios";
 import useWindowSize from "../../hooks/useWindowSize";
-import { Helmet } from "react-helmet";
 
 function Login() {
     const navigate = useNavigate();
@@ -36,6 +35,10 @@ function Login() {
     const [isLogin, setIsLogin] = useState(true);
     const [signUpError, setSignUpError] = useState(false);
     const [loginError, setLoginError] = useState(false);
+
+    useEffect(() => {
+        document.title = "Login";
+    }, []);
 
     const handleOnChangeFormType = useCallback(() => {
         setLocalUser(defaultUser);
@@ -106,10 +109,6 @@ function Login() {
 
     return (
         <main>
-            <Helmet>
-                <title>Login</title>
-            </Helmet>
-            
             <Stack
                 direction="row"
                 gap="0"

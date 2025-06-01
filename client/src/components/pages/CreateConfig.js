@@ -7,7 +7,6 @@ import { setUser } from "../../slices/user/userSlice";
 import { useDispatch } from "react-redux";
 import authUser from "../../utils/requests/auth";
 import api from "../../api/axios";
-import { Helmet } from "react-helmet";
 
 function CreateConfig() {
     const location = useLocation();
@@ -38,6 +37,10 @@ function CreateConfig() {
         password: ""
     });
     const [config, setConfig] = useState(defaultConfig);
+
+    useEffect(() => {
+        document.title = "Criar Configuração";
+    }, []);
 
     useEffect(() => {
         if (hasRun.current) return;
@@ -85,10 +88,6 @@ function CreateConfig() {
 
     return (
         <main>
-            <Helmet>
-                <title>Criar Configuração</title>
-            </Helmet>
-
             <ConfigForm
                 config={config}
                 setConfig={setConfig}
