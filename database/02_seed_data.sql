@@ -1,5 +1,5 @@
 INSERT INTO media (url) VALUES
-('images/activated_muscles/female/abdomen/'), #comecei a contar a partir daqui
+('images/activated_muscles/female/abdomen/'),
 ('images/activated_muscles/male/abdomen/'),
 ('images/activated_muscles/female/biceps/'),
 ('images/activated_muscles/male/biceps/'),
@@ -32,87 +32,85 @@ INSERT INTO media (url) VALUES
 ('images/cardio_options/upright_exercise_bike.png'),
 ('images/cardio_options/rowing_machine.png'),
 ('images/cardio_options/stair_simulator.png'),
-('images/cardio_options/treadmill.png');
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0100_1_toett3&profile=cld-default'), #Flexão Nórdica
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0081_1_doos6n&profile=cld-default'), #leavntar a barra e abaixar
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0079_1_uzhtaj&profile=cld-default'), #Tríceps Testa
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0078_1_fwymg8&profile=cld-default'), #Rosca Cruz
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0082_1_vpsqel&profile=cld-default'), #Elevação Frontal
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0083_1_qaognf&profile=cld-default'), #Rosca Direta Tradicional
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0080_1_hrhw35&profile=cld-default'), #Encolhimento
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0084_1_tuow81&profile=cld-default'), #Adução de Punho?????
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0091_1_ompois&profile=cld-default'), #crossover baixo
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0086_1_omuygg&profile=cld-default'), #Rosca Martelo
-('https://res.cloudinary.com/dt5rj5jsb/image/upload/v1748815849/IMG-20250601-WA0085_dugf6h.jpg'), #Sustentação de Peso com as Mãos
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0087_1_cuc4aa&profile=cld-default'), #Rosca Punho
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0089_1_rg7euk&profile=cld-default'), #sarrada inclinada com barra
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0093_1_zaerjn&profile=cld-default'), #Crucifixo Inclinado
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0088_1_qmzreq&profile=cld-default'), #Meio Terra
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0090_1_ttckk0&profile=cld-default'), #Elevação Lateral
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0092_1_dy4430&profile=cld-default'), #biceps barra baixo
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0099_1_bth2am&profile=cld-default'), #Extensão Lombar
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0097_1_wmljqo&profile=cld-default'), #Pulldown
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0095_1_brrkbs&profile=cld-default'), #Supino Inclinado
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0096_1_s9pwvu&profile=cld-default'), #Tríceps Francês
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0094_1_guvocm&profile=cld-default'), #maquina inicial peito/amigo
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0000_lwav5v&profile=cld-default'), #Elevação Pélvica
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0001_zfvm9q&profile=cld-default'), #Abdominal Oblíquo na Barra Fixa CERTO
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0003_kgenvy&profile=cld-default'), #Abdominal Bicicleta CERTO
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0004_p8o5ag&profile=cld-default'), #Abdominal Escalador CERRTO
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0005_jwwnbu&profile=cld-default'), #Abdominal Oblíquo Deitado CERTO
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0006_bvgpek&profile=cld-default'), #Abdominal Infra na Barra Fixa CERTO
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0007_oec8gn&profile=cld-default'), #abdomen na maquina ????
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0009_xsz9wa&profile=cld-default'), #levantando peso com o pulso
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0010_do7fuz&profile=cld-default'), #Abdominal Infra Apoiado CERTO
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0011_s8lrrb&profile=cld-default'), #Abdominal Supra
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0012_mpzwpl&profile=cld-default'), #Adução de Quadril em Pé
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0013_p6geji&profile=cld-default'), #Glúteo Coice 
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0014_o1s36y&profile=cld-default'), #Cadeira Extensora
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0015_u2gabe&profile=cld-default'), #Abdução de Quadril em Pé
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0016_vp9pe2&profile=cld-default'), #Cadeira Flexora
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0017_dvs1l4&profile=cld-default'), #Cadeira Adutora
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0018_tnrldp&profile=cld-default'), #Leg Press
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0019_dkwfnf&profile=cld-default'), #Cadeira Abdutora
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0020_e7oeif&profile=cld-default'), #Flexora em Pé
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0021_kbjwe1&profile=cld-default'), #Gêmeos em Pé
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0022_nakl7n&profile=cld-default'), #Gêmeos com Quadril Flexionado
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0023_vahm5m&profile=cld-default'), #Mesa Flexora
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0026_r5li7x&profile=cld-default'), #Gêmeos Sentado
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0027_v3lzwb&profile=cld-default'), #Agachamento Romano
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0028_fp0vy8&profile=cld-default'), #Búlgaro
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0029_dcayom&profile=cld-default'), #Passada
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0030_hfqwt4&profile=cld-default'), #Afundo
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0031_td5l4f&profile=cld-default'), #Bom Dia
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0032_fnfbz9&profile=cld-default'), #Agachamento Sumô
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0033_h9ygct&profile=cld-default'), #Agachamento Frontal
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0034_yw3vtj&profile=cld-default'), #Agachamento Tradicional
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0035_av2pfq&profile=cld-default'), #sarrada terra com a perna inclinada e aberta
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0036_c8xids&profile=cld-default'), #sarrada terra com a perna inclinada e fechada
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0037_zabbie&profile=cld-default'), #video repetido?
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0039_s4ecsu&profile=cld-default'), #Pullover
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0042_nsbfhz&profile=cld-default'), #Remada Tradicional
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0043_wn9d23&profile=cld-default'), #Puxada
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0045_llcgxf&profile=cld-default'), #Puxada de Rosto
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0046_njw3mo&profile=cld-default'), #Remada Alta
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0047_fje5a2&profile=cld-default'), #Desenvolvimento
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0048_nh2r4i&profile=cld-default'), #Crucifixo Inverso
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0051_uknsil&profile=cld-default'), #Flexão
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0054_x5biyc&profile=cld-default'), #Crucifixo Reto
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0057_bb2pxc&profile=cld-default'), #Supino Reto
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0059_z4uziz&profile=cld-default'), #Rosca Aranha
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0061_nfpiqy&profile=cld-default'), #Rosca Concentrada
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0062_wdqkh4&profile=cld-default'), #Rosca Direta Inclinada
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0067_onxqpj&profile=cld-default'), #Rosca Scott Tradicional
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0068_lbesb9&profile=cld-default'), #abaixar e levantar a maquina com o braço
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0069_gzufup&profile=cld-default'), #Rosca Scott Inversa
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0070_pw5bpl&profile=cld-default'), #Tríceps Coice
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0071_maanl4&profile=cld-default'), #Roller de Punho
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0072_nyz4pq&profile=cld-default'), #francesa barra
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0074_aejes4&profile=cld-default'), #Tríceps Pulley
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=VID-20250601-WA0076_wcabnc&profile=cld-default'), #martelo na coxa
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=20250531_150549_xdpnl3&profile=cld-default'), #Supino Declinado
-('https://player.cloudinary.com/embed/?cloud_name=dt5rj5jsb&public_id=20250531_150903_xihkx5&profile=cld-default'), #Crucifixo Declinado
-('https://res.cloudinary.com/dt5rj5jsb/image/upload/v1748832212/20250531_184532_x7vcaw.jpg'), #Prancha
+('images/cardio_options/treadmill.png'),
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925660/Triceps_testa_yxt7z2.mp4'),  
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925653/Triceps_pulley_zffryr.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925651/Triceps_frances_mtiknw.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925651/Terra_sumo_hp1qgl.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925651/Triceps_coice_wvytbb.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925650/Terra_tradicional_nk7ryr.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925650/Terra_romeno_vbd2ab.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/image/upload/v1748925649/Sustentacao_peso_qrod0l.jpg'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925643/Supino_reto_qdjzdr.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925642/Supino_declinado_rcc2cc.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925642/Supino_inclinado_i9gfon.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925642/Stiff_sfqpap.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925640/Rosca_scott_inversa_izd8w9.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925641/Rosca_scott_tradicional_g1u673.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925640/Rosca_punho_hxj0ts.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925640/Rosca_martelo_gs0osy.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925634/Rosca_inversa_oe7wew.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925633/Rosca_direta_tradicional_s1e05h.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925633/Rosca_inclinada_y1hnyz.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925632/Rosca_concentrada_aqaowu.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925632/Rosca_cruz_pp2dpz.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925631/Rosca_aranha_lea6uj.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925631/Remada_tradicional_o4rqa4.mp4'),
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925631/Roller_punho_lg4qfn.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925623/Remada_cavalinho_qzrlmc.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925623/Remada_baixa_hshoxq.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925622/Remada_alta_sixcx0.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925622/Puxada_rosto_pk5yn1.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925622/Puxada_mfhh7x.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925621/Pullover_pstoot.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925621/Pulldown_dq9pbt.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/image/upload/v1748925619/Prancha_acl4lf.jpg'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925617/Passada_kedcfe.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925615/Mesa_flexora_poo1gf.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925615/Legpress_kuf419.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925615/Mergulho_j67ynw.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925614/Gluteo_coice_ca44c7.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925614/Gemeos_sentado_xrt4vz.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925612/Gemeos_quadril_flexionado_u299zm.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925607/Flexao_dedos_fbpk1n.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925608/Gemeos_em_pe_eubmjm.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925608/Flexao_nordica_jajkhz.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925607/Flexora_em_pe_xocysj.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925606/Encolhimento_cknaaz.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925606/Extensao_lombar_fg1lrd.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925605/Extensora_zfsfgt.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925605/Flexao_wcpy3f.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925604/Elevacao_pelvica_wsxe1p.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925603/Elevacao_lateral_wxmk3t.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925600/Elevacao_frontal_gjmz77.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925597/Crucifixo_declinado_mup9zp.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925599/Desenvolvimento_adr7ek.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925597/Crucifixo_inclinado_tsj5sx.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925597/Crucifixo_inverso_ktwz7g.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925597/Crucifixo_reto_zj82cx.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925596/Cadeira_flexora_xqfbez.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925595/Cadeira_adutora_vqszqa.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925595/Cadeira_abdutora_rgcu9a.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925591/Bomdia_rl3qyd.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925589/Agachamento_tradicional_bo8g1b.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925589/Agachamento_sumo_volatg.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925588/Agachamento_romano_rohkwz.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925588/Agachamento_bulgaro_u3qank.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925588/Agachamento_frontal_wpthvr.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925587/Afundo_yymijf.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925588/Aducao_punho_gvuy9h.mp4'),  
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925586/Aducao_em_pe_kcq6yy.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925580/Adominal_bicicleta_skkysz.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925578/Abducao_punho_su3fvd.mp4'),  
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925578/Abdominal_obliquo_barra_livre_yxfbeg.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925578/Abducao_em_pe_wmvtby.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925577/Abdominal_infra_deitado_psis12.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925577/Abdominal_escalador_maqxcw.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925577/Abdominal_infra_barra_fixa_sbaf4p.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925576/Abdominal_infra_apoiado_gzxptq.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925576/Abdomina_supra_h4acnu.mp4'), 
+('https://res.cloudinary.com/dt5rj5jsb/video/upload/v1748925576/Abdomina_obliquo_deitado_w9lk5h.mp4'); 
+
 
 INSERT INTO muscle_group (name, fk_male_model_media_ID, fk_female_model_media_ID) VALUES
 ('Abdômen', 2, 1),
@@ -131,84 +129,83 @@ INSERT INTO muscle_group (name, fk_male_model_media_ID, fk_female_model_media_ID
 ('Panturrilha', 28, 27);
 
 INSERT INTO exercise (name, description, is_fixed, fk_media_ID) VALUES 
-('Tríceps Francês', 'Empurre um peso para cima com os braços acima da cabeça. Movimente somente o antebraço.', 0, 55),
-('Tríceps Pulley', 'Empurre um peso para baixo com os braços ao lado do tronco em uma polia alta. Movimente somente o antebraço.', 0, 110),
-('Tríceps Testa', 'Empurre um peso para frente com os braços à frente da cabeça. Movimente somente o antebraço.', 0, 37),
-('Tríceps Coice', 'Empurre um peso para trás com os braços ao lado do tronco inclinado para frente em uma polia alta. Movimente somente o antebraço.', 0, 107),
-('Tríceps Mergulho', 'Empurre um peso para baixo com os braços ao lado do tronco. Movimente somente o braço.', 0, 115),
-('Rosca Punho', 'Movimente somente um peso com os braços fixos. Utilize somente o punho.', 0, NULL), ????
-('Adução de Punho', 'Movimente somente um peso em direção ao seu dedo mínimo com os braços fixos. Utilize somente o punho.', 0, NULL), ????
-('Abdução de Punho', 'Movimente somente um peso em direção ao seu dedo polegar com os braços fixos. Utilize somente o punho.', 0, NULL), ????
-('Flexão de Dedos', 'Movimento um peso com os braços fixos. Utilize somente os dedos.', 0, NULL), ????
-('Sustentação de Peso com as Mãos', 'Segure e mantenha um peso com as mãos.', 0, 45),
-('Roller de Punho', 'Torça e destorça uma barra amarrada a pesos.', 1, 108),
-('Rosca Direta Tradicional', 'Puxe um peso para cima com os braços ao lado do tronco e com as palmas das mãos viradas para cima. Movimente somente o antebraço.', 0, 40),
-('Rosca Inversa', 'Puxe um peso para cima com os braços ao lado do tronco e com as palmas das mãos viradas para baixo. Movimente somente o antebraço.', 0, NULL), ????
-('Rosca Scott Tradicional', 'Puxe um peso para cima com os braços apoiados à frente do tronco e com as palmas das mãos viradas para cima. Movimente somente o antebraço.', 0, 104),
-('Rosca Scott Inversa', 'Puxe um peso para cima com os braços apoiados à frente do tronco e com as palmas das mãos viradas para baixo. Movimente somente o antebraço.', 0, 106),
-('Rosca Aranha', 'Puxe um peso para cima com os braços soltos à frente do tronco inclinado para frente. Movimente somente o antebraço.', 0, 101),
-('Rosca Direta Inclinada', 'Puxe um peso para cima com os braços atrás do tronco. Movimente somente o antebraço.', 0, 103), 
-('Rosca Concentrada', 'Puxe um peso em direção ao peito com os braços à frente do tronco inclinado para frente. Movimente somente o antebraço.', 0, 102),
-('Rosca Cruz', 'Puxe um peso em direção à cabeça com os braços ao lado dela. Movimente somente o antebraço.', 0, 38),
-('Rosca Martelo', 'Puxe um peso para cima com os braços ao lado do tronco e com as palmas das mãos voltadas uma para a outra. Movimente somente o antebraço.', 0, 44)
-('Supino Reto', 'Empurre um peso para frente do tronco. Movimente somente o braço.', 0, 100),
-('Supino Inclinado', 'Empurre um peso para frente e para cima do tronco. Movimente somente o braço.', 0, 54),
-('Supino Declinado', 'Empurre um peso para frente e para baixo do tronco. Movimente somente o braço.', 0, 112),
-('Crucifixo Reto', 'Junte os seus braços à frente do tronco com eles levemente dobrados. Movimente somente o braço.', 0, 99),
-('Crucifixo Declinado', 'Junte os seus braços à frente do tronco e próximo as pernas com eles levemente dobrados. Movimente somente o braço.', 0, 113),
-('Crucifixo Inclinado', 'Junte os seus braços à frente do tronco e mais próximos à cabeça com eles levemente dobrados. Movimente somente o braço.', 0, 48),
-('Flexão', 'Deite no chão de bruços e empurre o seu próprio corpo. Movimente somente o braço.', 1, 98),
-('Elevação Lateral', 'Levante os seus braços ao lado do tronco com eles levemente dobrados. Movimente somente o braço.', 0, 50),
-('Elevação Frontal', 'Levante os seus braços à frente do tronco com eles levemente dobrados. Movimente somente o braço.', 0, 39),
-('Crucifixo Inverso', 'Puxe um peso em direção as costas com os seus braços na altura dos ombros e levemente dobrados. Movimente somente o braço.', 0, 97),
-('Desenvolvimento', 'Empurre um peso para cima da cabeça. Movimente somente o braço.', 0, 96),
-('Remada Alta', 'Puxe um peso para cima até a altura do peito. Movimente somente o braço.', 0,95),
-('Puxada de Rosto', 'Puxe um peso em direção a cabeça com os braços na altura dos ombros. Movimente somente o braço e o ombro.', 0, 94),
-('Encolhimento', 'Suba os seus ombros com eles e os braços fixos.', 0, 41),
-('Puxada', 'Puxe um peso até a altura do pescoço com os braços acima da cabeça. Movimente somente o braço e o ombro.', 0, 93),
-('Remada Tradicional', 'Puxe um peso em direção ao tronco, estando apoiado, com ele inclinado, ou em máquinas. Movimente somente o braço e o ombro.', 0, 92),
-('Remada Cavalinho', 'Puxe um peso em direção ao tronco, estando apoiado ou com ele inclinado em máquina T-bar, com trajetória angular. Movimente somente o braço e o ombro.', 0, NULL),
-('Remada Baixa', 'Puxe um peso em direção ao tronco, estando sentado e em uma polia baixa. Movimente somente o braço e o ombro.', 0, NULL), ????
-('Pulldown', 'Puxe um peso até a altura do umbigo com os braços levemente dobrados e alinhados com os ombros, com trajetória angular. Movimente somente o braço e o ombro.', 0, 53),
-('Pullover', 'Puxe um peso até a altura do peito com os braços levemente dobrados e alinhados com os ombros, com trajetória angular, estando deitado. Movimente somente o braço e o ombro.', 0, 91),
-('Meio Terra', 'Levante um peso do chão, mas com um apoio para tornar o movimento mais curto. Movimente somente o quadril e a perna.', 0, 49),
-('Extensão Lombar', 'Levante o seu tronco e extenda sua coluna com as pernas presas em um banco romano. Movimente somente o tronco e a coluna.', 0, 52),
-('Gêmeos em Pé', 'Apoie a ponta dos pés deixando o calcanhar suspenso, estando em pé. Movimente somente o calcanhar.', 0, 76),
-('Gêmeos Sentado', 'Apoie a ponta dos pés deixando o calcanhar suspenso, estando sentado com as pernas dobradas. Movimente somente o calcanhar.', 0, 79),
-('Gêmeos com Quadril Flexionado', 'Apoie a ponta dos pés deixando o calcanhar suspenso, estando sentado com as pernas esticadas. Movimente somente o calcanhar.', 0, 77),
-('Mesa Flexora', 'Puxe um peso com ele apoiado nos pés ou na parte de trás da canela, estando deitado. Movimente somente o joelho.', 0, 78),
-('Cadeira Flexora', 'Puxe um peso com ele apoiado na parte de trás da canela, estando sentado. Movimente somente o joelho.', 0, 71),
-('Flexora em Pé', 'Puxe um peso com ele apoiado na parte de trás da canela, estando em pé. Movimente somente o joelho.', 0, 75),
-('Stiff', 'Levante um peso do chão com as mãos e com as pernas levemente dobradas. Movimente somente o quadril.', 0, NULL), ????
-('Bom Dia', 'Levante um peso apoiado nas costas com as pernas levemente dobradas. Movimente somente o quadril.', 0, 84),
-('Flexão Nórdica', 'Com os pés presos e canela apoiada, desça e suba as pernas com o quadril levemente dobrado. Movimente somente o joelho.', 1, 35),
-('Elevação Pélvica', 'Suba um peso com ele apoiado no quadril e as costas e sola dos pés apoiados, estando deitado. Movimente somente o quadril.', 0, 57),
-('Cadeira Abdutora', 'Abra as pernas com a parte lateral da coxa apoiada, estando sentado. Movimente somente a perna.', 1, 74),
-('Abdução de Quadril em Pé', 'Abra as pernas com o peso preso ou apoiado no calcanhar, estando em pé. Movimente somente a perna.', 0, 70),
-('Glúteo Coice', 'Empurre um peso para trás do corpo com as pernas. Movimente somente a perna.', 0, 68),
-('Búlgaro', 'Agache com uma única perna, estando com o pé da outra perna apoiada em um banco atrás do tronco. Movimente somente a perna e o quadril.', 0, 81),
-('Agachamento Sumô', 'Agache com as pernas bem afastadas. Movimente somente a perna e o quadril.', 0, 85),
-('Levantamento Terra Sumô', 'Levante um peso do chão com as mãos e com as pernas bem afastadas. Movimente somente o quadril e a perna.', 0, NULL),
-('Levantamento Terra Tradicional', 'Levante um peso do chão com as mãos, e com as pernas na largura dos ombros. Movimente somente o quadril e a perna.', 0, NULL),
-('Levantamento Terra Romeno', 'Levante um peso do chão com as mãos e com o quadril mais alto do que no levantamento terra tradicional. Movimente somente o quadril e a perna.', 0, NULL),
-('Cadeira Adutora', 'Feche as pernas com a parte interna da coxa apoiada, estando sentado. Movimente somente a perna.', 1, 72),
-('Adução de Quadril em Pé', 'Feche as pernas com o peso preso ou apoiado no calcanhar, estando em pé. Movimente somente a perna.', 0, 67),
-('Cadeira Extensora', 'Empurre o peso em um movimento de chute, estando sentado ou deitado. Movimente somente o joelho.', 0, 69),
-('Agachamento Tradicional', 'Agache com as pernas na largura dos ombros e o peso apoiado nas costas ou segurado com as mãos. Movimente somente a perna e o quadril.', 0, 87),
-('Agachamento Frontal', 'Agache com as pernas na largura dos ombros e o peso apoiado nos ombros à frente do tronco. Movimente somente a perna e o quadril.', 0, 86),
-('Agachamento Romano', 'Agache com as pernas na largura dos ombros com os pés presos e panturrilha apoiada. Movimente somente a perna e o quadril.', 1, 80), 
-('Leg Press', 'Empurre uma plataforma com peso utilizando as pernas, estando sentado ou deitado. Movimente somente a perna.', 0, 73),
-('Passada', 'Simule uma caminhada com passos largos e agachando com a perna da frente a cada passo. Movimente somente a perna e o quadril.', 1, 82),
-('Afundo', 'Agache com uma única perna, estando com o pé da outra perna apoiado no chão atrás do tronco. Movimente somente a perna e o quadril.', 0, 83),
-('Abdominal Supra', 'Deite com a barriga virada para cima, dobre as pernas e suba seu tronco dobrando a coluna. Movimente somente o tronco e a coluna.', 0, 66),
-('Abdominal Infra Deitado', 'Deite com a barriga virada para cima e suba as pernas dobrando a coluna. Movimente somente a perna e a coluna.', 1, NULL), ????
-('Abdominal Infra na Barra Fixa', 'Segure em uma barra fixa e suba as pernas dobrando a coluna. Movimente somente a perna e a coluna.', 1, 62),
-('Abdominal Infra Apoiado', 'Apoie seus braços e costas e suba as pernas dobrando a coluna. Movimente somente a perna e a coluna.', 1, 64),
-('Prancha', 'Deite de bruços e fique levantado com seus braços apoiados no chão com tronco e pernas alinhados.', 1, 114),
-('Abdominal Bicicleta', 'Deite com a barriga virada para cima com as pernas e coluna dobradas simulando uma pedalada. Rotacione o tronco e movimente somente a perna.', 1, 58),
-('Abdominal Oblíquo na Barra Fixa', 'Segure em uma barra fixa e suba as pernas dobrando a coluna e rotacionando o tronco. Rotacione o tronco e movimente somente a perna e a coluna.', 1, 57),
-('Abdominal Oblíquo Deitado', 'Deite com a barriga virada para cima, dobre as pernas e suba seu tronco enquanto o rotaciona dobrando a coluna. Rotacione o tronco e movimente somente o tronco e a coluna.', 1, 60),
-('Abdominal Escalador', 'Deite de bruços e fique levantado com seus braços apoiados no chão enquanto tenta encostar suas pernas no seu peito. Movimente somente as pernas.', 1, 59);
+('Tríceps Francês', 'Empurre um peso para cima com os braços acima da cabeça. Movimente somente o antebraço.', 0, 37),
+('Tríceps Pulley', 'Empurre um peso para baixo com os braços ao lado do tronco em uma polia alta. Movimente somente o antebraço.', 0, 36),
+('Tríceps Testa', 'Empurre um peso para frente com os braços à frente da cabeça. Movimente somente o antebraço.', 0, 35),
+('Tríceps Coice', 'Empurre um peso para trás com os braços ao lado do tronco inclinado para frente em uma polia alta. Movimente somente o antebraço.', 0, 39),
+('Tríceps Mergulho', 'Empurre um peso para baixo com os braços ao lado do tronco. Movimente somente o braço.', 0, 70),
+('Rosca Punho', 'Movimente somente um peso com os braços fixos. Utilize somente o punho.', 0, 49), 
+('Adução de Punho', 'Movimente somente um peso em direção ao seu dedo mínimo com os braços fixos. Utilize somente o punho.', 0, 100), 
+('Abdução de Punho', 'Movimente somente um peso em direção ao seu dedo polegar com os braços fixos. Utilize somente o punho.', 0, 103), 
+('Flexão de Dedos', 'Movimento um peso com os braços fixos. Utilize somente os dedos.', 0, 74), 
+('Sustentação de Peso com as Mãos', 'Segure e mantenha um peso com as mãos.', 0, 42),
+('Roller de Punho', 'Torça e destorça uma barra amarrada a pesos.', 1, 58),
+('Rosca Direta Tradicional', 'Puxe um peso para cima com os braços ao lado do tronco e com as palmas das mãos viradas para cima. Movimente somente o antebraço.', 0, 52),
+('Rosca Inversa', 'Puxe um peso para cima com os braços ao lado do tronco e com as palmas das mãos viradas para baixo. Movimente somente o antebraço.', 0, 51), 
+('Rosca Scott Tradicional', 'Puxe um peso para cima com os braços apoiados à frente do tronco e com as palmas das mãos viradas para cima. Movimente somente o antebraço.', 0, 48),
+('Rosca Scott Inversa', 'Puxe um peso para cima com os braços apoiados à frente do tronco e com as palmas das mãos viradas para baixo. Movimente somente o antebraço.', 0, 47),
+('Rosca Aranha', 'Puxe um peso para cima com os braços soltos à frente do tronco inclinado para frente. Movimente somente o antebraço.', 0, 56),
+('Rosca Direta Inclinada', 'Puxe um peso para cima com os braços atrás do tronco. Movimente somente o antebraço.', 0, 53), 
+('Rosca Concentrada', 'Puxe um peso em direção ao peito com os braços à frente do tronco inclinado para frente. Movimente somente o antebraço.', 0, 54),
+('Rosca Cruz', 'Puxe um peso em direção à cabeça com os braços ao lado dela. Movimente somente o antebraço.', 0, 55),
+('Rosca Martelo', 'Puxe um peso para cima com os braços ao lado do tronco e com as palmas das mãos voltadas uma para a outra. Movimente somente o antebraço.', 0, 50),
+('Supino Reto', 'Empurre um peso para frente do tronco. Movimente somente o braço.', 0, 43),
+('Supino Inclinado', 'Empurre um peso para frente e para cima do tronco. Movimente somente o braço.', 0, 45),
+('Supino Declinado', 'Empurre um peso para frente e para baixo do tronco. Movimente somente o braço.', 0, 44),
+('Crucifixo Reto', 'Junte os seus braços à frente do tronco com eles levemente dobrados. Movimente somente o braço.', 0, 89),
+('Crucifixo Declinado', 'Junte os seus braços à frente do tronco e próximo as pernas com eles levemente dobrados. Movimente somente o braço.', 0, 85),
+('Crucifixo Inclinado', 'Junte os seus braços à frente do tronco e mais próximos à cabeça com eles levemente dobrados. Movimente somente o braço.', 0, 87),
+('Flexão', 'Deite no chão de bruços e empurre o seu próprio corpo. Movimente somente o braço.', 1, 81),
+('Elevação Lateral', 'Levante os seus braços ao lado do tronco com eles levemente dobrados. Movimente somente o braço.', 0, 83),
+('Elevação Frontal', 'Levante os seus braços à frente do tronco com eles levemente dobrados. Movimente somente o braço.', 0, 84),
+('Crucifixo Inverso', 'Puxe um peso em direção as costas com os seus braços na altura dos ombros e levemente dobrados. Movimente somente o braço.', 0, 88),
+('Desenvolvimento', 'Empurre um peso para cima da cabeça. Movimente somente o braço.', 0, 86),
+('Remada Alta', 'Puxe um peso para cima até a altura do peito. Movimente somente o braço.', 0,61),
+('Puxada de Rosto', 'Puxe um peso em direção a cabeça com os braços na altura dos ombros. Movimente somente o braço e o ombro.', 0, 62),
+('Encolhimento', 'Suba os seus ombros com eles e os braços fixos.', 0, 78),
+('Puxada', 'Puxe um peso até a altura do pescoço com os braços acima da cabeça. Movimente somente o braço e o ombro.', 0, 63),
+('Remada Tradicional', 'Puxe um peso em direção ao tronco, estando apoiado, com ele inclinado, ou em máquinas. Movimente somente o braço e o ombro.', 0, 57),
+('Remada Cavalinho', 'Puxe um peso em direção ao tronco, estando apoiado ou com ele inclinado em máquina T-bar, com trajetória angular. Movimente somente o braço e o ombro.', 0, 59),
+('Remada Baixa', 'Puxe um peso em direção ao tronco, estando sentado e em uma polia baixa. Movimente somente o braço e o ombro.', 0, 60), 
+('Pulldown', 'Puxe um peso até a altura do umbigo com os braços levemente dobrados e alinhados com os ombros, com trajetória angular. Movimente somente o braço e o ombro.', 0, 65),
+('Pullover', 'Puxe um peso até a altura do peito com os braços levemente dobrados e alinhados com os ombros, com trajetória angular, estando deitado. Movimente somente o braço e o ombro.', 0, 64),
+('Extensão Lombar', 'Levante o seu tronco e extenda sua coluna com as pernas presas em um banco romano. Movimente somente o tronco e a coluna.', 0, 79),
+('Gêmeos em Pé', 'Apoie a ponta dos pés deixando o calcanhar suspenso, estando em pé. Movimente somente o calcanhar.', 0, 75),
+('Gêmeos Sentado', 'Apoie a ponta dos pés deixando o calcanhar suspenso, estando sentado com as pernas dobradas. Movimente somente o calcanhar.', 0, 72),
+('Gêmeos com Quadril Flexionado', 'Apoie a ponta dos pés deixando o calcanhar suspenso, estando sentado com as pernas esticadas. Movimente somente o calcanhar.', 0, 73),
+('Mesa Flexora', 'Puxe um peso com ele apoiado nos pés ou na parte de trás da canela, estando deitado. Movimente somente o joelho.', 0, 68),
+('Cadeira Flexora', 'Puxe um peso com ele apoiado na parte de trás da canela, estando sentado. Movimente somente o joelho.', 0, 90),
+('Flexora em Pé', 'Puxe um peso com ele apoiado na parte de trás da canela, estando em pé. Movimente somente o joelho.', 0, 77),
+('Stiff', 'Levante um peso do chão com as mãos e com as pernas levemente dobradas. Movimente somente o quadril.', 0, 46), 
+('Bom Dia', 'Levante um peso apoiado nas costas com as pernas levemente dobradas. Movimente somente o quadril.', 0, 93),
+('Flexão Nórdica', 'Com os pés presos e canela apoiada, desça e suba as pernas com o quadril levemente dobrado. Movimente somente o joelho.', 1, 76),
+('Elevação Pélvica', 'Suba um peso com ele apoiado no quadril e as costas e sola dos pés apoiados, estando deitado. Movimente somente o quadril.', 0, 82),
+('Cadeira Abdutora', 'Abra as pernas com a parte lateral da coxa apoiada, estando sentado. Movimente somente a perna.', 1, 92),
+('Abdução de Quadril em Pé', 'Abra as pernas com o peso preso ou apoiado no calcanhar, estando em pé. Movimente somente a perna.', 0, 105), 
+('Glúteo Coice', 'Empurre um peso para trás do corpo com as pernas. Movimente somente a perna.', 0, 71),
+('Búlgaro', 'Agache com uma única perna, estando com o pé da outra perna apoiada em um banco atrás do tronco. Movimente somente a perna e o quadril.', 0, 97),
+('Agachamento Sumô', 'Agache com as pernas bem afastadas. Movimente somente a perna e o quadril.', 0, 95),
+('Levantamento Terra Sumô', 'Levante um peso do chão com as mãos e com as pernas bem afastadas. Movimente somente o quadril e a perna.', 0, 38),
+('Levantamento Terra Tradicional', 'Levante um peso do chão com as mãos, e com as pernas na largura dos ombros. Movimente somente o quadril e a perna.', 0, 40),
+('Levantamento Terra Romeno', 'Levante um peso do chão com as mãos e com o quadril mais alto do que no levantamento terra tradicional. Movimente somente o quadril e a perna.', 0, 41),
+('Cadeira Adutora', 'Feche as pernas com a parte interna da coxa apoiada, estando sentado. Movimente somente a perna.', 1, 91),
+('Adução de Quadril em Pé', 'Feche as pernas com o peso preso ou apoiado no calcanhar, estando em pé. Movimente somente a perna.', 0, 101),
+('Cadeira Extensora', 'Empurre o peso em um movimento de chute, estando sentado ou deitado. Movimente somente o joelho.', 0, 80), 
+('Agachamento Tradicional', 'Agache com as pernas na largura dos ombros e o peso apoiado nas costas ou segurado com as mãos. Movimente somente a perna e o quadril.', 0, 94),
+('Agachamento Frontal', 'Agache com as pernas na largura dos ombros e o peso apoiado nos ombros à frente do tronco. Movimente somente a perna e o quadril.', 0, 98),
+('Agachamento Romano', 'Agache com as pernas na largura dos ombros com os pés presos e panturrilha apoiada. Movimente somente a perna e o quadril.', 1, 96), 
+('Leg Press', 'Empurre uma plataforma com peso utilizando as pernas, estando sentado ou deitado. Movimente somente a perna.', 0, 69),
+('Passada', 'Simule uma caminhada com passos largos e agachando com a perna da frente a cada passo. Movimente somente a perna e o quadril.', 1, 67),
+('Afundo', 'Agache com uma única perna, estando com o pé da outra perna apoiado no chão atrás do tronco. Movimente somente a perna e o quadril.', 0, 99),
+('Abdominal Supra', 'Deite com a barriga virada para cima, dobre as pernas e suba seu tronco dobrando a coluna. Movimente somente o tronco e a coluna.', 0, 110),
+('Abdominal Infra Deitado', 'Deite com a barriga virada para cima e suba as pernas dobrando a coluna. Movimente somente a perna e a coluna.', 1, 106), 
+('Abdominal Infra na Barra Fixa', 'Segure em uma barra fixa e suba as pernas dobrando a coluna. Movimente somente a perna e a coluna.', 1, 108),
+('Abdominal Infra Apoiado', 'Apoie seus braços e costas e suba as pernas dobrando a coluna. Movimente somente a perna e a coluna.', 1, 109),
+('Prancha', 'Deite de bruços e fique levantado com seus braços apoiados no chão com tronco e pernas alinhados.', 1, 66),
+('Abdominal Bicicleta', 'Deite com a barriga virada para cima com as pernas e coluna dobradas simulando uma pedalada. Rotacione o tronco e movimente somente a perna.', 1, 102),
+('Abdominal Oblíquo na Barra Fixa', 'Segure em uma barra fixa e suba as pernas dobrando a coluna e rotacionando o tronco. Rotacione o tronco e movimente somente a perna e a coluna.', 1, 104),
+('Abdominal Oblíquo Deitado', 'Deite com a barriga virada para cima, dobre as pernas e suba seu tronco enquanto o rotaciona dobrando a coluna. Rotacione o tronco e movimente somente o tronco e a coluna.', 1, 111),
+('Abdominal Escalador', 'Deite de bruços e fique levantado com seus braços apoiados no chão enquanto tenta encostar suas pernas no seu peito. Movimente somente as pernas.', 1, 107);
 
 INSERT INTO exercise_muscle_group (is_primary, fk_exercise_ID, fk_muscle_group_ID) VALUES
 (TRUE, 1, 3),
