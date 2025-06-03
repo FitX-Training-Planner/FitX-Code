@@ -248,8 +248,8 @@ class StepExercise(Base):
     fk_exercise_ID = Column(Integer, ForeignKey("exercise.ID"), index=True, nullable=False)
     fk_exercise_equipment_ID = Column(Integer, ForeignKey("exercise_equipment.ID"), index=True, nullable=False)
     fk_body_position_ID = Column(Integer, ForeignKey("body_position.ID"), index=True)
-    fk_pulley_height_ID = Column(Integer, ForeignKey("pulley_height.ID"), index=True, nullable=False)
-    fk_pulley_attachment_ID = Column(Integer, ForeignKey("pulley_attachment.ID"), index=True, nullable=False)
+    fk_pulley_height_ID = Column(Integer, ForeignKey("pulley_height.ID"), index=True)
+    fk_pulley_attachment_ID = Column(Integer, ForeignKey("pulley_attachment.ID"), index=True)
     fk_grip_type_ID = Column(Integer, ForeignKey("grip_type.ID"), index=True)
     fk_grip_width_ID = Column(Integer, ForeignKey("grip_width.ID"), index=True)
     fk_laterality_ID = Column(Integer, ForeignKey("laterality.ID"), index=True)
@@ -322,7 +322,7 @@ class CardioSession(Base):
     __tablename__ = "cardio_session"
 
     ID = Column(Integer, primary_key=True, autoincrement=True)
-    session_time= Column(TIME, nullable=False) 
+    session_time= Column(TIME) 
     duration_minutes = Column(SmallInteger, nullable=False)
     note = Column(TEXT) 
     fk_training_day_ID = Column(Integer, ForeignKey("training_day.ID"), index=True, nullable=False) 

@@ -1,3 +1,41 @@
+DROP TABLE IF EXISTS body_composition_exam_send;
+DROP TABLE IF EXISTS body_composition_exam;
+DROP TABLE IF EXISTS message;
+DROP TABLE IF EXISTS chat;
+DROP TABLE IF EXISTS exercise_set_log;
+DROP TABLE IF EXISTS body_composition;
+DROP TABLE IF EXISTS payment_plan_benefit;
+DROP TABLE IF EXISTS payment_transaction;
+DROP TABLE IF EXISTS payment_method;
+DROP TABLE IF EXISTS payment_in_installments;
+DROP TABLE IF EXISTS payment_plan;
+DROP TABLE IF EXISTS cardio_session;
+DROP TABLE IF EXISTS cardio_intensity;
+DROP TABLE IF EXISTS cardio_option;
+DROP TABLE IF EXISTS exercise_set;
+DROP TABLE IF EXISTS set_type;
+DROP TABLE IF EXISTS step_exercise;
+DROP TABLE IF EXISTS training_day_step;
+DROP TABLE IF EXISTS training_day;
+DROP TABLE IF EXISTS training_plan_user;
+DROP TABLE IF EXISTS training_plan;
+DROP TABLE IF EXISTS training_technique;
+DROP TABLE IF EXISTS laterality;
+DROP TABLE IF EXISTS grip_width;
+DROP TABLE IF EXISTS grip_type;
+DROP TABLE IF EXISTS pulley_attachment;
+DROP TABLE IF EXISTS pulley_height;
+DROP TABLE IF EXISTS exercise_equipment;
+DROP TABLE IF EXISTS body_position;
+DROP TABLE IF EXISTS exercise_muscle_group;
+DROP TABLE IF EXISTS exercise;
+DROP TABLE IF EXISTS muscle_group;
+DROP TABLE IF EXISTS complaint;
+DROP TABLE IF EXISTS rating;
+DROP TABLE IF EXISTS trainer;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS media;
+
 CREATE TABLE IF NOT EXISTS media (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     url VARCHAR(255) NOT NULL UNIQUE
@@ -181,8 +219,8 @@ CREATE TABLE IF NOT EXISTS step_exercise (
     fk_exercise_ID INT NOT NULL,
     fk_exercise_equipment_ID INT NOT NULL,
     fk_body_position_ID INT,
-    fk_pulley_height_ID INT NOT NULL,
-    fk_pulley_attachment_ID INT NOT NULL,
+    fk_pulley_height_ID INT,
+    fk_pulley_attachment_ID INT,
     fk_grip_type_ID INT,
     fk_grip_width_ID INT,
     fk_laterality_ID INT,
@@ -243,7 +281,7 @@ CREATE TABLE IF NOT EXISTS cardio_intensity (
 
 CREATE TABLE IF NOT EXISTS cardio_session (
     ID INT PRIMARY KEY AUTO_INCREMENT,
-    session_time TIME NOT NULL, 
+    session_time TIME, 
     duration_minutes SMALLINT NOT NULL,
     note TEXT, 
     fk_training_day_ID INT NOT NULL, 

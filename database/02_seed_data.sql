@@ -148,7 +148,6 @@ INSERT INTO exercise (name, description, is_fixed, fk_media_ID) VALUES
 ('Rosca Direta Inclinada', 'Puxe um peso para cima com os braços atrás do tronco. Movimente somente o antebraço.', 0, 53), 
 ('Rosca Concentrada', 'Puxe um peso em direção ao peito com os braços à frente do tronco inclinado para frente. Movimente somente o antebraço.', 0, 54),
 ('Rosca Cruz', 'Puxe um peso em direção à cabeça com os braços ao lado dela. Movimente somente o antebraço.', 0, 55),
-('Rosca Martelo', 'Puxe um peso para cima com os braços ao lado do tronco e com as palmas das mãos voltadas uma para a outra. Movimente somente o antebraço.', 0, 50),
 ('Supino Reto', 'Empurre um peso para frente do tronco. Movimente somente o braço.', 0, 43),
 ('Supino Inclinado', 'Empurre um peso para frente e para cima do tronco. Movimente somente o braço.', 0, 45),
 ('Supino Declinado', 'Empurre um peso para frente e para baixo do tronco. Movimente somente o braço.', 0, 44),
@@ -170,6 +169,7 @@ INSERT INTO exercise (name, description, is_fixed, fk_media_ID) VALUES
 ('Pulldown', 'Puxe um peso até a altura do umbigo com os braços levemente dobrados e alinhados com os ombros, com trajetória angular. Movimente somente o braço e o ombro.', 0, 65),
 ('Pullover', 'Puxe um peso até a altura do peito com os braços levemente dobrados e alinhados com os ombros, com trajetória angular, estando deitado. Movimente somente o braço e o ombro.', 0, 64),
 ('Extensão Lombar', 'Levante o seu tronco e extenda sua coluna com as pernas presas em um banco romano. Movimente somente o tronco e a coluna.', 0, 79),
+('Rosca Martelo', 'Puxe um peso para cima com os braços ao lado do tronco e com as palmas das mãos voltadas ára o tronco. Movimente somente o antebraço.', 0, 50),
 ('Gêmeos em Pé', 'Apoie a ponta dos pés deixando o calcanhar suspenso, estando em pé. Movimente somente o calcanhar.', 0, 75),
 ('Gêmeos Sentado', 'Apoie a ponta dos pés deixando o calcanhar suspenso, estando sentado com as pernas dobradas. Movimente somente o calcanhar.', 0, 72),
 ('Gêmeos com Quadril Flexionado', 'Apoie a ponta dos pés deixando o calcanhar suspenso, estando sentado com as pernas esticadas. Movimente somente o calcanhar.', 0, 73),
@@ -197,6 +197,7 @@ INSERT INTO exercise (name, description, is_fixed, fk_media_ID) VALUES
 ('Leg Press', 'Empurre uma plataforma com peso utilizando as pernas, estando sentado ou deitado. Movimente somente a perna.', 0, 69),
 ('Passada', 'Simule uma caminhada com passos largos e agachando com a perna da frente a cada passo. Movimente somente a perna e o quadril.', 1, 67),
 ('Afundo', 'Agache com uma única perna, estando com o pé da outra perna apoiado no chão atrás do tronco. Movimente somente a perna e o quadril.', 0, 99),
+('Abdominal Escalador', 'Deite de bruços e fique levantado com seus braços apoiados no chão enquanto tenta encostar suas pernas no seu peito. Movimente somente as pernas.', 1, 107),
 ('Abdominal Supra', 'Deite com a barriga virada para cima, dobre as pernas e suba seu tronco dobrando a coluna. Movimente somente o tronco e a coluna.', 0, 110),
 ('Abdominal Infra Deitado', 'Deite com a barriga virada para cima e suba as pernas dobrando a coluna. Movimente somente a perna e a coluna.', 1, 106), 
 ('Abdominal Infra na Barra Fixa', 'Segure em uma barra fixa e suba as pernas dobrando a coluna. Movimente somente a perna e a coluna.', 1, 108),
@@ -204,8 +205,7 @@ INSERT INTO exercise (name, description, is_fixed, fk_media_ID) VALUES
 ('Prancha', 'Deite de bruços e fique levantado com seus braços apoiados no chão com tronco e pernas alinhados.', 1, 66),
 ('Abdominal Bicicleta', 'Deite com a barriga virada para cima com as pernas e coluna dobradas simulando uma pedalada. Rotacione o tronco e movimente somente a perna.', 1, 102),
 ('Abdominal Oblíquo na Barra Fixa', 'Segure em uma barra fixa e suba as pernas dobrando a coluna e rotacionando o tronco. Rotacione o tronco e movimente somente a perna e a coluna.', 1, 104),
-('Abdominal Oblíquo Deitado', 'Deite com a barriga virada para cima, dobre as pernas e suba seu tronco enquanto o rotaciona dobrando a coluna. Rotacione o tronco e movimente somente o tronco e a coluna.', 1, 111),
-('Abdominal Escalador', 'Deite de bruços e fique levantado com seus braços apoiados no chão enquanto tenta encostar suas pernas no seu peito. Movimente somente as pernas.', 1, 107);
+('Abdominal Oblíquo Deitado', 'Deite com a barriga virada para cima, dobre as pernas e suba seu tronco enquanto o rotaciona dobrando a coluna. Rotacione o tronco e movimente somente o tronco e a coluna.', 1, 111);
 
 INSERT INTO exercise_muscle_group (is_primary, fk_exercise_ID, fk_muscle_group_ID) VALUES
 (TRUE, 1, 3),
@@ -247,8 +247,8 @@ INSERT INTO exercise_muscle_group (is_primary, fk_exercise_ID, fk_muscle_group_I
 (TRUE, 37, 10), (TRUE, 37, 9), (FALSE, 37, 2), (FALSE, 37, 4), (FALSE, 37, 11),
 (TRUE, 38, 10),
 (TRUE, 39, 10),
-(TRUE, 40, 11), (FALSE, 40, 9), (FALSE, 40, 13),
-(TRUE, 41, 11), (FALSE, 41, 13),
+(TRUE, 40, 11), (FALSE, 40, 13),
+(TRUE, 41, 2), (TRUE, 41, 4),
 (TRUE, 42, 14),
 (TRUE, 43, 14),
 (TRUE, 44, 14),
@@ -270,13 +270,13 @@ INSERT INTO exercise_muscle_group (is_primary, fk_exercise_ID, fk_muscle_group_I
 (TRUE, 60, 8),
 (TRUE, 61, 8),
 (TRUE, 62, 7),
-(TRUE, 63, 7),
-(TRUE, 64, 7), (TRUE, 64, 13), (FALSE, 64, 8), (FALSE, 64, 11),
-(TRUE, 65, 7), (FALSE, 65, 13), (FALSE, 65, 8), (FALSE, 65, 11),
-(TRUE, 66, 7), (FALSE, 66, 13),
-(TRUE, 67, 7), (TRUE, 67, 13), (FALSE, 67, 12),
+(TRUE, 63, 7), (TRUE, 63, 13), (FALSE, 63, 8), (FALSE, 63, 11),
+(TRUE, 64, 7), (FALSE, 64, 13), (FALSE, 64, 8), (FALSE, 64, 11),
+(TRUE, 65, 7), (FALSE, 65, 13),
+(TRUE, 66, 7), (TRUE, 66, 13), (FALSE, 66, 12),
+(TRUE, 67, 7), (FALSE, 67, 13),
 (TRUE, 68, 7), (FALSE, 68, 13),
-(TRUE, 69, 7), (FALSE, 69, 13),
+(TRUE, 69, 1),
 (TRUE, 70, 1),
 (TRUE, 71, 1),
 (TRUE, 72, 1), (FALSE, 72, 4),
@@ -284,8 +284,7 @@ INSERT INTO exercise_muscle_group (is_primary, fk_exercise_ID, fk_muscle_group_I
 (TRUE, 74, 1),
 (TRUE, 75, 1),
 (TRUE, 76, 1), (FALSE, 76, 4),
-(TRUE, 77, 1),
-(TRUE, 78, 1);
+(TRUE, 77, 1);
 
 INSERT INTO body_position (description) VALUES
 ('Em pé'),
