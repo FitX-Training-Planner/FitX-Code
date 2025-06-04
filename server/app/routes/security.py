@@ -5,6 +5,8 @@ from ..utils.security import check_login, generate_code, verify_code, set_jwt_co
 from ..utils.user import is_email_used, send_email
 from ..services.user import get_user_by_id
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
+from ..utils.jwt_decorator import jwt_with_auto_refresh
+from ..utils.trainer_decorator import only_trainer
 
 security_bp = Blueprint("security", __name__)
 
@@ -32,7 +34,7 @@ def login():
         except Exception as e:
             print(f"{error_message}: {e}")
 
-            return jsonify({"message": str(e)}), 500
+            return jsonify({"message": "Erro interno no servidor."}), 500
 
 
 @security_bp.route("/sign-up", methods=["POST"])
@@ -56,7 +58,7 @@ def sign_up():
         except Exception as e:
             print(f"{error_message}: {e}")
 
-            return jsonify({"message": str(e)}), 500
+            return jsonify({"message": "Erro interno no servidor."}), 500
 
 @security_bp.route("/identity-confirmation", methods=["POST"])
 def identity_confirmation():
@@ -88,7 +90,8 @@ def identity_confirmation():
     except Exception as e:
         print(f"{error_message}: {e}")
 
-        return jsonify({"message": str(e)}), 500
+        return jsonify({"message": "Erro interno no servidor."}), 500
+
 
 @security_bp.route("/auth", methods=["POST"])
 def auth():
@@ -119,7 +122,7 @@ def auth():
         except Exception as e:
             print(f"{error_message}: {e}")
 
-            return jsonify({"message": str(e)}), 500
+            return jsonify({"message": "Erro interno no servidor."}), 500
 
 @security_bp.route("/token/refresh", methods=["POST"])
 @jwt_required(refresh=True)  
@@ -149,4 +152,10 @@ def refresh_token():
     except Exception as e:
         print(f"{error_message}: {e}")
 
-        return jsonify({"message": str(e)}), 500
+        return jsonify({"message": "Erro interno no servidor."}), 500
+
+@security_bp.route("/is-trainer", methods=["POST"])
+@jwt_with_auto_refresh
+@only_trainer
+def is_trainer():
+    return "", 204

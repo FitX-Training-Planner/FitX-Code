@@ -28,7 +28,7 @@ def get_user():
         except Exception as e:    
             print(f"{error_message}: {e}")
 
-            return jsonify({"message": str(e)}), 500
+            return jsonify({"message": "Erro interno no servidor."}), 500
         
 @user_bp.route("", methods=["POST"])
 def post_user():
@@ -73,4 +73,4 @@ def post_user():
 
             print(f"{error_message}: {e}")
 
-            return jsonify({"message": str(e)}), 500
+            return jsonify({"message": "Erro interno no servidor."}), 500

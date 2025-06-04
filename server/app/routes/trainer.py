@@ -3,6 +3,8 @@ from ..services.user import insert_user, insert_photo
 from ..services.trainer import insert_trainer
 from ..database.context_manager import get_db
 from ..exceptions.api_error import ApiError
+from ..utils.jwt_decorator import jwt_with_auto_refresh
+from ..utils.trainer_decorator import only_trainer
 
 trainer_bp = Blueprint("trainer", __name__, url_prefix="/trainers")
         
@@ -56,4 +58,10 @@ def post_trainer():
 
             print(f"{error_message}: {e}")
 
-            return jsonify({"message": str(e)}), 500
+            return jsonify({"message": "Erro interno no servidor."}), 500
+
+@trainer_bp.route("me/training-plans", methods=["POST"])
+@jwt_with_auto_refresh
+@only_trainer
+def post_training_plan():
+    return "", 204
