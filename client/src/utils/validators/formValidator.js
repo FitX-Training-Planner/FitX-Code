@@ -1,3 +1,4 @@
+import { isCardioDurationValid, isDurationSetValid, isNoteValid, isPlanNameValid, isRepsValid, isRestValid } from "./trainingValidator";
 import { isCREFValid, isEmailValid, isNameValid, isPasswordValid, isTrainerDescriptionValid } from "./userValidator";
 
 export function hasEmptyFieldsInObject(object) {
@@ -51,7 +52,6 @@ export function validateTrainerPostRequestData(trainerError, setTrainerError, cr
 
     if (!(isCREFValid(crefNumber) && crefUF && isTrainerDescriptionValid(description))) {
         setTrainerError(true);
-        console.log("valido")
 
         return false;
     }
@@ -72,3 +72,189 @@ export function validateCodeRequestData(codeError, setCodeError, code) {
         
     return true;
 }
+
+export function validateCardioSession(cardioError, setCardioError, note, durationMinutes, cardioIntensityID, cardioOptionID) {
+    if (cardioError) return false;
+
+    if (hasEmptyFieldsInObject({ cardioIntensityID, cardioOptionID, durationMinutes })) {
+        setCardioError(true);
+
+        return false;
+    }
+
+    if (!(isNoteValid(note) && isCardioDurationValid(durationMinutes))) {
+        setCardioError(true);
+
+        return false;
+    }
+
+    return true;
+}
+
+export function validateTrainingDay(trainingDayError, setTrainingDayError, note) {
+    if (trainingDayError) return false;
+
+    if (!isNoteValid(note)) {
+        setTrainingDayError(true);
+
+        return false;
+    }
+
+    return true;
+}
+
+export function validateTrainingPlan(trainingPlanError, setTrainingPlanError, name, note) {
+    if (trainingPlanError) return false;
+
+    if (!name) {
+        setTrainingPlanError(true);
+
+        return false;
+    }
+
+    if (!(isPlanNameValid(name) && isNoteValid(note))) {
+        setTrainingPlanError(true);
+
+        return false;
+    }
+
+    return true;
+}
+
+export function validateExercise(exerciseError, setExerciseError, note, exerciseID, exerciseEquipmentID) {
+    if (exerciseError) return false;
+
+    if (hasEmptyFieldsInObject({ exerciseEquipmentID, exerciseID })) {
+        setExerciseError(true);
+
+        return false;
+    }
+
+    if (!isNoteValid(note)) {
+        setExerciseError(true);
+
+        return false;
+    }
+
+    return true;
+}
+
+export function validateSet(setError, setSetError, minReps, maxReps, durationSeconds, restSeconds, setTypeID) {
+    if (setError) return false;
+
+    if (hasEmptyFieldsInObject({ restSeconds, setTypeID })) {
+        setSetError(true);
+
+        return false;
+    }
+
+    if (!isRestValid(restSeconds)) {
+        setSetError(true);
+        
+        return false;
+    }
+
+    const isAnyRepsSet = minReps || maxReps;
+    const isDurationSet = durationSeconds;
+
+    if ((isAnyRepsSet && isDurationSet) || (!isAnyRepsSet && !isDurationSet)) {
+        setSetError(true);
+
+        return false;
+    }
+
+    if (isAnyRepsSet) {
+        if (!isRepsValid(minReps, maxReps)) {
+            setError(true);
+
+            return false;
+        }
+    }
+
+    if (isDurationSet) {
+        if (!isDurationSetValid(durationSeconds)) {
+            setSetError(true);
+
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+export function validateAllElementsInTrainingPlan(trainingPlanError, setTrainingPlanError, trainingPlan) {
+    if (trainingPlanError) {
+        return { error: true, message: "Erro no estado atual do plano de treino!" };
+    }
+
+    if (!validateTrainingPlan(false, setTrainingPlanError, trainingPlan.name, trainingPlan.note)) {
+        return { error: true, message: "Dados do plano de treino inválidos!" };
+    }
+
+    if (trainingPlan.trainingDays.length < 2) {
+        return { error: true, message: "O plano de treino deve ter pelo menos 2 dias de treino!" };
+    }
+
+    for (const day of trainingPlan.trainingDays) {
+        if (!validateTrainingDay(false, setTrainingPlanError, day.note)) {
+            return { error: true, message: `Dados inválidos no dia de treino ${day.orderInPlan}!` };
+        }
+
+        const hasTrainingSteps = day.trainingSteps.length > 0;
+        const hasCardioSessions = day.cardioSessions.length > 0;
+
+        if (!(hasTrainingSteps || hasCardioSessions)) {
+            return { error: true, message: `O dia de treino ${day.orderInPlan} precisa ter pelo menos uma sessão de cardio ou um exercício!` };
+        }
+
+        if (hasCardioSessions) {
+            for (const cardio of day.cardioSessions) {
+                if (!validateCardioSession(false, setTrainingPlanError, cardio.note, cardio.durationMinutes, cardio.cardioIntensityID, cardio.cardioOptionID)) {
+                    return { error: true, message: `Cardio de ID ${cardio.ID} inválido no dia de treino ${day.orderInPlan}!` };
+                }
+            }
+        }
+
+        if (hasTrainingSteps) {
+            for (const step of day.trainingSteps) {
+                const exercisesLenght = step.exercises.length;
+
+                if (exercisesLenght < 1) {
+                    return { error: true, message: `O exercício ${step.orderInDay} do dia de treino ${day.orderInPlan} está vazio!` };
+                }
+
+                for (const exercise of step.exercises) {
+                    if (!validateExercise(false, setTrainingPlanError, exercise.note, exercise.exerciseID, exercise.exerciseEquipmentID)) {
+                        if (exercisesLenght > 1) {
+                            return { error: true, message: `Exercício ${exercise.orderInStep} inválido na sequência ${step.orderInDay} no dia de treino ${day.orderInPlan}!` };
+                        } 
+
+                        return { error: true, message: `Exercício ${step.orderInDay} inválido no dia de treino ${day.orderInPlan}!` };
+                    }
+
+                    if (exercise.sets.length < 1) {
+                        if (exercisesLenght > 1) {
+                            return { error: true, message: `O exercício ${exercise.orderInStep} na sequência ${step.orderInDay} no dia de treino ${day.orderInPlan} precisa ter pelo menos uma série!` };
+                        } 
+
+                        return { error: true, message: `O exercício ${step.orderInDay} no dia de treino ${day.orderInPlan} precisa ter pelo menos uma série!` };
+                    }
+
+                    for (const set of exercise.sets) {
+                        if (!validateSet(false, setTrainingPlanError, set.minReps, set.maxReps, set.durationSeconds, set.restSeconds, set.setTypeID)) {
+                            if (exercisesLenght > 1) {
+                                return { error: true, message: `Série ${set.orderInExercise} inválida no exercício ${exercise.orderInStep} na sequência ${step.orderInDay} no dia de treino ${day.orderInPlan}!` };
+                            } 
+
+                            return { error: true, message: `Série ${set.orderInExercise} inválida no exercício ${step.orderInDay} no dia de treino ${day.orderInPlan}!` };
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+
+    return { error: false };
+}
+
