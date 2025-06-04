@@ -35,6 +35,6 @@ def jwt_with_auto_refresh(fn):
             except Exception as e:
                 print(f"{error_message}: {e}")
 
-                return jsonify({"message": "Token inválido ou expirado."}), 401
+                return jsonify({"message": "Token inválido ou ausente."}), 401
 
     return wrapper
