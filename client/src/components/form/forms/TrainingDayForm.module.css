@@ -1,0 +1,14 @@
+.training_steps {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--theme-color);
+    width: 100%;
+    align-items: center;
+    gap: 1em;
+}
+
+.training_step {
+    flex: 1;
+    border: 1px solid var(--theme-color);
+    max-height: 15em;
+}
