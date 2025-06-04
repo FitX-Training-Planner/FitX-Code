@@ -1,0 +1,13 @@
+.training_days {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    border: 1px solid var(--theme-color);
+    gap: 1em;
+}
+
+.training_day {
+    flex: 1;
+    max-width: 20em;
+    border: 1px solid var(--theme-color);
+}
