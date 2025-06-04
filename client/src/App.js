@@ -11,6 +11,11 @@ import { setUser } from "./slices/user/userSlice";
 import Home from "./components/pages/Home";
 import RecoverPassword from "./components/pages/RecoverPassword";
 import CreateTrainingPlan from "./components/pages/CreateTrainingPlan";
+import ModifyTrainingDay from "./components/pages/ModifyTrainingDay";
+import ModifyCardioSession from "./components/pages/ModifyCardioSession";
+import ModifyExerciseSet from "./components/pages/ModifyTrainingSet";
+import ModifyTrainingStep from "./components/pages/ModifyTrainingStep";
+import ModifyExercise from "./components/pages/ModifyTrainingExercise";
 
 function App() {
   const dispatch = useDispatch();
@@ -72,8 +77,33 @@ function App() {
       />
 
       <Route
-        path="/trainers/:userID/create-training-plan"
+        path="/trainers/me/create-training-plan"
         element={<CreateTrainingPlan />}
+      />
+
+      <Route
+        path="/trainers/me/create-training-plan/modify-training-day"
+        element={<ModifyTrainingDay />}
+      />
+
+      <Route
+        path="/trainers/me/create-training-plan/modify-training-day/modify-cardio-session"
+        element={<ModifyCardioSession />}
+      />
+
+      <Route
+        path="/trainers/me/create-training-plan/modify-training-day/modify-training-step"
+        element={<ModifyTrainingStep />}
+      />
+
+      <Route
+        path="/trainers/me/create-training-plan/modify-training-day/modify-training-step/modify-exercise"
+        element={<ModifyExercise />}
+      />
+
+      <Route
+        path="/trainers/me/create-training-plan/modify-training-day/modify-training-step/modify-exercise/modify-set"
+        element={<ModifyExerciseSet />}
       />
     </Routes>
   );

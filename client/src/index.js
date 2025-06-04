@@ -6,6 +6,7 @@ import "./index.css";
 import App from "./App";
 import { ConfirmIdentityCallbackProvider } from "./app/ConfirmIdentityCallbackProvider.js";
 import { SystemMessageProvider } from "./app/SystemMessageProvider.js";
+import { TrainingPlanProvider } from "./app/TrainingPlanProvider.js";
 import { BrowserRouter as Router } from "react-router-dom";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -15,7 +16,9 @@ root.render(
       <Provider store={store} >
         <SystemMessageProvider>
           <ConfirmIdentityCallbackProvider>
-            <App />
+            <TrainingPlanProvider>
+              <App />
+            </TrainingPlanProvider>
           </ConfirmIdentityCallbackProvider>
         </SystemMessageProvider>
       </Provider>

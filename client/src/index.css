@@ -78,6 +78,7 @@ body {
 
 img {
   display: block;
+  height: 4em;
 }
 
 button {
@@ -95,6 +96,10 @@ form {
 input,
 textarea {
   outline: none;
+}
+
+ul {
+  list-style: none;
 }
 
 .fade-enter {
