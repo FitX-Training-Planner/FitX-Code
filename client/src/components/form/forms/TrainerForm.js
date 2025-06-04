@@ -95,8 +95,7 @@ function TrainerForm({ trainer, setTrainer, setTrainerError, handleSubmit }) {
                     <Stack
                         gap="2em"
                     >
-                        <Stack
-                        >
+                        <Stack>
                             <TextInput
                                 name="cref_number"
                                 placeholder="000000-L"

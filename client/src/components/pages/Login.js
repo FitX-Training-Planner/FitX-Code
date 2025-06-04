@@ -196,13 +196,13 @@ function Login() {
                                 iconSrc="images/icons/youtube.png"
                                 name="Youtube"
                                 // handleClick={() => window.open("https://www.youtube.com/c/seu_canal", "_blank", "noopener,noreferrer")}
-                                />
+                            />
 
                             <ClickableIcon
                                 iconSrc="images/icons/tiktok.png"
                                 name="TikTok"
                                 // handleClick={() => window.open("https://www.tiktok.com/@seu_perfil", "_blank", "noopener,noreferrer")}
-                                />
+                            />
 
                             <ClickableIcon
                                 iconSrc="images/icons/github.png"

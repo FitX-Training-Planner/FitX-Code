@@ -39,21 +39,22 @@
     font-size: var(--text-size);
     border-radius: var(--input-border-radius);
     color: var(--text-color);
-    background-color: transparent;
+    background-color: var(--bg-color);
 }
 
 .select > ul {
     position: absolute;
     top: calc(var(--padding) * 2 + 1em);
     left: calc(var(--border-size) * -1);
-    background-color: var(--bg-color);
     width: calc(100% + var(--border-size) * 2);
     max-height: 15em;
     list-style: none;
+    background-color: var(--bg-color);
     overflow-y: auto;
+    z-index: 8;
 }
 
 .select > ul > li:hover,
-.active     {
-    filter: brightness(0.5);
+.active {
+    background-color: var(--gray-color);
 }

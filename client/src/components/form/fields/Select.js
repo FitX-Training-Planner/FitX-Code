@@ -7,6 +7,10 @@ function Select({ name, placeholder, labelText, value = "", handleChange, icon, 
     const [selected, setSelected] = useState(value);
     const selectRef = useRef(null);
 
+    useEffect(() => {
+        setSelected(value);
+    }, [value]);
+
     const handleOnOptionClick = useCallback((option) => {
         setSelected(option);
         
@@ -55,7 +59,7 @@ function Select({ name, placeholder, labelText, value = "", handleChange, icon, 
                     {selected || placeholder}
                     
                     {isOpen && (
-                        <ul >
+                        <ul>
                             {options.map(option => (
                                 <li 
                                     key={option} 

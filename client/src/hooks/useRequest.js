@@ -16,7 +16,7 @@ export default function useRequest() {
         if (loading) return;
 
         if (!navigator.onLine) {
-            notify("Você está offline! Verifique sua conexão.", "error", "network");
+            notify("Erro de conexão! Verifique sua conexão ou tente novamente.", "error", "network");
 
             return;
         }
@@ -25,14 +25,14 @@ export default function useRequest() {
 
         setLoading(true);
 
-        notify(loadingMessage, "loading", requestId);
+        if (loadingMessage) notify(loadingMessage, "loading", requestId);
 
         try {
             const resp = await requestFn();
 
             handleSuccess(resp.data);
 
-            notify(successMessage, "success", requestId);
+            if (successMessage) notify(successMessage, "success", requestId);
         } catch (err) {
             console.error(err);
 
@@ -44,17 +44,26 @@ export default function useRequest() {
                 return;
             }
 
-            if (err.response.status === 401) {
-                if (location.pathname !== "/login") {                    
-                    navigate("/login");
-                }
-            }
-
-            handleError(err);
-
-            notify(errorMessage, "error");
+            if (errorMessage) notify(errorMessage, "error");
             
             notify(getErrorMessageFromError(err), "error", requestId);
+
+            const status = err?.response?.status;
+            const currentPath = location.pathname;
+
+            if (status === 401) {
+                if (currentPath !== "/login") navigate("/login");
+
+                return;
+            } else if (status === 403) {
+                if (currentPath !== "/") navigate("/");
+
+                notify("Falha ao acessar recurso!", "error");
+
+                return;
+            }
+            
+            handleError(err);
         } finally {
             setLoading(false);
         }

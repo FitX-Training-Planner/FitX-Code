@@ -29,7 +29,7 @@ function TextInput({ type = "text", name, placeholder, labelText, value = "", ha
                 placeholder={placeholder}
                 value={value}
                 onChange={handleChange}
-                maxLength={maxLength}
+                maxLength={maxLength || undefined}
             />
 
            {alertMessage && 

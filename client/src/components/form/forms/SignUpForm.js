@@ -75,7 +75,7 @@ function SignUpForm({ user, setUser, setSignUpError, handleChangeFormType, handl
                             value={user.name}
                             handleChange={(e) => handleOnChangeUserData(e, formattName, isNameValid)}
                             icon="images/icons/user2.png"
-                            alertMessage="O nome deve ter entre 3 e 100 caracteres, sem símbolos ou números."
+                            alertMessage="O nome deve ter entre 3 e 100 caracteres."
                             error={errors.name}
                             maxLength={100}
                         />
