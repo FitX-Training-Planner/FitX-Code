@@ -56,8 +56,7 @@ def set_jwt_cookies(ID, is_client, response):
 def set_jwt_access_cookies(identity, additional_claims, response):
     access_token = create_access_token(
         identity=identity, 
-        additional_claims=additional_claims,
-        expires_delta=timedelta(minutes=15)
+        additional_claims=additional_claims
     )
 
     set_access_cookies(response, access_token)
@@ -67,8 +66,7 @@ def set_jwt_access_cookies(identity, additional_claims, response):
 def set_jwt_refresh_cookies(identity, additional_claims, response):
     refresh_token = create_refresh_token(
         identity=identity, 
-        additional_claims=additional_claims,
-        expires_delta=timedelta(days=30)
+        additional_claims=additional_claims
     )
 
     set_refresh_cookies(response, refresh_token)

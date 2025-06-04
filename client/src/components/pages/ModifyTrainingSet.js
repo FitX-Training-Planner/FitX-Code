@@ -1,3 +1,4 @@
+import styles from "./CreateTrainingPlan.module.css";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Title from "../text/Title";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -69,7 +70,8 @@ function ModifyExerciseSet() {
                 setSetTypes,
                 { orderInPlan: locationTrainingDayOrder, orderInDay: locationStepOrder, exerciseOrder: locationExerciseOrder },
                 navigate,
-                exerciseDestination
+                exerciseDestination,
+                "setTypes"
             );
     
             if (!setTypesSuccess) return;
@@ -79,7 +81,8 @@ function ModifyExerciseSet() {
                 setTrainingTechniques, 
                 { orderInPlan: locationTrainingDayOrder, orderInDay: locationStepOrder, exerciseOrder: locationExerciseOrder },
                 navigate,
-                exerciseDestination
+                exerciseDestination,
+                "trainingTechniques"
             );
 
             if (!trainingTechniquesSuccess) return;
@@ -185,7 +188,9 @@ function ModifyExerciseSet() {
     }, []);
 
     return (
-        <main>
+        <main
+            className={styles.training_plan_page}
+        >
             <Stack>
                 <Title
                     headingNumber={1}

@@ -140,7 +140,7 @@ export function validateExercise(exerciseError, setExerciseError, note, exercise
 }
 
 export function validateSet(setError, setSetError, minReps, maxReps, durationSeconds, restSeconds, setTypeID) {
-    if (setError) return false;
+    if (setError) return false; 
 
     if (hasEmptyFieldsInObject({ restSeconds, setTypeID })) {
         setSetError(true);
@@ -165,7 +165,7 @@ export function validateSet(setError, setSetError, minReps, maxReps, durationSec
 
     if (isAnyRepsSet) {
         if (!isRepsValid(minReps, maxReps)) {
-            setError(true);
+            setSetError(true);
 
             return false;
         }
@@ -195,16 +195,25 @@ export function validateAllElementsInTrainingPlan(trainingPlanError, setTraining
         return { error: true, message: "O plano de treino deve ter pelo menos 2 dias de treino!" };
     }
 
+    if (!trainingPlan.trainingDays.some(day => day.trainingSteps.length > 0 || day.cardioSessions.length > 0)) {
+        return { error: true, message: "O plano de treino deve ter pelo menos um dia com treino ou cardio!" };
+    }
+
     for (const day of trainingPlan.trainingDays) {
         if (!validateTrainingDay(false, setTrainingPlanError, day.note)) {
             return { error: true, message: `Dados inválidos no dia de treino ${day.orderInPlan}!` };
         }
 
+        const isRestDay = day.isRestDay;
         const hasTrainingSteps = day.trainingSteps.length > 0;
         const hasCardioSessions = day.cardioSessions.length > 0;
 
-        if (!(hasTrainingSteps || hasCardioSessions)) {
-            return { error: true, message: `O dia de treino ${day.orderInPlan} precisa ter pelo menos uma sessão de cardio ou um exercício!` };
+        if (!isRestDay && !hasTrainingSteps) {
+            return { error: true, message: `O dia de treino ${day.orderInPlan} precisa ter pelo menos um exercício!` };
+        }
+
+        if (isRestDay && hasTrainingSteps) {
+            return { error: true, message: `O dia de descanso ${day.orderInPlan} não pode ter exercícios!` };
         }
 
         if (hasCardioSessions) {
@@ -215,7 +224,7 @@ export function validateAllElementsInTrainingPlan(trainingPlanError, setTraining
             }
         }
 
-        if (hasTrainingSteps) {
+        if (!isRestDay && hasTrainingSteps) {
             for (const step of day.trainingSteps) {
                 const exercisesLenght = step.exercises.length;
 

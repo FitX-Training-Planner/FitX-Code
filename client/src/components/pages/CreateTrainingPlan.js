@@ -1,4 +1,4 @@
-// import styles from "./CreateTrainingPlan.module.css";
+import styles from "./CreateTrainingPlan.module.css";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Title from "../text/Title";
 import { useTrainingPlan } from "../../app/TrainingPlanProvider";
@@ -17,7 +17,8 @@ function CreateTrainingPlan() {
     
     const hasRun = useRef(false);
     
-    const { notify, confirm } = useSystemMessage();
+    const { notify } = useSystemMessage();
+    const { confirm } = useSystemMessage();
 
     const { request: postPlanRequest } = useRequest();
     const { request: verifyIsTrainer } = useRequest();
@@ -120,7 +121,7 @@ function CreateTrainingPlan() {
 
         const formData = new FormData();
 
-        formData.append("trainingPlan", trainingPlan);
+        formData.append("trainingPlan", JSON.stringify(trainingPlan));
 
         const postTrainingPlan = () => {
             return api.post(`/trainers/me/training-plans`, formData);
@@ -151,7 +152,9 @@ function CreateTrainingPlan() {
     }, []);
 
     return (
-        <main>
+        <main
+            className={styles.training_plan_page}
+        >
             <Stack>
                 <Stack>
                     <Title

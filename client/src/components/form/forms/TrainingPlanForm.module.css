@@ -10,4 +10,5 @@
     flex: 1;
     max-width: 20em;
     border: 1px solid var(--theme-color);
+    touch-action: none;
 }

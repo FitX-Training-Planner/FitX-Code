@@ -19,7 +19,9 @@ export function isRepsValid(minReps, maxReps) {
 
     return (
         !hasEmptyFieldsInObject({ minReps, maxReps }) &&
-        ((newMinReps >= 1 && newMinReps <= 100) && (newMaxReps >= 1 && newMaxReps <= 100) && (newMinReps <= newMaxReps))
+        newMinReps >= 1 && newMinReps <= 100 && 
+        newMaxReps >= 1 && newMaxReps <= 100 && 
+        newMinReps <= newMaxReps
     )
 }
 

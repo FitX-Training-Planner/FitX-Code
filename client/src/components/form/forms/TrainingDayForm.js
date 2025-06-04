@@ -8,8 +8,8 @@ import styles from "./TrainingDayForm.module.css";
 import ClickableIcon from "../buttons/ClickableIcon";
 import CheckBoxInput from "../fields/CheckBoxInput";
 import Title from "../../text/Title";
-import { closestCenter, DndContext, PointerSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
-import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { closestCorners, DndContext, KeyboardSensor, PointerSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import SortableItem from "../../sortable/SortableItem";
 
 function TrainingDayForm({ trainingDay, setTrainingDay, setTrainingDayError, handleSubmit, handleChangeDayType, handleAddTrainingStep, handleModifyTrainingStep, handleRemoveTrainingStep, handleAddCardioSession, handleModifyCardioSession, handleRemoveCardioSession }) {
@@ -18,16 +18,10 @@ function TrainingDayForm({ trainingDay, setTrainingDay, setTrainingDayError, han
     });
     
     const sensors = useSensors(
-        useSensor(PointerSensor, {
-            activationConstraint: {
-                distance: 5
-            }
-        }),
-        useSensor(TouchSensor, {
-            activationConstraint: {
-                delay: 150, 
-                tolerance: 5,
-            },
+        useSensor(PointerSensor),
+        useSensor(TouchSensor),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates
         })
     );
 
@@ -97,17 +91,17 @@ function TrainingDayForm({ trainingDay, setTrainingDay, setTrainingDayError, han
                                     text="Treino"
                                 />
 
-                                <DndContext
-                                    sensors={sensors}
-                                    collisionDetection={closestCenter}
-                                    onDragEnd={handleDragEnd}
+                                <Stack
+                                    className={styles.training_steps}
                                 >
-                                    <SortableContext
-                                        items={trainingDay.trainingSteps.map(step => String(step.ID))}
-                                        strategy={verticalListSortingStrategy}
+                                    <DndContext 
+                                        sensors={sensors}
+                                        collisionDetection={closestCorners}
+                                        onDragEnd={handleDragEnd}
                                     >
-                                        <ul 
-                                            className={styles.training_steps}
+                                        <SortableContext
+                                            items={trainingDay.trainingSteps.map(step => String(step.ID))}
+                                            strategy={verticalListSortingStrategy}
                                         >
                                             {trainingDay.trainingSteps
                                                 .sort((a, b) => a.orderInDay - b.orderInDay)
@@ -158,9 +152,9 @@ function TrainingDayForm({ trainingDay, setTrainingDay, setTrainingDayError, han
                                                     </SortableItem>
                                                 ))
                                             }
-                                        </ul>
-                                    </SortableContext>
-                                </DndContext>
+                                        </SortableContext>
+                                    </DndContext>
+                                </Stack>
 
                                 <ClickableIcon
                                     iconSrc="/images/icons/add.png"

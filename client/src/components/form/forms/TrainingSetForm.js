@@ -6,6 +6,7 @@ import { isDurationSetValid, isRepsValid, isRestValid } from "../../../utils/val
 import Select from "../fields/Select";
 import Alert from "../../messages/Alert";
 import TextInput from "../fields/TextInput";
+// import styles from "./TrainingSetForm.module.css";
 
 function TrainingSetForm({ set, setSet, setSetError, handleSubmit, setTypes, trainingTechniques }) {
     const arrays = useMemo(() => ({
@@ -36,10 +37,20 @@ function TrainingSetForm({ set, setSet, setSetError, handleSubmit, setTypes, tra
 
         const isReps = name === "minReps" || name === "maxReps";
 
-        setErrors((prevErrors) => ({
-            ...prevErrors,
-            [name]: value !== "" && !dataValidator(!isReps && value)
-        }));
+        if (isReps) {
+            const hasError = !isRepsValid(newSet.minReps, newSet.maxReps);
+
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                minReps: value !== "" && hasError,
+                maxReps: value !== "" && hasError
+            }));
+        } else {
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                [name]: value !== "" && !dataValidator(value)
+            }));
+        }
     }, [setSetError, set, setSet]);
 
     const handleOnChangeSetFKs = useCallback((e, arrayName, valueFieldName) => {
@@ -69,10 +80,6 @@ function TrainingSetForm({ set, setSet, setSetError, handleSubmit, setTypes, tra
                 <Stack
                     gap="2em"
                 >
-                    <span>
-                        Série {set.orderInExercise}
-                    </span>
-
                     <Stack>
                         <p>
                             - Os campos obrigatórios são marcados com "*".
@@ -151,7 +158,7 @@ function TrainingSetForm({ set, setSet, setSetError, handleSubmit, setTypes, tra
                                 labelText="Número Mínimo de Repetições"
                                 value={set.minReps}
                                 handleChange={(e) => 
-                                    handleOnChangeSetData(e, formattSecondsMinutesAndReps, () => isRepsValid(set.minReps, set.maxReps))
+                                    handleOnChangeSetData(e, formattSecondsMinutesAndReps, () => true)
                                 }
                                 alertMessage="O número mínimo de repetições deve ser menor que o máximo e estar entre 1 e 100."
                                 error={errors.minReps}
@@ -164,7 +171,7 @@ function TrainingSetForm({ set, setSet, setSetError, handleSubmit, setTypes, tra
                                 labelText="Número Máximo de Repetições"
                                 value={set.maxReps}
                                 handleChange={(e) => 
-                                    handleOnChangeSetData(e, formattSecondsMinutesAndReps, () => isRepsValid(set.minReps, set.maxReps))
+                                    handleOnChangeSetData(e, formattSecondsMinutesAndReps, () => true)
                                 }
                                 alertMessage="O número máximo de repetições deve ser maior que o mínimo e estar entre 1 e 100."
                                 error={errors.maxReps}
@@ -176,7 +183,7 @@ function TrainingSetForm({ set, setSet, setSetError, handleSubmit, setTypes, tra
                                 placeholder="Insira a duração da isometria"
                                 labelText="Duração da Isometria em Segundos"
                                 value={set.durationSeconds}
-                                handleChange={(e) => handleOnChangeSetData(e, formattSecondsMinutesAndReps, isDurationSetValid)}
+                                handleChange={(e) => handleOnChangeSetData(e, formattSecondsMinutesAndReps, value => isDurationSetValid(value))}
                                 alertMessage="O tempo de isometria deve ter entre 5 e 600 segundos."
                                 error={errors.durationSeconds}
                                 maxLength={3}
@@ -187,7 +194,7 @@ function TrainingSetForm({ set, setSet, setSetError, handleSubmit, setTypes, tra
                                 placeholder="Insira a duração do descanso"
                                 labelText="Duração do Descanso em Segundos *"
                                 value={set.restSeconds}
-                                handleChange={(e) => handleOnChangeSetData(e, formattSecondsMinutesAndReps, isRestValid)}
+                                handleChange={(e) => handleOnChangeSetData(e, formattSecondsMinutesAndReps, value => isRestValid(value))}
                                 alertMessage="O tempo de descanso deve ter entre 15 e 600 segundos."
                                 error={errors.restSeconds}
                                 maxLength={3}

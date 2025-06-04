@@ -1,3 +1,4 @@
+import styles from "./CreateTrainingPlan.module.css";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Title from "../text/Title";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -14,7 +15,8 @@ function ModifyTrainingStep() {
     
     const hasRun = useRef(false);
     
-    const { notify, confirm } = useSystemMessage();
+    const { notify } = useSystemMessage();
+    const { confirm } = useSystemMessage();
     
     const { trainingPlan, setTrainingPlan } = useTrainingPlan();
     
@@ -151,13 +153,14 @@ function ModifyTrainingStep() {
     }, []);
 
     return (
-        <main>
+        <main
+            className={styles.training_plan_page}
+        >
             <Stack>
                 <Title
                     headingNumber={1}
                     text={`
-                        Modificar 
-                        ${step.exercises.length > 1 ? " Sequência " : " Exercício "}
+                        Modificar Sequência
                         ${step.orderInDay && trainingDayOrder ? `${step.orderInDay} do Dia ${trainingDayOrder}` : ""}
                     `}
                 />

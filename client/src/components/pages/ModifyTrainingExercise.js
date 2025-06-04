@@ -1,3 +1,4 @@
+import styles from "./CreateTrainingPlan.module.css";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Title from "../text/Title";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -17,7 +18,8 @@ function ModifyExercise() {
     
     const hasRun = useRef(false);
     
-    const { notify, confirm } = useSystemMessage();
+    const { notify } = useSystemMessage();
+    const { confirm } = useSystemMessage();
     
     const { trainingPlan, setTrainingPlan } = useTrainingPlan();
     
@@ -40,6 +42,7 @@ function ModifyExercise() {
     const [exercise, setExercise] = useState({
         ID: null,
         orderInStep: 1,
+        name: "",
         note: "",
         exerciseID: null,
         exerciseEquipmentID: null,
@@ -87,7 +90,8 @@ function ModifyExercise() {
                 setExercises,
                 { orderInPlan: locationTrainingDayOrder, stepOrder: locationStepOrder },
                 navigate,
-                stepDestination
+                stepDestination,
+                "exercises"
             );
     
             if (!exercisesSuccess) return;
@@ -97,7 +101,8 @@ function ModifyExercise() {
                 setExerciseEquipments, 
                 { orderInPlan: locationTrainingDayOrder, stepOrder: locationStepOrder },
                 navigate,
-                stepDestination
+                stepDestination,
+                "exerciseEquipments"
             );
 
             if (!exerciseEquipmentsSuccess) return;
@@ -107,7 +112,8 @@ function ModifyExercise() {
                 setBodyPositions,
                 { orderInPlan: locationTrainingDayOrder, stepOrder: locationStepOrder },
                 navigate,
-                stepDestination
+                stepDestination,
+                "bodyPositions"
             );
     
             if (!bodyPositionsSuccess) return;
@@ -117,7 +123,8 @@ function ModifyExercise() {
                 setPulleyHeights, 
                 { orderInPlan: locationTrainingDayOrder, stepOrder: locationStepOrder },
                 navigate,
-                stepDestination
+                stepDestination,
+                "pulleyHeights"
             );
 
             if (!pulleyHeightsSuccess) return;
@@ -127,7 +134,8 @@ function ModifyExercise() {
                 setPulleyAttachments,
                 { orderInPlan: locationTrainingDayOrder, stepOrder: locationStepOrder },
                 navigate,
-                stepDestination
+                stepDestination,
+                "pulleyAttachments"
             );
     
             if (!pulleyAttachmentsSuccess) return;
@@ -137,7 +145,8 @@ function ModifyExercise() {
                 setGripTypes, 
                 { orderInPlan: locationTrainingDayOrder, stepOrder: locationStepOrder },
                 navigate,
-                stepDestination
+                stepDestination,
+                "gripTypes"
             );
 
             if (!gripTypesSuccess) return;
@@ -147,7 +156,8 @@ function ModifyExercise() {
                 setGripWidths,
                 { orderInPlan: locationTrainingDayOrder, stepOrder: locationStepOrder },
                 navigate,
-                stepDestination
+                stepDestination,
+                "gripWidths"
             );
     
             if (!gripWidthsSuccess) return;
@@ -157,7 +167,8 @@ function ModifyExercise() {
                 setLateralities, 
                 { orderInPlan: locationTrainingDayOrder, stepOrder: locationStepOrder },
                 navigate,
-                stepDestination
+                stepDestination,
+                "lateralities"
             );
 
             if (!lateralitiesSuccess) return;
@@ -298,7 +309,9 @@ function ModifyExercise() {
     }, []);
 
     return (
-        <main>
+        <main
+            className={styles.training_plan_page}
+        >
             <Stack>
                 <Title
                     headingNumber={1}

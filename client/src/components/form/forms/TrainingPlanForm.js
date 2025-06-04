@@ -8,8 +8,8 @@ import { formattNameAndNote } from "../../../utils/formatters/training/formatOnC
 import styles from "./TrainingPlanForm.module.css";
 import ClickableIcon from "../buttons/ClickableIcon";
 import SortableItem from "../../sortable/SortableItem";
-import { arrayMove, horizontalListSortingStrategy, SortableContext } from "@dnd-kit/sortable";
-import { closestCenter, DndContext, PointerSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { arrayMove, horizontalListSortingStrategy, SortableContext, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
+import { closestCorners, DndContext, KeyboardSensor, PointerSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
 
 function TrainingPlanForm({ trainingPlan, setTrainingPlan, setTrainingPlanError, handleSubmit, handleAddTrainingDay, handleModifyTrainingDay, handleRemoveTrainingDay }) {
     const [errors, setErrors] = useState({
@@ -18,16 +18,10 @@ function TrainingPlanForm({ trainingPlan, setTrainingPlan, setTrainingPlanError,
     });
 
     const sensors = useSensors(
-        useSensor(PointerSensor, {
-            activationConstraint: {
-                distance: 5
-            }
-        }),
-        useSensor(TouchSensor, {
-            activationConstraint: {
-                delay: 150, 
-                tolerance: 5,
-            },
+        useSensor(PointerSensor),
+        useSensor(TouchSensor),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates
         })
     );
     
@@ -97,17 +91,18 @@ function TrainingPlanForm({ trainingPlan, setTrainingPlan, setTrainingPlanError,
                     />
 
                     <Stack>
-                        <DndContext
-                            sensors={sensors}
-                            collisionDetection={closestCenter}
-                            onDragEnd={handleDragEnd}
+                        <Stack
+                            direction="row"
+                            className={styles.training_days}
                         >
-                            <SortableContext
-                                items={trainingPlan.trainingDays.map(day => String(day.ID))}
-                                strategy={horizontalListSortingStrategy}
+                            <DndContext
+                                sensors={sensors}
+                                collisionDetection={closestCorners}
+                                onDragEnd={handleDragEnd}
                             >
-                                <ul 
-                                    className={styles.training_days}
+                                <SortableContext
+                                    items={trainingPlan.trainingDays.map(day => String(day.ID))}
+                                    strategy={horizontalListSortingStrategy}
                                 >
                                     {trainingPlan.trainingDays
                                         .sort((a, b) => a.orderInPlan - b.orderInPlan)
@@ -162,9 +157,9 @@ function TrainingPlanForm({ trainingPlan, setTrainingPlan, setTrainingPlanError,
                                             </SortableItem>
                                         ))
                                     }
-                                </ul>
-                            </SortableContext>
-                        </DndContext>
+                                </SortableContext>
+                            </DndContext>
+                        </Stack>
 
                         <ClickableIcon
                             iconSrc="/images/icons/add.png"

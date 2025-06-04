@@ -122,6 +122,9 @@ function CardioSessionForm({ cardioSession, setCardioSession, setCardioSessionEr
                                     )?.media.url
                                 }`}
                                 alt="Cardio Icon"
+                                style={{
+                                    height: "4em"
+                                }}
                             />
                         }
                     </Stack>

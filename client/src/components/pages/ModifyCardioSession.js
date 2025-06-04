@@ -1,3 +1,4 @@
+import styles from "./CreateTrainingPlan.module.css";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Title from "../text/Title";
@@ -63,7 +64,8 @@ function ModifyCardioSession() {
                 setCardioIntensities,
                 { trainingDayOrder: locationTrainingDayOrder },
                 navigate,
-                destination
+                destination,
+                "cardioIntensities"
             );
     
             if (!intensitiesSuccess) return;
@@ -73,7 +75,8 @@ function ModifyCardioSession() {
                 setCardioOptions, 
                 { trainingDayOrder: locationTrainingDayOrder },
                 navigate,
-                destination
+                destination,
+                "cardioOptions"
             );
 
             if (!optionsSuccess) return;
@@ -129,7 +132,9 @@ function ModifyCardioSession() {
     }, []);
     
     return (
-        <main>
+        <main
+            className={styles.training_plan_page}
+        >
             <Stack>
                 <Title
                     headingNumber={1}

@@ -1,8 +1,8 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-function SortableItem({ ID, className, children }) {
-    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: ID });
+function SortableItem({ id, className, children }) {
+    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
 
     const style = {
         transform: CSS.Transform.toString(transform),
@@ -12,7 +12,7 @@ function SortableItem({ ID, className, children }) {
     };
 
     return (
-        <li
+        <div
             ref={setNodeRef}
             style={style}
             {...attributes}
@@ -20,7 +20,7 @@ function SortableItem({ ID, className, children }) {
             className={className}
         >
             {children}
-        </li>
+        </div>
     );
 }
 

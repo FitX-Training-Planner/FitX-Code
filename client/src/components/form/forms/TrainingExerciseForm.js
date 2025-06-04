@@ -8,9 +8,10 @@ import { formattNameAndNote } from "../../../utils/formatters/training/formatOnC
 import { isNoteValid } from "../../../utils/validators/trainingValidator";
 import Select from "../fields/Select";
 import Alert from "../../messages/Alert";
-import { closestCenter, DndContext, PointerSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
-import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { closestCorners, DndContext, KeyboardSensor, PointerSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import SortableItem from "../../sortable/SortableItem";
+import Title from "../../text/Title";
 
 function TrainingExerciseForm({ exercise, setExercise, setExerciseError, handleSubmit, handleAddSet, handleModifySet, handleRemoveSet, exercises, exerciseEquipments, bodyPositions, pulleyHeights, pulleyAttachments, gripTypes, gripWidths, lateralities }) {
     const arrays = useMemo(() => ({
@@ -30,16 +31,10 @@ function TrainingExerciseForm({ exercise, setExercise, setExerciseError, handleS
     });
 
     const sensors = useSensors(
-        useSensor(PointerSensor, {
-            activationConstraint: {
-                distance: 5
-            }
-        }),
-        useSensor(TouchSensor, {
-            activationConstraint: {
-                delay: 150, 
-                tolerance: 5,
-            },
+        useSensor(PointerSensor),
+        useSensor(TouchSensor),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates
         })
     );
     
@@ -75,9 +70,10 @@ function TrainingExerciseForm({ exercise, setExercise, setExerciseError, handleS
         const newExercise = {
             ...exercise, 
             [name]: FK
-        };
+        };  
 
         setExercise(newExercise);
+
     }, [setExerciseError, arrays, exercise, setExercise]);
 
     const handleDragEnd = useCallback((e) => {
@@ -111,17 +107,22 @@ function TrainingExerciseForm({ exercise, setExercise, setExerciseError, handleS
                     gap="2em"
                 >
                     <Stack>
-                        <DndContext
-                            sensors={sensors}
-                            collisionDetection={closestCenter}
-                            onDragEnd={handleDragEnd}
+                        <Title
+                            headingNumber={2}
+                            text="Séries"
+                        />
+
+                        <Stack
+                            className={styles.sets}
                         >
-                            <SortableContext
-                                items={exercise.sets.map(set => String(set.ID))}
-                                strategy={verticalListSortingStrategy}
+                            <DndContext
+                                sensors={sensors}
+                                collisionDetection={closestCorners}
+                                onDragEnd={handleDragEnd}
                             >
-                                <ul 
-                                    className={styles.sets}
+                                <SortableContext
+                                    items={exercise.sets.map(set => String(set.ID))}
+                                    strategy={verticalListSortingStrategy}
                                 >
                                     {exercise.sets
                                         .sort((a, b) => a.orderInExercise - b.orderInExercise)
@@ -172,9 +173,9 @@ function TrainingExerciseForm({ exercise, setExercise, setExerciseError, handleS
                                             </SortableItem>
                                         ))
                                     }
-                                </ul>
-                            </SortableContext>
-                        </DndContext>
+                                </SortableContext>
+                            </DndContext>
+                        </Stack>
 
                         <ClickableIcon
                             iconSrc="/images/icons/add.png"
@@ -198,7 +199,14 @@ function TrainingExerciseForm({ exercise, setExercise, setExerciseError, handleS
                                         placeholder="Selecione o exercício"
                                         labelText="Exercício *"
                                         value={exercises.find(ex => String(ex.ID) === String(exercise.exerciseID))?.name}
-                                        handleChange={(e) => handleOnChangeTrainingFKs(e, "exercises", "name")}
+                                        handleChange={(e) => {
+                                            handleOnChangeTrainingFKs(e, "exercises", "name");
+                                            setErrors(prevErrors => ({ ...prevErrors, video: false }));
+                                            setExercise(prevExercise => ({ 
+                                                ...prevExercise, 
+                                                name: e.target.value
+                                            }))
+                                        }}
                                         options={exercises.map(ex => ex.name)}    
                                     />
 
@@ -260,18 +268,21 @@ function TrainingExerciseForm({ exercise, setExercise, setExerciseError, handleS
                                 }
                             </Stack>
 
-                            {!errors.video && exercise.media ? (
+                            {!errors.video ? (
                                 <video
                                     src={
                                         exercises.find(ex => 
                                             String(ex.ID) === String(exercise.exerciseID)
-                                        ).media.url
+                                        )?.media.url
                                     }
                                     autoPlay 
                                     loop 
                                     muted 
                                     playsInline
                                     onError={() => setErrors(prevErrors => ({ ...prevErrors, video: true }))}
+                                    style={{
+                                        height: "10em"
+                                    }}
                                 />
                             ) : (
                                 <span>

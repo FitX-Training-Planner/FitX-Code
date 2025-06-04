@@ -3,22 +3,17 @@ import Stack from "../../containers/Stack";
 import SubmitFormButton from "../buttons/SubmitFormButton";
 import ClickableIcon from "../buttons/ClickableIcon";
 import styles from "./TrainingStepForm.module.css";
-import { closestCenter, DndContext, PointerSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
-import { arrayMove, horizontalListSortingStrategy, SortableContext } from "@dnd-kit/sortable";
+import { closestCorners, DndContext, KeyboardSensor, PointerSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { arrayMove, horizontalListSortingStrategy, SortableContext, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import SortableItem from "../../sortable/SortableItem";
+import Title from "../../text/Title";
 
 function TrainingStepForm({ trainingStep, setTrainingStep, handleSubmit, handleAddExercise, handleModifyExercise, handleRemoveExercise }) {
     const sensors = useSensors(
-        useSensor(PointerSensor, {
-            activationConstraint: {
-                distance: 5
-            }
-        }),
-        useSensor(TouchSensor, {
-            activationConstraint: {
-                delay: 150, 
-                tolerance: 5,
-            },
+        useSensor(PointerSensor),
+        useSensor(TouchSensor),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates
         })
     );
 
@@ -53,17 +48,24 @@ function TrainingStepForm({ trainingStep, setTrainingStep, handleSubmit, handleA
                     gap="2em"
                 >
                     <Stack>
-                        <DndContext
-                            sensors={sensors}
-                            collisionDetection={closestCenter}
-                            onDragEnd={handleDragEnd}
-                        >
-                            <SortableContext
-                                items={trainingStep.exercises.map(exercise => String(exercise.ID))}
-                                strategy={horizontalListSortingStrategy}
+                        <Title
+                            headingNumber={2}
+                            text="Exercícios da Sequência"
+                            textAlign="center"
+                        />
+
+                        <Stack
+                            direction="row"
+                            className={styles.exercises}
+                        >    
+                            <DndContext
+                                sensors={sensors}
+                                collisionDetection={closestCorners}
+                                onDragEnd={handleDragEnd}
                             >
-                                <ul 
-                                    className={styles.exercises}
+                                <SortableContext
+                                    items={trainingStep.exercises.map(exercise => String(exercise.ID))}
+                                    strategy={horizontalListSortingStrategy}
                                 >
                                     {trainingStep.exercises
                                         .sort((a, b) => a.orderInStep - b.orderInStep)
@@ -99,6 +101,10 @@ function TrainingStepForm({ trainingStep, setTrainingStep, handleSubmit, handleA
                                                         )}
                                                     </span>
 
+                                                    <span>
+                                                        {exercise.name}
+                                                    </span>
+
                                                     <Stack>                                            
                                                         <span>
                                                             N° Séries: {exercise.sets.length}
@@ -108,9 +114,9 @@ function TrainingStepForm({ trainingStep, setTrainingStep, handleSubmit, handleA
                                             </SortableItem>
                                         ))
                                     }
-                                </ul>
-                            </SortableContext>
-                        </DndContext>
+                                </SortableContext>
+                            </DndContext>
+                        </Stack>
 
                         <ClickableIcon
                             iconSrc="/images/icons/add.png"
@@ -121,10 +127,7 @@ function TrainingStepForm({ trainingStep, setTrainingStep, handleSubmit, handleA
                 </Stack>
 
                 <SubmitFormButton
-                    text={`
-                        Criar ou Modificar 
-                        ${trainingStep.exercises.length > 1 ? "sequência" : "Exercício"}
-                    `}
+                    text="Criar ou Modificar sequência"
                 />
             </Stack>
         </form>

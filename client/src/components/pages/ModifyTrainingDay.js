@@ -1,3 +1,4 @@
+import styles from "./CreateTrainingPlan.module.css";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Title from "../text/Title";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -15,8 +16,9 @@ function ModifyTrainingDay() {
     
     const hasRun = useRef(false);
     
-    const { notify, confirm } = useSystemMessage();
-    
+    const { notify } = useSystemMessage();
+    const { confirm } = useSystemMessage();
+
     const { trainingPlan, setTrainingPlan } = useTrainingPlan();
     
     const cardioSessionDestination = useMemo(() => (
@@ -68,9 +70,14 @@ function ModifyTrainingDay() {
     const handleOnChangeTrainingDayType = useCallback(async () => {
         if (!trainingDay.isRestDay) {
             const userConfirmed = await confirm("Deseja transformar esse dia em descanso?");
-            
+
             if (userConfirmed) {
-                setTrainingDay(prevTrainingDay => ({ ...defaultTrainingDay, isRestDay: !prevTrainingDay.isRestDay }));
+                setTrainingDay(prevTrainingDay => ({ 
+                    ...prevTrainingDay, 
+                    isRestDay: !prevTrainingDay.isRestDay,
+                    trainingSteps: [],
+                    cardioSessions: []
+                }));
 
                 setError(false);  
 
@@ -80,10 +87,15 @@ function ModifyTrainingDay() {
             }
         }
 
-        setTrainingDay(prevTrainingDay => ({ ...defaultTrainingDay, isRestDay: !prevTrainingDay.isRestDay }));
+        setTrainingDay(prevTrainingDay => ({ 
+            ...prevTrainingDay, 
+            isRestDay: !prevTrainingDay.isRestDay,
+            trainingSteps: [],
+            cardioSessions: []
+        }));
 
         setError(false);
-    }, [confirm, defaultTrainingDay, trainingDay.isRestDay]);
+    }, [confirm, trainingDay.isRestDay]);
 
     const validateAndSaveTrainingDay = useCallback(() => {
         if (!validateTrainingDay(
@@ -196,7 +208,9 @@ function ModifyTrainingDay() {
     }, []);
 
     return (
-        <main>
+        <main
+            className={styles.training_plan_page}
+        >
             <Stack>
                 <Stack>
                     <Title

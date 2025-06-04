@@ -11,4 +11,6 @@
     flex: 1;
     border: 1px solid var(--theme-color);
     max-height: 15em;
+    width: 100%;
+    touch-action: none;
 }
