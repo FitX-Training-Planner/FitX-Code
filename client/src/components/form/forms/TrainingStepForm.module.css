@@ -1,0 +1,13 @@
+.exercises {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    border: 1px solid var(--theme-color);
+    gap: 1em;
+}
+
+.exercise {
+    flex: 1;
+    max-width: 30em;
+    border: 1px solid var(--theme-color);
+}
