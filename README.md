@@ -16,3 +16,6 @@ Este repositório contém o código e documentos relacionados ao projeto FitX, u
 <a href="https://www.flaticon.com/br/icones-gratis/nome-de-usuario" title="nome de usuário ícones">Nome de usuário ícones criados por Freepik - Flaticon</a>
 <a href="https://www.flaticon.com/free-icons/email" title="email icons">Email icons created by Freepik - Flaticon</a>
 <a href="https://www.flaticon.com/free-icons/password" title="password icons">Password icons created by kostop - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/editar-texto" title="editar texto ícones">Editar texto ícones criados por iconmas - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/ui" title="ui ícones">Ui ícones criados por Ian Anandara - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/adicionar" title="adicionar ícones">Adicionar ícones criados por inkubators - Flaticon</a>
