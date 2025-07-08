@@ -4,7 +4,7 @@
   --dark-theme-color: #002462;
   --bg-color: var(--white-color);
   --text-color: var(--dark-color);
-  --gray-color: #5c5c5c;
+  --gray-color: #adadad;
   --dark-color: #000000;
   --white-color: #f5f5f5;
   --alert-color: rgb(255, 0, 0);
@@ -19,6 +19,11 @@
   --medium-font-weight: 600;
   --fonts-1: "Roboto", sans-serif;
   --fonts-2:  "Raleway", "Open Sans";
+}
+
+[data-theme="dark"] {
+  --bg-color: #000000;
+  --text-color: #f5f5f5;
 }
 
 * {
@@ -59,12 +64,20 @@ h1 {
   letter-spacing: 2px;
 }
 
-h2, h3 {
+h2 {
   font-size: var(--title-size);
 }
 
-h4, h5, h6 {
+h3 {
   font-size: var(--small-title-size);
+}
+
+h4 {
+  font-size: var(--large-text-size);
+}
+
+h5, h6 {
+  font-size: var(--text-size);
 }
 
 body {
@@ -99,6 +112,11 @@ textarea {
 
 ul {
   list-style: none;
+}
+
+hr {
+  width: 100%;
+  border-top: 1px solid var(--text-color);
 }
 
 .fade-enter {
