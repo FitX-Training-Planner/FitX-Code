@@ -1,0 +1,44 @@
+.training_plan_card {
+    --border-radius: 30px;
+    border: 2px solid var(--theme-color);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.training_plan_actions {
+    background-color: var(--theme-color);
+    padding: 0.5em 1em;
+}
+
+.training_plan_id > span {
+    color: var(--gray-color);
+}
+
+.training_plan_info {
+    --padding: 0.5em;
+    padding: var(--padding);
+}
+
+.training_day {
+    border: 1px solid var(--theme-color);
+    height: 100%;
+    border-radius: calc(var(--border-radius) - var(--padding));
+    overflow: hidden;
+}
+
+.training_day_title {
+    padding: 0.5em;
+    background-color: var(--light-theme-color);
+}
+
+.training_day_title > span {
+    font-weight: bold;
+}
+
+.training_day_info {
+    padding: 1em;
+}
+
+:where(.cardio_session, .exercise) > span {
+    text-align: center;
+}
