@@ -19,3 +19,20 @@ Este repositório contém o código e documentos relacionados ao projeto FitX, u
 <a href="https://www.flaticon.com/br/icones-gratis/editar-texto" title="editar texto ícones">Editar texto ícones criados por iconmas - Flaticon</a>
 <a href="https://www.flaticon.com/br/icones-gratis/ui" title="ui ícones">Ui ícones criados por Ian Anandara - Flaticon</a>
 <a href="https://www.flaticon.com/br/icones-gratis/adicionar" title="adicionar ícones">Adicionar ícones criados por inkubators - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/agarrar" title="agarrar ícones">Agarrar ícones criados por Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/duplicado" title="duplicado ícones">Duplicado ícones criados por Hight Quality Icons - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/costas" title="costas ícones">Costas ícones criados por Roundicons - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/botao-home" title="botão home ícones">Botão home ícones criados por Mayor Icons - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/chatbot" title="chatbot ícones">Chatbot ícones criados por Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/workout" title="workout icons">Workout icons created by Flowicon - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/database" title="database icons">Database icons created by Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/comments" title="comments icons">Comments icons created by Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/settings" title="settings icons">Settings icons created by Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/discover" title="discover icons">Discover icons created by Smashicons - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/client" title="client icons">Client icons created by Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/price" title="price icons">Price icons created by bqlqn - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/document" title="document icons">Document icons created by Andrean Prabowo - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/rise" title="rise icons">Rise icons created by Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/mandar" title="mandar ícones">Mandar ícones criados por Those Icons - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/back" title="back icons">Back icons created by Roundicons - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/expandir" title="expandir ícones">Expandir ícones criados por bqlqn - Flaticon</a>
