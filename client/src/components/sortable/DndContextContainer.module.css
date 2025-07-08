@@ -1,0 +1,10 @@
+.dnd_context_container {
+    background-color: var(--text-color);
+    border-radius: 20px;
+    padding: 1em;
+}
+
+.stack_column > div {
+    min-width: 50%;
+    max-width: unset;
+}

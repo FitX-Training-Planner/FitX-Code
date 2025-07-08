@@ -1,0 +1,38 @@
+.sortable_item {
+    --border: solid var(--theme-color);
+    --bg: var(--bg-color);
+    user-select: none;
+    flex: 1;
+    border: 5px var(--border);
+    border-radius: 20px;
+    background-color: var(--bg);
+    padding: 1em;
+    position: relative;
+    cursor: default;
+}
+
+.sortable_item > span {
+    --size: 2.5em;
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% - (var(--size) / 2));
+    transform: translateX(-50%);
+    width: var(--size);
+    height: var(--size);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    cursor: grab;
+    background-color: var(--bg);
+    border: 2px var(--border);
+    padding: 0.2em;
+    border-radius: 50%;
+}
+
+.sortable_item > span > button {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    cursor: grab;
+}
