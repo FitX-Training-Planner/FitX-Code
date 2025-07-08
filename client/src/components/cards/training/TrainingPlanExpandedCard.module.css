@@ -1,0 +1,15 @@
+.training_plan_card {
+    border: 2px solid var(--theme-color);
+    padding: 1em 0;
+}
+
+.training_day {
+    border: 2px solid var(--light-theme-color);
+    padding: 1em;
+}
+
+.step {
+    border: 1px solid var(--gray-color);
+    padding: 0.5em;
+    border-radius: 10px;
+}
