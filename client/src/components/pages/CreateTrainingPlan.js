@@ -2,7 +2,7 @@ import styles from "./CreateTrainingPlan.module.css";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Title from "../text/Title";
 import { useTrainingPlan } from "../../app/TrainingPlanProvider";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSystemMessage } from "../../app/SystemMessageProvider";
 import { useSelector } from "react-redux";
 import { getNextOrder, removeAndReorder } from "../../utils/generators/generateOrder";
@@ -11,17 +11,23 @@ import useRequest from "../../hooks/useRequest";
 import { validateAllElementsInTrainingPlan, validateTrainingPlan } from "../../utils/validators/formValidator";
 import Stack from "../containers/Stack";
 import TrainingPlanForm from "../form/forms/TrainingPlanForm";
+import duplicateObjectInObjectList from "../../utils/generators/duplicate";
+import { verifyIsTrainer } from "../../utils/requests/verifyUserType";
+import { cleanCacheData } from "../../utils/cache/operations";
+import BackButton from "../form/buttons/BackButton";
 
 function CreateTrainingPlan() {    
     const navigate = useNavigate();
+
+    const location = useLocation();
     
     const hasRun = useRef(false);
     
     const { notify } = useSystemMessage();
     const { confirm } = useSystemMessage();
 
-    const { request: postPlanRequest } = useRequest();
-    const { request: verifyIsTrainer } = useRequest();
+    const { request: postOrPutPlanRequest } = useRequest();
+    const { request: isTrainer } = useRequest();
 
     const { trainingPlan, setTrainingPlan, resetTrainingPlan } = useTrainingPlan();
         
@@ -37,21 +43,19 @@ function CreateTrainingPlan() {
         if (hasRun.current) return;
                 
         hasRun.current = true;
-    
-        if (user.config.isClient) {
-            navigate("/");
-            
-            notify("Essa página só pode ser acessada por treinadores.", "error");
 
-            return;
+        const verifyTrainer = async () => {
+            const success = await verifyIsTrainer(isTrainer, user, navigate, notify);
+
+            if (!success) return;
+
+            const locationTrainingPlan = location.state?.trainingPlan;
+    
+            if (locationTrainingPlan) setTrainingPlan(locationTrainingPlan);
         }
 
-        const getIsTrainer = () => {
-            return api.post(`/is-trainer`);
-        };
-
-        verifyIsTrainer(getIsTrainer, () => undefined, () => undefined);
-    }, [navigate, notify, verifyIsTrainer, user.config.isClient]);
+        verifyTrainer();
+    }, [navigate, notify, isTrainer, user, location.state?.trainingPlan, setTrainingPlan]);
 
     const validatePlan = useCallback(() => {
         if (!validateTrainingPlan(
@@ -74,20 +78,29 @@ function CreateTrainingPlan() {
 
             return;
         }
-
-        if (!validatePlan()) return;
      
         navigate(
             trainingDayDestination, 
             { state: { trainingDayOrder: getNextOrder(trainingPlan.trainingDays, "orderInPlan") } }
         )
-    }, [navigate, notify, trainingDayDestination, trainingPlan.trainingDays, validatePlan]);
+    }, [navigate, notify, trainingDayDestination, trainingPlan.trainingDays]);
+
+    const duplicateTrainingDay = useCallback((day) => {
+        duplicateObjectInObjectList(
+            day, 
+            trainingPlan.trainingDays, 
+            "trainingDays", 
+            9, 
+            "Você atingiu o limite de 9 dias para este plano de treino.", 
+            notify, 
+            "orderInPlan", 
+            setTrainingPlan
+        )
+    }, [notify, setTrainingPlan, trainingPlan.trainingDays]);
 
     const modifyTrainingDay = useCallback(trainingDay => {
-        if (!validatePlan()) return;
-
-        navigate(trainingDayDestination, { state: { trainingDay } })
-    }, [navigate, trainingDayDestination, validatePlan]);
+        navigate(trainingDayDestination, { state: { trainingDay } });
+    }, [navigate, trainingDayDestination]);
 
     const removeTrainingDay = useCallback(async order => {
         const userConfirmed = await confirm("Deseja remover esse dia do seu treino?");
@@ -123,29 +136,50 @@ function CreateTrainingPlan() {
 
         formData.append("trainingPlan", JSON.stringify(trainingPlan));
 
-        const postTrainingPlan = () => {
-            return api.post(`/trainers/me/training-plans`, formData);
-        };
+        let requestFn = () => undefined;
+        let loadingMessage = "";
+        let successMessage = "";
+        let errorMessage = "";
 
-        const handleOnPostPlanSuccess = () => {
-            navigate("/");
+        if (trainingPlan.ID) {
+            requestFn = () => {
+                return api.put(`/trainers/me/training-plans/${trainingPlan.ID}`, formData);
+            };
+
+            loadingMessage = "Modificando";
+            successMessage = "Plano de treino modificado com sucesso!";
+            errorMessage = "Falha ao modificar plano!";
+        } else {
+            requestFn = () => {
+                return api.post(`/trainers/me/training-plans`, formData);
+            };
+
+            loadingMessage = "Criando";
+            successMessage = "Plano de treino criado com sucesso!";
+            errorMessage = "Falha ao criar plano!";
+        }
+
+        const handleOnPostOrPutPlanSuccess = () => {
+            navigate("/trainers/me/training-plans");
 
             resetTrainingPlan();
+
+            cleanCacheData("trainingPlans");
         };
 
-        const handleOnPostPlanError = () => {
+        const handleOnPostOrPutPlanError = () => {
             setError(true);
         };
 
-        postPlanRequest(
-            postTrainingPlan, 
-            handleOnPostPlanSuccess, 
-            handleOnPostPlanError, 
-            "Criando", 
-            "Plano de treino criado com sucesso!", 
-            "Falha ao criar plano!"
+        postOrPutPlanRequest(
+            requestFn, 
+            handleOnPostOrPutPlanSuccess, 
+            handleOnPostOrPutPlanError, 
+            loadingMessage, 
+            successMessage, 
+            errorMessage
         );
-    }, [error, navigate, notify, postPlanRequest, resetTrainingPlan, trainingPlan, validatePlan]);
+    }, [error, navigate, notify, postOrPutPlanRequest, resetTrainingPlan, trainingPlan, validatePlan]);
 
     useEffect(() => {
         document.title = "Criar Plano de Treino";
@@ -155,16 +189,32 @@ function CreateTrainingPlan() {
         <main
             className={styles.training_plan_page}
         >
-            <Stack>
-                <Stack>
+            <BackButton
+                destiny="/trainers/me/training-plans"
+            />
+
+            <Stack
+                gap="3em"
+            >
+                <Stack
+                    className={styles.training_title_container}
+                >
                     <Title
                         headingNumber={1}
-                        text="Novo Plano de Treino"
+                        text="Plano de Treino"
                     />
 
-                    <p>
-                        Crie um plano de treino completo para usar com quantos clientes você quiser!
-                    </p>
+                    <Title
+                        headingNumber={2}
+                        text="Criar ou Modificar Modelo"
+                        varColor="--light-theme-color"
+                    />
+
+                    {!trainingPlan.ID && (
+                        <p>
+                            Crie um plano de treino completo para usar com quantos clientes você quiser!
+                        </p>
+                    )}
                 </Stack>
 
                 <TrainingPlanForm
@@ -173,6 +223,7 @@ function CreateTrainingPlan() {
                     setTrainingPlanError={setError}
                     handleSubmit={handleOnSubmit}
                     handleAddTrainingDay={addTrainingDay}
+                    handleDuplicateTrainingDay={duplicateTrainingDay}
                     handleModifyTrainingDay={modifyTrainingDay}
                     handleRemoveTrainingDay={removeTrainingDay}
                 />

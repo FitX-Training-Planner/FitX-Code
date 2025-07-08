@@ -1,3 +1,7 @@
 .training_plan_page {
     padding: 2em;
 }
+
+.training_title_container > p {
+    text-align: center;
+}
