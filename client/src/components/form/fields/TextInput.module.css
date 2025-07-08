@@ -21,6 +21,10 @@
     width: var(--size);
 }
 
+.text_input.dark_theme > label > img {
+    filter: invert(1);
+}
+
 .text_input > label > p {
     line-height: var(--size);
 }

@@ -1,5 +1,4 @@
 .label_container {
-    width: max-content;
     color: var(--dark-color);
 }
 
@@ -8,7 +7,12 @@
     font-weight: bold;
 }
 
-.photo_input > label {
+.photo_input {
+    width: max-content;
+    --border: solid var(--dark-theme-color);
+}
+
+.photo_input > :where(label, div:not(.label_container)) {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -19,19 +23,19 @@
     transition: var(--fast-transition);
 }
 
-.photo_input > label:hover {
+.photo_input > :where(label, div:not(.label_container)):hover {
     border-color: var(--light-theme-color);
     background-color: var(--gray-color);
 }
 
-.photo_input > label > img {
+.photo_input > :where(label, div:not(.label_container)) > img {
     height: 100%;
     width: 100%;
     object-fit: cover;
     transition: var(--fast-transition);
 }
 
-.photo_input > label:hover > img {
+.photo_input > :where(label, div:not(.label_container)):hover > img {
     transform: scale(1.1);
 }
 
@@ -47,19 +51,26 @@
     --size: 200px; 
     height: var(--size);
     width: var(--size);
-    border: 10px solid var(--dark-theme-color);
+    border: 10px var(--border);
 }
 
 .medium {
     --size: 120px; 
     height: var(--size);
     width: var(--size);
-    border: 7px solid var(--dark-theme-color);
+    border: 7px var(--border);
 }
 
 .small {
     --size: 80px; 
     height: var(--size);
     width: var(--size);
-    border: 4px solid var(--dark-theme-color);
+    border: 4px var(--border);
+}
+
+.tiny {
+    --size: 40px; 
+    height: var(--size);
+    width: var(--size);
+    border: 2px var(--border);
 }
