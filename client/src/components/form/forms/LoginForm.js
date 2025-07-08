@@ -5,20 +5,9 @@ import Title from "../../text/Title";
 import NonBackgroundButton from "../buttons/NonBackgroundButton";
 import SubmitFormButton from "../buttons/SubmitFormButton";
 import TextInput from "../fields/TextInput";
-import { useCallback } from "react";
+import { handleOnChangeTextField } from "../../../utils/handlers/changeHandlers";
 
 function LoginForm({ user, setUser, loginError, setLoginError, navigate, handleChangeFormType, handleSubmit }) {
-    const handleOnChangeUserData = useCallback((e) => {
-        setLoginError(false);
-        
-        const value = formattEmailAndPassword(e.target.value);
-        
-        setUser(prevUser => ({
-            ...prevUser, 
-            [e.target.name]: value
-        }));
-    }, [setLoginError, setUser]);
-    
     return (
         <>
             <Stack
@@ -36,7 +25,9 @@ function LoginForm({ user, setUser, loginError, setLoginError, navigate, handleC
                 />
             </Stack>
 
-            <form onSubmit={handleSubmit}>
+            <form 
+                onSubmit={handleSubmit}
+            >
                 <Stack
                     gap="3em"
                 >
@@ -49,7 +40,7 @@ function LoginForm({ user, setUser, loginError, setLoginError, navigate, handleC
                             placeholder="Insira seu e-mail"
                             labelText="E-mail"
                             value={user.email}
-                            handleChange={(e) => handleOnChangeUserData(e)}
+                            handleChange={(e) => handleOnChangeTextField(e, formattEmailAndPassword, undefined, user, setUser, setLoginError)}
                             icon="images/icons/email.png"
                             maxLength={254}
                         />
@@ -60,7 +51,7 @@ function LoginForm({ user, setUser, loginError, setLoginError, navigate, handleC
                             placeholder="Insira sua senha"
                             labelText="Senha"
                             value={user.password}
-                            handleChange={(e) => handleOnChangeUserData(e)}
+                            handleChange={(e) => handleOnChangeTextField(e, formattEmailAndPassword, undefined, user, setUser, setLoginError)}
                             icon="images/icons/password.png"
                             alertMessage="E-mail e/ou senha inválidos."
                             error={loginError}

@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Stack from "../../containers/Stack";
 import SubmitFormButton from "../buttons/SubmitFormButton";
 import TextArea from "../fields/TextArea";
@@ -6,7 +6,7 @@ import { isCardioDurationValid, isNoteValid } from "../../../utils/validators/tr
 import { formattNameAndNote, formattSecondsMinutesAndReps } from "../../../utils/formatters/training/formatOnChange";
 import TextInput from "../fields/TextInput";
 import Select from "../fields/Select";
-import Alert from "../../messages/Alert";
+import { handleOnChangeSelect, handleOnChangeTextField } from "../../../utils/handlers/changeHandlers";
 
 function CardioSessionForm({ cardioSession, setCardioSession, setCardioSessionError, handleSubmit, cardioOptions, cardioIntensities }) {
     const arrays = useMemo(() => ({
@@ -19,48 +19,6 @@ function CardioSessionForm({ cardioSession, setCardioSession, setCardioSessionEr
         note: false
     });
 
-    const handleOnChangeCardioData = useCallback((e, formattFunction, dataValidator) => {
-        setCardioSessionError(false);
-        
-        const name = e.target.name;
-
-        const value = 
-            formattFunction ?
-            formattFunction(e.target.value) :
-            e.target.value;
-        
-        const newCardio = {
-            ...cardioSession, 
-            [name]: value
-        };
-
-        setCardioSession(newCardio);
-
-        if (dataValidator) {
-            setErrors((prevErrors) => ({
-                ...prevErrors,
-                [name]: value !== "" && !dataValidator(value)
-            }));
-        }
-    }, [setCardioSession, setCardioSessionError, cardioSession]);
-
-    const handleOnChangeCardioFKs = useCallback((e, arrayName, valueFieldName) => {
-        setCardioSessionError(false);
-        
-        const name = e.target.name;
-
-        const value = e.target.value;
-
-        const FK = arrays[arrayName].find(item => item[valueFieldName] === value).ID;
-
-        const newCardio = {
-            ...cardioSession, 
-            [name]: FK
-        };
-
-        setCardioSession(newCardio);
-    }, [setCardioSessionError, arrays, cardioSession, setCardioSession]);
-
     return (
         <form
             onSubmit={handleSubmit}
@@ -68,18 +26,40 @@ function CardioSessionForm({ cardioSession, setCardioSession, setCardioSessionEr
             <Stack
                 gap="3em"
             >
+                <p>
+                    - Os campos obrigatórios são marcados com "*".
+                </p>
+
                 <Stack
                     gap="2em"
                 >
                     <TextInput
                         name="durationMinutes"
                         placeholder="Insira a duração do cardio"
-                        labelText="Duração em Minutos"
+                        labelText="Duração em Minutos *"
                         value={cardioSession.durationMinutes}
-                        handleChange={(e) => handleOnChangeCardioData(e, formattSecondsMinutesAndReps, isCardioDurationValid)}
+                        handleChange={(e) => handleOnChangeTextField(e, formattSecondsMinutesAndReps, isCardioDurationValid, cardioSession, setCardioSession, setCardioSessionError, setErrors)}
                         alertMessage="A duração deve ter entre 10 e 600 minutos."
                         error={errors.durationMinutes}
                         maxLength={3}
+                    />
+
+                    <Select
+                        name="cardioOption"
+                        placeholder="Selecione o tipo"
+                        labelText="Tipo do Cardio *"
+                        value={cardioOptions.find(option => String(option.ID) === String(cardioSession.cardioOption?.ID))?.name}
+                        handleChange={(e) => handleOnChangeSelect(e, arrays.cardioOptions, "name", cardioSession, setCardioSession, setCardioSessionError)}
+                        options={cardioOptions.map(option => option.name)}
+                    />
+
+                    <Select
+                        name="cardioIntensity"
+                        placeholder="Selecione a intensidade"
+                        labelText="Intensidade do Cardio *"
+                        value={cardioIntensities.find(intensity => String(intensity.ID) === String(cardioSession.cardioIntensity?.ID))?.type}
+                        handleChange={(e) => handleOnChangeSelect(e, arrays.cardioIntensities, "type", cardioSession, setCardioSession, setCardioSessionError)}
+                        options={cardioIntensities.map(intensity => intensity.type)}
                     />
 
                     <TextInput
@@ -88,7 +68,7 @@ function CardioSessionForm({ cardioSession, setCardioSession, setCardioSessionEr
                         placeholder="Insira o horário do cardio"
                         labelText="Horário"
                         value={cardioSession.sessionTime}
-                        handleChange={(e) => handleOnChangeCardioData(e)}
+                        handleChange={(e) => handleOnChangeTextField(e, undefined, undefined, cardioSession, setCardioSession, setCardioSessionError, setErrors)}
                     />
 
                     <TextArea
@@ -96,62 +76,11 @@ function CardioSessionForm({ cardioSession, setCardioSession, setCardioSessionEr
                         placeholder="Insira sua nota ou observação"
                         labelText="Nota"
                         value={cardioSession.note}
-                        handleChange={(e) => handleOnChangeCardioData(e, formattNameAndNote, isNoteValid)}
+                        handleChange={(e) => handleOnChangeTextField(e, formattNameAndNote, isNoteValid, cardioSession, setCardioSession, setCardioSessionError, setErrors)}
                         alertMessage="A nota não deve ter mais que 500 caracteres."
                         error={errors.note}
                         maxLength={500}
                     />
-
-                    <Stack
-                        direction="row"
-                    >
-                        <Select
-                            name="cardioOptionID"
-                            placeholder="Selecione o tipo"
-                            labelText="Tipo do Cardio"
-                            value={cardioOptions.find(option => String(option.ID) === String(cardioSession.cardioOptionID))?.name}
-                            handleChange={(e) => handleOnChangeCardioFKs(e, "cardioOptions", "name")}
-                            options={cardioOptions.map(option => option.name)}
-                        />
-
-                        {cardioSession.cardioOptionID &&
-                            <img
-                                src={`/${
-                                    cardioOptions.find(option => 
-                                        String(option.ID) === String(cardioSession.cardioOptionID)
-                                    )?.media.url
-                                }`}
-                                alt="Cardio Icon"
-                                style={{
-                                    height: "4em"
-                                }}
-                            />
-                        }
-                    </Stack>
-
-                    <Stack
-                        direction="row"
-                    >
-                        <Select
-                            name="cardioIntensityID"
-                            placeholder="Selecione a intensidade"
-                            labelText="Intensidade do Cardio"
-                            value={cardioIntensities.find(intensity => String(intensity.ID) === String(cardioSession.cardioIntensityID))?.type}
-                            handleChange={(e) => handleOnChangeCardioFKs(e, "cardioIntensities", "type")}
-                            options={cardioIntensities.map(intensity => intensity.type)}
-                        />
-
-                        {cardioSession.cardioIntensityID &&
-                            <Alert
-                                alertMessage={`
-                                    Opção selecionada: 
-                                    ${cardioIntensities.find(intensity => 
-                                        String(intensity.ID) === String(cardioSession.cardioIntensityID))?.description
-                                    }
-                                `}
-                            />
-                        } 
-                    </Stack>
                 </Stack>
 
                 <SubmitFormButton

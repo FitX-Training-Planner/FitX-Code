@@ -1,5 +1,5 @@
 import styles from "./LoginForm.module.css";
-import { useCallback, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { formattCref, formattTrainerDescription } from "../../../utils/formatters/user/formatOnChange";
 import { isCREFValid, isTrainerDescriptionValid } from "../../../utils/validators/userValidator";
 import Stack from "../../containers/Stack";
@@ -8,6 +8,8 @@ import SubmitFormButton from "../buttons/SubmitFormButton";
 import Title from "../../text/Title";
 import TextArea from "../fields/TextArea";
 import Select from "../fields/Select";
+import { handleOnChangeSelect, handleOnChangeTextField } from "../../../utils/handlers/changeHandlers";
+import Alert from "../../messages/Alert";
 
 function TrainerForm({ trainer, setTrainer, setTrainerError, handleSubmit }) {
     const [errors, setErrors] = useState({
@@ -45,30 +47,6 @@ function TrainerForm({ trainer, setTrainer, setTrainerError, handleSubmit }) {
         "TO"
     ], []);
 
-    const handleOnChangeTrainerData = useCallback((e, formattFunction, dataValidator) => {
-        setTrainerError(false);
-
-        const name = e.target.name;
-        const value = 
-            formattFunction 
-            ? formattFunction(e.target.value) 
-            : e.target.value;
-
-        const newTrainer = {
-            ...trainer, 
-            [name]: value
-        };
-
-        setTrainer(newTrainer);
-
-        if (dataValidator) {
-            setErrors((prevErrors) => ({
-                ...prevErrors,
-                [name]: value !== "" && !dataValidator(value)
-            }));
-        }
-    }, [setTrainerError, setTrainer, trainer]);
-    
     return (
         <>
             <Stack
@@ -96,12 +74,17 @@ function TrainerForm({ trainer, setTrainer, setTrainerError, handleSubmit }) {
                         gap="2em"
                     >
                         <Stack>
+                            <Alert
+                                varColor="--white-color"
+                                alertMessage="Adicione seu CREF para passar mais credibilidade aos seus clientes!"
+                            />
+
                             <TextInput
                                 name="cref_number"
                                 placeholder="000000-L"
                                 labelText="CREF"
                                 value={trainer.cref_number}
-                                handleChange={(e) => handleOnChangeTrainerData(e, formattCref, isCREFValid)}
+                                handleChange={(e) => handleOnChangeTextField(e, formattCref, isCREFValid, trainer, setTrainer, setTrainerError, setErrors)}
                                 icon="images/icons/trainer.png"
                                 alertMessage="Número do CREF inválido."
                                 error={errors.cref_number}
@@ -113,7 +96,7 @@ function TrainerForm({ trainer, setTrainer, setTrainerError, handleSubmit }) {
                                 placeholder="Selecione a UF"
                                 labelText="Unidade Federtiva do CREF"
                                 value={trainer.cref_UF}
-                                handleChange={(e) => handleOnChangeTrainerData(e)}
+                                handleChange={(e) => handleOnChangeSelect(e, UFs, undefined, trainer, setTrainer, setTrainerError)}
                                 icon="images/icons/location.png"
                                 options={UFs}
                             />
@@ -124,7 +107,7 @@ function TrainerForm({ trainer, setTrainer, setTrainerError, handleSubmit }) {
                             placeholder="Insira sua descrição profissional"
                             labelText="Descrição Profissional"
                             value={trainer.description}
-                            handleChange={(e) => handleOnChangeTrainerData(e, formattTrainerDescription, isTrainerDescriptionValid)}
+                            handleChange={(e) => handleOnChangeTextField(e, formattTrainerDescription, isTrainerDescriptionValid, trainer, setTrainer, setTrainerError, setErrors)}
                             icon="images/icons/description.png"
                             alertMessage="A descrição profissional não deve ter mais que 1200 caracteres ou 15 quebras de linha."
                             error={errors.description}

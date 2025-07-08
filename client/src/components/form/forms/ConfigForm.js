@@ -3,31 +3,15 @@ import Title from "../../text/Title";
 import SubmitFormButton from "../buttons/SubmitFormButton";
 import CheckBoxInput from "../fields/CheckBoxInput";
 import PhotoInput from "../fields/PhotoInput";
-import { isPhotoValid } from "../../../utils/validators/userValidator";
 import Alert from "../../messages/Alert";
 import styles from "./ConfigForm.module.css";
 import { useCallback } from "react";
 import NonBackgroundButton from "../buttons/NonBackgroundButton";
 import useWindowSize from "../../../hooks/useWindowSize";
+import { handleOnChangePhoto } from "../../../utils/handlers/changeHandlers";
 
 function ConfigForm({ config, setConfig, handleSubmit, handleChangeToTrainer }) {
     const { width } = useWindowSize();
-
-    const handleOnChangeUserPhoto = useCallback((e) => {
-        const file = e.target.files[0];
-
-        if (!file) return;
-        
-        if (!isPhotoValid(file)) return;
-        
-        const newBlobUrl = URL.createObjectURL(file);
-        
-        setConfig(prevConfig => ({
-            ...prevConfig, 
-            [e.target.name]: file,
-            photoBlobUrl: newBlobUrl
-        }));
-    }, [setConfig]);
 
     const handleOnChangeConfigData = useCallback((e) => {
         setConfig(prevConfig => ({
@@ -71,17 +55,17 @@ function ConfigForm({ config, setConfig, handleSubmit, handleChangeToTrainer }) 
                         labelText="Foto de Perfil"
                         size="large"
                         blobUrl={config.photoBlobUrl}
-                        handleChange={handleOnChangeUserPhoto}
+                        handleChange={(e) => handleOnChangePhoto(e, config, setConfig)}
                     />
 
                     <Stack
                         direction="row"
                         gap="0.5em"
                         className={styles.config_alert}
+                        justifyContent="center"
                     >
                         <Alert
                             varColor="--white-color"
-                            varSize="--small-text-size"
                         />
                         
                         Você sempre pode alterar suas configurações após criar sua conta.

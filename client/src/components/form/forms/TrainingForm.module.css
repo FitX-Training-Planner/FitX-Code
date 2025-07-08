@@ -1,0 +1,16 @@
+.cardio_session {
+    --border: solid var(--theme-color);
+    --bg: var(--bg-color);
+    user-select: none;
+    flex: 1;
+    max-width: 50%;
+    border: 5px var(--border);
+    border-radius: 20px;
+    background-color: var(--bg);
+    padding: 1em;
+    cursor: default;
+}
+
+.exercise_alert {
+    text-align: center;
+}

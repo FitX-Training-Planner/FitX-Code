@@ -1,42 +1,16 @@
-import { useCallback } from "react";
 import Stack from "../../containers/Stack";
 import SubmitFormButton from "../buttons/SubmitFormButton";
 import ClickableIcon from "../buttons/ClickableIcon";
-import styles from "./TrainingStepForm.module.css";
-import { closestCorners, DndContext, KeyboardSensor, PointerSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
-import { arrayMove, horizontalListSortingStrategy, SortableContext, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
+import styles from "./TrainingForm.module.css";
 import SortableItem from "../../sortable/SortableItem";
 import Title from "../../text/Title";
+import DndContextContainer from "../../sortable/DndContextContainer";
+import useWindowSize from "../../../hooks/useWindowSize";
+import ExerciseCard from "../../cards/training/ExerciseCard";
 
-function TrainingStepForm({ trainingStep, setTrainingStep, handleSubmit, handleAddExercise, handleModifyExercise, handleRemoveExercise }) {
-    const sensors = useSensors(
-        useSensor(PointerSensor),
-        useSensor(TouchSensor),
-        useSensor(KeyboardSensor, {
-            coordinateGetter: sortableKeyboardCoordinates
-        })
-    );
-
-    const handleDragEnd = useCallback((e) => {
-        const { active, over } = e;
-
-        if (!over || active.id === over.id) return;
-
-        const oldIndex = trainingStep.exercises.findIndex(exercise => String(exercise.ID) === String(active.id));
-        
-        const newIndex = trainingStep.exercises.findIndex(exercise => String(exercise.ID) === String(over.id));
-
-        const newExercises = arrayMove(trainingStep.exercises, oldIndex, newIndex).map((exercise, index) => ({
-            ...exercise,
-            orderInStep: index + 1
-        }));
-
-        setTrainingStep(prevTrainingStep => ({
-            ...prevTrainingStep,
-            exercises: newExercises
-        }));
-    }, [trainingStep.exercises, setTrainingStep]);
-
+function TrainingStepForm({ trainingStep, setTrainingStep, handleSubmit, handleAddExercise, handleDuplicateExercise, handleModifyExercise, handleRemoveExercise }) {
+    const { width } = useWindowSize();
+    
     return (
         <form
             onSubmit={handleSubmit}
@@ -47,76 +21,57 @@ function TrainingStepForm({ trainingStep, setTrainingStep, handleSubmit, handleA
                 <Stack
                     gap="2em"
                 >
+                    <Title
+                        headingNumber={3}
+                        text="Exercícios da Sequência"
+                    />
+
                     <Stack>
-                        <Title
-                            headingNumber={2}
-                            text="Exercícios da Sequência"
-                            textAlign="center"
-                        />
-
-                        <Stack
-                            direction="row"
-                            className={styles.exercises}
-                        >    
-                            <DndContext
-                                sensors={sensors}
-                                collisionDetection={closestCorners}
-                                onDragEnd={handleDragEnd}
-                            >
-                                <SortableContext
-                                    items={trainingStep.exercises.map(exercise => String(exercise.ID))}
-                                    strategy={horizontalListSortingStrategy}
-                                >
-                                    {trainingStep.exercises
-                                        .sort((a, b) => a.orderInStep - b.orderInStep)
-                                        .map(exercise => (
-                                            <SortableItem
-                                                key={exercise.ID} 
-                                                id={String(exercise.ID)}
-                                                className={styles.exercise}
-                                            >
-                                                <Stack>
-                                                    <Stack
-                                                        direction="row"
-                                                        gap="0.5em"
-                                                    >
-                                                        <ClickableIcon
-                                                            iconSrc="/images/icons/edit.png"
-                                                            name="Editar"
-                                                            handleClick={() => handleModifyExercise(exercise)}
-                                                        />
-
-                                                        <ClickableIcon
-                                                            iconSrc="/images/icons/remove.png"
-                                                            name="Remover"
-                                                            handleClick={() => handleRemoveExercise(exercise.orderInStep)}
-                                                        />
-                                                    </Stack>
-
-                                                    <span>
-                                                        {trainingStep.exercises.length > 1 ? (
-                                                            `Exercício ${exercise.orderInStep} da sequência ${trainingStep.orderInDay}`
-                                                        ) : (
-                                                            `Exercício ${trainingStep.orderInDay}`
-                                                        )}
-                                                    </span>
-
-                                                    <span>
-                                                        {exercise.name}
-                                                    </span>
-
-                                                    <Stack>                                            
-                                                        <span>
-                                                            N° Séries: {exercise.sets.length}
-                                                        </span>                                               
-                                                    </Stack>
-                                                </Stack>
-                                            </SortableItem>
-                                        ))
-                                    }
-                                </SortableContext>
-                            </DndContext>
-                        </Stack>
+                        <DndContextContainer
+                            stackDirection={
+                                width <= 640 ? (                                
+                                    trainingStep.exercises.length <= 2
+                                    ? "row"
+                                    : "column"
+                                ) : (
+                                    trainingStep.exercises.length <= 3 
+                                    ? "row" 
+                                    : "column"
+                                )
+                            }
+                            itemsClassName={styles.exercises}
+                            items={trainingStep.exercises}
+                            orderPropName="orderInStep"
+                            setObjectWithSortables={setTrainingStep}
+                            sortablesPropName="exercises"
+                        >
+                            {trainingStep.exercises
+                                .sort((a, b) => a.orderInStep - b.orderInStep)
+                                .map(exercise => (
+                                    <SortableItem
+                                        key={exercise.ID} 
+                                        id={String(exercise.ID)}
+                                    >
+                                        <ExerciseCard
+                                            sets={exercise.sets}
+                                            exerciseName={exercise.exercise?.name}
+                                            exerciseEquipmentName={exercise.exerciseEquipment?.name}
+                                            pulleyHeightDescription={exercise.pulleyHeight?.description}
+                                            pulleyAttachmentName={exercise.pulleyAttachment?.name}
+                                            gripTypeName={exercise.gripType?.name}
+                                            gripWidthDescription={exercise.gripWidth?.description}
+                                            bodyPositionDescription={exercise.bodyPosition?.description}
+                                            lateralityType={exercise.laterality?.type}
+                                            note={exercise.note}
+                                            headingNumber={4}
+                                            handleModifyExercise={() => handleModifyExercise(exercise)}
+                                            handleRemoveExercise={() => handleRemoveExercise(exercise.orderInStep)}
+                                            handleDuplicateExercise={() => handleDuplicateExercise(exercise)}
+                                        />
+                                    </SortableItem>
+                                ))
+                            }
+                        </DndContextContainer>
 
                         <ClickableIcon
                             iconSrc="/images/icons/add.png"
