@@ -9,6 +9,7 @@ import getAndSetInitialData from "../../utils/requests/initialData";
 import { validateSet } from "../../utils/validators/formValidator";
 import Stack from "../containers/Stack";
 import TrainingSetForm from "../form/forms/TrainingSetForm";
+import BackButton from "../form/buttons/BackButton";
 
 function ModifyExerciseSet() {
     const location = useLocation();
@@ -31,12 +32,12 @@ function ModifyExerciseSet() {
     const [set, setSet] = useState({
         ID: null,
         orderInExercise: 1,
-        minReps: 1,
-        maxReps: 1,
+        minReps: "",
+        maxReps: "",
         durationSeconds: "",
-        restSeconds: 30,
-        setTypeID: null,
-        trainingTechniqueID: null
+        restSeconds: "30",
+        setType: null,
+        trainingTechnique: null
     });
     const [error, setError] = useState(false);
     const [trainingDayOrder, setTrainingDayOrder] = useState(null);
@@ -131,7 +132,7 @@ function ModifyExerciseSet() {
             set.maxReps,
             set.durationSeconds,
             set.restSeconds,
-            set.setTypeID
+            set.setType?.ID || null
         )) {
             notify("Ainda há erros no formulário de série!", "error");
 
@@ -184,25 +185,34 @@ function ModifyExerciseSet() {
     }, [exerciseDestination, exerciseOrder, navigate, stepOrder, trainingDayOrder, validateAndSaveSet]);
 
     useEffect(() => {
-        document.title = "Modificar Série";
+        document.title = "Modificar Série do Treino";
     }, []);
 
     return (
         <main
             className={styles.training_plan_page}
         >
-            <Stack>
-                <Title
-                    headingNumber={1}
-                    text={`
-                        Modificar Série
-                        ${
-                            set.orderInExercise && trainingDayOrder && stepOrder && exerciseOrder ? 
-                            ` ${set.orderInExercise} do Exercício ${exerciseOrder} da Sequência ${stepOrder} do Dia ${trainingDayOrder}` 
+            <BackButton/>
+
+            <Stack
+                gap="3em"
+            >
+                <Stack>
+                    <Title
+                        headingNumber={1}
+                        text="Modificar Série do Treino"
+                    />
+
+                    <Title
+                        text={
+                           set.ID && trainingDayOrder && stepOrder && exerciseOrder
+                            ? `Série ${set.orderInExercise} do Exercício ${exerciseOrder} da Sequência ${stepOrder} do Dia ${trainingDayOrder}` 
                             : ""
-                        }`  
-                    }
-                />
+                        }
+                        headingNumber={2}
+                        varColor="--light-theme-color"
+                    />
+                </Stack>
     
                 <TrainingSetForm
                     set={set}

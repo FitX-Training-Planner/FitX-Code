@@ -190,25 +190,29 @@ function Login() {
                                 iconSrc="images/icons/instagram.png"
                                 name="Instagram"
                                 // handleClick={() => window.open("https://www.instagram.com/seu_perfil/", "_blank", "noopener,noreferrer")}
-                            />
+                                hasTheme={false}
+                           />
 
                             <ClickableIcon
                                 iconSrc="images/icons/youtube.png"
                                 name="Youtube"
                                 // handleClick={() => window.open("https://www.youtube.com/c/seu_canal", "_blank", "noopener,noreferrer")}
-                            />
+                                hasTheme={false}
+                           />
 
                             <ClickableIcon
                                 iconSrc="images/icons/tiktok.png"
                                 name="TikTok"
                                 // handleClick={() => window.open("https://www.tiktok.com/@seu_perfil", "_blank", "noopener,noreferrer")}
-                            />
+                                hasTheme={false}
+                           />
 
                             <ClickableIcon
                                 iconSrc="images/icons/github.png"
                                 name="GitHub"
                                 // handleClick={() =>  window.open("https://github.com/FitX-Training-Planner", "_blank", "noopener,noreferrer")}
-                            />
+                                hasTheme={false}
+                           />
                         </Stack>
                     </Stack>
                 }

@@ -104,7 +104,14 @@ function CreateTrainer() {
             setError(true);
         }
 
-        postTrainerRequest(postTrainer, handleOnPostTrainerSuccess, handleOnPostTrainerError, "Criando usuário", "Usuário criado!", "Falha ao criar usuário!");
+        postTrainerRequest(
+            postTrainer, 
+            handleOnPostTrainerSuccess, 
+            handleOnPostTrainerError, 
+            "Criando usuário", 
+            "Usuário criado!", 
+            "Falha ao criar usuário!"
+        );
     }, [authRequest, dispatch, error, localUser, navigate, notify, postTrainerRequest, trainer]);
 
     return (

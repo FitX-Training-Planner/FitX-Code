@@ -9,6 +9,7 @@ import useGets from "../../hooks/useGetRequest";
 import getAndSetInitialData from "../../utils/requests/initialData";
 import Stack from "../containers/Stack";
 import CardioSessionForm from "../form/forms/CardioSessionForm";
+import BackButton from "../form/buttons/BackButton";
 
 function ModifyCardioSession() {
     const location = useLocation();
@@ -30,11 +31,12 @@ function ModifyCardioSession() {
 
     const [cardioSession, setCardioSession] = useState({
         ID: null,
+        usedID: 1,
         sessionTime: "",
         durationMinutes: "",
         note: "",
-        cardioOptionID: null,
-        cardioIntensityID: null
+        cardioOption: null,
+        cardioIntensity: null
     });
     const [trainingDayOrder, setTrainingDayOrder] = useState(null);
     const [error, setError] = useState(false);
@@ -83,7 +85,7 @@ function ModifyCardioSession() {
 
             setCardioSession(prevCardioSession => 
                 locationCardioSession || 
-                { ...prevCardioSession, ID: locationCardioSessionID }
+                { ...prevCardioSession, ID: locationCardioSessionID, usedID: locationCardioSessionID }
             );
             
             setTrainingDayOrder(locationTrainingDayOrder);
@@ -100,9 +102,13 @@ function ModifyCardioSession() {
             setError, 
             cardioSession.note, 
             cardioSession.durationMinutes, 
-            cardioSession.cardioIntensityID, 
-            cardioSession.cardioOptionID
-        )) return;
+            cardioSession.cardioIntensity?.ID || null, 
+            cardioSession.cardioOption?.ID || null
+        )) {
+            notify("Ainda há erros no formulário de sessão de cardio!", "error");
+
+            return;
+        }
 
         setTrainingPlan(prevTrainingPlan => ({ 
             ...prevTrainingPlan, 
@@ -111,9 +117,9 @@ function ModifyCardioSession() {
                 { 
                     ...trainingDayEl, 
                     cardioSessions: (
-                        trainingDayEl.cardioSessions.some(cardioSessionEl => cardioSessionEl.ID === cardioSession.ID) ?
+                        trainingDayEl.cardioSessions.some(cardioSessionEl => cardioSessionEl.usedID === cardioSession.usedID) ?
                         trainingDayEl.cardioSessions.map(cardioSessionEl => (
-                            cardioSessionEl.ID === cardioSession.ID ?
+                            cardioSessionEl.usedID === cardioSession.usedID ?
                             cardioSession :
                             cardioSessionEl
                         )) :
@@ -125,24 +131,33 @@ function ModifyCardioSession() {
         }));
 
         navigate(destination, { state: { trainingDayOrder } });
-    }, [cardioSession, destination, error, navigate, setTrainingPlan, trainingDayOrder]);
+    }, [cardioSession, destination, error, navigate, notify, setTrainingPlan, trainingDayOrder]);
 
     useEffect(() => {
-        document.title = "Modificar Cardio";
+        document.title = "Modificar Sessão de Cardio";
     }, []);
     
     return (
         <main
             className={styles.training_plan_page}
         >
-            <Stack>
-                <Title
-                    headingNumber={1}
-                    text={`
-                        Modificar Cardio 
-                        ${cardioSession.ID && trainingDayOrder ? `${cardioSession.ID} do Dia ${trainingDayOrder}` : ""}
-                    `}
-                />
+            <BackButton/>
+            
+            <Stack
+                gap="3em"
+            >
+                <Stack>
+                    <Title
+                        headingNumber={1}
+                        text="Modificar Sessão de Cardio"
+                    />
+
+                    <Title
+                        text={cardioSession.ID && trainingDayOrder ? `Sessão ${cardioSession.usedID} do Dia ${trainingDayOrder}` : ""}
+                        headingNumber={2}
+                        varColor="--light-theme-color"
+                    />
+                </Stack>
 
                 <CardioSessionForm
                     cardioSession={cardioSession}

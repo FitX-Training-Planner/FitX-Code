@@ -8,6 +8,8 @@ import { getNextOrder, removeAndReorder } from "../../utils/generators/generateO
 import { validateTrainingDay } from "../../utils/validators/formValidator";
 import Stack from "../containers/Stack";
 import TrainingDayForm from "../form/forms/TrainingDayForm";
+import duplicateObjectInObjectList from "../../utils/generators/duplicate";
+import BackButton from "../form/buttons/BackButton";
 
 function ModifyTrainingDay() {
     const location = useLocation();
@@ -30,6 +32,7 @@ function ModifyTrainingDay() {
     const defaultTrainingDay = useMemo(() => ({
         ID: null,
         orderInPlan: 1,
+        name: "",
         isRestDay: false,
         note: "",
         trainingSteps: [],
@@ -74,24 +77,24 @@ function ModifyTrainingDay() {
             if (userConfirmed) {
                 setTrainingDay(prevTrainingDay => ({ 
                     ...prevTrainingDay, 
-                    isRestDay: !prevTrainingDay.isRestDay,
-                    trainingSteps: [],
-                    cardioSessions: []
+                    name: "Descanso",
+                    isRestDay: true,
+                    trainingSteps: []
                 }));
 
                 setError(false);  
 
                 return;
             } else {
-                return
+                return;
             }
         }
 
         setTrainingDay(prevTrainingDay => ({ 
             ...prevTrainingDay, 
-            isRestDay: !prevTrainingDay.isRestDay,
-            trainingSteps: [],
-            cardioSessions: []
+            isRestDay: false,
+            name: "",
+            trainingSteps: []
         }));
 
         setError(false);
@@ -101,6 +104,7 @@ function ModifyTrainingDay() {
         if (!validateTrainingDay(
             error,
             setError,
+            trainingDay.name,
             trainingDay.note
         )) {
             notify("Ainda há erros no formulário de dia de treino!", "error");
@@ -136,7 +140,7 @@ function ModifyTrainingDay() {
 
         navigate(
             cardioSessionDestination, 
-            { state: { cardioSessionID: getNextOrder(trainingDay.cardioSessions, "ID"), orderInPlan: trainingDay.orderInPlan } }
+            { state: { cardioSessionID: getNextOrder(trainingDay.cardioSessions, "usedID"), orderInPlan: trainingDay.orderInPlan } }
         )
     }, [cardioSessionDestination, navigate, notify, trainingDay.cardioSessions, trainingDay.orderInPlan, validateAndSaveTrainingDay]);
 
@@ -154,6 +158,32 @@ function ModifyTrainingDay() {
             { state: { stepOrder: getNextOrder(trainingDay.trainingSteps, "orderInDay"), orderInPlan: trainingDay.orderInPlan } }
         )
     }, [navigate, notify, trainingDay.orderInPlan, trainingDay.trainingSteps, trainingStepDestination, validateAndSaveTrainingDay]);
+
+    const duplicateTrainingStep = useCallback((step) => {
+        duplicateObjectInObjectList(
+            step, 
+            trainingDay.trainingSteps, 
+            "trainingSteps", 
+            12, 
+            "Você atingiu o limite de 12 exercícios para este dia de treino.", 
+            notify, 
+            "orderInDay", 
+            setTrainingDay
+        )
+    }, [notify, trainingDay.trainingSteps]);
+
+    const duplicateCardioSession = useCallback((session) => {
+        duplicateObjectInObjectList(
+            session, 
+            trainingDay.cardioSessions, 
+            "cardioSessions", 
+            4, 
+            "Você atingiu o limite de 4 sessões de cardio para este dia de treino.", 
+            notify, 
+            "usedID", 
+            setTrainingDay
+        )
+    }, [notify, trainingDay.cardioSessions]);
 
     const modifyCardioSession = useCallback(cardioSession => {
         if (!validateAndSaveTrainingDay()) return;
@@ -173,7 +203,7 @@ function ModifyTrainingDay() {
         if (userConfirmed) {
             setTrainingDay(prevTrainingDay => ({
                 ...prevTrainingDay,
-                cardioSessions: removeAndReorder(prevTrainingDay.cardioSessions, "ID", ID)
+                cardioSessions: removeAndReorder(prevTrainingDay.cardioSessions, "usedID", ID)
             }));
 
             notify("Sessão de cardio removida!", "success");
@@ -211,16 +241,22 @@ function ModifyTrainingDay() {
         <main
             className={styles.training_plan_page}
         >
-            <Stack>
+            <BackButton/>
+            
+            <Stack
+                gap="3em"
+            >
                 <Stack>
                     <Title
                         headingNumber={1}
-                        text={`Modificar Dia de Treino ${trainingDay.orderInPlan || ""}`}
+                        text="Modificar Dia de Treino"
                     />
 
-                    <p>
-                        Adicione exercícios e sessões de cardio nesse dia, ou o transforme em um dia de descanso.
-                    </p>
+                    <Title
+                        text={trainingDay.ID ?  `Dia ${trainingDay.orderInPlan}` : ""}
+                        headingNumber={2}
+                        varColor="--light-theme-color"
+                    />
                 </Stack>
 
                 <TrainingDayForm
@@ -230,9 +266,11 @@ function ModifyTrainingDay() {
                     handleSubmit={handleOnSubmit}
                     handleChangeDayType={handleOnChangeTrainingDayType}
                     handleAddTrainingStep={addTrainingStep}
+                    handleDuplicateStep={duplicateTrainingStep}
                     handleModifyTrainingStep={modifyTrainingStep}
                     handleRemoveTrainingStep={removeTrainingStep}
                     handleAddCardioSession={addCardioSession}
+                    handleDuplicateCardioSession={duplicateCardioSession}
                     handleModifyCardioSession={modifyCardioSession}
                     handleRemoveCardioSession={removeCardioSession}
                 />

@@ -7,6 +7,8 @@ import { useTrainingPlan } from "../../app/TrainingPlanProvider";
 import { getNextOrder, removeAndReorder } from "../../utils/generators/generateOrder";
 import Stack from "../containers/Stack";
 import TrainingStepForm from "../form/forms/TrainingStepForm";
+import duplicateObjectInObjectList from "../../utils/generators/duplicate";
+import BackButton from "../form/buttons/BackButton";
 
 function ModifyTrainingStep() {
     const location = useLocation();
@@ -110,6 +112,19 @@ function ModifyTrainingStep() {
         )
     }, [exerciseDestination, navigate, notify, saveTrainingStep, step.exercises, step.orderInDay, trainingDayOrder]);
 
+    const duplicateExercise = useCallback((exercise) => {
+        duplicateObjectInObjectList(
+            exercise, 
+            step.exercises, 
+            "exercises", 
+            4, 
+            "Você atingiu o limite de 4 exercícios consecutivos para esta sequência.", 
+            notify, 
+            "orderInStep", 
+            setStep
+        )
+    }, [notify, step.exercises]);
+
     const modifyExercise = useCallback(exercise => {
         saveTrainingStep();
 
@@ -149,27 +164,37 @@ function ModifyTrainingStep() {
     }, [navigate, saveTrainingStep, trainingDayOrder]);
 
     useEffect(() => {
-        document.title = "Modificar Etapa do Treino";
+        document.title = "Modificar Sequência do Treino";
     }, []);
 
     return (
         <main
             className={styles.training_plan_page}
         >
-            <Stack>
-                <Title
-                    headingNumber={1}
-                    text={`
-                        Modificar Sequência
-                        ${step.orderInDay && trainingDayOrder ? `${step.orderInDay} do Dia ${trainingDayOrder}` : ""}
-                    `}
-                />
+            <BackButton/>
+            
+            <Stack
+                gap="3em"
+            >
+                <Stack>
+                    <Title
+                        headingNumber={1}
+                        text="Modificar Sequência do Treino"
+                    />
+
+                    <Title
+                        text={step.ID && trainingDayOrder ? `Sequência ${step.orderInDay} do Dia ${trainingDayOrder}` : ""}
+                        headingNumber={2}
+                        varColor="--light-theme-color"
+                    />
+                </Stack>
 
                 <TrainingStepForm
                     trainingStep={step}
                     setTrainingStep={setStep}
                     handleSubmit={handleOnSubmit}
                     handleAddExercise={addExercise}
+                    handleDuplicateExercise={duplicateExercise}
                     handleModifyExercise={modifyExercise}
                     handleRemoveExercise={removeExercise}
                 />

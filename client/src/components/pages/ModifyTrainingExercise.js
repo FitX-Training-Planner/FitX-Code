@@ -10,6 +10,8 @@ import useGets from "../../hooks/useGetRequest";
 import getAndSetInitialData from "../../utils/requests/initialData";
 import Stack from "../containers/Stack";
 import TrainingExerciseForm from "../form/forms/TrainingExerciseForm";
+import duplicateObjectInObjectList from "../../utils/generators/duplicate";
+import BackButton from "../form/buttons/BackButton";
 
 function ModifyExercise() {
     const location = useLocation();
@@ -42,16 +44,15 @@ function ModifyExercise() {
     const [exercise, setExercise] = useState({
         ID: null,
         orderInStep: 1,
-        name: "",
         note: "",
-        exerciseID: null,
-        exerciseEquipmentID: null,
-        bodyPositionID: null,
-        pulleyHeightID: null,
-        pulleyAttachmentID: null,
-        gripTypeID: null,
-        gripWidthID: null,
-        lateralityID: null,
+        exercise: null,
+        exerciseEquipment: null,
+        bodyPosition: null,
+        pulleyHeight: null,
+        pulleyAttachment: null,
+        gripType: null,
+        gripWidth: null,
+        laterality: null,
         sets: []
     });
     const [error, setError] = useState(false);
@@ -207,8 +208,9 @@ function ModifyExercise() {
             error,
             setError,
             exercise.note,
-            exercise.exerciseID,
-            exercise.exerciseEquipmentID
+            exercise.exercise?.ID || null,
+            exercise.exerciseEquipment?.ID || null,
+            exercise.exercise?.isFixed || null
         )) {
             notify("Ainda há erros no formulário de exercício!", "error");
 
@@ -267,6 +269,19 @@ function ModifyExercise() {
         )
     }, [exercise.sets, exercise.orderInStep, validateAndSaveExercise, navigate, setDestination, stepOrder, trainingDayOrder, notify]);
 
+    const duplicateSet = useCallback((set) => {
+        duplicateObjectInObjectList(
+            set, 
+            exercise.sets, 
+            "sets", 
+            10, 
+            "Você atingiu o limite de 10 séries para este exercício.", 
+            notify, 
+            "orderInExercise", 
+            setExercise
+        )
+    }, [exercise.sets, notify]);
+
     const modifySet = useCallback(set => {
         if (!validateAndSaveExercise()) return;
 
@@ -312,17 +327,27 @@ function ModifyExercise() {
         <main
             className={styles.training_plan_page}
         >
-            <Stack>
-                <Title
-                    headingNumber={1}
-                    text={`
-                        Modificar Exercício 
-                        ${
-                            exercise.orderInStep && trainingDayOrder && stepOrder ? 
-                            ` ${exercise.orderInStep} da Sequência ${stepOrder} do Dia ${trainingDayOrder}` 
+            <BackButton/>
+            
+            <Stack
+                gap="3em"
+            >
+                <Stack>
+                    <Title
+                        headingNumber={1}
+                        text="Modificar Exercício do Treino"
+                    />
+
+                    <Title
+                        text={
+                            exercise.ID && trainingDayOrder && stepOrder
+                            ? `Exercício ${exercise.orderInStep} da Sequência ${stepOrder} do Dia ${trainingDayOrder}` 
                             : ""
-                        }`}
-                />
+                        }
+                        headingNumber={2}
+                        varColor="--light-theme-color"
+                    />
+                </Stack>
     
                 <TrainingExerciseForm
                     exercise={exercise}
@@ -330,6 +355,7 @@ function ModifyExercise() {
                     setExerciseError={setError}
                     handleSubmit={handleOnSubmit}
                     handleAddSet={addSet}
+                    handleDuplicateSet={duplicateSet}
                     handleModifySet={modifySet}
                     handleRemoveSet={removeSet}
                     exercises={exercises}
