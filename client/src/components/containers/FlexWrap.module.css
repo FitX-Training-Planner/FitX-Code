@@ -1,0 +1,9 @@
+.flex_wrap {
+    flex-wrap: wrap;
+}
+
+.flex_wrap > div {
+    display: flex;
+    flex: 1;
+    max-width: 50%;
+}
