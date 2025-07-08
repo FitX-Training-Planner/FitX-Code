@@ -15,8 +15,11 @@ export function isPasswordValid(password) {
 }
 
 export function isPhotoValid(photoFile) {
-    // 2mb
-    return photoFile.size <= 2 * 1024 * 1024;
+    return photoFile.size <= 1 * 1024 * 1024;
+}
+
+export function isDocumentValid(documentFile) {
+    return documentFile.size <= 5 * 1024 * 1024;
 }
 
 export function isCREFValid(cref) {
@@ -29,4 +32,8 @@ export function isTrainerDescriptionValid(description) {
     const lineBreakCount = (description.match(/\n/g) || []).length;
 
     return description.length <= 1200 && lineBreakCount < 15;
+}
+
+export function isMessageValid(message, isChatBot) {
+    return message.length <= (isChatBot ? 100 : 1000);
 }
