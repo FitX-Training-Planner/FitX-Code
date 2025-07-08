@@ -1,8 +1,10 @@
+import { getCacheData, setCacheData } from "../cache/operations";
+
 export default async function getAndSetInitialData(getRequest, setData, navigateState, navigate, destination, key) {
-    const cachedData = sessionStorage.getItem(key);
+    const cachedData = getCacheData(key);
 
     if (cachedData) {
-        setData(JSON.parse(cachedData));
+        setData(cachedData);
 
         return true;
     }
@@ -10,7 +12,7 @@ export default async function getAndSetInitialData(getRequest, setData, navigate
     const handleOnSuccess = (data) => {
         setData(data);
 
-        sessionStorage.setItem(key, JSON.stringify(data));
+        setCacheData(key, data);
     };
 
     const handleOnError = () => {

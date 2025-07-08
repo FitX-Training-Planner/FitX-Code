@@ -14,13 +14,18 @@ export default function authUser(ID, dispatch, navigate, notify, authRequest, se
         dispatch(setUser(data));
 
         navigate("/");
-
-        notify("Você foi autenticado com sucesso. Aproveite o FitX!");
     };
 
     const handleOnAuthError = () => {
         navigate("/login");
     };
 
-    authRequest(postAuth, handleOnAuthSuccess, handleOnAuthError, "Autenticando", "Autenticado!", "Falha ao autenticar!");
+    authRequest(
+        postAuth, 
+        handleOnAuthSuccess, 
+        handleOnAuthError, 
+        "Autenticando", 
+        "Você foi autenticado com sucesso. Aproveite o FitX!", 
+        "Falha ao autenticar!"
+    );
 };
