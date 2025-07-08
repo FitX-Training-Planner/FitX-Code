@@ -1,0 +1,66 @@
+.nav_bar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100dvh;
+    width: var(--nav-width);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+    max-width: max-content;
+    background: linear-gradient(to top, var(--theme-color), var(--light-theme-color));
+    transition: var(--fast-transition);
+    padding: var(--padding);
+    z-index: 7;
+    border-right: 1px solid var(--text-color);
+}
+
+.nav_bar > img {
+    width: var(--item-width);
+    height: var(--item-width);
+}
+
+.nav_bar:hover {
+    /* para a transição funcionar, um valor numérico deve ser usado */
+    width: 20em;
+}
+
+.nav_bar_subdivision > ul {
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+    width: max-content;
+    height: 100%;
+    /* padding: calc(var(--padding) * 2); */
+}
+
+.nav_bar_subdivision > ul > li,
+.nav_bar_item_icon {
+    transition: var(--fast-transition);
+}
+
+.nav_bar_subdivision > ul > li:where(.selected, :hover) {
+    color: var(--bg-color);
+}
+
+.nav_bar_subdivision > ul > li:where(.selected, :hover) > .nav_bar_item > .nav_bar_item_icon:not(.profile_item) {
+    filter: invert(1);
+}
+
+.nav_bar_item {
+    cursor: pointer;
+}
+
+.nav_bar_item > span {
+    margin-right: 1em;
+}
+
+.nav_bar_item_icon {
+    width: var(--item-width);
+    
+}
+
+.nav_bar > hr {
+    border: 1px solid var(--text-color);
+}
