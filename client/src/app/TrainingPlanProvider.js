@@ -4,6 +4,7 @@ const TrainingPlanContext = createContext();
 
 export const TrainingPlanProvider = ({ children }) => {
     const defaultTrainingPlan = useMemo(() => ({
+        ID: null,
         name: "",
         note: "",
         trainingDays: []
