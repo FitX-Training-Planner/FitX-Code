@@ -1,5 +1,5 @@
 import { isCardioDurationValid, isDurationSetValid, isNoteValid, isPlanNameValid, isRepsValid, isRestValid } from "./trainingValidator";
-import { isCREFValid, isEmailValid, isNameValid, isPasswordValid, isTrainerDescriptionValid } from "./userValidator";
+import { isCREFValid, isDocumentValid, isEmailValid, isMessageValid, isNameValid, isPasswordValid, isTrainerDescriptionValid } from "./userValidator";
 
 export function hasEmptyFieldsInObject(object) {
     return Object.values(object).some(value => value === null || value === "")
@@ -44,20 +44,31 @@ export function validateSignUpRequestData(signUpError, setSignUpError, name, ema
 export function validateTrainerPostRequestData(trainerError, setTrainerError, crefNumber, description, crefUF) {
     if (trainerError) return false;
 
-    if (hasEmptyFieldsInObject({ crefNumber, crefUF })) {
-        setTrainerError(true);
+    const hasCref = crefNumber || crefUF;
 
-        return false;
+    if (!isTrainerDescriptionValid(description)) {
+        setTrainerError(true);
+    
+        return false;   
     }
 
-    if (!(isCREFValid(crefNumber) && crefUF && isTrainerDescriptionValid(description))) {
-        setTrainerError(true);
+    if (hasCref) {
+        if (hasEmptyFieldsInObject({ crefNumber, crefUF })) {
+            setTrainerError(true);
+    
+            return false;
+        }
 
-        return false;
+        if (!isCREFValid(crefNumber)) {
+            setTrainerError(true);
+
+            return false;
+        }
     }
 
     return true;
 }
+
 
 export function validateCodeRequestData(codeError, setCodeError, code) {
     if (codeError) return false;
@@ -91,8 +102,21 @@ export function validateCardioSession(cardioError, setCardioError, note, duratio
     return true;
 }
 
-export function validateTrainingDay(trainingDayError, setTrainingDayError, note) {
+export function validateTrainingDay(trainingDayError, setTrainingDayError, name, note) {
     if (trainingDayError) return false;
+
+    if (!name) {
+        setTrainingDayError(true);
+
+        return false;
+    }
+
+    if (!isPlanNameValid(name)) {
+        setTrainingDayError(true);
+
+        return false;
+    }
+
 
     if (!isNoteValid(note)) {
         setTrainingDayError(true);
@@ -121,10 +145,16 @@ export function validateTrainingPlan(trainingPlanError, setTrainingPlanError, na
     return true;
 }
 
-export function validateExercise(exerciseError, setExerciseError, note, exerciseID, exerciseEquipmentID) {
+export function validateExercise(exerciseError, setExerciseError, note, exerciseID, exerciseEquipmentID, isFixed) {
     if (exerciseError) return false;
 
-    if (hasEmptyFieldsInObject({ exerciseEquipmentID, exerciseID })) {
+    if (!exerciseID) {
+        setExerciseError(true);
+
+        return false;
+    }
+
+    if (!!isFixed === !!exerciseEquipmentID) {
         setExerciseError(true);
 
         return false;
@@ -134,7 +164,7 @@ export function validateExercise(exerciseError, setExerciseError, note, exercise
         setExerciseError(true);
 
         return false;
-    }
+    }   
 
     return true;
 }
@@ -200,7 +230,7 @@ export function validateAllElementsInTrainingPlan(trainingPlanError, setTraining
     }
 
     for (const day of trainingPlan.trainingDays) {
-        if (!validateTrainingDay(false, setTrainingPlanError, day.note)) {
+        if (!validateTrainingDay(false, setTrainingPlanError, day.name, day.note)) {
             return { error: true, message: `Dados inválidos no dia de treino ${day.orderInPlan}!` };
         }
 
@@ -218,7 +248,7 @@ export function validateAllElementsInTrainingPlan(trainingPlanError, setTraining
 
         if (hasCardioSessions) {
             for (const cardio of day.cardioSessions) {
-                if (!validateCardioSession(false, setTrainingPlanError, cardio.note, cardio.durationMinutes, cardio.cardioIntensityID, cardio.cardioOptionID)) {
+                if (!validateCardioSession(false, setTrainingPlanError, cardio.note, cardio.durationMinutes, cardio.cardioIntensity?.ID, cardio.cardioOption?.ID)) {
                     return { error: true, message: `Cardio de ID ${cardio.ID} inválido no dia de treino ${day.orderInPlan}!` };
                 }
             }
@@ -233,7 +263,7 @@ export function validateAllElementsInTrainingPlan(trainingPlanError, setTraining
                 }
 
                 for (const exercise of step.exercises) {
-                    if (!validateExercise(false, setTrainingPlanError, exercise.note, exercise.exerciseID, exercise.exerciseEquipmentID)) {
+                    if (!validateExercise(false, setTrainingPlanError, exercise.note, exercise.exercise?.ID, exercise.exerciseEquipment?.ID, exercise.exercise?.isFixed)) {
                         if (exercisesLenght > 1) {
                             return { error: true, message: `Exercício ${exercise.orderInStep} inválido na sequência ${step.orderInDay} no dia de treino ${day.orderInPlan}!` };
                         } 
@@ -250,7 +280,7 @@ export function validateAllElementsInTrainingPlan(trainingPlanError, setTraining
                     }
 
                     for (const set of exercise.sets) {
-                        if (!validateSet(false, setTrainingPlanError, set.minReps, set.maxReps, set.durationSeconds, set.restSeconds, set.setTypeID)) {
+                        if (!validateSet(false, setTrainingPlanError, set.minReps, set.maxReps, set.durationSeconds, set.restSeconds, set.setType?.ID)) {
                             if (exercisesLenght > 1) {
                                 return { error: true, message: `Série ${set.orderInExercise} inválida no exercício ${exercise.orderInStep} na sequência ${step.orderInDay} no dia de treino ${day.orderInPlan}!` };
                             } 
@@ -267,3 +297,38 @@ export function validateAllElementsInTrainingPlan(trainingPlanError, setTraining
     return { error: false };
 }
 
+export function validateMessage(messageError, setMessageError, message, isChatBot) {
+    if (messageError) return false;
+
+    if (!message) {
+        setMessageError(true);
+
+        return false;
+    }
+
+    if (!isMessageValid(message, isChatBot)) {
+        setMessageError(true);
+
+        return false;
+    }
+
+    return true;
+}
+
+export function validateDocument(documentError, setDocumentError, document) {
+    if (documentError) return false;
+
+    if (!document) {
+        setDocumentError(true);
+
+        return false;
+    }
+
+    if (!isDocumentValid(document)) {
+        setDocumentError(true);
+
+        return false;
+    }
+
+    return true;
+}
