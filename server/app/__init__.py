@@ -1,5 +1,5 @@
 from flask import Flask
-from .config import AppConfig, CloudinaryConfig, FernetConfig, RedisConfig, CORSConfig
+from .config import AppConfig, CloudinaryConfig, FernetConfig, RedisConfig, CORSConfig, OpenaiConfig
 import cloudinary
 from flask_bcrypt import Bcrypt
 from cryptography.fernet import Fernet
@@ -8,10 +8,13 @@ from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_mail import Mail
 import os
+from openai import OpenAI
 
 bcrypt = Bcrypt()
 
 fernet = Fernet(FernetConfig.key)
+
+openai_client = OpenAI(api_key=OpenaiConfig.OPENAI_API_KEY)
 
 redis_client = redis.StrictRedis(**RedisConfig.settings)
 
@@ -36,5 +39,11 @@ def create_app():
 
     from .routes import register_routes
     register_routes(app)
+
+    # from .database.database_connection import engine, Base
+    # from .database.models import Media, Users, Trainer, Rating, Complaint, MuscleGroup, Exercise, ExerciseMuscleGroup, BodyPosition, ExerciseEquipment, PulleyHeight, PulleyAttachment, GripType, GripWidth, Laterality, TrainingTechnique, TrainingPlan, TrainingPlanUser, TrainingDay, TrainingDayStep, StepExercise, SetType, ExerciseSet, CardioOption, CardioIntensity, CardioSession, PaymentPlan, PaymentInInstallments, PaymentMethod, PaymentTransaction, ContractStatus, PlanContract, PaymentPlanBenefit, BodyComposition, ExerciseSetLog, Chat, Message, BodyCompositionExam, BodyCompositionExamSend
+
+    # Base.metadata.drop_all(bind=engine)
+    # Base.metadata.create_all(bind=engine)
 
     return app

@@ -1,5 +1,4 @@
 import os
-import base64
 from datetime import timedelta
 
 class AppConfig:
@@ -13,6 +12,9 @@ class AppConfig:
     JWT_COOKIE_CSRF_PROTECT = os.getenv("JWT_COOKIE_CSRF_PROTECT").lower() == "true"
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=int(os.getenv("JWT_ACCESS_TOKEN_EXPIRES")))
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=int(os.getenv("JWT_REFRESH_TOKEN_EXPIRES")))
+    JWT_COOKIE_SAMESITE = os.getenv("JWT_COOKIE_SAMESITE") 
+    JWT_ACCESS_COOKIE_NAME = os.getenv("JWT_ACCESS_COOKIE_NAME")
+    JWT_REFRESH_COOKIE_NAME = os.getenv("JWT_REFRESH_COOKIE_NAME")
 
     MAIL_SERVER = os.getenv("MAIL_SERVER")
     MAIL_PORT = int(os.getenv("MAIL_PORT"))
@@ -56,3 +58,6 @@ class CORSConfig:
         "methods": ["GET", "POST", "PUT", "DELETE"],
         "allow_headers": ["Content-Type", "Authorization"]
     }
+
+class OpenaiConfig:
+    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
