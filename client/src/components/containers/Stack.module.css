@@ -1,6 +1,5 @@
 .stack {
     display: flex;
-    justify-content: space-between;
     height: max-content;
     width: 100%;
 }
