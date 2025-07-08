@@ -1,31 +1,29 @@
-from ..database.models import Users, Media
+from ..database.models import Users, Media, Trainer
 from ..utils.user import is_email_used, hash_email, encrypt_email, hash_password
 from ..utils.cloudinary import upload_file
 from sqlalchemy.orm import joinedload
 from ..exceptions.api_error import ApiError
+from ..utils.serialize import serialize_user
 
-def get_user_by_id(db, user_id):
+def get_user_by_id(db, user_id, is_client):
     try:
-        user = db.query(Users).options(joinedload(Users.trainer)).filter(Users.ID == user_id).first()
+        if not is_client:
+            trainer = db.query(Trainer).filter(Trainer.ID == user_id).first()
+
+            if not trainer:
+                raise ApiError("Treinador não encontrado.", 404)
+            
+            user_id = trainer.fk_user_ID
+
+        user = db.query(Users).options(
+            joinedload(Users.media),
+            joinedload(Users.trainer)
+        ).filter(Users.ID == user_id).first()
 
         if not user:
             raise ApiError("Usuário não encontrado.", 404)
 
-        return {
-            "ID": user_id,
-            "name": user.name,
-            "crefNumber": user.trainer.cref_number if user.trainer else None,
-            "description": user.trainer.description if user.trainer else None,
-            "config": {
-                "isClient": user.is_client,
-                "isDarkTheme": user.is_dark_theme,
-                "isComplainterAnonymous": user.is_complainter_anonymous,
-                "isRaterAnonymous": user.is_rater_anonymous,
-                "emailNotificationPermission": user.email_notification_permission,
-                "isEnglish": user.is_english,
-                "photoUrl": user.media.url if user.fk_media_ID and user.media else None
-            }
-        }
+        return serialize_user(user)
     
     except ApiError as e:
         print(f"Erro ao recuperar usuário: {e}")
