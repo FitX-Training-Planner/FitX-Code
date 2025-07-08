@@ -1,0 +1,27 @@
+.filter_items_container {
+    width: max-content;
+}
+
+.filter_items_container > ul {
+    display: flex;
+}
+
+.filter_items_container > ul > li {
+    --size: 2.5em;
+    background-color: var(--light-theme-color);
+    color: var(--dark-color);
+    transition: var(--fast-transition);
+    width: var(--size);
+    height: var(--size);
+    border: 1px solid var(--text-color);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
+.filter_items_container > ul > li.selected {
+    background-color: var(--dark-theme-color);
+    color: var(--white-color);
+}
