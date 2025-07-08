@@ -1,4 +1,5 @@
 from ..database.models import CardioOption, CardioIntensity, Exercise, ExerciseEquipment, PulleyAttachment, PulleyHeight, GripType, GripWidth, Laterality, SetType, TrainingTechnique, BodyPosition, ExerciseMuscleGroup
+from ..utils.serialize import serialize_cardio_option, serialize_cardio_intensity, serialize_exercise, serialize_exercise_equipment, serialize_body_position, serialize_pulley_height, serialize_pulley_attachment, serialize_grip_type, serialize_grip_width, serialize_laterality, serialize_set_type, serialize_training_technique
 from sqlalchemy.orm import joinedload, subqueryload
 from ..exceptions.api_error import ApiError
 
@@ -12,13 +13,7 @@ def get_all_cardio_options(db):
             raise ApiError("Erro ao recuperar as opções de cardio.", 500)
 
         return [
-            {
-                "ID": option.ID,
-                "name": option.name,
-                "media": {
-                    "url": option.media.url
-                } if option.media else None
-            } for option in cardio_options
+            serialize_cardio_option(option) for option in cardio_options
         ]
 
     except Exception as e:
@@ -36,11 +31,7 @@ def get_all_cardio_intensities(db):
             raise ApiError("Erro ao recuperar as intensidades de cardio.", 500)
 
         return [
-            {
-                "ID": intensity.ID,
-                "type": intensity.type,
-                "description": intensity.description
-            } for intensity in cardio_intensities
+            serialize_cardio_intensity(intensity) for intensity in cardio_intensities
         ]
 
     except Exception as e:
@@ -65,22 +56,7 @@ def get_all_exercises(db):
             raise ApiError("Erro ao recuperar os exercícios.", 500)
 
         return [
-            {
-                "ID": exercise.ID,
-                "name": exercise.name,
-                "description": exercise.description,
-                "isFixed": exercise.is_fixed,
-                "media": {
-                    "url": exercise.media.url
-                } if exercise.media else None,
-                "muscleGroups": [
-                    {
-                        "name": emg.muscle_group.name,
-                        "isPrimary": emg.is_primary
-                    }
-                    for emg in exercise.muscle_groups
-                ]
-            } for exercise in exercises
+            serialize_exercise(exercise) for exercise in exercises
         ]
 
     except Exception as e:
@@ -98,11 +74,7 @@ def get_all_exercise_equipments(db):
             raise ApiError("Erro ao recuperar os equipamentos.", 500)
 
         return [
-            {
-                "ID": equipment.ID,
-                "name": equipment.name,
-                "description": equipment.description
-            } for equipment in exercise_equipments
+            serialize_exercise_equipment(equipment) for equipment in exercise_equipments
         ]
 
     except Exception as e:
@@ -120,10 +92,7 @@ def get_all_body_positions(db):
             raise ApiError("Erro ao recuperar as posições corporais.", 500)
 
         return [
-            {
-                "ID": position.ID,
-                "description": position.description
-            } for position in body_positions
+            serialize_body_position(position) for position in body_positions
         ]
 
     except Exception as e:
@@ -141,10 +110,7 @@ def get_all_pulley_heights(db):
             raise ApiError("Erro ao recuperar as alturas de polia.", 500)
 
         return [
-            {
-                "ID": height.ID,
-                "description": height.description
-            } for height in pulley_heights
+            serialize_pulley_height(height) for height in pulley_heights
         ]
 
     except Exception as e:
@@ -162,10 +128,7 @@ def get_all_pulley_attachments(db):
             raise ApiError("Erro ao recuperar os acessórios de polia.", 500)
 
         return [
-            {
-                "ID": attachment.ID,
-                "name": attachment.name
-            } for attachment in pulley_attachments
+            serialize_pulley_attachment(attachment) for attachment in pulley_attachments
         ]
 
     except Exception as e:
@@ -183,10 +146,7 @@ def get_all_grip_types(db):
             raise ApiError("Erro ao recuperar os tipos de pegada.", 500)
 
         return [
-            {
-                "ID": grip.ID,
-                "name": grip.name
-            } for grip in grip_types
+            serialize_grip_type(grip) for grip in grip_types
         ]
 
     except Exception as e:
@@ -204,10 +164,7 @@ def get_all_grip_widths(db):
             raise ApiError("Erro ao recuperar os espaçamentos de pegada.", 500)
 
         return [
-            {
-                "ID": width.ID,
-                "description": width.description
-            } for width in grip_widths
+            serialize_grip_width(width) for width in grip_widths
         ]
 
     except Exception as e:
@@ -225,10 +182,7 @@ def get_all_lateralities(db):
             raise ApiError("Erro ao recuperar as formas de execução.", 500)
 
         return [
-            {
-                "ID": lat.ID,
-                "type": lat.type
-            } for lat in lateralities
+            serialize_laterality(lat) for lat in lateralities
         ]
 
     except Exception as e:
@@ -246,12 +200,7 @@ def get_all_set_types(db):
             raise ApiError("Erro ao recuperar os tipos de séries.", 500)
 
         return [
-            {
-                "ID": set_type.ID,
-                "name": set_type.name,
-                "description": set_type.description,
-                "intensityLevel": set_type.intensity_level
-            } for set_type in set_types
+            serialize_set_type(set_type) for set_type in set_types
         ]
 
     except Exception as e:
@@ -269,11 +218,7 @@ def get_all_training_techniques(db):
             raise ApiError("Erro ao recuperar as técnicas de trein.", 500)
 
         return [
-            {
-                "ID": technique.ID,
-                "name": technique.name,
-                "description": technique.description
-            } for technique in training_techniques
+            serialize_training_technique(technique) for technique in training_techniques
         ]
 
     except Exception as e:
