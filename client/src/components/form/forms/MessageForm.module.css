@@ -1,0 +1,11 @@
+.message_form {
+    background-color: var(--dark-theme-color);
+    padding: 1em;
+}
+
+.send_message {
+    padding: 0.6em 0.6em 0.4em 0.4em;
+    border-radius: 50%;
+    background-color: var(--theme-color);
+    width: max-content;
+}
