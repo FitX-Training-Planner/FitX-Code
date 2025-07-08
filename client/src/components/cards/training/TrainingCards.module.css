@@ -1,0 +1,38 @@
+.item_title {
+    width: max-content;
+}
+
+.item_title > hr {
+    width: calc(100% + 2em);
+}
+
+.item_title > span {
+    font-family: var(--fonts-1);
+    text-align: center;
+}
+
+:where(.note, .plan_note) > span {
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.note,
+.plan_note {
+    width: 100%;
+    color: var(--gray-color);
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    padding: 1em;
+    border: 2px solid var(--theme-color);
+}
+
+.plan_note {
+    width: calc(100% - 2em);
+}
+
+.descriptioned_item > span:first-child {
+    font-weight: bold;
+}
