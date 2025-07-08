@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request
 from ..services.user import get_user_by_id, insert_user, insert_photo
 from ..database.context_manager import get_db
 from ..exceptions.api_error import ApiError
-from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import get_jwt_identity, get_jwt
 from ..utils.jwt_decorator import jwt_with_auto_refresh
 
 user_bp = Blueprint("user", __name__, url_prefix="/users")
@@ -16,7 +16,11 @@ def get_user():
         try:
             identity = get_jwt_identity()
 
-            user = get_user_by_id(db, identity)
+            jwt_data = get_jwt()
+
+            is_client = jwt_data.get("isClient")
+
+            user = get_user_by_id(db, identity, is_client)
 
             return jsonify(user), 200
 

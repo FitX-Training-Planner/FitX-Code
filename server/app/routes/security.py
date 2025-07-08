@@ -7,6 +7,7 @@ from ..services.user import get_user_by_id
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from ..utils.jwt_decorator import jwt_with_auto_refresh
 from ..utils.trainer_decorator import only_trainer
+from ..utils.client_decorator import only_client
 
 security_bp = Blueprint("security", __name__)
 
@@ -107,7 +108,7 @@ def auth():
 
             is_client = is_client == "true"
 
-            user = get_user_by_id(db, ID)
+            user = get_user_by_id(db, ID, is_client)
 
             response = jsonify(user)
             response.status_code = 200
@@ -158,4 +159,10 @@ def refresh_token():
 @jwt_with_auto_refresh
 @only_trainer
 def is_trainer():
+    return "", 204
+
+@security_bp.route("/is-client", methods=["POST"])
+@jwt_with_auto_refresh
+@only_client
+def is_client():
     return "", 204
