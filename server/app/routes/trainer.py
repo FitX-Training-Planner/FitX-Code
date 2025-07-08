@@ -1,10 +1,12 @@
 from flask import Blueprint, jsonify, request
 from ..services.user import insert_user, insert_photo
-from ..services.trainer import insert_trainer
+from ..services.trainer import insert_trainer, insert_training_plan, get_trainer_plans, get_training_plan, modify_training_plan, remove_training_plan
 from ..database.context_manager import get_db
 from ..exceptions.api_error import ApiError
 from ..utils.jwt_decorator import jwt_with_auto_refresh
 from ..utils.trainer_decorator import only_trainer
+from flask_jwt_extended import get_jwt_identity
+import json
 
 trainer_bp = Blueprint("trainer", __name__, url_prefix="/trainers")
         
@@ -23,7 +25,7 @@ def post_trainer():
             if photo_file:
                 fk_media_ID = insert_photo(db, photo_file)
 
-            user_ID = insert_user(
+            user_id = insert_user(
                 db,
                 data.get("name"),
                 data.get("email"),
@@ -37,14 +39,14 @@ def post_trainer():
                 fk_media_ID
             )
 
-            insert_trainer(
+            trainer_id = insert_trainer(
                 db, 
                 data.get("crefNumber"),
                 data.get("description"),
-                user_ID
+                user_id
             )
 
-            return jsonify({"userID": user_ID}), 201
+            return jsonify({"userID": trainer_id}), 201
 
         except ApiError as e:
             db.rollback()
@@ -64,4 +66,138 @@ def post_trainer():
 @jwt_with_auto_refresh
 @only_trainer
 def post_training_plan():
-    return "", 204
+    error_message = "Erro na rota de criação de plano de treino"
+
+    with get_db() as db:
+        try:
+            identity = get_jwt_identity()
+
+            data = json.loads(request.form.get("trainingPlan"))
+
+            insert_training_plan(db, data, identity)
+        
+            return "", 201
+        
+        except ApiError as e:
+            db.rollback()
+
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": str(e)}), e.status_code
+
+        except Exception as e:
+            db.rollback()
+
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": "Erro interno no servidor."}), 500
+        
+@trainer_bp.route("me/training-plans", methods=["GET"])
+@jwt_with_auto_refresh
+@only_trainer
+def get_trainer_training_plans():
+    error_message = "Erro na rota de recuperação de planos de treino"
+
+    with get_db() as db:
+        try:        
+            identity = get_jwt_identity()
+
+            plans = get_trainer_plans(db, identity)
+
+            return jsonify(plans), 200
+        
+        except ApiError as e:
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": str(e)}), e.status_code
+
+        except Exception as e:
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": "Erro interno no servidor."}), 500
+        
+@trainer_bp.route("me/training-plans/<int:plan_id>", methods=["GET"])
+@jwt_with_auto_refresh
+@only_trainer
+def get_trainer_training_plan(plan_id):
+    error_message = "Erro na rota de recuperação de plano de treino"
+
+    with get_db() as db:
+        try:        
+            identity = get_jwt_identity()
+
+            plan = get_training_plan(db, plan_id)
+
+            if str(identity) != str(plan.get("trainerID")):
+                raise ApiError("Os treinadores só podem acessar seus próprios planos de treino.", 403)
+
+            return jsonify(plan), 200
+        
+        except ApiError as e:
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": str(e)}), e.status_code
+
+        except Exception as e:
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": "Erro interno no servidor."}), 500
+
+   
+@trainer_bp.route("me/training-plans/<int:plan_id>", methods=["PUT"])
+@jwt_with_auto_refresh
+@only_trainer
+def modify_trainer_training_plan(plan_id):
+    error_message = "Erro na rota de modificação de plano de treino"
+
+    with get_db() as db:
+        try:
+            data = json.loads(request.form.get("trainingPlan"))
+
+            identity = get_jwt_identity()
+
+            modify_training_plan(db, data, plan_id, identity)
+        
+            return "", 204
+        
+        except ApiError as e:
+            db.rollback()
+
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": str(e)}), e.status_code
+
+        except Exception as e:
+            db.rollback()
+
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": "Erro interno no servidor."}), 500
+
+@trainer_bp.route("me/training-plans/<int:plan_id>", methods=["DELETE"])
+@jwt_with_auto_refresh
+@only_trainer
+def remove_trainer_training_plan(plan_id):
+    error_message = "Erro na rota de remoção de plano de treino"
+
+    with get_db() as db:
+        try:
+            identity = get_jwt_identity()
+
+            remove_training_plan(db, plan_id, identity)
+        
+            return "", 204
+        
+        except ApiError as e:
+            db.rollback()
+
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": str(e)}), e.status_code
+
+        except Exception as e:
+            db.rollback()
+
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": "Erro interno no servidor."}), 500
