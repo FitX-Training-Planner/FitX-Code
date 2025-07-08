@@ -2,7 +2,6 @@ import cloudinary
 import cloudinary.uploader
 from ..exceptions.api_error import ApiError
 
-
 def upload_file(file):
     try:
         result = cloudinary.uploader.upload(file, resource_type="image")

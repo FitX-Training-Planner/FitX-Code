@@ -15,12 +15,12 @@ def jwt_with_auto_refresh(fn):
 
         except Exception as e:
             try:
-                verify_jwt_in_request(optional=True)
+                verify_jwt_in_request(refresh=True)
 
                 jwt_data = get_jwt()
 
                 if jwt_data.get("type") != "refresh":
-                    raise
+                    raise Exception("O tipo do token não é refresh.")
 
                 identity = get_jwt_identity()
 
