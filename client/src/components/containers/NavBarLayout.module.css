@@ -1,0 +1,11 @@
+.nav_bar_container {
+    --padding: 0.5em;
+    --item-width: 3.1em;
+    --nav-width: calc((var(--padding) * 2) + var(--item-width));
+    height: 100%;
+    width: 100%;
+}
+
+.main_content {
+    margin-left: var(--nav-width);
+}
