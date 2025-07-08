@@ -1,22 +1,39 @@
-.clickable_icon {
+.clickable_icon.small {
+    --size: 1em;
+}
+
+.clickable_icon.medium {
     --size: 2em;
+}
+
+.clickable_icon.large {
+    --size: 3em;
+}
+
+.clickable_icon {
     background: none;
     height: var(--size);
     width: var(--size);
+    min-height: var(--size);
+    min-width: var(--size);
     display: flex;
     justify-content: center;
     align-items: center;
     border: none;
+    touch-action: auto;
 }
 
 .clickable_icon > img {
     object-fit: contain;
     width: 100%;
     height: 100%;
-    filter: drop-shadow(2px 2px 5px black);
     transition: var(--fast-transition);
 }
 
+.clickable_icon.dark_theme > img {
+    filter: invert(1);
+}
+
 .clickable_icon:hover > img {
-    filter: brightness(0.5);
+    transform: scale(1.1);
 }
