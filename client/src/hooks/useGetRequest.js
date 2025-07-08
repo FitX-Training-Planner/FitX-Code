@@ -10,8 +10,8 @@ export default function useGets() {
             () => {return api.get("/training/cardio-options")},
             handleSuccess,
             handleError,
-            "Carregando opções de cardio",
-            "Opções de cardio carregadas!",
+            undefined,
+            undefined,
             "Falha ao carregar opões de cardio!"
         );
     }, [request]);
@@ -21,8 +21,8 @@ export default function useGets() {
             () => {return api.get("/training/cardio-intensities")},
             handleSuccess,
             handleError,
-            "Carregando intensidades de cardio",
-            "Intensidades de cardio carregadas!",
+            undefined,
+            undefined,
             "Falha ao carregar intensidades de cardio!"
         );
     }, [request]);
@@ -32,8 +32,8 @@ export default function useGets() {
             () => {return api.get("/training/exercises")},
             handleSuccess,
             handleError,
-            "Carregando exercícios",
-            "Execícios carregados!",
+            undefined,
+            undefined,
             "Falha ao carregar execícios!"
         )
     }, [request]);
@@ -43,8 +43,8 @@ export default function useGets() {
             () => {return api.get("/training/exercise-equipments")},
             handleSuccess,
             handleError,
-            "Carregando equipamentos",
-            "Equipamentos carregados!",
+            undefined,
+            undefined,
             "Falha ao carregar equipamentos"
         )
     }, [request]);
@@ -54,8 +54,8 @@ export default function useGets() {
             () => {return api.get("/training/body-positions")},
             handleSuccess,
             handleError,
-            "Carregando posições corporais",
-            "Posições corporais carregadas!",
+            undefined,
+            undefined,
             "Falha ao carregar posições corporais!"
         )
     }, [request]);
@@ -65,8 +65,8 @@ export default function useGets() {
             () => {return api.get("/training/pulley-heights")},
             handleSuccess,
             handleError,
-            "Carregando alturas de polia",
-            "Alturas de polia carregadas!",
+            undefined,
+            undefined,
             "Falha ao carregar alturas de polia!"
         )
     }, [request]);
@@ -76,8 +76,8 @@ export default function useGets() {
             () => {return api.get("/training/pulley-attachments")},
             handleSuccess,
             handleError,
-            "Carregando acessórios de polia",
-            "Acessórios de polia carregados!",
+            undefined,
+            undefined,
             "Falha ao carregar acessórios de polia!"
         )
     }, [request]);
@@ -87,8 +87,8 @@ export default function useGets() {
             () => {return api.get("/training/grip-types")},
             handleSuccess,
             handleError,
-            "Carregando tipos de pegada",
-            "Tipos de pegada carregados!",
+            undefined,
+            undefined,
             "Falha ao carregar tipos de pegada!"
         )
     }, [request]);
@@ -98,8 +98,8 @@ export default function useGets() {
             () => {return api.get("/training/grip-widths")},
             handleSuccess,
             handleError,
-            "Carregando espaçamentos de pegada",
-            "Espaçamentos de pegada carregados!",
+            undefined,
+            undefined,
             "Falha ao carregar espaçamentos de pegada!"
         )
     }, [request]);
@@ -109,8 +109,8 @@ export default function useGets() {
             () => {return api.get("/training/lateralities")},
             handleSuccess,
             handleError,
-            "Carregando formas de execução",
-            "Formas de execução carregadas!",
+            undefined,
+            undefined,
             "Falha ao carregar formas de execução!"
         )
     }, [request]);
@@ -120,8 +120,8 @@ export default function useGets() {
             () => {return api.get("/training/set-types")},
             handleSuccess,
             handleError,
-            "Carregando tipos de séries",
-            "Tipos de séries carregados!",
+            undefined,
+            undefined,
             "Falha ao carregar tipos de séries!"
         )
     }, [request]);
@@ -131,8 +131,8 @@ export default function useGets() {
             () => {return api.get("/training/training-techniques")},
             handleSuccess,
             handleError,
-            "Carregando técnicas de treino",
-            "Técnicas de treino carregadas!",
+            undefined,
+            undefined,
             "Falha ao carregar técnicas de treino!"
         )
     }, [request]);

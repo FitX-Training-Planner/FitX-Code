@@ -69,5 +69,5 @@ export default function useRequest() {
         }
     }
 
-    return { request };
+    return { request, loading };
 }
