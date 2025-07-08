@@ -178,7 +178,7 @@ INSERT INTO exercise (name, description, is_fixed, fk_media_ID) VALUES
 ('Flexora em Pé', 'Puxe um peso com ele apoiado na parte de trás da canela, estando em pé. Movimente somente o joelho.', 0, 77),
 ('Stiff', 'Levante um peso do chão com as mãos e com as pernas levemente dobradas. Movimente somente o quadril.', 0, 46), 
 ('Bom Dia', 'Levante um peso apoiado nas costas com as pernas levemente dobradas. Movimente somente o quadril.', 0, 93),
-('Flexão Nórdica', 'Com os pés presos e canela apoiada, desça e suba as pernas com o quadril levemente dobrado. Movimente somente o joelho.', 1, 76),
+('Flexão Nórdica', 'Com os pés presos e canela apoiada, desça e suba as pernas com o quadril levemente dobrado. Movimente somente o joelho.', 0, 76),
 ('Elevação Pélvica', 'Suba um peso com ele apoiado no quadril e as costas e sola dos pés apoiados, estando deitado. Movimente somente o quadril.', 0, 82),
 ('Cadeira Abdutora', 'Abra as pernas com a parte lateral da coxa apoiada, estando sentado. Movimente somente a perna.', 1, 92),
 ('Abdução de Quadril em Pé', 'Abra as pernas com o peso preso ou apoiado no calcanhar, estando em pé. Movimente somente a perna.', 0, 105), 
@@ -289,6 +289,7 @@ INSERT INTO exercise_muscle_group (is_primary, fk_exercise_ID, fk_muscle_group_I
 INSERT INTO body_position (description) VALUES
 ('Em pé'),
 ('Em pé com o tronco inclinado'),
+('Sentado'),
 ('Sentado no banco reto (de costas para o banco)'),
 ('Sentado no banco reto (virado para o banco)'),
 ('Sentado no banco inclinado a 75° (de costas para o banco)'),
@@ -347,7 +348,9 @@ INSERT INTO grip_type (name) VALUES
 ('Semi-Pronada'),
 ('Neutra'),
 ('Semi-Supinada'),
-('Supinada');
+('Supinada'),
+('Pronando'),
+('Supinando');
 
 INSERT INTO grip_width (description) VALUES
 ('Fechada'),
@@ -399,3 +402,8 @@ INSERT INTO payment_method (name) VALUES
 ('PIX'),
 ('Cartão de Crédito'),
 ('Cartão de Débito');
+
+INSERT INTO contract_status (name) VALUES 
+('Ativo'),
+('Vencido'),
+('Cancelado');

@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS trainer (
     ID INT PRIMARY KEY AUTO_INCREMENT,
-    cref_number CHAR(11) NOT NULL UNIQUE,   
+    cref_number CHAR(11) UNIQUE,   
     description TEXT,
     fk_user_ID INT NOT NULL UNIQUE,
     FOREIGN KEY (fk_user_ID) REFERENCES users(ID),
@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS rating (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     rating TINYINT NOT NULL,   
     comment VARCHAR(255),
-    fk_user_ID INT NOT NULL,
+    fk_user_ID INT,
     fk_trainer_ID INT NOT NULL,
     FOREIGN KEY (fk_user_ID) REFERENCES users(ID),
     FOREIGN KEY (fk_trainer_ID) REFERENCES trainer(ID),
@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS rating (
 CREATE TABLE IF NOT EXISTS complaint (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     reason VARCHAR(255),
-    fk_user_ID INT NOT NULL,
+    fk_user_ID INT,
     fk_trainer_ID INT NOT NULL,
     FOREIGN KEY (fk_user_ID) REFERENCES users(ID),
     FOREIGN KEY (fk_trainer_ID) REFERENCES trainer(ID),
@@ -195,6 +195,7 @@ CREATE TABLE IF NOT EXISTS training_plan_user (
 CREATE TABLE IF NOT EXISTS training_day (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     order_in_plan TINYINT NOT NULL, 
+    name VARCHAR(50) NOT NULL,
     is_rest_day BOOLEAN NOT NULL DEFAULT 0,
     note TEXT,
     fk_training_plan_ID INT NOT NULL,
@@ -217,7 +218,7 @@ CREATE TABLE IF NOT EXISTS step_exercise (
     note TEXT,
     fk_training_day_step_ID INT NOT NULL,
     fk_exercise_ID INT NOT NULL,
-    fk_exercise_equipment_ID INT NOT NULL,
+    fk_exercise_equipment_ID INT,
     fk_body_position_ID INT,
     fk_pulley_height_ID INT,
     fk_pulley_attachment_ID INT,
@@ -286,7 +287,7 @@ CREATE TABLE IF NOT EXISTS cardio_session (
     note TEXT, 
     fk_training_day_ID INT NOT NULL, 
     fk_cardio_option_ID INT NOT NULL, 
-    fk_cardio_intensity_ID INT NOT NULL,
+    fk_cardio_intensity_ID INT,
     FOREIGN KEY (fk_training_day_ID) REFERENCES training_day(ID),
     FOREIGN KEY (fk_cardio_option_ID) REFERENCES cardio_option(ID),
     FOREIGN KEY (fk_cardio_intensity_ID) REFERENCES cardio_intensity(ID),
@@ -329,11 +330,11 @@ CREATE TABLE IF NOT EXISTS payment_transaction (
     create_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     mercadopago_transaction_ID VARCHAR(100) UNIQUE,
     receipt_url TEXT,
-    fk_payment_plan_ID INT NOT NULL,
+    fk_payment_plan_ID INT,
     fk_payment_in_installments_ID INT,
-    fk_payment_method_ID INT NOT NULL,
-    fk_user_ID INT NOT NULL,
-    fk_trainer_ID INT NOT NULL,
+    fk_payment_method_ID INT,
+    fk_user_ID INT,
+    fk_trainer_ID INT,
     FOREIGN KEY (fk_payment_plan_ID) REFERENCES payment_plan(ID),
     FOREIGN KEY (fk_payment_in_installments_ID) REFERENCES payment_in_installments(ID),
     FOREIGN KEY (fk_payment_method_ID) REFERENCES payment_method(ID),
@@ -341,6 +342,31 @@ CREATE TABLE IF NOT EXISTS payment_transaction (
     FOREIGN KEY (fk_trainer_ID) REFERENCES trainer(ID),
     INDEX idx_fk_payment_plan_ID (fk_payment_plan_ID),
     INDEX idx_fk_payment_in_installments_ID (fk_payment_in_installments_ID),
+    INDEX idx_fk_user_ID (fk_user_ID),
+    INDEX idx_fk_trainer_ID (fk_trainer_ID)
+);
+
+CREATE TABLE IF NOT EXISTS contract_status (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(30) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS plan_contract (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    start_date DATE NOT NULL DEFAULT (CURRENT_DATE),
+    end_date DATE NOT NULL,
+    fk_user_ID INT NOT NULL,
+    fk_trainer_ID INT NOT NULL,
+    fk_payment_plan_ID INT,
+    fk_payment_transaction_ID INT,
+    fk_contract_status_ID INT NOT NULL,
+    FOREIGN KEY (fk_user_ID) REFERENCES users(ID),
+    FOREIGN KEY (fk_trainer_ID) REFERENCES trainer(ID),
+    FOREIGN KEY (fk_payment_plan_ID) REFERENCES payment_plan(ID),
+    FOREIGN KEY (fk_payment_transaction_ID) REFERENCES payment_transaction(ID),
+    FOREIGN KEY (fk_contract_status_ID) REFERENCES contract_status(ID),
+    INDEX idx_fk_payment_plan_ID (fk_payment_plan_ID),
+    INDEX idx_fk_payment_transaction_ID (fk_payment_transaction_ID),
     INDEX idx_fk_user_ID (fk_user_ID),
     INDEX idx_fk_trainer_ID (fk_trainer_ID)
 );
@@ -362,7 +388,7 @@ CREATE TABLE IF NOT EXISTS body_composition (
     result_date DATE NOT NULL, 
     note TEXT, 
     fk_user_ID INT NOT NULL,
-    fk_trainer_ID INT NOT NULL, 
+    fk_trainer_ID INT, 
     FOREIGN KEY (fk_user_ID) REFERENCES users(ID),
     FOREIGN KEY (fk_trainer_ID) REFERENCES trainer(ID),
     UNIQUE (result_date, fk_user_ID, fk_trainer_ID),
@@ -387,8 +413,8 @@ CREATE TABLE IF NOT EXISTS exercise_set_log (
 CREATE TABLE IF NOT EXISTS chat (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     update_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    fk_user_ID INT NOT NULL,
-    fk_trainer_ID INT NOT NULL,
+    fk_user_ID INT,
+    fk_trainer_ID INT,
     FOREIGN KEY (fk_user_ID) REFERENCES users(ID),
     FOREIGN KEY (fk_trainer_ID) REFERENCES trainer(ID),
     UNIQUE (fk_trainer_ID, fk_user_ID),
@@ -400,6 +426,7 @@ CREATE TABLE IF NOT EXISTS message (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     content TEXT NOT NULL,
     is_from_trainer BOOLEAN NOT NULL,
+    is_viewed BOOLEAN NOT NULL,
     create_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     fk_chat_ID INT NOT NULL,
     FOREIGN KEY (fk_chat_ID) REFERENCES chat(ID),
