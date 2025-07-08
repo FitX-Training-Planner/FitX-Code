@@ -1,10 +1,18 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import Stack from "../../containers/Stack";
 import styles from "./Select.module.css";
+import { textFilter } from "../../../utils/filters/search";
 
 function Select({ name, placeholder, labelText, value = "", handleChange, icon, options = [] }) {
     const [isOpen, setIsOpen] = useState(false);
     const [selected, setSelected] = useState(value);
+    const [searchText, setSearchText] = useState("");
+    const [isDarkTheme, setIsDarkTheme] = useState(false);
+    
+    useEffect(() => {
+        setIsDarkTheme(document.documentElement.getAttribute("data-theme") === "dark");
+    }, []);
+
     const selectRef = useRef(null);
 
     useEffect(() => {
@@ -13,13 +21,21 @@ function Select({ name, placeholder, labelText, value = "", handleChange, icon, 
 
     const handleOnOptionClick = useCallback((option) => {
         setSelected(option);
+
+        setIsOpen(false);
+
+        setSearchText("");
         
         handleChange({ target: { name, value: option } });
     }, [handleChange, name]);
 
-    const handleOnClickOutside = (e) => {
-        if (selectRef.current && !selectRef.current.contains(e.target)) setIsOpen(false);
-    };
+    const handleOnClickOutside = useCallback((e) => {
+        if (selectRef.current && !selectRef.current.contains(e.target)) {
+            setIsOpen(false);
+
+            setSearchText("");
+        }
+    }, []);
 
     useEffect(() => {
         document.addEventListener("mousedown", handleOnClickOutside);
@@ -27,7 +43,7 @@ function Select({ name, placeholder, labelText, value = "", handleChange, icon, 
         return () => {
             document.removeEventListener("mousedown", handleOnClickOutside);
         };
-    }, []);
+    }, [handleOnClickOutside]);
 
     return (
         <div
@@ -35,7 +51,7 @@ function Select({ name, placeholder, labelText, value = "", handleChange, icon, 
             className={styles.select_container} 
         >
             <Stack 
-                className={styles.select_container} 
+                className={`${styles.select_container} ${isDarkTheme ? styles.dark_theme : undefined}`} 
                 gap="0.2em"
                 alignItems="start"
             >
@@ -53,23 +69,63 @@ function Select({ name, placeholder, labelText, value = "", handleChange, icon, 
                 </label>
 
                 <div 
-                    onClick={() => setIsOpen(prevIsOpen => !prevIsOpen)}
                     className={styles.select}
                 >
-                    {selected || placeholder}
+                    <div
+                        onClick={() => setIsOpen(prevIsOpen => !prevIsOpen)}
+                    >
+                        {selected || placeholder}
+                    </div>
                     
                     {isOpen && (
-                        <ul>
-                            {options.map(option => (
-                                <li 
-                                    key={option} 
-                                    className={option === selected ? styles.active : undefined} 
-                                    onClick={() => handleOnOptionClick(option)}
+                        <>
+                            {options.length > 5 && (
+                                <input
+                                    type="text"
+                                    value={searchText}
+                                    onChange={(e) => setSearchText(e.target.value)}
+                                    placeholder="Filtrar opções..."
+                                />
+                            )}
+
+                            <ul>
+                                <li
+                                    key="_none"
+                                    onClick={() => handleOnOptionClick("")}
                                 >
-                                    {option}
+                                    -
                                 </li>
-                            ))}
-                        </ul>
+                                
+                                {
+                                    options.length !== 0 ? (
+                                        textFilter(searchText, options).length !== 0 ? (
+                                            textFilter(searchText, options).map(option => (
+                                                <li 
+                                                    key={option} 
+                                                    className={option === selected ? styles.active : undefined} 
+                                                    onClick={() => handleOnOptionClick(option)}
+                                                >
+                                                    {option}
+                                                </li>
+                                            ))
+                                        ) : (
+                                            <li
+                                                key="_empty"
+                                            >
+                                                Sem resultado
+                                            </li>
+                                        )
+
+                                    ) : (
+                                        <li
+                                            key="_loading"
+                                        >
+                                            Carregando...
+                                        </li>
+                                    )
+                                }
+                            </ul>
+                        </>
                     )}
                 </div>
             </Stack>
