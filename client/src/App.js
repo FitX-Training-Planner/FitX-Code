@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import CodeConfirmation from "./components/pages/CodeConfirmation";
 import CreateConfig from "./components/pages/CreateConfig";
 import CreateTrainer from "./components/pages/CreateTrainer";
@@ -8,7 +8,8 @@ import api from "./api/axios";
 import useRequest from "./hooks/useRequest";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "./slices/user/userSlice";
-import Home from "./components/pages/Home";
+import ClientHome from "./components/pages/ClientHome";
+import TrainerHome from "./components/pages/TrainerHome";
 import RecoverPassword from "./components/pages/RecoverPassword";
 import CreateTrainingPlan from "./components/pages/CreateTrainingPlan";
 import ModifyTrainingDay from "./components/pages/ModifyTrainingDay";
@@ -19,8 +20,13 @@ import ModifyExercise from "./components/pages/ModifyTrainingExercise";
 import TrainingPlans from "./components/pages/TrainingPlans";
 import ChatBot from "./components/pages/ChatBot";
 import TrainingPlan from "./components/pages/TrainingPlan";
+import TrainerPayments from "./components/pages/TrainerPayments";
+import CreatePaymentPlan from "./components/pages/CreatePaymentPlan";
+import { useTranslation } from "react-i18next";
 
 function App() {
+  const { i18n } = useTranslation();
+
   const dispatch = useDispatch();
 
   const user = useSelector(state => state.user);
@@ -32,121 +38,158 @@ function App() {
   const { request: getUserRequest } = useRequest();
 
   const hasRun = useRef(false);
+
+  const [canRender, setCanRender] = useState(false);
   
   useEffect(() => {
-    const excludedPaths = ["/login", "/create-config", "/code-confirmation", "/create-trainer", "/recover-password"];
+    const excludedPaths = [
+      "/login",
+      "/create-config",
+      "/code-confirmation",
+      "/create-trainer",
+      "/recover-password"
+    ];
 
-    if (excludedPaths.includes(location.pathname)) return;
+    const shouldSkip = excludedPaths.includes(location.pathname);
 
-    if (hasRun.current) return;
+    if (shouldSkip) setCanRender(true);
+    
+    if (!shouldSkip && !hasRun.current) {
+      hasRun.current = true;
+      
+      const getUser = () => {
+        return api.get("/users/me");
+      };
 
-    hasRun.current = true;
+      const handleOnGetUserSuccess = (data) => {
+        dispatch(setUser(data));
 
-    const getUser = () => {
-      return api.get("/users/me");
-    };
+        setCanRender(true);
+      };
 
-    const handleOnGetUserSuccess = (data) => {
-      dispatch(setUser(data));
-    };
+      const handleOnGetUserError = (err) => {
+        if (err?.response?.status === 404) {
+          navigate("/login");
+        }
+      };
 
-    const handleOnGetUserError = (err) => {
-      if (err?.response?.status === 404) {
-        navigate("/login");
-      }
+      getUserRequest(
+        getUser,
+        handleOnGetUserSuccess,
+        handleOnGetUserError,
+        "Carregando usuário",
+        undefined,
+        "Falha ao recuperar usuário!"
+      );
     }
 
-    getUserRequest(getUser, handleOnGetUserSuccess, handleOnGetUserError, undefined, undefined, "Falha ao recuperar usuário!");
-  }, [dispatch, getUserRequest, location.pathname, navigate]);
-
-  useEffect(() => {
     const theme = user.config.isDarkTheme ? "dark" : "light";
 
     document.documentElement.setAttribute("data-theme", theme);
 
-    const language = user.config.isEnglish ? "en" : "pt-BR";
+    const isEnglish = user.ID ? user.config.isEnglish : navigator.language?.toLowerCase().startsWith("en");
 
-    document.documentElement.setAttribute("lang", language);
-  }, [user.config.isDarkTheme, user.config.isEnglish]);
+    const lang = isEnglish ? "en" : "pt-BR";
+
+    document.documentElement.setAttribute("lang", lang);
+
+    i18n.changeLanguage(lang);
+  }, [dispatch, getUserRequest, i18n, location.pathname, navigate, user.ID, user.config.isDarkTheme, user.config.isEnglish]);
 
   return (
-    <Routes>
-      <Route
-        exact
-        path="/"
-        element={<Home />}
-      />
+    canRender && (
+      <Routes>
+        <Route
+          exact
+          path="/"
+          element={user.config.isClient ? (
+            <ClientHome />
+          ) : (
+            <TrainerHome />
+          )}
+        />
 
-      <Route
-        path="/login"
-        element={<Login />}
-      />
+        <Route
+          path="/login"
+          element={<Login />}
+        />
 
-      <Route
-        path="/create-config"
-        element={<CreateConfig />}
-      />
+        <Route
+          path="/create-config"
+          element={<CreateConfig />}
+        />
 
-      <Route
-        path="/create-trainer"
-        element={<CreateTrainer />}
-      />
+        <Route
+          path="/create-trainer"
+          element={<CreateTrainer />}
+        />
 
-      <Route
-        path="/code-confirmation"
-        element={<CodeConfirmation />}
-      />
+        <Route
+          path="/code-confirmation"
+          element={<CodeConfirmation />}
+        />
 
-      <Route
-        path="/recover-password"
-        element={<RecoverPassword />}
-      />
+        <Route
+          path="/recover-password"
+          element={<RecoverPassword />}
+        />
 
-      <Route
-        path="/trainers/me/training-plans"
-        element={<TrainingPlans />}
-      />
+        <Route
+          path="/trainers/me/training-plans"
+          element={<TrainingPlans />}
+        />
+        
+        <Route
+          path="/trainers/me/payments"
+          element={<TrainerPayments />}
+        />
 
-      <Route
-        path="/trainers/me/training-plans/:id"
-        element={<TrainingPlan />}
-      />
+        <Route
+          path="/trainers/me/create-payment-plan"
+          element={<CreatePaymentPlan />}
+        />
 
-      <Route
-        path="/trainers/me/create-training-plan"
-        element={<CreateTrainingPlan />}
-      />
+        <Route
+          path="/trainers/me/training-plans/:id"
+          element={<TrainingPlan />}
+        />
 
-      <Route
-        path="/trainers/me/create-training-plan/modify-training-day"
-        element={<ModifyTrainingDay />}
-      />
+        <Route
+          path="/trainers/me/create-training-plan"
+          element={<CreateTrainingPlan />}
+        />
 
-      <Route
-        path="/trainers/me/create-training-plan/modify-training-day/modify-cardio-session"
-        element={<ModifyCardioSession />}
-      />
+        <Route
+          path="/trainers/me/create-training-plan/modify-training-day"
+          element={<ModifyTrainingDay />}
+        />
 
-      <Route
-        path="/trainers/me/create-training-plan/modify-training-day/modify-training-step"
-        element={<ModifyTrainingStep />}
-      />
+        <Route
+          path="/trainers/me/create-training-plan/modify-training-day/modify-cardio-session"
+          element={<ModifyCardioSession />}
+        />
 
-      <Route
-        path="/trainers/me/create-training-plan/modify-training-day/modify-training-step/modify-exercise"
-        element={<ModifyExercise />}
-      />
+        <Route
+          path="/trainers/me/create-training-plan/modify-training-day/modify-training-step"
+          element={<ModifyTrainingStep />}
+        />
 
-      <Route
-        path="/trainers/me/create-training-plan/modify-training-day/modify-training-step/modify-exercise/modify-set"
-        element={<ModifyExerciseSet />}
-      />
+        <Route
+          path="/trainers/me/create-training-plan/modify-training-day/modify-training-step/modify-exercise"
+          element={<ModifyExercise />}
+        />
 
-      <Route 
-        path="/questions-chatbot"
-        element={<ChatBot />}
-      />
-    </Routes>
+        <Route
+          path="/trainers/me/create-training-plan/modify-training-day/modify-training-step/modify-exercise/modify-set"
+          element={<ModifyExerciseSet />}
+        />
+
+        <Route 
+          path="/questions-chatbot"
+          element={<ChatBot />}
+        />
+      </Routes>
+    )
   );
 }
 
