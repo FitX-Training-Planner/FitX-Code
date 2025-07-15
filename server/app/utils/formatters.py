@@ -10,6 +10,16 @@ def safe_int(value):
     except Exception:
         return None
 
+def safe_float(value):
+    if value in ("", None):
+        return None
+
+    try:
+        return float(value)
+    
+    except Exception:
+        return None
+
 def safe_bool(value):
     if value in ("", None):
         return False
