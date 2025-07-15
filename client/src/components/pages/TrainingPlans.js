@@ -13,6 +13,7 @@ import ClickableIcon from "../form/buttons/ClickableIcon";
 import TrainingPlanCompactedCard from "../cards/training/TrainingPlanCompactedCard";
 import styles from "./TrainingPlans.module.css";
 import { getCacheData, removeItemFromCacheList, setCacheData } from "../../utils/cache/operations";
+import SearchInput from "../form/fields/SearchInput";
 
 function TrainingPlans() {    
     const navigate = useNavigate();
@@ -33,7 +34,9 @@ function TrainingPlans() {
     const storageKey = "trainingPlans";
     
     const [trainingPlans, setTrainingPlans] = useState([]);
-    
+    const [searchText, setSearchText] = useState("");
+    const [showedTrainingPlans, setShowedTrainingPlans] = useState([]);
+
     useEffect(() => {
         if (hasRun.current) return;
                 
@@ -48,6 +51,7 @@ function TrainingPlans() {
 
             if (cachedData) {
                 setTrainingPlans(cachedData);
+                setShowedTrainingPlans(cachedData);
 
                 return;
             }
@@ -58,6 +62,7 @@ function TrainingPlans() {
         
             const handleOnGetPlansSuccess = (data) => {
                 setTrainingPlans(data);
+                setShowedTrainingPlans(data);
 
                 setCacheData(storageKey, data);
             };
@@ -80,8 +85,14 @@ function TrainingPlans() {
     }, [navigate, notify, isTrainer, user, getTrainingPlans]);
 
     const addTrainingPlan = useCallback(() => {   
+        if (trainingPlans.length >= 20) {
+            notify("Você atingiu o limite de 20 planos de treinamento.", "error");
+
+            return;
+        }
+
         navigate("/trainers/me/create-training-plan");
-    }, [navigate]);
+    }, [navigate, notify, trainingPlans.length]);
 
     const modifyTrainingPlan = useCallback(trainingPlan => {
         navigate("/trainers/me/create-training-plan", { state: { trainingPlan } });
@@ -100,7 +111,10 @@ function TrainingPlans() {
             }
         
             const handleOnRemovePlanSuccess = () => {
-                setTrainingPlans(prevTrainingPlans => prevTrainingPlans.filter(plan => String(plan.ID) !== String(ID)));
+                const filteredItems = trainingPlans.filter(plan => String(plan.ID) !== String(ID));
+
+                setTrainingPlans(filteredItems);
+                setShowedTrainingPlans(filteredItems);
 
                 removeItemFromCacheList(storageKey, ID)
             };
@@ -114,7 +128,7 @@ function TrainingPlans() {
                 "Falha ao remover plano!"
             );
         }
-    }, [confirm, removeTrainingPlan]);
+    }, [confirm, removeTrainingPlan, trainingPlans]);
 
     useEffect(() => {
         document.title = "Planos de Treino";
@@ -146,6 +160,18 @@ function TrainingPlans() {
                     <Stack
                         gap="3em"
                     >
+                        {trainingPlans.length !== 0 && (
+                            <SearchInput
+                                searchText={searchText}
+                                setSearchText={setSearchText}
+                                items={trainingPlans}
+                                setShowedItems={setShowedTrainingPlans}
+                                searchKey="name"
+                                placeholder="Filtrar por nome..."
+                                name="Filtrar"
+                            />
+                        )}
+
                         <Stack
                             gap="2em"
                         >
@@ -154,22 +180,28 @@ function TrainingPlans() {
                                     Crie seu primeiro plano de treino clicando no botão abaixo.
                                 </p>
                             ) : (
-                                trainingPlans.map((trainingPlan, index) => (
-                                    <React.Fragment
-                                        key={index}
-                                    >
-                                        <TrainingPlanCompactedCard
-                                            headingNumber={2}
-                                            planID={trainingPlan.ID}
-                                            name={trainingPlan.name}
-                                            trainingDays={trainingPlan.trainingDays}
-                                            handleModifyPlan={() => modifyTrainingPlan(trainingPlan)}
-                                            handleRemovePlan={() => removePlan(trainingPlan.ID)}
-                                            handleExpandPlan={() => expandPlan(trainingPlan.ID)}
-                                            width={width}
-                                        />
-                                    </React.Fragment>
-                                ))
+                                showedTrainingPlans.length !== 0 ? (
+                                    showedTrainingPlans.map((trainingPlan, index) => (
+                                        <React.Fragment
+                                            key={index}
+                                        >
+                                            <TrainingPlanCompactedCard
+                                                headingNumber={2}
+                                                planID={trainingPlan.ID}
+                                                name={trainingPlan.name}
+                                                trainingDays={trainingPlan.trainingDays}
+                                                handleModifyPlan={() => modifyTrainingPlan(trainingPlan)}
+                                                handleRemovePlan={() => removePlan(trainingPlan.ID)}
+                                                handleExpandPlan={() => expandPlan(trainingPlan.ID)}
+                                                width={width}
+                                            />
+                                        </React.Fragment>
+                                    ))
+                                ) : (
+                                    <p>
+                                        Sem resultado
+                                    </p>
+                                )
                             )}
                         </Stack>
 
