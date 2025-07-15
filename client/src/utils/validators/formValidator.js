@@ -1,3 +1,4 @@
+import { isPaymentPlanBenefitDescriptionValid, isPaymentPlanDurationValid, isPaymentPlanPriceValid } from "./paymentsValidator";
 import { isCardioDurationValid, isDurationSetValid, isNoteValid, isPlanNameValid, isRepsValid, isRestValid } from "./trainingValidator";
 import { isCREFValid, isDocumentValid, isEmailValid, isMessageValid, isNameValid, isPasswordValid, isTrainerDescriptionValid } from "./userValidator";
 
@@ -328,6 +329,32 @@ export function validateDocument(documentError, setDocumentError, document) {
         setDocumentError(true);
 
         return false;
+    }
+
+    return true;
+}
+
+export function validatePaymentPlan(paymentPlanError, setPaymentPlanError, name, fullPrice, durationDays, description, benefits) {
+    if (paymentPlanError) return false;
+
+    if (hasEmptyFieldsInObject({ name, fullPrice, durationDays })) {
+        setPaymentPlanError(true);
+
+        return false;
+    }
+
+    if (!(isNoteValid(description) && isPlanNameValid(name) && isPaymentPlanPriceValid(fullPrice) && isPaymentPlanDurationValid(durationDays))) {
+        setPaymentPlanError(true);
+
+        return false;
+    }
+
+    for (const benefit of benefits) {
+        if (!isPaymentPlanBenefitDescriptionValid(benefit.description)) {
+            setPaymentPlanError(true);
+
+            return false;
+        }  
     }
 
     return true;
