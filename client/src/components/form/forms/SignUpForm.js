@@ -8,6 +8,7 @@ import SubmitFormButton from "../buttons/SubmitFormButton";
 import NonBackgroundButton from "../buttons/NonBackgroundButton";
 import Title from "../../text/Title";
 import { handleOnChangeTextField } from "../../../utils/handlers/changeHandlers";
+import { useTranslation } from "react-i18next";
 
 function SignUpForm({ user, setUser, setSignUpError, handleChangeFormType, handleSubmit }) {
     const [errors, setErrors] = useState({
@@ -16,6 +17,8 @@ function SignUpForm({ user, setUser, setSignUpError, handleChangeFormType, handl
         password: false,
         emptyFields: true
     });
+
+    const { t } = useTranslation();
     
     return (
         <>
@@ -24,13 +27,13 @@ function SignUpForm({ user, setUser, setSignUpError, handleChangeFormType, handl
                 className={styles.title_container}
             >
                 <img 
-                    src="logo180.png" 
-                    alt="FitX Icon"
+                    src="/logo180.png" 
+                    alt=""
                 />
 
                 <Title
                     headingNumber={1}
-                    text="Criar Conta"
+                    text={t("signUp")}
                 />
             </Stack>
             
@@ -42,7 +45,7 @@ function SignUpForm({ user, setUser, setSignUpError, handleChangeFormType, handl
                     alignItems="start"
                 >
                     <p>
-                        - Preenha todos os campos
+                        - {t("fillAllFields")}
                     </p>
 
                     <Stack
@@ -50,12 +53,12 @@ function SignUpForm({ user, setUser, setSignUpError, handleChangeFormType, handl
                     >
                         <TextInput
                             name="name"
-                            placeholder="Insira seu nome"
-                            labelText="Nome"
+                            placeholder={t("namePlaceholder")}
+                            labelText={t("name")}
                             value={user.name}
                             handleChange={(e) => handleOnChangeTextField(e, formattName, isNameValid, user, setUser, setSignUpError, setErrors)}
-                            icon="images/icons/user2.png"
-                            alertMessage="O nome deve ter entre 3 e 100 caracteres."
+                            icon="/images/icons/user2.png"
+                            alertMessage={t("alertName")}
                             error={errors.name}
                             maxLength={100}
                         />
@@ -63,12 +66,12 @@ function SignUpForm({ user, setUser, setSignUpError, handleChangeFormType, handl
                         <TextInput
                             type="email"
                             name="email"
-                            placeholder="Insira seu e-mail"
-                            labelText="E-mail"
+                            placeholder={t("emailPlaceholder")}
+                            labelText={t("email")}
                             value={user.email}
                             handleChange={(e) => handleOnChangeTextField(e, formattEmailAndPassword, isEmailValid, user, setUser, setSignUpError, setErrors)}
-                            icon="images/icons/email.png"
-                            alertMessage="E-mail inválido."
+                            icon="/images/icons/email.png"
+                            alertMessage={t("alertEmail")}
                             error={errors.email}
                             maxLength={254}
                         />
@@ -76,12 +79,12 @@ function SignUpForm({ user, setUser, setSignUpError, handleChangeFormType, handl
                         <TextInput
                             type="password"
                             name="password"
-                            placeholder="Insira sua senha"
-                            labelText="Senha"
+                            placeholder={t("passwordPlaceholder")}
+                            labelText={t("password")}
                             value={user.password}
                             handleChange={(e) => handleOnChangeTextField(e, formattEmailAndPassword, isPasswordValid, user, setUser, setSignUpError, setErrors)}
-                            icon="images/icons/password.png"
-                            alertMessage="A senha deve ter entre 10 e 20 caracteres, com no mínimo um símbolo, número e letra."
+                            icon="/images/icons/password.png"
+                            alertMessage={t("alertPassword")}
                             error={errors.password}
                             maxLength={20}
                         />
@@ -89,15 +92,15 @@ function SignUpForm({ user, setUser, setSignUpError, handleChangeFormType, handl
 
                     <Stack>
                         <SubmitFormButton
-                            text="Criar Conta"
+                            text={t("signUp")}
                         />
 
                         <span>
-                            Ou
+                            {t("or")}
                         </span>
 
                         <NonBackgroundButton
-                            text="Entrar em uma Conta já Existente"
+                            text={t("login")}
                             handleClick={handleChangeFormType}
                             varColor="--theme-color"
                         />

@@ -6,8 +6,19 @@ import NonBackgroundButton from "../buttons/NonBackgroundButton";
 import SubmitFormButton from "../buttons/SubmitFormButton";
 import TextInput from "../fields/TextInput";
 import { handleOnChangeTextField } from "../../../utils/handlers/changeHandlers";
+import { useTranslation } from "react-i18next";
 
-function LoginForm({ user, setUser, loginError, setLoginError, navigate, handleChangeFormType, handleSubmit }) {
+function LoginForm({
+    user,
+    setUser,
+    loginError,
+    setLoginError,
+    navigate,
+    handleChangeFormType,
+    handleSubmit 
+}) {
+    const { t } = useTranslation();
+
     return (
         <>
             <Stack
@@ -15,13 +26,13 @@ function LoginForm({ user, setUser, loginError, setLoginError, navigate, handleC
                 className={styles.title_container}
             >
                 <img 
-                    src="logo180.png" 
-                    alt="FitX Icon"
+                    src="/logo180.png" 
+                    alt=""
                 />
 
                 <Title
                     headingNumber={1}
-                    text="Login"
+                    text={t("login")}
                 />
             </Stack>
 
@@ -37,45 +48,45 @@ function LoginForm({ user, setUser, loginError, setLoginError, navigate, handleC
                         <TextInput
                             type="email"
                             name="email"
-                            placeholder="Insira seu e-mail"
-                            labelText="E-mail"
+                            placeholder={t("emailPlaceholder")}
+                            labelText={t("email")}
                             value={user.email}
                             handleChange={(e) => handleOnChangeTextField(e, formattEmailAndPassword, undefined, user, setUser, setLoginError)}
-                            icon="images/icons/email.png"
+                            icon="/images/icons/email.png"
                             maxLength={254}
                         />
 
                         <TextInput
                             type="password"
                             name="password"
-                            placeholder="Insira sua senha"
-                            labelText="Senha"
+                            placeholder={t("passwordPlaceholder")}
+                            labelText={t("password")}
                             value={user.password}
                             handleChange={(e) => handleOnChangeTextField(e, formattEmailAndPassword, undefined, user, setUser, setLoginError)}
-                            icon="images/icons/password.png"
-                            alertMessage="E-mail e/ou senha inválidos."
+                            icon="/images/icons/password.png"
+                            alertMessage={t("alertLogin")}
                             error={loginError}
                             maxLength={20}
                         />
                     </Stack>
 
                     <NonBackgroundButton
-                        text="Esqueci minha senha"
+                        text={t("forgotPassword")}
                         handleClick={() => navigate("/recover-password")}
                         varColor="--alert-color"
                     />
 
                     <Stack>
                         <SubmitFormButton
-                            text="Entrar"
+                            text={t("login")}
                         />
 
                         <span>
-                            Ou
+                            {t("or")}
                         </span>
 
                         <NonBackgroundButton
-                            text="Criar uma conta"
+                            text={t("signUp")}
                             handleClick={handleChangeFormType}
                             varColor="--theme-color"
                         />

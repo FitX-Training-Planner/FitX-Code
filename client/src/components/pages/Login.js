@@ -13,8 +13,11 @@ import { useConfirmIdentityCallback } from "../../app/ConfirmIdentityCallbackPro
 import authUser from "../../utils/requests/auth";
 import api from "../../api/axios";
 import useWindowSize from "../../hooks/useWindowSize";
+import { useTranslation } from "react-i18next";
 
 function Login() {
+    const { t } = useTranslation();
+
     const navigate = useNavigate();
     
     const { width } = useWindowSize();
@@ -37,8 +40,8 @@ function Login() {
     const [loginError, setLoginError] = useState(false);
 
     useEffect(() => {
-        document.title = "Login";
-    }, []);
+        document.title = t("login");
+    }, [t]);
 
     const handleOnChangeFormType = useCallback(() => {
         setLocalUser(defaultUser);
@@ -76,8 +79,15 @@ function Login() {
             }
         };
     
-        loginRequest(postLogin, handleOnLoginSuccess, handleOnLoginError, "Checando dados", "Dados validados!", "Falha ao logar!");
-    }, [localUser, loginError, loginRequest, navigate, setHandleOnConfirmed]);
+        loginRequest(
+            postLogin, 
+            handleOnLoginSuccess, 
+            handleOnLoginError, 
+            t("loadingCheckData"), 
+            undefined, 
+            t("errorLogin")
+        );
+    }, [localUser, loginError, loginRequest, navigate, setHandleOnConfirmed, t]);
 
     const handleOnSignUpSubmit = useCallback((e) => {
         e.preventDefault();
@@ -104,8 +114,15 @@ function Login() {
             navigate("/create-config", { state: { localUser } });
         });
     
-        signUpRequest(postSignUp, handleOnSignUpSuccess, handleOnSignUpError, "Checando dados", "Dados validados!", "Falha ao checar dados!");
-    }, [localUser, navigate, setHandleOnConfirmed, signUpError, signUpRequest]);
+        signUpRequest(
+            postSignUp,
+            handleOnSignUpSuccess, 
+            handleOnSignUpError, 
+            t("loadingCheckData"), 
+            undefined, 
+            t("errorSignUp")
+        );
+    }, [localUser, navigate, setHandleOnConfirmed, signUpError, signUpRequest, t]);
 
     return (
         <main>
@@ -164,21 +181,20 @@ function Login() {
                         >
                             <Title
                                 headingNumber={2}
-                                text="Bem-Vindo ao FitX"
+                                text={t("welcome")}
                                 varColor="--dark-color"
                                 textAlign="start"
                             />
 
 
                             <p>
-                                A melhor plataforma para você, que é um praticante ou treinador de musculação, 
-                                gerir seus treinos.
+                                {t("welcomeDescription")}
                             </p>
                         </Stack>
 
                         <img
-                            src="images\backgrounds\login_welcome_illustration.png"
-                            alt="FitX Illustration"
+                            src="/images/backgrounds/login_welcome_illustration.png"
+                            alt=""
                         />    
 
                         <Stack
@@ -187,28 +203,28 @@ function Login() {
                             className={styles.social_medias}
                         >
                             <ClickableIcon
-                                iconSrc="images/icons/instagram.png"
+                                iconSrc="/images/icons/instagram.png"
                                 name="Instagram"
                                 // handleClick={() => window.open("https://www.instagram.com/seu_perfil/", "_blank", "noopener,noreferrer")}
                                 hasTheme={false}
                            />
 
                             <ClickableIcon
-                                iconSrc="images/icons/youtube.png"
+                                iconSrc="/images/icons/youtube.png"
                                 name="Youtube"
                                 // handleClick={() => window.open("https://www.youtube.com/c/seu_canal", "_blank", "noopener,noreferrer")}
                                 hasTheme={false}
                            />
 
                             <ClickableIcon
-                                iconSrc="images/icons/tiktok.png"
+                                iconSrc="/images/icons/tiktok.png"
                                 name="TikTok"
                                 // handleClick={() => window.open("https://www.tiktok.com/@seu_perfil", "_blank", "noopener,noreferrer")}
                                 hasTheme={false}
                            />
 
                             <ClickableIcon
-                                iconSrc="images/icons/github.png"
+                                iconSrc="/images/icons/github.png"
                                 name="GitHub"
                                 // handleClick={() =>  window.open("https://github.com/FitX-Training-Planner", "_blank", "noopener,noreferrer")}
                                 hasTheme={false}
