@@ -12,7 +12,7 @@ function ClickableIcon({ iconSrc, name, handleClick, size = "medium", hasTheme =
         <button
             type={isSubmit ? "submit" : "button"}
             className={`${styles.clickable_icon} ${styles[size]} ${isDarkTheme && hasTheme ? styles.dark_theme : undefined}`}
-            title={name}
+            title={name || undefined}
             onClick={handleClick || undefined}
         >
             <img

@@ -20,7 +20,7 @@ function TextInput({ type = "text", name, placeholder, labelText, value = "", ha
                 {icon &&
                     <img 
                         src={icon} 
-                        alt={`${labelText} Icon`} 
+                        alt="" 
                     />
                 }
                 
