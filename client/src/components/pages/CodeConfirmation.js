@@ -12,8 +12,11 @@ import { useDispatch } from "react-redux";
 import { setUser } from "../../slices/user/userSlice";
 import api from "../../api/axios";
 import { validateCodeRequestData } from "../../utils/validators/formValidator";
+import { useTranslation } from "react-i18next";
 
 function CodeConfirmation() {
+    const { t } = useTranslation();
+
     const navigate = useNavigate();
     
     const hasRun = useRef(false);
@@ -42,10 +45,6 @@ function CodeConfirmation() {
     const [origin, setOrigin] = useState("login");
     const [error, setError] = useState(false);
 
-    useEffect(() => {
-        document.title = "Confirmar Identidade";
-    }, []);
-
     const generateCode = useCallback(email => {
         const generateCodeFormData = new FormData();
 
@@ -55,8 +54,15 @@ function CodeConfirmation() {
             return api.post("/identity-confirmation", generateCodeFormData);
         }         
 
-        generateCodeRequest(postGenerateCode, () => undefined, () => undefined, "Enviando código", "Código enviado!", "Falha ao enviar código!");
-    }, [generateCodeRequest]);    
+        generateCodeRequest(
+            postGenerateCode, 
+            () => undefined, 
+            () => undefined, 
+            t("loadingSendCode"), 
+            t("successSendCode"), 
+            t("errorSendCode")
+        );
+    }, [generateCodeRequest, t]);    
 
     useEffect(() => {
         if (hasRun.current) return;
@@ -69,7 +75,7 @@ function CodeConfirmation() {
         if (!locationUser || !locationOrigin) {
             navigate("/login");
             
-            notify("As suas informações de contato não foram encontradas. Tente logar ou se registrar novamente.", "error");
+            notify(t("notFoundContactInfo"), "error");
 
             return;
         }
@@ -79,7 +85,7 @@ function CodeConfirmation() {
         setOrigin(locationOrigin);
 
         generateCode(locationUser.email);
-    }, [generateCode, location.state, navigate, notify]);
+    }, [generateCode, location.state, navigate, notify, t]);
 
     const handleOnSubmit = useCallback((e) => {
         e.preventDefault();
@@ -108,8 +114,19 @@ function CodeConfirmation() {
             setError(true);
         }
 
-        confirmIdentityRequest(postConfirmCode, handleOnConfirmCodeSuccess, handleOnConfirmCodeError, "Enviando código", "Identidade confirmada!", "Falha ao confirmar identidade!");
-    }, [error, code, localUser.email, localUser.ID, confirmIdentityRequest, origin, handleOnConfirmed, dispatch, navigate, notify, authRequest]);
+        confirmIdentityRequest(
+            postConfirmCode, 
+            handleOnConfirmCodeSuccess, 
+            handleOnConfirmCodeError, 
+            t("loadingSendCode"), 
+            undefined, 
+            t("errorConfirmIdentity")
+        );
+    }, [error, code, localUser.email, localUser.ID, confirmIdentityRequest, t, origin, handleOnConfirmed, dispatch, navigate, notify, authRequest]);
+
+    useEffect(() => {
+        document.title = t("confirmIdentity");
+    }, [t]);
 
     return (
         <main
@@ -121,7 +138,7 @@ function CodeConfirmation() {
             >
                 <Title
                     headingNumber={1}
-                    text="Confirmação de Identidade"
+                    text={t("confirmIdentity")}
                 />
 
                 <CodeConfirmationForm
@@ -133,7 +150,7 @@ function CodeConfirmation() {
                 />
 
                 <NonBackgroundButton
-                    text="Reenviar Código"
+                    text={t("resendCode")}
                     handleClick={() => generateCode(localUser.email)}
                     varColor="--theme-color"
                 />

@@ -10,7 +10,13 @@ import Title from "../../text/Title";
 import { handleOnChangeTextField } from "../../../utils/handlers/changeHandlers";
 import { useTranslation } from "react-i18next";
 
-function SignUpForm({ user, setUser, setSignUpError, handleChangeFormType, handleSubmit }) {
+function SignUpForm({
+    user,
+    setUser,
+    setSignUpError,
+    handleChangeFormType,
+    handleSubmit 
+}) {
     const [errors, setErrors] = useState({
         name: false,
         email: false,

@@ -6,8 +6,17 @@ import styles from "./CodeConfirmationForm.module.css";
 import removeAccents from "../../../utils/formatters/text/removeAccents";
 import removeSymbols from "../../../utils/formatters/text/removeSymbols";
 import removeSpaces from "../../../utils/formatters/text/removeSpaces";
+import { useTranslation } from "react-i18next";
 
-function CodeConfirmationForm({ code, setCode, email, handleSubmit, setError }) {
+function CodeConfirmationForm({
+    code,
+    setCode,
+    email,
+    handleSubmit,
+    setError
+}) {
+    const { t } = useTranslation();
+    
     const inputRefs = useRef([]);
 
     const handleOnKeyDownCode = useCallback((e, order) => {
@@ -73,12 +82,12 @@ function CodeConfirmationForm({ code, setCode, email, handleSubmit, setError }) 
                 className={styles.code_confirmation_form_container}
             >
                 <p>
-                    Preencha as caixas abaixo com o código que enviamos a você.
+                    {t("confirmIdentityDescription")}
                 </p>
             
                 <Stack>
                     <p>
-                        Insira o código enviado a 
+                        {t("codePlaceholder")} 
 
                         <span
                             className={styles.user_info}
@@ -106,7 +115,7 @@ function CodeConfirmationForm({ code, setCode, email, handleSubmit, setError }) 
                 </Stack>
 
                 <SubmitFormButton
-                    text="Confirmar"
+                    text={t("confirm")}
                 />
             </Stack>
         </form>

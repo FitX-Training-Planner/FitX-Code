@@ -39,10 +39,6 @@ function Login() {
     const [signUpError, setSignUpError] = useState(false);
     const [loginError, setLoginError] = useState(false);
 
-    useEffect(() => {
-        document.title = t("login");
-    }, [t]);
-
     const handleOnChangeFormType = useCallback(() => {
         setLocalUser(defaultUser);
 
@@ -123,6 +119,10 @@ function Login() {
             t("errorSignUp")
         );
     }, [localUser, navigate, setHandleOnConfirmed, signUpError, signUpRequest, t]);
+
+    useEffect(() => {
+        document.title = t("login");
+    }, [t]);
 
     return (
         <main>
