@@ -8,6 +8,7 @@ import { ConfirmIdentityCallbackProvider } from "./app/ConfirmIdentityCallbackPr
 import { SystemMessageProvider } from "./app/SystemMessageProvider.js";
 import { TrainingPlanProvider } from "./app/TrainingPlanProvider.js";
 import { BrowserRouter as Router } from "react-router-dom";
+import "./i18n";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
