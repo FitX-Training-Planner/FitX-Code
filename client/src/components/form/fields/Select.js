@@ -1,13 +1,14 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import Stack from "../../containers/Stack";
 import styles from "./Select.module.css";
-import { textFilter } from "../../../utils/filters/search";
+import SearchInput from "./SearchInput";
 
 function Select({ name, placeholder, labelText, value = "", handleChange, icon, options = [] }) {
     const [isOpen, setIsOpen] = useState(false);
     const [selected, setSelected] = useState(value);
-    const [searchText, setSearchText] = useState("");
     const [isDarkTheme, setIsDarkTheme] = useState(false);
+    const [searchText, setSearchText] = useState("");
+    const [showedOptions, setShowedOptions] = useState(options);
     
     useEffect(() => {
         setIsDarkTheme(document.documentElement.getAttribute("data-theme") === "dark");
@@ -79,14 +80,15 @@ function Select({ name, placeholder, labelText, value = "", handleChange, icon, 
                     
                     {isOpen && (
                         <>
-                            {options.length > 5 && (
-                                <input
-                                    type="text"
-                                    value={searchText}
-                                    onChange={(e) => setSearchText(e.target.value)}
-                                    placeholder="Filtrar opções..."
-                                />
-                            )}
+                            <SearchInput
+                                placeholder="Filtrar opções..."
+                                name="Filtrar"
+                                searchText={searchText}
+                                setSearchText={setSearchText}
+                                items={options}
+                                setShowedItems={setShowedOptions}
+                                className={styles.select_search}
+                            />
 
                             <ul>
                                 <li
@@ -98,8 +100,8 @@ function Select({ name, placeholder, labelText, value = "", handleChange, icon, 
                                 
                                 {
                                     options.length !== 0 ? (
-                                        textFilter(searchText, options).length !== 0 ? (
-                                            textFilter(searchText, options).map(option => (
+                                        showedOptions !== 0 ? (
+                                            showedOptions.map(option => (
                                                 <li 
                                                     key={option} 
                                                     className={option === selected ? styles.active : undefined} 

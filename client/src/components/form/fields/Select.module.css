@@ -45,7 +45,7 @@
     background-color: var(--bg-color);
 }
 
-.select > input {
+.select > .select_search {
     position: absolute;
     top: 0;
     left: 0;
