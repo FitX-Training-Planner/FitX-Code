@@ -1,0 +1,346 @@
+import { useSelector } from "react-redux";
+import useRequest from "../../hooks/useRequest";
+import { useSystemMessage } from "../../app/SystemMessageProvider";
+import useWindowSize from "../../hooks/useWindowSize";
+import { cleanCacheData, getCacheData, setCacheData } from "../../utils/cache/operations";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { verifyIsClient } from "../../utils/requests/verifyUserType";
+import api from "../../api/axios";
+import NavBarLayout from "../containers/NavBarLayout";
+import Stack from "../containers/Stack";
+import Title from "../text/Title";
+import ClickableIcon from "../form/buttons/ClickableIcon";
+import FilterItemsLayout from "../containers/FilterItemsLayout";
+import { useNavigate } from "react-router-dom";
+import styles from "./Home.module.css";
+import LoadMoreButton from "../form/buttons/LoadMoreButton";
+import ClientTrainingContractCard from "../cards/contracts/ClientTrainingContractCard";
+import SmallTrainerProfessionalCard from "../cards/contracts/SmallTrainerProfessionalCard";
+
+function ClientHome() {
+    const navigate = useNavigate();
+
+    const { width } = useWindowSize();
+    
+    const hasRun = useRef(false);
+    
+    const { notify, confirm } = useSystemMessage();
+    
+    const { request: isClient } = useRequest();
+    const { request: getTrainers, loading: trainersLoading } = useRequest();
+    const { request: getClientTraining, loading: trainingLoading } = useRequest();
+    const { request: cancelClientContract } = useRequest();
+            
+    const user = useSelector(state => state.user);
+
+    const clientTrainingStorageKey = "paymentPlans";
+    const trainersLimit = 20;
+
+    const trainersFilters = useMemo(() => {
+        return [
+            { value: "most_popular", text: "Mais populares" },
+            { value: "best_rated", text: "Melhores avaliados" },
+            { value: "most_affordable", text: "Mais acessíveis" },
+            { value: "best_value", text: "Melhor custo-benefício" }
+        ]
+    }, []);  
+    const clientTrainingDefault = useMemo(() => {
+        return {
+            trainer: {
+                ID: 1,
+                name: "Paulo Henrique",
+                photoUrl: "/images/icons/chatbot2.png",
+                crefNumber: "123456-P"
+            },
+            trainingPlan: {
+                ID: 1,
+                name: "Plano 1",
+            },
+            contract: {
+                ID: 1,
+                startDate: new Date("2025-05-04"),
+                endDate: new Date("2026-05-04")
+            }
+        }
+    }, []);
+
+    const [clientTraining, setClientTraining] = useState(clientTrainingDefault);
+    const [clientTrainingError, setClientTrainingError] = useState(false);
+    const [trainers, setTrainers] = useState([]);
+    const [trainersError, setTrainersError] = useState(false);
+    const [trainersOffset, setTrainersOffset] = useState(0);
+    const [activeTrainerFilter, setActiveTrainerFilter] = useState(trainersFilters[0]);
+
+    const loadTrainers = useCallback((hasError, updatedTrainers, offset, filter) => {
+        if (hasError) return;
+
+        if ((updatedTrainers.length < trainersLimit && updatedTrainers.length !== 0) || updatedTrainers.length % trainersLimit !== 0) {
+            notify("Não há mais treinadores disponíveis!");
+
+            return;
+        }
+
+        const getSearchedTrainers = () => {
+            return api.get(`/trainers`, { 
+                params: { 
+                    offset: offset, 
+                    limit: trainersLimit, 
+                    sort: filter
+                }
+            });
+        }
+        
+        const handleOnGetTrainersSuccess = (data) => {            
+            setTrainers(prevTrainers => [...prevTrainers, ...data]);
+
+            setTrainersOffset(offset + trainersLimit);
+        };
+    
+        const handleOnGetTrainersError = () => {
+            setTrainersError(true);
+        };
+    
+        getTrainers(
+            getSearchedTrainers, 
+            handleOnGetTrainersSuccess, 
+            handleOnGetTrainersError, 
+            "Carregando treinadores", 
+            "Treinadores carregados!", 
+            "Falha ao carregar treinadores!"
+        );
+    }, [getTrainers, notify]);
+    
+    const handleOnChangeFilter = useCallback((filter) => {
+        setTrainers([]);
+        setTrainersOffset(0);
+        setTrainersError(false);
+
+        loadTrainers(false, [], 0, filter);
+    }, [loadTrainers]);
+
+    useEffect(() => {
+        if (hasRun.current) return;
+                
+        hasRun.current = true;
+        
+        const fetchData = async () => {
+            const success = await verifyIsClient(isClient, user, navigate, notify);
+
+            if (!success) return;
+
+            loadTrainers(trainersError, trainers, trainersOffset, activeTrainerFilter.value);
+
+            const cachedData = getCacheData(clientTrainingStorageKey);
+            
+            if (cachedData) {
+                setClientTraining(cachedData);
+
+                return;
+            }
+
+            const getTraining = () => {
+                return api.get(`/me/training-contract`);
+            }
+        
+            const handleOnGetClientTrainingSuccess = (data) => {
+                setClientTraining(clientTrainingDefault);
+
+                setCacheData(clientTrainingStorageKey, clientTrainingDefault);
+            };
+        
+            const handleOnGetClientTrainingError = () => {
+                setClientTrainingError(true);
+            };
+
+            getClientTraining(
+                getTraining, 
+                handleOnGetClientTrainingSuccess, 
+                handleOnGetClientTrainingError, 
+                undefined, 
+                undefined, 
+                "Falha ao recuperar informações do treinamento e contrato ativo!"
+            );
+        }
+
+        fetchData();
+    }, [navigate, notify, user, trainersError, trainers, trainersOffset, isClient, loadTrainers, activeTrainerFilter.value, getClientTraining]);
+
+    const cancelContract = useCallback(async (e) => {
+        e.preventDefault();
+
+        const userConfirmed = await confirm(
+            "Deseja cancelar seu contrato ativo? Você não receberá reembolso e não terá mais acesso ao plano de treino atual."
+        );
+        
+        if (userConfirmed) {
+            const cancelContract = () => {
+                return api.put(`/me/active-contract`);
+            }
+        
+            const handleOnCancelContractSuccess = () => {
+                setClientTraining(clientTrainingDefault);
+
+                cleanCacheData(clientTrainingStorageKey)
+            };
+
+            cancelClientContract(
+                cancelContract, 
+                handleOnCancelContractSuccess, 
+                () => undefined, 
+                "Cancelando contrato", 
+                "Contrato cancelado!", 
+                "Falha ao cancelar contrato!"
+            );
+        }
+    }, [cancelClientContract, clientTrainingDefault, confirm]);
+
+    useEffect(() => {
+        document.title = "Início";
+    }, []);
+
+    return (
+        <NavBarLayout>
+            <main
+                className={styles.client_home}
+                style={{ padding: width <= 440 ? "2em 1em" : "1em" }}
+            >
+                <Stack
+                    gap="3em"
+                >
+                    <Stack
+                        direction={width <= 440 ? "column" : "row"}
+                        justifyContent="center"
+                        gap={width <= 440 ? "0" : "1em"}
+                    >
+                        <ClickableIcon
+                            iconSrc="/logo180.png"
+                            size="large"
+                            hasTheme={false}
+                        />
+
+                        <Title
+                            headingNumber={1}
+                            text="Treinamento"
+                        />
+                    </Stack>
+
+                    <Stack
+                        gap="3em"
+                    >
+                        <Stack>
+                            <Title
+                                headingNumber={2}
+                                text="Seu Treinamento"
+                            />
+
+                            {trainingLoading || !clientTraining || clientTrainingError ? (
+                                clientTrainingError ? (
+                                    <p>
+                                        Ocorreu um erro ao recuperar as informações do seu treinamento e contrato!
+
+                                        <br/>
+                                        
+                                        Recarregue a página ou tente de novo mais tarde.
+                                    </p>
+                                ) : (
+                                    !trainingLoading && (
+                                        <p>
+                                            Você não tem nenhum contrato ativo!
+
+                                            <br/>
+
+                                            Pesquise por treinadores e escolha um de seus planos de pagamento.
+                                        </p>
+                                    )
+                                )
+                            ) : (
+                                <ClientTrainingContractCard
+                                    trainerName={clientTraining.trainer?.name} 
+                                    trainerPhotoUrl={clientTraining.trainer?.photoUrl} 
+                                    trainerCrefNumber={clientTraining.trainer?.crefNumber} 
+                                    trainingPlanID={clientTraining.trainingPlan?.ID}
+                                    trainingPlanName={clientTraining.trainingPlan?.name} 
+                                    contractStartDate={clientTraining.contract?.startDate} 
+                                    contractEndDate={clientTraining.contract?.endDate} 
+                                    handleCancelContract={cancelContract}
+                                />
+                            )}
+                        </Stack>
+
+                        <Stack>
+                            <Title
+                                headingNumber={2}
+                                text="Outros Treinadores"
+                            />
+
+                            <Stack
+                                className={styles.contracts}
+                                gap="2em"
+                            >
+                                <FilterItemsLayout
+                                    filters={trainersFilters}
+                                    activeFilter={activeTrainerFilter}
+                                    setActiveFilter={setActiveTrainerFilter}
+                                    handleChange={handleOnChangeFilter}
+                                >
+                                    {!trainersError && trainersLoading ? (
+                                        <p>
+                                            Carregando treinadores...
+                                        </p>
+                                    ) : (
+                                        <Stack
+                                            gap="2em"
+                                        >
+                                            {trainers.length !== 0 ? (
+                                                trainers.map((trainer, index) => (
+                                                    <React.Fragment
+                                                        key={index}
+                                                    >
+                                                        <SmallTrainerProfessionalCard
+                                                            name={trainer.name} 
+                                                            photoUrl={trainer.photoUrl} 
+                                                            crefNumber={trainer.crefNumber} 
+                                                            rate={trainer.rate} 
+                                                            contractsNumber={trainer.contractsNumber} 
+                                                            complaintsNumber={trainer.complaintsNumber} 
+                                                            paymentPlans={trainer.paymentPlans} 
+                                                            handleExpand={() => navigate(`/trainers/${trainer.ID}`)}
+                                                        />
+                                                    </React.Fragment>
+                                                ))
+                                            ) : (
+                                                <p>
+                                                    Nenhum treinador encontrado
+                                                </p>
+                                            )}
+                                        </Stack>
+                                    )}
+                                </FilterItemsLayout>
+
+                                {trainersError ? (
+                                    <p>
+                                        <>
+                                            Ocorreu um erro ao carregar os treinadores!
+
+                                            <br/>
+                                            
+                                            Recarregue a página ou tente de novo mais tarde.
+                                        </>
+                                    </p>
+                                ) : (
+                                    !trainersLoading && (
+                                        <LoadMoreButton
+                                            handleLoad={() => loadTrainers(trainersError, trainers, trainersOffset, activeTrainerFilter.value)}
+                                        />
+                                    )
+                                )}
+                            </Stack>
+                        </Stack>
+                    </Stack>
+                </Stack>
+            </main>
+        </NavBarLayout>
+    );
+}
+
+export default ClientHome;

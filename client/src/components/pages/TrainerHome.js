@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import NavBarLayout from "../containers/NavBarLayout";
 import { useSelector } from "react-redux";
 
-function Home() {
+function TrainerHome() {
     const user = useSelector(state => state.user);
 
     useEffect(() => {
@@ -22,4 +22,4 @@ function Home() {
     );
 }
 
-export default Home;
+export default TrainerHome;
