@@ -9,8 +9,16 @@ import { useCallback } from "react";
 import NonBackgroundButton from "../buttons/NonBackgroundButton";
 import useWindowSize from "../../../hooks/useWindowSize";
 import { handleOnChangePhoto } from "../../../utils/handlers/changeHandlers";
+import { useTranslation } from "react-i18next";
 
-function ConfigForm({ config, setConfig, handleSubmit, handleChangeToTrainer }) {
+function ConfigForm({
+    config,
+    setConfig,
+    handleSubmit,
+    handleChangeToTrainer 
+}) {
+    const { t } = useTranslation();
+
     const { width } = useWindowSize();
 
     const handleOnChangeConfigData = useCallback((e) => {
@@ -41,18 +49,18 @@ function ConfigForm({ config, setConfig, handleSubmit, handleChangeToTrainer }) 
                     >
                         <Title
                             headingNumber={1}
-                            text="Configuração de Perfil"
+                            text={t("userConfig")}
                             varColor="--dark-color"
                         />
 
                         <p>
-                            Configure seu perfil para uma experiência mais personalizada!
+                            {t("configDescription")}
                         </p>
                     </Stack>
                     
                     <PhotoInput
                         name="photoFile"
-                        labelText="Foto de Perfil"
+                        labelText={t("profilePhoto")}
                         size="large"
                         blobUrl={config.photoBlobUrl}
                         handleChange={(e) => handleOnChangePhoto(e, config, setConfig)}
@@ -68,7 +76,7 @@ function ConfigForm({ config, setConfig, handleSubmit, handleChangeToTrainer }) 
                             varColor="--white-color"
                         />
                         
-                        Você sempre pode alterar suas configurações após criar sua conta.
+                        {t("configAlert")}
                     </Stack>
                 </Stack>
 
@@ -82,7 +90,7 @@ function ConfigForm({ config, setConfig, handleSubmit, handleChangeToTrainer }) 
                     >
                         <Title
                             headingNumber={2}
-                            text="Segurança e Privacidade"
+                            text={t("securityAndPrivacy")}
                         />
 
                         <Stack
@@ -90,18 +98,18 @@ function ConfigForm({ config, setConfig, handleSubmit, handleChangeToTrainer }) 
                         >
                             <CheckBoxInput
                                 name="is_complainter_anonymous"
-                                labelText="Denúncia Anônima"
+                                labelText={t("anonymousComplaint")}
                                 isChecked={config.is_complainter_anonymous}
                                 handleChange={handleOnChangeConfigData}
-                                description="Habilite para que seu perfil não seja exibido nas denúncias que você fizer."
+                                description={t("anonymousComplaintDescription")}
                             />
 
                             <CheckBoxInput
                                 name="is_rater_anonymous"
-                                labelText="Avaliação Anônima"
+                                labelText={t("anonymousRating")}
                                 isChecked={config.is_rater_anonymous}
                                 handleChange={handleOnChangeConfigData}
-                                description="Habilite para que seu perfil não seja exibido nas avaliações que você fizer."
+                                description={t("anonymousRatingDescription")}
                             />
                         </Stack>
                     </Stack>
@@ -111,7 +119,7 @@ function ConfigForm({ config, setConfig, handleSubmit, handleChangeToTrainer }) 
                     >
                         <Title
                             headingNumber={2}
-                            text="Notificações"
+                            text={t("notifications")}
                         />
 
                         <Stack
@@ -119,10 +127,10 @@ function ConfigForm({ config, setConfig, handleSubmit, handleChangeToTrainer }) 
                         >
                             <CheckBoxInput
                                 name="email_notification_permission"
-                                labelText="Notificações pelo E-mail"
+                                labelText={t("emailNotifications")}
                                 isChecked={config.email_notification_permission}
                                 handleChange={handleOnChangeConfigData}
-                                description="Habilite para que você receba nossas notificações por e-mail."
+                                description={t("emailNotificationsDescription")}
                             />
                         </Stack>
                     </Stack>
@@ -132,7 +140,7 @@ function ConfigForm({ config, setConfig, handleSubmit, handleChangeToTrainer }) 
                     >
                         <Title
                             headingNumber={2}
-                            text="Acessibilidade"
+                            text={t("accessibility")}
                         />
 
                         <Stack
@@ -140,18 +148,18 @@ function ConfigForm({ config, setConfig, handleSubmit, handleChangeToTrainer }) 
                         >
                             <CheckBoxInput
                                 name="is_dark_theme"
-                                labelText="Tema Escuro"
+                                labelText={t("darkTheme")}
                                 isChecked={config.is_dark_theme}
                                 handleChange={handleOnChangeConfigData}
-                                description="Habilite para ter uma interface com cores mais escuras."
+                                description={t("darkThemeDescription")}
                             />
 
                             <CheckBoxInput
                                 name="is_english"
-                                labelText="Inglês"
+                                labelText={t("english")}
                                 isChecked={config.is_english}
                                 handleChange={handleOnChangeConfigData}
-                                description="Habilite para que todo o texto do aplicativo esteja em inglês."
+                                description={t("englishDescription")}
                             />
                         </Stack>
                     </Stack>
@@ -160,11 +168,11 @@ function ConfigForm({ config, setConfig, handleSubmit, handleChangeToTrainer }) 
                         gap="2em"
                     >
                         <SubmitFormButton
-                            text="Confirmar"
+                            text={t("confirm")}
                         />
 
                         <NonBackgroundButton
-                            text="Quero me registrar como treinador"
+                            text={t("signUpAsTrainer")}
                             varColor="--theme-color"
                             handleClick={handleChangeToTrainer}
                         />

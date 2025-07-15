@@ -3,8 +3,18 @@ import styles from "./PhotoInput.module.css";
 import Stack from "../../containers/Stack";
 import Alert from "../../messages/Alert";
 import { useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
-function PhotoInput({ name, labelText, size = "medium", blobUrl, handleChange, disabled = false }) {
+function PhotoInput({
+    name,
+    labelText,
+    size = "medium",
+    blobUrl,
+    handleChange,
+    disabled = false 
+}) {
+    const { t } = useTranslation();
+    
     const userIcon = "/images/icons/user.png";
     const LabelOrDiv = name ? "label" : "div";
 
@@ -34,7 +44,7 @@ function PhotoInput({ name, labelText, size = "medium", blobUrl, handleChange, d
                     >
                         <Alert
                             varColor="--dark-color"
-                            alertMessage="Selecione uma foto do tipo JPG, JPEG, PNG ou WEBP de até 1mb."
+                            alertMessage={t("photoAlert")}
                         />
 
                         <span>
@@ -52,7 +62,7 @@ function PhotoInput({ name, labelText, size = "medium", blobUrl, handleChange, d
                 <img
                     key={preview} 
                     src={preview}
-                    alt={`${labelText || ""} Icon`}
+                    alt={t("profilePhoto")}
                     onError={() => preview !== userIcon ? setPreview(userIcon) : undefined}
                 />
             </LabelOrDiv>

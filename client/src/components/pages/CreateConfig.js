@@ -7,8 +7,11 @@ import { setUser } from "../../slices/user/userSlice";
 import { useDispatch } from "react-redux";
 import authUser from "../../utils/requests/auth";
 import api from "../../api/axios";
+import { useTranslation } from "react-i18next";
 
 function CreateConfig() {
+    const { t } = useTranslation();
+
     const location = useLocation();
 
     const navigate = useNavigate();
@@ -39,10 +42,6 @@ function CreateConfig() {
     const [config, setConfig] = useState(defaultConfig);
 
     useEffect(() => {
-        document.title = "Criar Configuração";
-    }, []);
-
-    useEffect(() => {
         if (hasRun.current) return;
         
         hasRun.current = true;
@@ -52,13 +51,13 @@ function CreateConfig() {
         if (!locationUser) {
             navigate("/login");
             
-            notify("As suas informações de usuário não foram encontradas. Tente se registrar novamente.", "error");
+            notify(t("notFoundUserInfo"), "error");
 
             return;
         }
 
         setLocalUser(locationUser);
-    }, [location.state, navigate, notify]);
+    }, [location.state, navigate, notify, t]);
     
     const handleOnSubmit = useCallback((e) => {
         e.preventDefault();
@@ -83,8 +82,19 @@ function CreateConfig() {
             authUser(data.userID, dispatch, navigate, notify, authRequest, setUser, true);
         }
 
-        postUserRequest(postUser, handleOnPostUserSuccess, () => undefined, "Criando usuário", "Usuário criado!", "Falha ao criar usuário!");
-    }, [authRequest, config, dispatch, localUser, navigate, notify, postUserRequest]);
+        postUserRequest(
+            postUser, 
+            handleOnPostUserSuccess, 
+            () => undefined, 
+            t("loadingCreateUser"), 
+            undefined, 
+            t("errorCreateUser")
+        );
+    }, [authRequest, config.email_notification_permission, config.is_complainter_anonymous, config.is_dark_theme, config.is_english, config.is_rater_anonymous, config.photoFile, dispatch, localUser.email, localUser.name, localUser.password, navigate, notify, postUserRequest, t]);
+
+    useEffect(() => {
+        document.title = t("configs");
+    }, [t]);
 
     return (
         <main>
