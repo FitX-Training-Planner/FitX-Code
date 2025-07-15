@@ -1,9 +1,10 @@
-from app.database.models import Trainer, TrainingPlan, TrainingDay, TrainingDayStep, StepExercise, ExerciseSet, CardioSession
+from app.database.models import Trainer, TrainingPlan, TrainingDay, TrainingDayStep, StepExercise, ExerciseSet, CardioSession, PaymentPlan, PaymentPlanBenefit, PlanContract, Users, PaymentTransaction
 from ..utils.trainer import is_cref_used
 from ..exceptions.api_error import ApiError
-from ..utils.formatters import safe_str, safe_int, safe_bool, safe_time
-from ..utils.serialize import serialize_training_plan
+from ..utils.formatters import safe_str, safe_int, safe_float, safe_bool, safe_time
+from ..utils.serialize import serialize_training_plan, serialize_payment_plan, serialize_contract, serialize_trainer_in_trainers
 from sqlalchemy.orm import joinedload, subqueryload
+from sqlalchemy import asc, desc, func, nulls_last
 from ..exceptions.api_error import ApiError
 
 def insert_trainer(db, cref_number, decription, fk_user_ID):
@@ -35,12 +36,12 @@ def insert_trainer(db, cref_number, decription, fk_user_ID):
 
         raise Exception(f"Erro ao criar o treinador: {e}")
 
-def insert_training_plan(db, training_plan, fk_trainer_ID):
+def insert_training_plan(db, training_plan, trainer_id):
     try:
         new_plan = TrainingPlan(
             name=training_plan.get("name"), 
             note=safe_str(training_plan.get("note")),
-            fk_trainer_ID=fk_trainer_ID
+            fk_trainer_ID=trainer_id
         )
 
         for training_day in training_plan.get("trainingDays"):
@@ -378,3 +379,266 @@ def get_trainer_plans(db, trainer_id):
 
         raise Exception(f"Erro ao recuperar os planos de treino do treinador: {e}")
 
+def insert_payment_plan(db, name, full_price, duration_days, description, benefits, trainer_id):
+    try:
+        new_plan = PaymentPlan(
+            name=name, 
+            full_price=safe_float(full_price),
+            duration_days=safe_int(duration_days),
+            description=safe_str(description),
+            fk_trainer_ID=trainer_id
+        )
+
+        for benefit in benefits:
+            new_benefit = PaymentPlanBenefit(
+                description=safe_str(benefit)
+            )
+
+            new_plan.payment_plan_benefits.append(new_benefit)
+
+        db.add(new_plan)
+
+        db.commit()
+
+        update_trainer_price_info(db, trainer_id)
+
+        db.refresh(new_plan)
+
+        return new_plan.ID
+    
+    except ApiError as e:
+        print(f"Erro ao criar plano de pagamento: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao criar plano de pagamento: {e}")
+
+        raise Exception(f"Erro ao criar o plano de pagamento: {e}")
+    
+def modify_payment_plan(db, name, full_price, duration_days, description, benefits, payment_plan_id, trainer_id):
+    try:
+        modified_payment_plan = db.query(PaymentPlan).filter(PaymentPlan.ID == payment_plan_id).first()
+
+        if not modified_payment_plan:
+            raise ApiError(f"Plano de pagamento não encontrado.", 404)
+        
+        if str(trainer_id) != str(modified_payment_plan.fk_trainer_ID):
+            raise ApiError("Os treinadores só podem modificar seus próprios planos de pagamento.", 403)
+
+        modified_payment_plan.name = name
+        modified_payment_plan.full_price = safe_float(full_price),
+        modified_payment_plan.duration_days = safe_int(duration_days),
+        modified_payment_plan.description = safe_str(description),
+
+        for benefit in modified_payment_plan.payment_plan_benefits:
+            db.delete(benefit)
+
+        db.flush()
+
+        for benefit in benefits:
+            new_benefit = PaymentPlanBenefit(
+                description=safe_str(benefit)
+            )
+
+            modified_payment_plan.payment_plan_benefits.append(new_benefit)
+
+        db.commit()
+
+        update_trainer_price_info(db, trainer_id)
+
+        db.refresh(modified_payment_plan)
+        
+        return modified_payment_plan.ID
+
+    except ApiError as e:
+        print(f"Erro ao modificar plano de pagamento: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao modificar plano de pagamento: {e}")
+
+        raise Exception(f"Erro ao modificar o plano de pagamento: {e}")
+
+def remove_payment_plan(db, payment_plan_id, trainer_id):
+    try:
+        payment_plan = db.query(PaymentPlan).filter(PaymentPlan.ID == payment_plan_id).first()
+
+        if not payment_plan:
+            raise ApiError(f"Plano de pagamento não encontrado.", 404)
+
+        if str(trainer_id) != str(payment_plan.fk_trainer_ID):
+            raise ApiError("Os treinadores só podem remover seus próprios planos de pagamento.", 403)
+
+        db.delete(payment_plan)
+
+        db.commit()
+
+        update_trainer_price_info(db, trainer_id)
+
+        return True
+
+    except ApiError as e:
+        print(f"Erro ao remover plano de pagamento: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao remover plano de pagamento: {e}")
+
+        raise Exception(f"Erro ao remover o plano de pagamento: {e}")
+
+def get_trainer_payment_plans(db, trainer_id):
+    try:
+        payment_plans = (
+            db.query(PaymentPlan)
+            .options(subqueryload(PaymentPlan.payment_plan_benefits))
+            .filter(PaymentPlan.fk_trainer_ID == trainer_id)
+            .all()
+        )
+
+        return [serialize_payment_plan(plan) for plan in payment_plans]
+
+    except ApiError as e:
+        print(f"Erro ao recuperar planos de pagamento do treinador: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao recuperar planos de pagamento do treinador: {e}")
+
+        raise Exception(f"Erro ao recuperar os planos de pagamento do treinador: {e}")
+
+def get_partial_trainer_contracts(db, offset, limit, sort, trainer_id):
+    try:
+        query = (
+            db.query(PlanContract)
+            .join(PaymentTransaction, isouter=True)
+            .join(PaymentPlan, isouter=True)
+            .options(
+                subqueryload(PlanContract.payment_plan),
+                subqueryload(PlanContract.payment_transaction)
+                    .joinedload(PaymentTransaction.payment_method),
+                subqueryload(PlanContract.contract_status),
+                subqueryload(PlanContract.user)
+                    .joinedload(Users.media)
+            )
+            .filter(PlanContract.fk_trainer_ID == trainer_id)
+        )
+
+        if sort == "newest":
+            query = query.order_by(desc(PlanContract.start_date))
+
+        elif sort == "oldest":
+            query = query.order_by(asc(PlanContract.start_date))
+
+        elif sort == "highest_value":
+            query = query.order_by(desc(PaymentTransaction.amount))
+  
+        elif sort == "lowest_value":
+            query = query.order_by(asc(PaymentTransaction.amount))
+  
+        elif sort == "longest_duration":
+            query = query.order_by(
+                desc(func.datediff(PlanContract.end_date, PlanContract.start_date))
+            )
+
+        elif sort == "shortest_duration":
+            query = query.order_by(
+                asc(func.datediff(PlanContract.end_date, PlanContract.start_date))
+            )
+  
+        else:
+            raise ApiError("Filtro de contratos inválido.", 400)
+
+        contracts = query.offset(offset).limit(limit).all()
+
+        return [serialize_contract(contract) for contract in contracts]
+
+    except ApiError as e:
+        print(f"Erro ao recuperar contratos do treinador: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao recuperar contratos do treinador: {e}")
+
+        raise Exception(f"Erro ao recuperar os contratos do treinador: {e}")
+    
+def get_partial_trainers(db, offset, limit, sort):
+    try:
+        query = (
+            db.query(Trainer)
+            .join(PaymentPlan, isouter=True)
+            .options(
+                subqueryload(Trainer.user)
+                    .joinedload(Users.media)
+            )
+        )
+
+        if sort == "most_popular":
+            query = query.order_by(desc(Trainer.contracts_number))
+
+        elif sort == "best_rated":
+            query = query.order_by(desc(Trainer.rate))
+
+        elif sort == "most_affordable":
+            query = query.order_by(
+                Trainer.best_price_plan.is_(None),
+                asc(Trainer.best_price_plan)
+            )
+
+        elif sort == "best_value":
+            query = query.order_by(
+                Trainer.best_value_ratio.is_(None),
+                desc(Trainer.best_value_ratio)
+            )
+
+        else:
+            raise ApiError("Filtro de treinadores inválido.", 400)
+
+        trainers = query.offset(offset).limit(limit).all()
+
+        return [serialize_trainer_in_trainers(trainer) for trainer in trainers]
+
+    except ApiError as e:
+        print(f"Erro ao recuperar treinadores: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao recuperar treinadores: {e}")
+
+        raise Exception(f"Erro ao recuperar os treinadores: {e}")
+
+def update_trainer_price_info(db, trainer_id):
+    try:
+        best_price = (
+            db.query(func.min(PaymentPlan.full_price))
+            .filter(PaymentPlan.fk_trainer_ID == trainer_id)
+            .scalar()
+        )
+
+        best_value = (
+            db.query(func.max(PaymentPlan.duration_days / PaymentPlan.full_price))
+            .filter(PaymentPlan.fk_trainer_ID == trainer_id, PaymentPlan.full_price > 0)
+            .scalar()
+        )
+
+        db.query(Trainer).filter(Trainer.ID == trainer_id).update({
+            Trainer.best_price_plan: best_price,
+            Trainer.best_value_ratio: best_value
+        })
+
+        db.commit()
+    
+    except ApiError as e:
+        print(f"Erro ao atualizar informações de preço do treinador: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao atualizar informações de preço do treinador: {e}")
+
+        raise Exception(f"Erro ao atualizar as informações de preço do treinador: {e}")
