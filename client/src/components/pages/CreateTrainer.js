@@ -12,8 +12,11 @@ import useRequest from "../../hooks/useRequest";
 import { setUser } from "../../slices/user/userSlice";
 import styles from "./CreateTrainer.module.css";
 import useWindowSize from "../../hooks/useWindowSize";
+import { useTranslation } from "react-i18next";
 
 function CreateTrainer() {
+    const { t } = useTranslation()
+
     const hasRun = useRef(false);
 
     const location = useLocation();
@@ -52,10 +55,6 @@ function CreateTrainer() {
     const [error, setError] = useState(false);
 
     useEffect(() => {
-        document.title = "Criar Treinador";
-    }, []);
-
-    useEffect(() => {
         if (hasRun.current) return;
         
         hasRun.current = true;
@@ -65,13 +64,13 @@ function CreateTrainer() {
         if (!locationUser) {
             navigate("/login");
             
-            notify("As suas informações de usuário não foram encontradas. Tente se registrar novamente.", "error");
+            notify(t("notFoundUserInfo"), "error");
 
             return;
         }
 
         setLocalUser(locationUser);
-    }, [location.state, navigate, notify]);
+    }, [location.state, navigate, notify, t]);
 
     const handleOnSubmit = useCallback((e) => {
         e.preventDefault();
@@ -108,11 +107,15 @@ function CreateTrainer() {
             postTrainer, 
             handleOnPostTrainerSuccess, 
             handleOnPostTrainerError, 
-            "Criando usuário", 
-            "Usuário criado!", 
-            "Falha ao criar usuário!"
+            t("loadingCreateUser"), 
+            undefined, 
+            t("errorCreateUser")
         );
-    }, [authRequest, dispatch, error, localUser, navigate, notify, postTrainerRequest, trainer]);
+    }, [authRequest, dispatch, error, localUser.config.email_notification_permission, localUser.config.is_complainter_anonymous, localUser.config.is_dark_theme, localUser.config.is_english, localUser.config.is_rater_anonymous, localUser.config.photoFile, localUser.email, localUser.name, localUser.password, navigate, notify, postTrainerRequest, t, trainer.crefUF, trainer.cref_number, trainer.description]);
+
+    useEffect(() => {
+        document.title = t("trainerProfile");
+    }, [t]);
 
     return (
         <main>
