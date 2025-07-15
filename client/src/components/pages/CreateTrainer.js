@@ -89,7 +89,7 @@ function CreateTrainer() {
         postTrainerFormData.append("emailNotificationPermission", localUser.config.email_notification_permission);
         postTrainerFormData.append("isEnglish", localUser.config.is_english);
         postTrainerFormData.append("photoFile", localUser.config.photoFile);
-        postTrainerFormData.append("crefNumber", `${trainer.cref_number}/${trainer.crefUF}`);
+        postTrainerFormData.append("crefNumber", trainer.cref_number && trainer.crefUF ? `${trainer.cref_number}/${trainer.crefUF}` : "");
         postTrainerFormData.append("description", trainer.description);
 
         const postTrainer = () => {

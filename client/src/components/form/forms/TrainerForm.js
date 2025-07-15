@@ -75,7 +75,7 @@ function TrainerForm({ trainer, setTrainer, setTrainerError, handleSubmit }) {
                     >
                         <Stack>
                             <Alert
-                                varColor="--white-color"
+                                varColor="--text-color"
                                 alertMessage="Adicione seu CREF para passar mais credibilidade aos seus clientes!"
                             />
 

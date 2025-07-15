@@ -206,7 +206,7 @@ function CreateTrainingPlan() {
 
                     <Title
                         headingNumber={2}
-                        text="Criar ou Modificar Modelo"
+                        text={`${trainingPlan.ID ? "Modificar" : "Criar"} Modelo`}
                         varColor="--light-theme-color"
                     />
 

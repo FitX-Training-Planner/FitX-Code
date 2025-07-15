@@ -98,12 +98,12 @@ function TrainerNavBar({ navigate, isActive }) {
                     >
                         <ClickableIcon
                             iconSrc="/images/icons/transaction.png"
-                            name="Pagamentos"
+                            name="Pagamentos e Contratos"
                         />
                     </Stack>
 
                     <span>
-                        Pagamentos
+                        Pagamentos e Contratos
                     </span>
                 </Stack>
             </li>

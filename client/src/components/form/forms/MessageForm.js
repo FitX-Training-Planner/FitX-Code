@@ -19,6 +19,8 @@ function MessageForm({ chatFormContext, setChatFormContext, isChatBot, setMessag
                     value={chatFormContext.message}
                     handleChange={(e) => handleOnChangeTextField(e, formattNameAndNote, undefined, chatFormContext, setChatFormContext, setMessageError)}
                     maxLength={isChatBot ? 100 : 1000}
+                    varTextColor="--white-color"
+                    placeholder="Insira sua mensagem"
                 />
 
                 <Stack
