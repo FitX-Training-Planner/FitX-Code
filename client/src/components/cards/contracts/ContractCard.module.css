@@ -1,0 +1,30 @@
+.contract_card {
+    border: 3px solid var(--dark-theme-color);
+    border-radius: 20px;
+    overflow: hidden;
+    background-color: var(--bg-color);
+}
+
+.descriptioned_item > span:first-of-type {
+    font-weight: bold;
+}
+
+.payment_button_container,
+.status_container {
+    background-color: var(--light-theme-color);
+}
+
+.contract_info,
+.status_container,
+.payment_button_container,
+.payment_card {
+    padding: 1em;
+}
+
+.receipt_url {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+    display: block;
+}
