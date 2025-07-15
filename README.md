@@ -36,3 +36,8 @@ Este repositório contém o código e documentos relacionados ao projeto FitX, u
 <a href="https://www.flaticon.com/br/icones-gratis/mandar" title="mandar ícones">Mandar ícones criados por Those Icons - Flaticon</a>
 <a href="https://www.flaticon.com/free-icons/back" title="back icons">Back icons created by Roundicons - Flaticon</a>
 <a href="https://www.flaticon.com/br/icones-gratis/expandir" title="expandir ícones">Expandir ícones criados por bqlqn - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/redirecionar" title="redirecionar ícones">Redirecionar ícones criados por IconKanan - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/sair" title="sair ícones">Sair ícones criados por Pixel perfect - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/estrela" title="estrela ícones">Estrela ícones criados por Pixel perfect - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/aperto-de-mao-de-parceria" title="aperto de mão de parceria ícones">Aperto de mão de parceria ícones criados por Aranagraphics - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/ponto-de-exclamacao" title="ponto de exclamação ícones">Ponto de exclamação ícones criados por Flat Icons - Flaticon</a>
