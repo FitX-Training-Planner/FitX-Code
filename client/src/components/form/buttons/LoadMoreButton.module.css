@@ -1,0 +1,15 @@
+.load_more_button {
+    --padding: 0.5em;
+    border: 1px solid var(--text-color);
+    padding: var(--padding);
+    border-radius: calc(var(--padding) + 0.5em);
+    transition: var(--fast-transition);
+    background-color: var(--gray-color);
+    color: var(--dark-color);
+    cursor: pointer;
+}
+
+.load_more_button:hover {
+    background-color: var(--white-color);
+    border: 1px solid var(--bg-color);
+}
