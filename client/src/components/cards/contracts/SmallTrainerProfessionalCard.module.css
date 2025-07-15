@@ -1,0 +1,35 @@
+.small_professional_card,
+.training_contract_card {
+    border: 3px solid var(--dark-theme-color);
+    border-radius: 20px;
+    padding: 1em;
+}
+
+.payment_plan_info {
+    background-color: var(--light-theme-color);
+    padding: 0.5em;
+    border: 1px solid var(--text-color);
+    border-radius: 10px;
+    width: max-content;
+    font-weight: bold;
+}
+
+.professional_name_container {
+    padding: 1em;
+    background-color: var(--light-theme-color);
+    font-weight: bold;
+    border-radius: 10px;
+}
+
+.professional_name_container > span {
+    min-width: max-content;
+}
+
+.payment_plans_container > span {
+    font-weight: bold;
+    font-size: var(--large-text-size);
+}
+
+.descriptioned_item > span:first-of-type {
+    font-weight: bold;
+}
