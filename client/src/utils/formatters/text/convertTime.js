@@ -1,14 +1,21 @@
-export default function convertTime(time, timeUnit = "second") {
+export default function convertTime(amount, timeUnit = "second") {
     let totalSeconds;
 
-    if (timeUnit === "second") {
-        totalSeconds = time;
-    } else if (timeUnit === "minute") {
-        totalSeconds = time * 60;
-    } else if (timeUnit === "hour") {
-        totalSeconds = time * 3600;
-    } else {
-        return "error";
+    switch (timeUnit) {
+        case "second":
+            totalSeconds = amount;
+
+            break;
+        case "minute":
+            totalSeconds = amount * 60;
+
+            break;
+        case "hour":
+            totalSeconds = amount * 3600;
+
+            break;
+        default:
+            return "error";
     }
 
     if (totalSeconds < 60) {

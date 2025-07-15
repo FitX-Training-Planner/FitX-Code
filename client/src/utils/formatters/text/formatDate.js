@@ -18,6 +18,31 @@ export function formatDate(date) {
     return `${day}/${month}/${year}`;
 }
 
+export function formatDateToExtend(date) {
+    const newDate = new Date(date);
+
+    const months = [
+        "janeiro", 
+        "fevereiro", 
+        "março", 
+        "abril", 
+        "maio", 
+        "junho",
+        "julho", 
+        "agosto", 
+        "setembro", 
+        "outubro", 
+        "novembro", 
+        "dezembro"
+    ];
+
+    const day = newDate.getDate();
+    const month = months[newDate.getMonth()];
+    const year = newDate.getFullYear();
+
+    return `${day} de ${month} de ${year}`;
+}
+
 export function formatDateTime(dateTime) {
     const date = new Date(dateTime);
 
