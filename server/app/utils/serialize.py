@@ -168,7 +168,7 @@ def serialize_training_plan(plan):
                     {
                         "ID": session.ID,
                         "usedID": index + 1,
-                        "sessionTime": session.session_time.strftime("%H:%M") if isinstance(session.session_time, time) else None,
+                        "sessionTime": session.session_time.strftime("%H:%M") if isinstance(session.session_time, time) else "",
                         "durationMinutes": serialize_field(session.duration_minutes),
                         "note": serialize_field(session.note),
                         "cardioOption": serialize_cardio_option(session.cardio_option) if session.fk_cardio_option_ID else None,
@@ -177,4 +177,85 @@ def serialize_training_plan(plan):
                 ]
             } for day in plan.training_days
         ]
+    }
+
+def serialize_payment_plan(plan):
+    return {
+        "ID": plan.ID,
+        "trainerID": plan.fk_trainer_ID,
+        "name": plan.name,
+        "fullPrice": serialize_field(plan.full_price),
+        "durationDays": serialize_field(plan.duration_days),
+        "description": serialize_field(plan.description),
+        "benefits": [
+            {
+                "ID": benefit.ID,
+                "description": benefit.description
+            } for benefit in plan.payment_plan_benefits
+        ]
+    }
+
+def serialize_contract(contract):
+    return {
+        "startDate": contract.start_date,        
+        "endDate": contract.end_date,
+        "status": contract.contract_status.name,        
+        "trainerID": contract.fk_trainer_ID,
+        "client": {
+            "ID": contract.user.ID,
+            "name": contract.user.name,
+            "photoUrl": contract.user.media.url if contract.user.fk_media_ID and contract.user.media else None
+        },
+        "paymentPlan": {
+            "ID": contract.payment_plan.ID,
+            "durationDays": serialize_field(contract.payment_plan.duration_days),
+            "name": contract.payment_plan.name
+        },
+        "paymentTransaction": {
+            "ID": contract.payment_transaction.ID,
+            "amount": serialize_field(contract.payment_transaction.amount),
+            "paymentMethod": contract.payment_transaction.payment_method.name,
+            "createDate": contract.payment_transaction.create_date,
+            "mercadopagoTransactionID": serialize_field(contract.payment_transaction.mercadopago_transaction_ID),
+            "receiptUrl": contract.payment_transaction.receipt_url
+        }
+    }
+
+def serialize_trainer_in_trainers(trainer):
+    return {
+        "ID": trainer.ID,
+        "name": trainer.user.name,
+        "photoUrl": trainer.user.media.url if trainer.user.fk_media_ID and trainer.user.media else None,
+        "crefNumber": trainer.cref_number if trainer.cref_number else None,
+        "rate": serialize_field(trainer.rate),
+        "contractsNumber": serialize_field(trainer.contracts_number),
+        "complaintsNumber": serialize_field(trainer.complaints_number),
+        "paymentPlans": [
+            {
+                "fullPrice": serialize_field(plan.full_price),
+                "durationDays": serialize_field(plan.duration_days)
+            } for plan in trainer.payment_plans
+        ]
+    }
+
+def serialize_training_contract(training_contract):
+    return {
+        "trainer": {
+            "ID": training_contract.trainer.ID,
+            "name": training_contract.trainer.user.name,
+            "photoUrl": 
+                training_contract.trainer.user.media.url 
+                if training_contract.trainer.user.fk_media_ID and training_contract.trainer.user.media 
+                else None,
+            "crefNumber": training_contract.trainer.cref_number if training_contract.trainer.cref_number else None,
+        } if training_contract.trainer else None,
+        "trainingPlan": {
+            "ID": training_contract.user.training_plan.ID,
+            "name": training_contract.user.training_plan.name,
+        } if training_contract.user.training_plan else None,
+        "contract": {
+            "ID": training_contract.ID,
+            "startDate": training_contract.start_date,
+            "endDate": training_contract.end_date
+        }
     }
