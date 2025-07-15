@@ -1,0 +1,41 @@
+.payment_plan_card {
+    border: 3px solid var(--dark-theme-color);
+    border-radius: 20px;
+    overflow: hidden;
+    padding: 1em;
+    background-color: var(--bg-color);
+}
+
+.payment_value {
+    background-color: var(--theme-color);
+    font-family: var(--fonts-1);
+    border: inherit;
+    border-radius: inherit;
+    font-weight: bold;
+}
+
+.plan_title {
+    font-weight: bold;
+    font-size: var(--large-text-size);
+}
+
+.plan_title > span {
+    min-width: 50%;
+    text-align: center;
+}
+
+.plan_duration > span:first-of-type {
+    font-size: var(--title-size);
+    font-family: var(--fonts-1);
+    color: var(--light-theme-color);
+}
+
+.plan_benefits,
+.payment_plan_note {
+    padding: 0 1em;
+}
+
+:where(.plan_benefits, .payment_plan_note) > span:first-of-type {
+    color: var(--light-theme-color);
+    font-weight: bold;
+}
