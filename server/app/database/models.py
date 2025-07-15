@@ -1,18 +1,18 @@
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, VARBINARY, CHAR, TEXT, DATE, func, SmallInteger, TIME, DECIMAL, Computed, DATETIME, UniqueConstraint
+from sqlalchemy import Column, String, Boolean, ForeignKey, VARBINARY, CHAR, TEXT, DATE, func, TIME, Computed, DATETIME, UniqueConstraint
 from sqlalchemy.orm import relationship
-from sqlalchemy.dialects.mysql import TINYINT
+from sqlalchemy.dialects.mysql import TINYINT, SMALLINT, INTEGER, FLOAT, DECIMAL
 from .database_connection import Base
 
 class Media(Base):
     __tablename__ = "media"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     url = Column(String(255), nullable=False, unique=True)
 
 class Users(Base):
     __tablename__ = "users"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     name = Column(String(100), nullable=False)
     email_encrypted = Column(VARBINARY(255), nullable=False)
     email_hash = Column(CHAR(64), nullable=False, unique=True)
@@ -24,14 +24,16 @@ class Users(Base):
     is_rater_anonymous = Column(Boolean, nullable=False, default=False)
     email_notification_permission = Column(Boolean, nullable=False, default=True)
     is_english = Column(Boolean, nullable=False, default=False)
-    fk_media_ID = Column(Integer, ForeignKey("media.ID", ondelete="SET NULL"), index=True, unique=True)  
+    fk_media_ID = Column(INTEGER(unsigned=True), ForeignKey("media.ID", ondelete="SET NULL"), index=True, unique=True)  
+    fk_training_plan_ID = Column(INTEGER(unsigned=True), ForeignKey("training_plan.ID", ondelete="SET NULL", name="fk_user_training_plan"), index=True)  
 
     media = relationship("Media")
+    training_plan = relationship("TrainingPlan")
 
+    exercise_set_logs = relationship("ExerciseSetLog", back_populates="user", passive_deletes=True)
     trainer = relationship("Trainer", back_populates="user", uselist=False, passive_deletes=True)
     ratings = relationship("Rating", back_populates="user", passive_deletes=True)
     complaints = relationship("Complaint", back_populates="user", passive_deletes=True)
-    training_plans = relationship("TrainingPlanUser", back_populates="user", passive_deletes=True)
     payment_transactions = relationship("PaymentTransaction", back_populates="user", passive_deletes=True)
     body_compositions = relationship("BodyComposition", back_populates="user", passive_deletes=True)
     chats = relationship("Chat", back_populates="user", passive_deletes=True)
@@ -41,10 +43,16 @@ class Users(Base):
 class Trainer(Base):
     __tablename__ = "trainer"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     cref_number = Column(CHAR(11), unique=True)   
     description = Column(TEXT)
-    fk_user_ID = Column(Integer, ForeignKey("users.ID", ondelete="CASCADE"), index=True, nullable=False, unique=True)
+    rate = Column(FLOAT(unsigned=True), default=0.0, nullable=False)
+    rates_number = Column(INTEGER(unsigned=True), default=0, nullable=False)  
+    contracts_number = Column(INTEGER(unsigned=True), default=0, nullable=False)  
+    complaints_number = Column(INTEGER(unsigned=True), default=0, nullable=False) 
+    best_price_plan = Column(DECIMAL(7, 2, unsigned=True), default=None, nullable=True) 
+    best_value_ratio = Column(FLOAT(unsigned=True), default=None, nullable=True)
+    fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="CASCADE", name="fk_trainer_user"), index=True, nullable=False, unique=True)
 
     user = relationship("Users", back_populates="trainer")
 
@@ -61,11 +69,11 @@ class Trainer(Base):
 class Rating(Base):
     __tablename__ = "rating"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
-    rating = Column(TINYINT(), nullable=False)   
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
+    rating = Column(TINYINT(unsigned=True), nullable=False)   
     comment = Column(String(255))
-    fk_user_ID = Column(Integer, ForeignKey("users.ID", ondelete="SET NULL"), index=True)
-    fk_trainer_ID = Column(Integer, ForeignKey("trainer.ID", ondelete="CASCADE"), index=True, nullable=False)
+    fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="SET NULL"), index=True)
+    fk_trainer_ID = Column(INTEGER(unsigned=True), ForeignKey("trainer.ID", ondelete="CASCADE"), index=True, nullable=False)
 
     user = relationship("Users", back_populates="ratings")
     trainer = relationship("Trainer", back_populates="ratings")
@@ -77,10 +85,10 @@ class Rating(Base):
 class Complaint(Base):
     __tablename__ = "complaint"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     reason = Column(String(255))
-    fk_user_ID = Column(Integer, ForeignKey("users.ID", ondelete="SET NULL"), index=True)
-    fk_trainer_ID = Column(Integer, ForeignKey("trainer.ID", ondelete="CASCADE"), index=True, nullable=False)
+    fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="SET NULL"), index=True)
+    fk_trainer_ID = Column(INTEGER(unsigned=True), ForeignKey("trainer.ID", ondelete="CASCADE"), index=True, nullable=False)
 
     user = relationship("Users", back_populates="complaints")
     trainer = relationship("Trainer", back_populates="complaints")
@@ -92,10 +100,10 @@ class Complaint(Base):
 class MuscleGroup(Base):
     __tablename__ = "muscle_group"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     name = Column(String(30), nullable=False, unique=True)
-    fk_male_model_media_ID = Column(Integer, ForeignKey("media.ID"), index=True, nullable=False, unique=True)
-    fk_female_model_media_ID = Column(Integer, ForeignKey("media.ID"), index=True, nullable=False, unique=True)
+    fk_male_model_media_ID = Column(INTEGER(unsigned=True), ForeignKey("media.ID"), index=True, nullable=False, unique=True)
+    fk_female_model_media_ID = Column(INTEGER(unsigned=True), ForeignKey("media.ID"), index=True, nullable=False, unique=True)
     
     male_model_media = relationship("Media", foreign_keys=[fk_male_model_media_ID])
     female_model_media = relationship("Media", foreign_keys=[fk_female_model_media_ID])
@@ -105,11 +113,11 @@ class MuscleGroup(Base):
 class Exercise(Base):
     __tablename__ = "exercise"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     name = Column(String(50), nullable=False, unique=True)
     description = Column(String(255), nullable=False, unique=True)
     is_fixed = Column(Boolean, nullable=False)
-    fk_media_ID = Column(Integer, ForeignKey("media.ID"), index=True, nullable=False, unique=True)
+    fk_media_ID = Column(INTEGER(unsigned=True), ForeignKey("media.ID"), index=True, nullable=False, unique=True)
     
     media = relationship("Media")
 
@@ -118,10 +126,10 @@ class Exercise(Base):
 class ExerciseMuscleGroup(Base):
     __tablename__ = "exercise_muscle_group"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     is_primary = Column(Boolean, nullable=False, default=True) 
-    fk_exercise_ID = Column(Integer, ForeignKey("exercise.ID", ondelete="CASCADE"), index=True, nullable=False)
-    fk_muscle_group_ID = Column(Integer, ForeignKey("muscle_group.ID", ondelete="CASCADE"), index=True, nullable=False)
+    fk_exercise_ID = Column(INTEGER(unsigned=True), ForeignKey("exercise.ID", ondelete="CASCADE"), index=True, nullable=False)
+    fk_muscle_group_ID = Column(INTEGER(unsigned=True), ForeignKey("muscle_group.ID", ondelete="CASCADE"), index=True, nullable=False)
     
     exercise = relationship("Exercise", back_populates="muscle_groups")
     muscle_group = relationship("MuscleGroup", back_populates="exercises")
@@ -133,96 +141,78 @@ class ExerciseMuscleGroup(Base):
 class BodyPosition(Base):
     __tablename__ = "body_position"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     description = Column(String(100), nullable=False, unique=True)
 
 class ExerciseEquipment(Base):
     __tablename__ = "exercise_equipment"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     name = Column(String(30), nullable=False, unique=True)
     description = Column(String(50), nullable=False, unique=True)
 
 class PulleyHeight(Base):
     __tablename__ = "pulley_height"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     description = Column(String(30), nullable=False, unique=True)
 
 class PulleyAttachment(Base):
     __tablename__ = "pulley_attachment"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     name = Column(String(30), nullable=False, unique=True)
 
 class GripType(Base):
     __tablename__ = "grip_type"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     name = Column(String(30), nullable=False, unique=True)
 
 class GripWidth(Base):
     __tablename__ = "grip_width"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     description = Column(String(30), nullable=False, unique=True)
 
 class Laterality(Base):
     __tablename__ = "laterality"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     type = Column(String(30), nullable=False, unique=True)
 
 class TrainingTechnique(Base):
     __tablename__ = "training_technique"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     name = Column(String(50), nullable=False, unique=True)
     description = Column(String(255), nullable=False, unique=True)
 
 class TrainingPlan(Base):
     __tablename__ = "training_plan"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     name = Column(String(50), nullable=False)
     note = Column(TEXT)
-    fk_trainer_ID = Column(Integer, ForeignKey("trainer.ID", ondelete="CASCADE"), index=True, nullable=False)
+    fk_trainer_ID = Column(INTEGER(unsigned=True), ForeignKey("trainer.ID", ondelete="CASCADE", name="fk_trainer_training_plan"), index=True, nullable=False)
     
     trainer = relationship("Trainer", back_populates="training_plans")
 
     training_days = relationship("TrainingDay", back_populates="training_plan", passive_deletes=True)
-    training_plan_users = relationship("TrainingPlanUser", back_populates="training_plan", passive_deletes=True)
     
     __table_args__ = (
         UniqueConstraint("name", "fk_trainer_ID", name="uq_name_trainer_training_plan"),
     )
 
-class TrainingPlanUser(Base):
-    __tablename__ = "training_plan_user"
-
-    ID = Column(Integer, primary_key=True, autoincrement=True)
-    create_date = Column(DATE, nullable=False, server_default=func.now())
-    fk_user_ID = Column(Integer, ForeignKey("users.ID", ondelete="CASCADE"), index=True, nullable=False)
-    fk_training_plan_ID = Column(Integer, ForeignKey("training_plan.ID", ondelete="CASCADE"), index=True, nullable=False)
-    
-    user = relationship("Users", back_populates="training_plans")
-    training_plan = relationship("TrainingPlan", back_populates="training_plan_users")
-
-    exercise_set_logs = relationship("ExerciseSetLog", back_populates="training_plan_user", passive_deletes=True)
-    
-    __table_args__ = (
-        UniqueConstraint("fk_user_ID", "fk_training_plan_ID", name="uq_user_training_plan_training_plan_user"),
-    )
-
 class TrainingDay(Base):
     __tablename__ = "training_day"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
-    order_in_plan = Column(TINYINT(), nullable=False) 
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
+    order_in_plan = Column(TINYINT(unsigned=True), nullable=False) 
     name = Column(String(50), nullable=False)
     is_rest_day = Column(Boolean, nullable=False, default=False)
     note = Column(TEXT)
-    fk_training_plan_ID = Column(Integer, ForeignKey("training_plan.ID", ondelete="CASCADE"), index=True, nullable=False)
+    fk_training_plan_ID = Column(INTEGER(unsigned=True), ForeignKey("training_plan.ID", ondelete="CASCADE"), index=True, nullable=False)
     
     training_plan = relationship("TrainingPlan", back_populates="training_days")
 
@@ -232,9 +222,9 @@ class TrainingDay(Base):
 class TrainingDayStep(Base):
     __tablename__ = "training_day_step"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
-    order_in_day = Column(TINYINT(), nullable=False)
-    fk_training_day_ID = Column(Integer, ForeignKey("training_day.ID", ondelete="CASCADE"), index=True, nullable=False)
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
+    order_in_day = Column(TINYINT(unsigned=True), nullable=False)
+    fk_training_day_ID = Column(INTEGER(unsigned=True), ForeignKey("training_day.ID", ondelete="CASCADE"), index=True, nullable=False)
     
     training_day = relationship("TrainingDay", back_populates="training_day_steps")
 
@@ -247,18 +237,18 @@ class TrainingDayStep(Base):
 class StepExercise(Base):
     __tablename__ = "step_exercise"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
-    order_in_step = Column(TINYINT(), nullable=False)
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
+    order_in_step = Column(TINYINT(unsigned=True), nullable=False)
     note = Column(TEXT)
-    fk_training_day_step_ID = Column(Integer, ForeignKey("training_day_step.ID", ondelete="CASCADE"), index=True, nullable=False)
-    fk_exercise_ID = Column(Integer, ForeignKey("exercise.ID", ondelete="CASCADE"), index=True, nullable=False)
-    fk_exercise_equipment_ID = Column(Integer, ForeignKey("exercise_equipment.ID", ondelete="SET NULL"), index=True)
-    fk_body_position_ID = Column(Integer, ForeignKey("body_position.ID", ondelete="SET NULL"), index=True)
-    fk_pulley_height_ID = Column(Integer, ForeignKey("pulley_height.ID", ondelete="SET NULL"), index=True)
-    fk_pulley_attachment_ID = Column(Integer, ForeignKey("pulley_attachment.ID", ondelete="SET NULL"), index=True)
-    fk_grip_type_ID = Column(Integer, ForeignKey("grip_type.ID", ondelete="SET NULL"), index=True)
-    fk_grip_width_ID = Column(Integer, ForeignKey("grip_width.ID", ondelete="SET NULL"), index=True)
-    fk_laterality_ID = Column(Integer, ForeignKey("laterality.ID", ondelete="SET NULL"), index=True)
+    fk_training_day_step_ID = Column(INTEGER(unsigned=True), ForeignKey("training_day_step.ID", ondelete="CASCADE"), index=True, nullable=False)
+    fk_exercise_ID = Column(INTEGER(unsigned=True), ForeignKey("exercise.ID", ondelete="CASCADE"), index=True, nullable=False)
+    fk_exercise_equipment_ID = Column(INTEGER(unsigned=True), ForeignKey("exercise_equipment.ID", ondelete="SET NULL"), index=True)
+    fk_body_position_ID = Column(INTEGER(unsigned=True), ForeignKey("body_position.ID", ondelete="SET NULL"), index=True)
+    fk_pulley_height_ID = Column(INTEGER(unsigned=True), ForeignKey("pulley_height.ID", ondelete="SET NULL"), index=True)
+    fk_pulley_attachment_ID = Column(INTEGER(unsigned=True), ForeignKey("pulley_attachment.ID", ondelete="SET NULL"), index=True)
+    fk_grip_type_ID = Column(INTEGER(unsigned=True), ForeignKey("grip_type.ID", ondelete="SET NULL"), index=True)
+    fk_grip_width_ID = Column(INTEGER(unsigned=True), ForeignKey("grip_width.ID", ondelete="SET NULL"), index=True)
+    fk_laterality_ID = Column(INTEGER(unsigned=True), ForeignKey("laterality.ID", ondelete="SET NULL"), index=True)
     
     training_day_step = relationship("TrainingDayStep", back_populates="step_exercises")
     exercise = relationship("Exercise")
@@ -279,23 +269,23 @@ class StepExercise(Base):
 class SetType(Base):
     __tablename__ = "set_type"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     name = Column(String(30), nullable=False, unique=True)
     description = Column(String(150), nullable=False, unique=True)
-    intensity_level = Column(TINYINT(), nullable=False) 
+    intensity_level = Column(TINYINT(unsigned=True), nullable=False) 
 
 class ExerciseSet(Base):
     __tablename__ = "exercise_set"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
-    min_reps = Column(TINYINT())
-    max_reps = Column(TINYINT())
-    duration_seconds = Column(SmallInteger)
-    required_rest_seconds = Column(SmallInteger, nullable=False)
-    order_in_exercise = Column(TINYINT(), nullable=False)
-    fk_step_exercise_ID = Column(Integer, ForeignKey("step_exercise.ID", ondelete="CASCADE"), index=True, nullable=False)
-    fk_set_type_ID = Column(Integer, ForeignKey("set_type.ID", ondelete="CASCADE"), index=True, nullable=False)
-    fk_training_technique_ID = Column(Integer, ForeignKey("training_technique.ID", ondelete="SET NULL"), index=True)
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
+    min_reps = Column(TINYINT(unsigned=True))
+    max_reps = Column(TINYINT(unsigned=True))
+    duration_seconds = Column(SMALLINT(unsigned=True))
+    required_rest_seconds = Column(SMALLINT(unsigned=True), nullable=False)
+    order_in_exercise = Column(TINYINT(unsigned=True), nullable=False)
+    fk_step_exercise_ID = Column(INTEGER(unsigned=True), ForeignKey("step_exercise.ID", ondelete="CASCADE"), index=True, nullable=False)
+    fk_set_type_ID = Column(INTEGER(unsigned=True), ForeignKey("set_type.ID", ondelete="CASCADE"), index=True, nullable=False)
+    fk_training_technique_ID = Column(INTEGER(unsigned=True), ForeignKey("training_technique.ID", ondelete="SET NULL"), index=True)
     
     step_exercise = relationship("StepExercise", back_populates="exercise_sets")
     training_technique = relationship("TrainingTechnique")
@@ -310,30 +300,30 @@ class ExerciseSet(Base):
 class CardioOption(Base):
     __tablename__ = "cardio_option"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     name = Column(String(50), nullable=False, unique=True)
-    fk_media_ID = Column(Integer, ForeignKey("media.ID"), index=True, nullable=False, unique=True)
+    fk_media_ID = Column(INTEGER(unsigned=True), ForeignKey("media.ID"), index=True, nullable=False, unique=True)
     
     media = relationship("Media")
 
 class CardioIntensity(Base):
     __tablename__ = "cardio_intensity"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     type = Column(String(30), nullable=False, unique=True)
     description = Column(String(100), nullable=False, unique=True)
-    intensity_level = Column(TINYINT(), nullable=False) 
+    intensity_level = Column(TINYINT(unsigned=True), nullable=False) 
 
 class CardioSession(Base):
     __tablename__ = "cardio_session"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     session_time = Column(TIME) 
-    duration_minutes = Column(SmallInteger, nullable=False)
+    duration_minutes = Column(SMALLINT(unsigned=True), nullable=False)
     note = Column(TEXT) 
-    fk_training_day_ID = Column(Integer, ForeignKey("training_day.ID", ondelete="CASCADE"), index=True, nullable=False) 
-    fk_cardio_option_ID = Column(Integer, ForeignKey("cardio_option.ID", ondelete="CASCADE"), index=True, nullable=False) 
-    fk_cardio_intensity_ID = Column(Integer, ForeignKey("cardio_intensity.ID", ondelete="SET NULL"), index=True)
+    fk_training_day_ID = Column(INTEGER(unsigned=True), ForeignKey("training_day.ID", ondelete="CASCADE"), index=True, nullable=False) 
+    fk_cardio_option_ID = Column(INTEGER(unsigned=True), ForeignKey("cardio_option.ID", ondelete="CASCADE"), index=True, nullable=False) 
+    fk_cardio_intensity_ID = Column(INTEGER(unsigned=True), ForeignKey("cardio_intensity.ID", ondelete="SET NULL"), index=True)
     
     training_day = relationship("TrainingDay", back_populates="cardio_sessions")
     cardio_option = relationship("CardioOption")
@@ -342,17 +332,16 @@ class CardioSession(Base):
 class PaymentPlan(Base):
     __tablename__ = "payment_plan"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     name = Column(String(50), nullable=False)
-    full_price = Column(DECIMAL(7,2), nullable=False)
-    duration_days = Column(SmallInteger, nullable=False)
+    full_price = Column(DECIMAL(7, 2, unsigned=True), nullable=False)
+    duration_days = Column(SMALLINT(unsigned=True), nullable=False)
     description = Column(TEXT)
-    fk_trainer_ID = Column(Integer, ForeignKey("trainer.ID", ondelete="CASCADE"), index=True, nullable=False)
+    fk_trainer_ID = Column(INTEGER(unsigned=True), ForeignKey("trainer.ID", ondelete="CASCADE"), index=True, nullable=False)
     
     trainer = relationship("Trainer", back_populates="payment_plans")
 
     payment_transactions = relationship("PaymentTransaction", back_populates="payment_plan", passive_deletes=True)
-    payment_in_installments = relationship("PaymentInInstallments", back_populates="payment_plan", passive_deletes=True)
     payment_plan_benefits = relationship("PaymentPlanBenefit", back_populates="payment_plan", passive_deletes=True)
     plan_contracts = relationship("PlanContract", back_populates="payment_plan", passive_deletes=True)
 
@@ -360,45 +349,26 @@ class PaymentPlan(Base):
         UniqueConstraint("name", "fk_trainer_ID", name="uq_name_trainer_payment_plan"),
     )
 
-class PaymentInInstallments(Base):
-    __tablename__ = "payment_in_installments"
-
-    ID = Column(Integer, primary_key=True, autoincrement=True)
-    installments_count = Column(TINYINT(), nullable=False)
-    installment_price = Column(DECIMAL(7,2), nullable=False)
-    total_price = Column(DECIMAL(7,2), Computed("installments_count * installment_price", persisted=True))
-    fk_payment_plan_ID = Column(Integer, ForeignKey("payment_plan.ID", ondelete="CASCADE"), index=True, nullable=False)
-    
-    payment_plan = relationship("PaymentPlan", back_populates="payment_in_installments")
-
-    payment_transactions = relationship("PaymentTransaction", back_populates="payment_in_installments", passive_deletes=True)
-    
-    __table_args__ = (
-        UniqueConstraint("fk_payment_plan_ID", "installments_count", name="uq_payment_plan_installments_count_payment_in_installments"),
-    )
-
 class PaymentMethod(Base):
     __tablename__ = "payment_method"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     name = Column(String(30), nullable=False, unique=True)
 
 class PaymentTransaction(Base):
     __tablename__ = "payment_transaction"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
-    amount = Column(DECIMAL(7,2), nullable=False)
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
+    amount = Column(DECIMAL(7, 2, unsigned=True), nullable=False)
     create_date = Column(DATETIME, nullable=False, server_default=func.now())
     mercadopago_transaction_ID = Column(String(100), unique=True)
     receipt_url = Column(TEXT)
-    fk_payment_plan_ID = Column(Integer, ForeignKey("payment_plan.ID", ondelete="SET NULL"), index=True)
-    fk_payment_in_installments_ID = Column(Integer, ForeignKey("payment_in_installments.ID", ondelete="SET NULL"), index=True)
-    fk_payment_method_ID = Column(Integer, ForeignKey("payment_method.ID"), index=True)
-    fk_user_ID = Column(Integer, ForeignKey("users.ID", ondelete="SET NULL"), index=True)
-    fk_trainer_ID = Column(Integer, ForeignKey("trainer.ID", ondelete="SET NULL"), index=True)
+    fk_payment_plan_ID = Column(INTEGER(unsigned=True), ForeignKey("payment_plan.ID", ondelete="SET NULL"), index=True)
+    fk_payment_method_ID = Column(INTEGER(unsigned=True), ForeignKey("payment_method.ID"), index=True)
+    fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="SET NULL"), index=True)
+    fk_trainer_ID = Column(INTEGER(unsigned=True), ForeignKey("trainer.ID", ondelete="SET NULL"), index=True)
     
     payment_plan = relationship("PaymentPlan", back_populates="payment_transactions")
-    payment_in_installments = relationship("PaymentInInstallments", back_populates="payment_transactions")
     plan_contract = relationship("PlanContract", back_populates="payment_transaction", uselist=False, passive_deletes=True)
     payment_method = relationship("PaymentMethod")
     user = relationship("Users", back_populates="payment_transactions")
@@ -407,20 +377,20 @@ class PaymentTransaction(Base):
 class ContractStatus(Base):
     __tablename__ = "contract_status"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     name = Column(String(30), nullable=False, unique=True)
 
 class PlanContract(Base):
     __tablename__ = "plan_contract"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     start_date = Column(DATE, nullable=False, server_default=func.now())
     end_date = Column(DATE, nullable=False)
-    fk_user_ID = Column(Integer, ForeignKey("users.ID", ondelete="CASCADE"), index=True, nullable=False)
-    fk_trainer_ID = Column(Integer, ForeignKey("trainer.ID", ondelete="CASCADE"), index=True, nullable=False)
-    fk_payment_plan_ID = Column(Integer, ForeignKey("payment_plan.ID", ondelete="SET NULL"), index=True)
-    fk_payment_transaction_ID = Column(Integer, ForeignKey("payment_transaction.ID", ondelete="SET NULL"), index=True)
-    fk_contract_status_ID = Column(Integer, ForeignKey("contract_status.ID"), index=True, nullable=False)
+    fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="CASCADE"), index=True, nullable=False)
+    fk_trainer_ID = Column(INTEGER(unsigned=True), ForeignKey("trainer.ID", ondelete="CASCADE"), index=True, nullable=False)
+    fk_payment_plan_ID = Column(INTEGER(unsigned=True), ForeignKey("payment_plan.ID", ondelete="SET NULL"), index=True)
+    fk_payment_transaction_ID = Column(INTEGER(unsigned=True), ForeignKey("payment_transaction.ID", ondelete="SET NULL"), index=True)
+    fk_contract_status_ID = Column(INTEGER(unsigned=True), ForeignKey("contract_status.ID"), index=True, nullable=False)
     
     payment_plan = relationship("PaymentPlan", back_populates="plan_contracts")
     payment_transaction = relationship("PaymentTransaction", back_populates="plan_contract")
@@ -431,9 +401,9 @@ class PlanContract(Base):
 class PaymentPlanBenefit(Base):
     __tablename__ = "payment_plan_benefit"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     description = Column(String(100), nullable=False)
-    fk_payment_plan_ID = Column(Integer, ForeignKey("payment_plan.ID", ondelete="CASCADE"), index=True, nullable=False)
+    fk_payment_plan_ID = Column(INTEGER(unsigned=True), ForeignKey("payment_plan.ID", ondelete="CASCADE"), index=True, nullable=False)
     
     payment_plan = relationship("PaymentPlan", back_populates="payment_plan_benefits")
     
@@ -444,14 +414,14 @@ class PaymentPlanBenefit(Base):
 class BodyComposition(Base):
     __tablename__ = "body_composition"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
-    body_fat_percent = Column(DECIMAL(4,2), nullable=False)
-    lean_mass_percent = Column(DECIMAL(4,2), nullable=False) 
-    water_percent = Column(DECIMAL(4,2), nullable=False)
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
+    body_fat_percent = Column(DECIMAL(4, 2, unsigned=True), nullable=False)
+    lean_mass_percent = Column(DECIMAL(4, 2, unsigned=True), nullable=False) 
+    water_percent = Column(DECIMAL(4, 2, unsigned=True), nullable=False)
     result_date = Column(DATE, nullable=False) 
     note = Column(TEXT) 
-    fk_user_ID = Column(Integer, ForeignKey("users.ID", ondelete="CASCADE"), index=True, nullable=False)
-    fk_trainer_ID = Column(Integer, ForeignKey("trainer.ID", ondelete="SET NULL"), index=True) 
+    fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="CASCADE"), index=True, nullable=False)
+    fk_trainer_ID = Column(INTEGER(unsigned=True), ForeignKey("trainer.ID", ondelete="SET NULL"), index=True) 
     
     user = relationship("Users", back_populates="body_compositions")
     trainer = relationship("Trainer", back_populates="body_compositions")
@@ -463,25 +433,25 @@ class BodyComposition(Base):
 class ExerciseSetLog(Base):
     __tablename__ = "exercise_set_log"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
-    performed_weight_kg = Column(DECIMAL(5,2))
-    performed_reps = Column(TINYINT())
-    target_weight_kg = Column(DECIMAL(5,2))
-    target_reps = Column(TINYINT())
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
+    performed_weight_kg = Column(DECIMAL(5, 2, unsigned=True))
+    performed_reps = Column(TINYINT(unsigned=True))
+    target_weight_kg = Column(DECIMAL(5, 2, unsigned=True))
+    target_reps = Column(TINYINT(unsigned=True))
     log_date = Column(DATE, nullable=False) 
-    fk_exercise_set_ID = Column(Integer, ForeignKey("exercise_set.ID", ondelete="CASCADE"), index=True, nullable=False) 
-    fk_training_plan_user_ID = Column(Integer, ForeignKey("training_plan_user.ID", ondelete="CASCADE"), index=True, nullable=False)
+    fk_exercise_set_ID = Column(INTEGER(unsigned=True), ForeignKey("exercise_set.ID", ondelete="CASCADE"), index=True, nullable=False) 
+    fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="CASCADE"), index=True, nullable=False)
     
     exercise_set = relationship("ExerciseSet", back_populates="exercise_set_logs")
-    training_plan_user = relationship("TrainingPlanUser", back_populates="exercise_set_logs")
+    user = relationship("Users", back_populates="exercise_set_logs")
 
 class Chat(Base):
     __tablename__ = "chat"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     update_date = Column(DATETIME, nullable=False, server_default=func.now(), onupdate=func.now())
-    fk_user_ID = Column(Integer, ForeignKey("users.ID", ondelete="SET NULL"), index=True)
-    fk_trainer_ID = Column(Integer, ForeignKey("trainer.ID", ondelete="SET NULL"), index=True)
+    fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="SET NULL"), index=True)
+    fk_trainer_ID = Column(INTEGER(unsigned=True), ForeignKey("trainer.ID", ondelete="SET NULL"), index=True)
     
     user = relationship("Users", back_populates="chats")
     trainer = relationship("Trainer", back_populates="chats")
@@ -495,22 +465,22 @@ class Chat(Base):
 class Message(Base):
     __tablename__ = "message"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     content = Column(TEXT, nullable=False)
     is_from_trainer = Column(Boolean, nullable=False)
     is_viewed = Column(Boolean, nullable=False)
     create_date = Column(DATETIME, nullable=False, server_default=func.now())
-    fk_chat_ID = Column(Integer, ForeignKey("chat.ID", ondelete="CASCADE"), index=True, nullable=False)
+    fk_chat_ID = Column(INTEGER(unsigned=True), ForeignKey("chat.ID", ondelete="CASCADE"), index=True, nullable=False)
     
     chat = relationship("Chat", back_populates="messages")
 
 class BodyCompositionExam(Base):
     __tablename__ = "body_composition_exam"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     url = Column(String(255), nullable=False, unique=True)
     create_date = Column(DATETIME, nullable=False, server_default=func.now())
-    fk_user_ID = Column(Integer, ForeignKey("users.ID", ondelete="CASCADE"), index=True, nullable=False)
+    fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="CASCADE"), index=True, nullable=False)
     
     user = relationship("Users", back_populates="body_composition_exams")
 
@@ -519,10 +489,10 @@ class BodyCompositionExam(Base):
 class BodyCompositionExamSend(Base):
     __tablename__ = "body_composition_exam_send"
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     send_date = Column(DATETIME, nullable=False, server_default=func.now())
-    fk_body_composition_exam_ID = Column(Integer, ForeignKey("body_composition_exam.ID", ondelete="CASCADE"), index=True, nullable=False)
-    fk_trainer_ID = Column(Integer, ForeignKey("trainer.ID", ondelete="CASCADE"), index=True, nullable=False)
+    fk_body_composition_exam_ID = Column(INTEGER(unsigned=True), ForeignKey("body_composition_exam.ID", ondelete="CASCADE"), index=True, nullable=False)
+    fk_trainer_ID = Column(INTEGER(unsigned=True), ForeignKey("trainer.ID", ondelete="CASCADE"), index=True, nullable=False)
     
     trainer = relationship("Trainer", back_populates="body_composition_exam_sends")
     body_composition_exam = relationship("BodyCompositionExam", back_populates="body_composition_exam_sends")
