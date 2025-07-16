@@ -16,8 +16,11 @@ import styles from "./Home.module.css";
 import LoadMoreButton from "../form/buttons/LoadMoreButton";
 import ClientTrainingContractCard from "../cards/contracts/ClientTrainingContractCard";
 import SmallTrainerProfessionalCard from "../cards/contracts/SmallTrainerProfessionalCard";
+import { useTranslation } from "react-i18next";
 
 function ClientHome() {
+    const { t } = useTranslation();
+
     const navigate = useNavigate();
 
     const { width } = useWindowSize();
@@ -38,12 +41,12 @@ function ClientHome() {
 
     const trainersFilters = useMemo(() => {
         return [
-            { value: "most_popular", text: "Mais populares" },
-            { value: "best_rated", text: "Melhores avaliados" },
-            { value: "most_affordable", text: "Mais acessíveis" },
-            { value: "best_value", text: "Melhor custo-benefício" }
+            { value: "most_popular", text: t("mostPopulars") },
+            { value: "best_rated", text: t("bestRateds") },
+            { value: "most_affordable", text: t("mostAffordables") },
+            { value: "best_value", text: t("bestValues") }
         ]
-    }, []);  
+    }, [t]);  
     const clientTrainingDefault = useMemo(() => {
         return {
             trainer: {
@@ -75,7 +78,7 @@ function ClientHome() {
         if (hasError) return;
 
         if ((updatedTrainers.length < trainersLimit && updatedTrainers.length !== 0) || updatedTrainers.length % trainersLimit !== 0) {
-            notify("Não há mais treinadores disponíveis!");
+            notify(t("noTrainers"));
 
             return;
         }
@@ -104,11 +107,11 @@ function ClientHome() {
             getSearchedTrainers, 
             handleOnGetTrainersSuccess, 
             handleOnGetTrainersError, 
-            "Carregando treinadores", 
-            "Treinadores carregados!", 
-            "Falha ao carregar treinadores!"
+            t("loadingTrainers"), 
+            t("successTrainers"), 
+            t("errorTrainers")
         );
-    }, [getTrainers, notify]);
+    }, [getTrainers, notify, t]);
     
     const handleOnChangeFilter = useCallback((filter) => {
         setTrainers([]);
@@ -158,19 +161,17 @@ function ClientHome() {
                 handleOnGetClientTrainingError, 
                 undefined, 
                 undefined, 
-                "Falha ao recuperar informações do treinamento e contrato ativo!"
+                t("errorTrainingContract")
             );
         }
 
         fetchData();
-    }, [navigate, notify, user, trainersError, trainers, trainersOffset, isClient, loadTrainers, activeTrainerFilter.value, getClientTraining]);
+    }, [navigate, notify, user, trainersError, trainers, trainersOffset, isClient, loadTrainers, activeTrainerFilter.value, getClientTraining, t, clientTrainingDefault]);
 
     const cancelContract = useCallback(async (e) => {
         e.preventDefault();
 
-        const userConfirmed = await confirm(
-            "Deseja cancelar seu contrato ativo? Você não receberá reembolso e não terá mais acesso ao plano de treino atual."
-        );
+        const userConfirmed = await confirm(t("cancelContractConfirm"));
         
         if (userConfirmed) {
             const cancelContract = () => {
@@ -187,16 +188,16 @@ function ClientHome() {
                 cancelContract, 
                 handleOnCancelContractSuccess, 
                 () => undefined, 
-                "Cancelando contrato", 
-                "Contrato cancelado!", 
-                "Falha ao cancelar contrato!"
+                t("loadingCancelContract"), 
+                t("errorCancelContract"),
+                t("successCancelContract")
             );
         }
-    }, [cancelClientContract, clientTrainingDefault, confirm]);
+    }, [cancelClientContract, clientTrainingDefault, confirm, t]);
 
     useEffect(() => {
-        document.title = "Início";
-    }, []);
+        document.title = t("home");
+    }, [t]);
 
     return (
         <NavBarLayout>
@@ -220,7 +221,7 @@ function ClientHome() {
 
                         <Title
                             headingNumber={1}
-                            text="Treinamento"
+                            text={t("training")}
                         />
                     </Stack>
 
@@ -230,26 +231,26 @@ function ClientHome() {
                         <Stack>
                             <Title
                                 headingNumber={2}
-                                text="Seu Treinamento"
+                                text={t("yourTraining")}
                             />
 
                             {trainingLoading || !clientTraining || clientTrainingError ? (
                                 clientTrainingError ? (
                                     <p>
-                                        Ocorreu um erro ao recuperar as informações do seu treinamento e contrato!
+                                        {t("errorOcurredTrainingContract")}
 
                                         <br/>
                                         
-                                        Recarregue a página ou tente de novo mais tarde.
+                                        {t("reloadOrTryLater")}
                                     </p>
                                 ) : (
                                     !trainingLoading && (
                                         <p>
-                                            Você não tem nenhum contrato ativo!
+                                            {t("noContractActive")}
 
                                             <br/>
 
-                                            Pesquise por treinadores e escolha um de seus planos de pagamento.
+                                            {t("searchTrainersInstruction")}
                                         </p>
                                     )
                                 )
@@ -270,7 +271,7 @@ function ClientHome() {
                         <Stack>
                             <Title
                                 headingNumber={2}
-                                text="Outros Treinadores"
+                                text={t("otherTrainers")}
                             />
 
                             <Stack
@@ -285,7 +286,7 @@ function ClientHome() {
                                 >
                                     {!trainersError && trainersLoading ? (
                                         <p>
-                                            Carregando treinadores...
+                                            {t("loadingTrainers")}...
                                         </p>
                                     ) : (
                                         <Stack
@@ -310,7 +311,7 @@ function ClientHome() {
                                                 ))
                                             ) : (
                                                 <p>
-                                                    Nenhum treinador encontrado
+                                                    {t("noTrainersFinded")}
                                                 </p>
                                             )}
                                         </Stack>
@@ -320,11 +321,11 @@ function ClientHome() {
                                 {trainersError ? (
                                     <p>
                                         <>
-                                            Ocorreu um erro ao carregar os treinadores!
+                                            {t("errorOcurredTrainers")}
 
                                             <br/>
                                             
-                                            Recarregue a página ou tente de novo mais tarde.
+                                            {t("reloadOrTryLater")}
                                         </>
                                     </p>
                                 ) : (

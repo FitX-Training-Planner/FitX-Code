@@ -5,6 +5,7 @@ import styles from "./SmallTrainerProfessionalCard.module.css";
 import { formatDateToExtend } from "../../../utils/formatters/text/formatDate";
 import useWindowSize from "../../../hooks/useWindowSize";
 import SubmitFormButton from "../../form/buttons/SubmitFormButton";
+import { useTranslation } from "react-i18next";
 
 function ClientTrainingContractCard({
     trainerName,
@@ -16,6 +17,8 @@ function ClientTrainingContractCard({
     contractEndDate,
     handleCancelContract
 }) {
+    const { t } = useTranslation();
+
     const { width } = useWindowSize();
 
     return (
@@ -35,7 +38,7 @@ function ClientTrainingContractCard({
                         </span>
                     ) : (
                         <p>
-                            Seu treinador ainda não te enviou um treino
+                            {t("noTrainingSended")}
                         </p>
                     )}
                 </Stack>
@@ -53,7 +56,7 @@ function ClientTrainingContractCard({
                             className={styles.professional_name_container}
                         >
                             <span>
-                                Treinador:
+                                {t("trainer")}:
                             </span>
 
                             <hr/>
@@ -93,7 +96,7 @@ function ClientTrainingContractCard({
                         className={styles.descriptioned_item}
                     >
                         <span>
-                            Contrato:
+                            {t("contract")}:
                         </span>
 
                         <Stack
@@ -124,7 +127,7 @@ function ClientTrainingContractCard({
                                 </Stack>
 
                                 <p>
-                                    {convertDays((new Date(contractEndDate) - new Date(contractStartDate) / (1)))} restando
+                                    {convertDays((new Date(contractEndDate) - new Date(contractStartDate) / (1)))} {t("remaining")}
                                 </p>
                             </Stack>
 
@@ -132,7 +135,7 @@ function ClientTrainingContractCard({
                                 onSubmit={handleCancelContract}
                             >
                                 <SubmitFormButton
-                                    text="Cancelar Contrato"
+                                    text={t("cancelContract")}
                                     varBgColor="--alert-color"
                                 />
                             </form>

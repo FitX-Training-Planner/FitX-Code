@@ -7,6 +7,7 @@ import FlexWrap from "../../containers/FlexWrap";
 import { formatPriceToBR } from "../../../utils/formatters/payments/formatOnChange";
 import React from "react";
 import { formatNumberShort } from "../../../utils/formatters/text/formatNumber";
+import { useTranslation } from "react-i18next";
 
 function SmallTrainerProfessionalCard({
     name,
@@ -18,6 +19,8 @@ function SmallTrainerProfessionalCard({
     paymentPlans,
     handleExpand
 }) {
+    const { t } = useTranslation();
+
     const { width } = useWindowSize();
 
     return (
@@ -30,7 +33,7 @@ function SmallTrainerProfessionalCard({
             >
                 <ClickableIcon
                     iconSrc="/images/icons/expand.png"
-                    name="Ver Perfil"
+                    name={t("seeProfile")}
                     handleClick={handleExpand}
                     size="small"
                 />
@@ -77,7 +80,7 @@ function SmallTrainerProfessionalCard({
                 >
                     <ClickableIcon
                         iconSrc="/images/icons/rated.png"
-                        name="Nota Média"
+                        name={t("averageGrade")}
                         size={width <= 440 ? "small" : "medium"}
                         hasTheme={false}
                     />
@@ -94,7 +97,7 @@ function SmallTrainerProfessionalCard({
                 >
                     <ClickableIcon
                         iconSrc="/images/icons/contracts.png"
-                        name="Contratações"
+                        name={t("hirings")}
                         size={width <= 440 ? "small" : "medium"}
                         hasTheme={false}
                     />
@@ -111,7 +114,7 @@ function SmallTrainerProfessionalCard({
                 >
                     <ClickableIcon
                         iconSrc="/images/icons/complaints.png"
-                        name="Denúncias"
+                        name={t("complaints")}
                         size={width <= 440 ? "small" : "medium"}
                         hasTheme={false}
                     />
@@ -132,7 +135,7 @@ function SmallTrainerProfessionalCard({
                     gap="2em"
                 >
                     <span>
-                        Planos
+                        {t("paymentPlans")}
                     </span>
 
                     <FlexWrap
@@ -156,7 +159,7 @@ function SmallTrainerProfessionalCard({
                                         </span>
 
                                         <span>
-                                            {plan.durationDays} dias
+                                            {plan.durationDays} {t("days")}
                                         </span>
                                     </Stack>
                                 </Stack>
@@ -166,7 +169,7 @@ function SmallTrainerProfessionalCard({
                 </Stack>
             ) : (
                 <p>
-                    O treinador ainda não possui nenhum plano de pagamento
+                    {t("noTrainerPaymentPlans")}
                 </p>
             )}
         </Stack>
