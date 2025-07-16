@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import Stack from "../../containers/Stack";
 import ClickableIcon from "../../form/buttons/ClickableIcon";
 import CardioSessionInfo from "./CardioSessionInfo";
@@ -14,6 +15,8 @@ function CardioSessionCard({
     handleRemoveCardioSession,
     handleDuplicateCardioSession
 }) {
+    const { t } = useTranslation();
+
     return (
         <Stack>
             <Stack
@@ -22,14 +25,14 @@ function CardioSessionCard({
             >
                 <ClickableIcon
                     iconSrc="/images/icons/edit.png"
-                    name="Editar"
+                    name={t("edit")}
                     handleClick={handleModifyCardioSession}
                     size="small"
                 />
 
                 <ClickableIcon
                     iconSrc="/images/icons/remove.png"
-                    name="Remover"
+                    name={t("remove")}
                     handleClick={handleRemoveCardioSession}
                     size="small"
                 />
@@ -51,7 +54,7 @@ function CardioSessionCard({
             
             <ClickableIcon
                 iconSrc="/images/icons/duplicate.png"
-                name="Duplicar"
+                name={t("duplicate")}
                 handleClick={handleDuplicateCardioSession}
                 size="small"
             />

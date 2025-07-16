@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import convertTime from "../../../utils/formatters/text/convertTime";
 import Stack from "../../containers/Stack";
 import Title from "../../text/Title";
@@ -13,6 +14,8 @@ function CardioSessionInfo({
     headingNumber,
     titleColor = "--text-color", 
 }) {
+    const { t } = useTranslation();
+
     return (
         <Stack>
             <Stack
@@ -20,7 +23,7 @@ function CardioSessionInfo({
                 className={styles.item_title}
             >
                 <span>
-                    {`Cardio ${usedID}`}
+                    {t("session")} {usedID}
                 </span>
 
                 <Title
@@ -48,14 +51,14 @@ function CardioSessionInfo({
                     className={styles.descriptioned_item}
                 >
                     <span>
-                        Horário:
+                        {t("time")}:
                     </span>
 
                     <span>
                         {
                             sessionTime 
                             ? sessionTime
-                            : "indeterminado"
+                            : t("undefined")
                         }
                     </span>
                 </Stack>
@@ -66,7 +69,7 @@ function CardioSessionInfo({
                     className={styles.note}
                 >
                     <span>
-                        Nota da sessão: 
+                        {t("cardioSessionNote")}:
                     </span>
                     
                     {` ${note}`}

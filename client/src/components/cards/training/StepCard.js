@@ -3,8 +3,18 @@ import Stack from "../../containers/Stack";
 import ClickableIcon from "../../form/buttons/ClickableIcon";
 import Title from "../../text/Title";
 import styles from "./TrainingCards.module.css";
+import { useTranslation } from "react-i18next";
 
-function StepCard({ exercises, orderInDay, headingNumber, handleModifyStep, handleRemoveStep, handleDuplicateStep }) {
+function StepCard({
+    exercises,
+    orderInDay,
+    headingNumber,
+    handleModifyStep,
+    handleRemoveStep,
+    handleDuplicateStep
+}) {
+    const { t }= useTranslation();
+
     return (
         <Stack>
             <Stack
@@ -13,14 +23,14 @@ function StepCard({ exercises, orderInDay, headingNumber, handleModifyStep, hand
             >
                 <ClickableIcon
                     iconSrc="/images/icons/edit.png"
-                    name="Editar"
+                    name={t("edit")}
                     handleClick={handleModifyStep}
                     size="small"
                 />
 
                 <ClickableIcon
                     iconSrc="/images/icons/remove.png"
-                    name="Remover"
+                    name={t("remove")}
                     handleClick={handleRemoveStep}
                     size="small"
                 />
@@ -33,7 +43,7 @@ function StepCard({ exercises, orderInDay, headingNumber, handleModifyStep, hand
                 className={styles.item_title}
             >
                 <Title
-                    text={`${exercises.length > 1 ? "Sequência" : "Exercício"} ${orderInDay}`}
+                    text={`${exercises.length > 1 ? t("step") : t("exercise")} ${orderInDay}`}
                     headingNumber={headingNumber}
                 />
 
@@ -52,7 +62,7 @@ function StepCard({ exercises, orderInDay, headingNumber, handleModifyStep, hand
                 gap="2em"
             >
                 {exercises.length === 0 ? (
-                    "Indefinido"
+                    t("undefined")
                 ) : (
                     exercises.map((exercise, index) => (
                         <React.Fragment
@@ -76,7 +86,7 @@ function StepCard({ exercises, orderInDay, headingNumber, handleModifyStep, hand
                                     )}
 
                                     <span>
-                                        {`${exercise.sets.length} séries`}
+                                        {exercise.sets.length} {t("sets")}
                                     </span>  
                                 </Stack>
                             </Stack>
@@ -89,7 +99,7 @@ function StepCard({ exercises, orderInDay, headingNumber, handleModifyStep, hand
             
             <ClickableIcon
                 iconSrc="/images/icons/duplicate.png"
-                name="Duplicar"
+                name={t("duplicate")}
                 handleClick={handleDuplicateStep}
                 size="small"
             />

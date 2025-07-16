@@ -20,7 +20,7 @@ function TextArea({ name, placeholder, labelText, value = "", handleChange, icon
                 {icon &&
                     <img 
                         src={icon} 
-                        alt={`${labelText} Icon`} 
+                        alt="" 
                     />
                 }
 

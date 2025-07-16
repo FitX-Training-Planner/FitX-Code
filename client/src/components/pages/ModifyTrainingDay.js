@@ -10,8 +10,11 @@ import Stack from "../containers/Stack";
 import TrainingDayForm from "../form/forms/TrainingDayForm";
 import duplicateObjectInObjectList from "../../utils/generators/duplicate";
 import BackButton from "../form/buttons/BackButton";
+import { useTranslation } from "react-i18next";
 
 function ModifyTrainingDay() {
+    const { t } = useTranslation();
+
     const location = useLocation();
         
     const navigate = useNavigate();
@@ -53,7 +56,7 @@ function ModifyTrainingDay() {
         if (!(locationTrainingDay || locationTrainingDayOrder)) {
             navigate("/");
             
-            notify("As informações do plano de treino não foram encontradas.", "error");
+            notify(t("notFoundTrainingPlanInfo"), "error");
 
             return;
         }
@@ -68,7 +71,7 @@ function ModifyTrainingDay() {
             locationTrainingDay || 
             { ...prevTrainingDay, orderInPlan: locationTrainingDayOrder, ID: locationTrainingDayOrder }
         );
-    }, [location.state, navigate, notify, trainingPlan.trainingDays]);
+    }, [location.state, navigate, notify, trainingPlan.trainingDays, t]);
 
     const handleOnChangeTrainingDayType = useCallback(async () => {
         if (!trainingDay.isRestDay) {
@@ -77,7 +80,7 @@ function ModifyTrainingDay() {
             if (userConfirmed) {
                 setTrainingDay(prevTrainingDay => ({ 
                     ...prevTrainingDay, 
-                    name: "Descanso",
+                    name: t("rest"),
                     isRestDay: true,
                     trainingSteps: []
                 }));
@@ -98,7 +101,7 @@ function ModifyTrainingDay() {
         }));
 
         setError(false);
-    }, [confirm, trainingDay.isRestDay]);
+    }, [confirm, trainingDay.isRestDay, t]);
 
     const validateAndSaveTrainingDay = useCallback(() => {
         if (!validateTrainingDay(
@@ -107,7 +110,7 @@ function ModifyTrainingDay() {
             trainingDay.name,
             trainingDay.note
         )) {
-            notify("Ainda há erros no formulário de dia de treino!", "error");
+            notify(t("errorAlertCreateTrainingDay"), "error");
 
             return false;
         }
@@ -126,12 +129,12 @@ function ModifyTrainingDay() {
         }));
 
         return true;
-    }, [error, notify, setTrainingPlan, trainingDay]);
+    }, [error, notify, setTrainingPlan, trainingDay, t]);
 
 
     const addCardioSession = useCallback(() => {
         if (trainingDay.cardioSessions.length >= 4) {
-            notify("Você atingiu o limite de 4 sessões de cardio para este dia de treino.", "error");
+            notify(t("limitAlertCardioSessions"), "error");
 
             return;
         }
@@ -142,11 +145,11 @@ function ModifyTrainingDay() {
             cardioSessionDestination, 
             { state: { cardioSessionID: getNextOrder(trainingDay.cardioSessions, "usedID"), orderInPlan: trainingDay.orderInPlan } }
         )
-    }, [cardioSessionDestination, navigate, notify, trainingDay.cardioSessions, trainingDay.orderInPlan, validateAndSaveTrainingDay]);
+    }, [cardioSessionDestination, navigate, notify, trainingDay.cardioSessions, trainingDay.orderInPlan, validateAndSaveTrainingDay, t]);
 
     const addTrainingStep = useCallback(() => {   
         if (trainingDay.trainingSteps.length >= 12) {
-            notify("Você atingiu o limite de 12 exercícios para este dia de treino.", "error");
+            notify(t("limitAlertTrainingSteps"), "error");
 
             return;
         }
@@ -157,7 +160,7 @@ function ModifyTrainingDay() {
             trainingStepDestination, 
             { state: { stepOrder: getNextOrder(trainingDay.trainingSteps, "orderInDay"), orderInPlan: trainingDay.orderInPlan } }
         )
-    }, [navigate, notify, trainingDay.orderInPlan, trainingDay.trainingSteps, trainingStepDestination, validateAndSaveTrainingDay]);
+    }, [navigate, notify, trainingDay.orderInPlan, trainingDay.trainingSteps, trainingStepDestination, validateAndSaveTrainingDay, t]);
 
     const duplicateTrainingStep = useCallback((step) => {
         duplicateObjectInObjectList(
@@ -165,12 +168,12 @@ function ModifyTrainingDay() {
             trainingDay.trainingSteps, 
             "trainingSteps", 
             12, 
-            "Você atingiu o limite de 12 exercícios para este dia de treino.", 
+            t("limitAlertTrainingSteps"), 
             notify, 
             "orderInDay", 
             setTrainingDay
         )
-    }, [notify, trainingDay.trainingSteps]);
+    }, [notify, trainingDay.trainingSteps, t]);
 
     const duplicateCardioSession = useCallback((session) => {
         duplicateObjectInObjectList(
@@ -178,12 +181,12 @@ function ModifyTrainingDay() {
             trainingDay.cardioSessions, 
             "cardioSessions", 
             4, 
-            "Você atingiu o limite de 4 sessões de cardio para este dia de treino.", 
+            t("limitAlertCardioSessions"), 
             notify, 
             "usedID", 
             setTrainingDay
         )
-    }, [notify, trainingDay.cardioSessions]);
+    }, [notify, trainingDay.cardioSessions, t]);
 
     const modifyCardioSession = useCallback(cardioSession => {
         if (!validateAndSaveTrainingDay()) return;
@@ -198,7 +201,7 @@ function ModifyTrainingDay() {
     }, [navigate, trainingDay.orderInPlan, trainingStepDestination, validateAndSaveTrainingDay]);
 
     const removeCardioSession = useCallback(async ID => {
-        const userConfirmed = await confirm("Deseja remover essa sessão de cardio do seu treino?");
+        const userConfirmed = await confirm(t("removeConfirmCardioSession"));
         
         if (userConfirmed) {
             setTrainingDay(prevTrainingDay => ({
@@ -206,12 +209,12 @@ function ModifyTrainingDay() {
                 cardioSessions: removeAndReorder(prevTrainingDay.cardioSessions, "usedID", ID)
             }));
 
-            notify("Sessão de cardio removida!", "success");
+            notify(t("successRemoveCardioSession"), "success");
         }
-    }, [confirm, notify]);
+    }, [confirm, notify, t]);
 
     const removeTrainingStep = useCallback(async order => {
-        const userConfirmed = await confirm("Deseja remover esse exercício do seu treino?");
+        const userConfirmed = await confirm(t("removeConfirmTrainingStep"));
         
         if (userConfirmed) {
             setTrainingDay(prevTrainingDay => ({
@@ -219,9 +222,9 @@ function ModifyTrainingDay() {
                 trainingSteps: removeAndReorder(prevTrainingDay.trainingSteps, "orderInDay", order)
             }));
 
-            notify("Exercício do treino removido!", "success");
+            notify(t("successRemoveTrainingStep"), "success");
         }
-    }, [confirm, notify]);
+    }, [confirm, notify, t]);
 
     const handleOnSubmit = useCallback((e) => {
         e.preventDefault();
@@ -234,8 +237,8 @@ function ModifyTrainingDay() {
     }, [navigate, validateAndSaveTrainingDay]);
 
     useEffect(() => {
-        document.title = "Modificar Dia de Treino";
-    }, []);
+        document.title = t("modifyTrainingDay");
+    }, [t]);
 
     return (
         <main
@@ -249,11 +252,11 @@ function ModifyTrainingDay() {
                 <Stack>
                     <Title
                         headingNumber={1}
-                        text="Modificar Dia de Treino"
+                        text={t("modifyTrainingDay")}
                     />
 
                     <Title
-                        text={trainingDay.ID ?  `Dia ${trainingDay.orderInPlan}` : ""}
+                        text={trainingDay.ID ?  `${t("day")} ${trainingDay.orderInPlan}` : ""}
                         headingNumber={2}
                         varColor="--light-theme-color"
                     />

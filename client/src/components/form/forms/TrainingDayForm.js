@@ -15,8 +15,25 @@ import TextInput from "../fields/TextInput";
 import StepCard from "../../cards/training/StepCard";
 import useWindowSize from "../../../hooks/useWindowSize";
 import CardioSessionCard from "../../cards/training/CardioSessionCard";
+import { useTranslation } from "react-i18next";
 
-function TrainingDayForm({ trainingDay, setTrainingDay, setTrainingDayError, handleSubmit, handleChangeDayType, handleAddTrainingStep, handleDuplicateStep, handleModifyTrainingStep, handleRemoveTrainingStep, handleAddCardioSession, handleDuplicateCardioSession, handleModifyCardioSession, handleRemoveCardioSession }) {
+function TrainingDayForm({
+    trainingDay,
+    setTrainingDay,
+    setTrainingDayError,
+    handleSubmit,
+    handleChangeDayType,
+    handleAddTrainingStep,
+    handleDuplicateStep,
+    handleModifyTrainingStep,
+    handleRemoveTrainingStep,
+    handleAddCardioSession,
+    handleDuplicateCardioSession,
+    handleModifyCardioSession,
+    handleRemoveCardioSession
+}) {
+    const { t } = useTranslation();
+    
     const { width } = useWindowSize();
     
     const [errors, setErrors] = useState({
@@ -32,7 +49,7 @@ function TrainingDayForm({ trainingDay, setTrainingDay, setTrainingDayError, han
                 gap="3em"
             >
                 <p>
-                    - Os campos obrigatórios são marcados com "*".
+                    - t("mandatoryFields")
                 </p>
                 
                 <Stack
@@ -40,21 +57,21 @@ function TrainingDayForm({ trainingDay, setTrainingDay, setTrainingDayError, han
                 >
                     <CheckBoxInput
                         name="isRestDay"
-                        labelText="Dia de descanso"
+                        labelText={t("restDay")}
                         isChecked={trainingDay.isRestDay}
                         handleChange={handleChangeDayType}
-                        description="Ative para que esse dia seja para descansar."
+                        description={t("restDayDescription")}
                     />
 
                     {!trainingDay.isRestDay &&
                         <>
                             <TextInput
                                 name="name"
-                                placeholder="Insira o nome do treino"
-                                labelText="Nome do Treino *"
+                                placeholder={t("trainingDayNamePlaceholder")}
+                                labelText={`${t("trainingDayName")} *`}
                                 value={trainingDay.name}
                                 handleChange={(e) => handleOnChangeTextField(e, formattNameAndNote, isPlanNameValid, trainingDay, setTrainingDay, setTrainingDayError, setErrors)}
-                                alertMessage="O nome deve ter entre 1 e 50 caracteres."
+                                alertMessage={t("alertTrainingDayName")}
                                 error={errors.name}
                                 maxLength={50}
                             />
@@ -64,7 +81,7 @@ function TrainingDayForm({ trainingDay, setTrainingDay, setTrainingDayError, han
                             >
                                 <Title
                                     headingNumber={3}
-                                    text="Sequências/Exercícios do Dia"
+                                    text={t("trainingSteps")}
                                 />
 
                                 <Stack>
@@ -108,7 +125,7 @@ function TrainingDayForm({ trainingDay, setTrainingDay, setTrainingDayError, han
 
                                     <ClickableIcon
                                         iconSrc="/images/icons/add.png"
-                                        name="Adicionar Sequência/Exercício"
+                                        name={t("addTrainingStep")}
                                         handleClick={handleAddTrainingStep}
                                     />
                                 </Stack>
@@ -121,7 +138,7 @@ function TrainingDayForm({ trainingDay, setTrainingDay, setTrainingDayError, han
                     >
                         <Title
                             headingNumber={3}
-                            text="Sessões de Cardio do Dia"
+                            text={t("cardioSessions")}
                         />
 
                         <Stack>
@@ -168,7 +185,7 @@ function TrainingDayForm({ trainingDay, setTrainingDay, setTrainingDayError, han
 
                             <ClickableIcon
                                 iconSrc="/images/icons/add.png"
-                                name="Adicionar Cardio"
+                                name={t("addCardioSession")}
                                 handleClick={handleAddCardioSession}
                             />
                         </Stack>
@@ -176,18 +193,18 @@ function TrainingDayForm({ trainingDay, setTrainingDay, setTrainingDayError, han
 
                     <TextArea
                         name="note"
-                        placeholder="Insira sua nota ou observação"
-                        labelText="Nota"
+                        placeholder={t("notePlaceholder")}
+                        labelText={t("note")}
                         value={trainingDay.note}
                         handleChange={(e) => handleOnChangeTextField(e, formattNameAndNote, isNoteValid, trainingDay, setTrainingDay, setTrainingDayError, setErrors)}
-                        alertMessage="A nota não deve ter mais que 500 caracteres."
+                        alertMessage={t("alertNote500")}
                         error={errors.note}
                         maxLength={500}
                     />
                 </Stack>
 
                 <SubmitFormButton
-                    text="Criar ou Modificar Dia"
+                    text={t("createTrainingDay")}
                 />
             </Stack>
         </form>

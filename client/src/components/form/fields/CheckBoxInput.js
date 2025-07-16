@@ -22,7 +22,7 @@ const CheckBoxInput = ({ name, isChecked = false, handleChange, labelText, descr
 
         <label
             htmlFor={name}
-            >
+        >
             <span/>
         </label>
 
