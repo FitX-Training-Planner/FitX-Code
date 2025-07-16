@@ -17,7 +17,7 @@ function ClickableIcon({ iconSrc, name, handleClick, size = "medium", hasTheme =
         >
             <img
                 src={iconSrc}
-                alt={`${name} Icon`}
+                alt={name}
             />
         </button>
     );

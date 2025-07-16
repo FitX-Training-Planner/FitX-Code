@@ -14,8 +14,11 @@ import TrainingPlanCompactedCard from "../cards/training/TrainingPlanCompactedCa
 import styles from "./TrainingPlans.module.css";
 import { getCacheData, removeItemFromCacheList, setCacheData } from "../../utils/cache/operations";
 import SearchInput from "../form/fields/SearchInput";
+import { useTranslation } from "react-i18next";
 
 function TrainingPlans() {    
+    const { t } = useTranslation();
+
     const navigate = useNavigate();
     
     const hasRun = useRef(false);
@@ -75,24 +78,24 @@ function TrainingPlans() {
                 getPlans, 
                 handleOnGetPlansSuccess, 
                 handleOnGetPlansError, 
-                "Recuperando planos", 
-                "Planos recuperados!", 
-                "Falha ao recuperar planos!"
+                t("loadingTrainingPlans"), 
+                undefined, 
+                t("errorTrainingPlans")
             );
         }
 
         fetchData();
-    }, [navigate, notify, isTrainer, user, getTrainingPlans]);
+    }, [navigate, notify, isTrainer, user, getTrainingPlans, t]);
 
     const addTrainingPlan = useCallback(() => {   
         if (trainingPlans.length >= 20) {
-            notify("Você atingiu o limite de 20 planos de treinamento.", "error");
+            notify(t("limitAlertTrainingPlans"), "error");
 
             return;
         }
 
         navigate("/trainers/me/create-training-plan");
-    }, [navigate, notify, trainingPlans.length]);
+    }, [navigate, notify, trainingPlans.length, t]);
 
     const modifyTrainingPlan = useCallback(trainingPlan => {
         navigate("/trainers/me/create-training-plan", { state: { trainingPlan } });
@@ -103,7 +106,7 @@ function TrainingPlans() {
     }, [navigate]);
 
     const removePlan = useCallback(async ID => {
-        const userConfirmed = await confirm("Deseja remover esse plano permanentemente?");
+        const userConfirmed = await confirm(t("removeConfirmTrainingPlan"));
         
         if (userConfirmed) {
             const removePlan = () => {
@@ -123,16 +126,16 @@ function TrainingPlans() {
                 removePlan, 
                 handleOnRemovePlanSuccess, 
                 () => undefined, 
-                "Removendo plano", 
-                "Plano removido!", 
-                "Falha ao remover plano!"
+                t("loadingRemoveTrainingPlan"), 
+                t("successRemoveTrainingPlan"), 
+                t("errorRemoveTrainingPlan")
             );
         }
-    }, [confirm, removeTrainingPlan, trainingPlans]);
+    }, [confirm, removeTrainingPlan, trainingPlans, t]);
 
     useEffect(() => {
-        document.title = "Planos de Treino";
-    }, []);
+        document.title = t("trainingPlans");
+    }, [t]);
 
     return (
         <NavBarLayout
@@ -149,11 +152,11 @@ function TrainingPlans() {
                     >
                         <Title
                             headingNumber={1}
-                            text="Planos de Treino"
+                            text={t("trainingPlans")}
                         />
 
                         <p>
-                            Adicione, edite, ou remova quantos planos de treino quiser!
+                            {t("trainingPlansDescription")}
                         </p>
                     </Stack>
 
@@ -167,8 +170,7 @@ function TrainingPlans() {
                                 items={trainingPlans}
                                 setShowedItems={setShowedTrainingPlans}
                                 searchKey="name"
-                                placeholder="Filtrar por nome..."
-                                name="Filtrar"
+                                placeholder={t("searchByName")}
                             />
                         )}
 
@@ -177,7 +179,7 @@ function TrainingPlans() {
                         >
                             {trainingPlans.length === 0 ? (
                                 <p>
-                                    Crie seu primeiro plano de treino clicando no botão abaixo.
+                                    {t("createTrainingInstruction")}
                                 </p>
                             ) : (
                                 showedTrainingPlans.length !== 0 ? (
@@ -199,7 +201,7 @@ function TrainingPlans() {
                                     ))
                                 ) : (
                                     <p>
-                                        Sem resultado
+                                        {t("noResult")}
                                     </p>
                                 )
                             )}
@@ -207,7 +209,7 @@ function TrainingPlans() {
 
                         <ClickableIcon
                             iconSrc="/images/icons/add.png"
-                            name="Adicionar Plano"
+                            name={t("addTrainingPlan")}
                             handleClick={addTrainingPlan}
                         />
                     </Stack>

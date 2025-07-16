@@ -6,8 +6,20 @@ import styles from "./TrainingPlanCompactedCard.module.css";
 import FlexWrap from "../../containers/FlexWrap";
 import convertTime from "../../../utils/formatters/text/convertTime";
 import getStepType from "../../../utils/generators/stepType";
+import { useTranslation } from "react-i18next";
 
-function TrainingPlanCompactedCard({ headingNumber, planID, name, trainingDays, handleModifyPlan, handleRemovePlan, handleExpandPlan, width }) {
+function TrainingPlanCompactedCard({
+    headingNumber,
+    planID,
+    name,
+    trainingDays,
+    handleModifyPlan,
+    handleRemovePlan,
+    handleExpandPlan,
+    width
+}) {
+    const { t } = useTranslation();
+
     return (
         <Stack
             className={styles.training_plan_card}
@@ -26,14 +38,14 @@ function TrainingPlanCompactedCard({ headingNumber, planID, name, trainingDays, 
                     >
                         <ClickableIcon
                             iconSrc="/images/icons/expand.png"
-                            name="Expandir"
+                            name={t("expand")}
                             handleClick={handleExpandPlan}
                             size="small"
                         />
 
                         <ClickableIcon
                             iconSrc="/images/icons/edit.png"
-                            name="Editar"
+                            name={t("edit")}
                             handleClick={handleModifyPlan}
                             size="small"
                         />
@@ -41,7 +53,7 @@ function TrainingPlanCompactedCard({ headingNumber, planID, name, trainingDays, 
 
                     <ClickableIcon
                         iconSrc="/images/icons/remove.png"
-                        name="Remover"
+                        name={t("remove")}
                         handleClick={handleRemovePlan}
                         size="small"
                     />
@@ -83,7 +95,7 @@ function TrainingPlanCompactedCard({ headingNumber, planID, name, trainingDays, 
                                     gap="0.2em"
                                 >                                    
                                     <span>
-                                        Dia {trainingDay.orderInPlan}
+                                        {t("day")} {trainingDay.orderInPlan}
                                     </span>
                                     
                                     <Title
@@ -99,7 +111,7 @@ function TrainingPlanCompactedCard({ headingNumber, planID, name, trainingDays, 
                                         <Stack>
                                             <Title
                                                 headingNumber={headingNumber + 2}
-                                                text="Exercícios"
+                                                text={t("exercises")}
                                             />
 
                                             <hr/>
@@ -138,7 +150,7 @@ function TrainingPlanCompactedCard({ headingNumber, planID, name, trainingDays, 
                                                                                 )}
 
                                                                                 <span>
-                                                                                    {exercise.sets.length} Séries
+                                                                                    {exercise.sets.length} {t("sets")}
                                                                                 </span>
                                                                             </Stack>
                                                                         </React.Fragment>
@@ -160,7 +172,7 @@ function TrainingPlanCompactedCard({ headingNumber, planID, name, trainingDays, 
                                         <Stack>
                                             <Title
                                                 headingNumber={headingNumber + 2}
-                                                text="Sessões de Cardio"
+                                                text={t("cardioSessions")}
                                             />
 
                                             <hr/>

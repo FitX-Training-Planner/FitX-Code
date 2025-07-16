@@ -4,6 +4,7 @@ import Stack from '../../containers/Stack';
 import { formattNameAndNote } from '../../../utils/formatters/training/formatOnChange';
 import styles from "./SearchInput.module.css";
 import { textFilter } from '../../../utils/filters/search';
+import { useTranslation } from 'react-i18next';
 
 export default function SearchInput({
     searchText,
@@ -11,11 +12,13 @@ export default function SearchInput({
     items,
     setShowedItems,
     searchKey,
-    placeholder = "Buscar...",
-    name = "search",
+    placeholder,
+    name,
     handleSubmit,
     className
 }) {
+    const { t } = useTranslation();
+
     const Tag = handleSubmit ? "form" : "div";
 
     useEffect(() => {
@@ -43,16 +46,16 @@ export default function SearchInput({
             >
                 <ClickableIcon
                     iconSrc="/images/icons/search.png"
-                    name={name}
+                    name={name || t("search")}
                     size="small"
                     isSubmit={!!handleSubmit}
                 />
 
                 <input
                     type="text"
-                    id={name}
-                    name={name}
-                    placeholder={placeholder}
+                    id={name || "search"}
+                    name={name || "search"}
+                    placeholder={placeholder || `${t("search")}...`}
                     value={searchText}
                     onChange={(e) => setSearchText(formattNameAndNote(e.target.value))}
                 />
