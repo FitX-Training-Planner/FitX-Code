@@ -2,8 +2,14 @@ import Stack from "../containers/Stack";
 import ClickableIcon from "../form/buttons/ClickableIcon";
 import styles from "./NavBar.module.css";
 import CommonNavBar from "./CommonNavBar";
+import { useTranslation } from "react-i18next";
 
-function TrainerNavBar({ navigate, isActive }) {
+function TrainerNavBar({
+    navigate,
+    isActive
+}) {
+    const { t } = useTranslation();
+
     return (
         <CommonNavBar
             navigate={navigate}
@@ -23,12 +29,12 @@ function TrainerNavBar({ navigate, isActive }) {
                     >
                         <ClickableIcon
                             iconSrc="/images/icons/training_plan.png"
-                            name="Planos de Treino"
+                            name={t("trainingPlans")}
                         />
                     </Stack>
 
                     <span>
-                        Planos de Treino
+                        {t("trainingPlans")}
                     </span>
                 </Stack>
             </li>
@@ -48,12 +54,12 @@ function TrainerNavBar({ navigate, isActive }) {
                     >
                         <ClickableIcon
                             iconSrc="/images/icons/clients.png"
-                            name="Clientes"
+                            name={t("clients")}
                         />
                     </Stack>
 
                     <span>
-                        Clientes
+                        {t("clients")}
                     </span>
                 </Stack>
             </li>
@@ -73,12 +79,12 @@ function TrainerNavBar({ navigate, isActive }) {
                     >
                         <ClickableIcon
                             iconSrc="/images/icons/chat.png"
-                            name="Conversas com Clientes"
+                            name={t("chatsWithClients")}
                         />
                     </Stack>
 
                     <span>
-                        Conversas com Clientes
+                        {t("chatsWithClients")}
                     </span>
                 </Stack>
             </li>
@@ -98,12 +104,12 @@ function TrainerNavBar({ navigate, isActive }) {
                     >
                         <ClickableIcon
                             iconSrc="/images/icons/transaction.png"
-                            name="Pagamentos e Contratos"
+                            name={t("paymentsAndContracts")}
                         />
                     </Stack>
 
                     <span>
-                        Pagamentos e Contratos
+                        {t("paymentsAndContracts")}
                     </span>
                 </Stack>
             </li>

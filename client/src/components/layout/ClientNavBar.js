@@ -2,8 +2,14 @@ import Stack from "../containers/Stack";
 import ClickableIcon from "../form/buttons/ClickableIcon";
 import styles from "./NavBar.module.css";
 import CommonNavBar from "./CommonNavBar";
+import { useTranslation } from "react-i18next";
 
-function ClientNavBar({ navigate, isActive }) {
+function ClientNavBar({
+    navigate,
+    isActive
+}) {
+    const { t } = useTranslation();
+
     return (
         <CommonNavBar
             navigate={navigate}
@@ -23,12 +29,12 @@ function ClientNavBar({ navigate, isActive }) {
                     >
                         <ClickableIcon
                             iconSrc="/images/icons/training_plan.png"
-                            name="Meu Treino"
+                            name={t("myWorkout")}
                         />
                     </Stack>
 
                     <span>
-                        Meu Treino
+                        {t("myWorkout")}
                     </span>
                 </Stack>
             </li>
@@ -48,12 +54,12 @@ function ClientNavBar({ navigate, isActive }) {
                     >
                         <ClickableIcon
                             iconSrc="/images/icons/chat.png"
-                            name="Conversa com Treinador"
+                            name={t("chatWithTrainer")}
                         />
                     </Stack>
 
                     <span>
-                        Conversa com Treinador
+                        {t("chatWithTrainer")}
                     </span>
                 </Stack>
             </li>
@@ -73,12 +79,12 @@ function ClientNavBar({ navigate, isActive }) {
                     >
                         <ClickableIcon
                             iconSrc="/images/icons/progress.png"
-                            name="Meu Progresso"
+                            name={t("myProgress")}
                         />
                     </Stack>
 
                     <span>
-                        Meu Progresso
+                        {t("myProgress")}
                     </span>
                 </Stack>
             </li>
@@ -98,12 +104,12 @@ function ClientNavBar({ navigate, isActive }) {
                     >
                         <ClickableIcon
                             iconSrc="/images/icons/chatbot.png"
-                            name="Chatbot"
+                            name="Coachy Chatbot"
                         />
                     </Stack>
 
                     <span>
-                        Dúvidas com Chatbot
+                        {t("questionsWithCoachy")}
                     </span>
                 </Stack>
             </li>

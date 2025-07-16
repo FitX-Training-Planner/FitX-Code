@@ -3,8 +3,15 @@ import ClickableIcon from "../form/buttons/ClickableIcon";
 import styles from "./NavBar.module.css";
 import PhotoInput from "../form/fields/PhotoInput";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
-function CommonNavBar({ children, navigate, isActive }) {
+function CommonNavBar({
+    children,
+    navigate,
+    isActive
+}) {
+    const { t } = useTranslation();
+
     const user = useSelector(state => state.user);
 
     return (
@@ -31,14 +38,14 @@ function CommonNavBar({ children, navigate, isActive }) {
                             >
                                 <ClickableIcon
                                     iconSrc="/logo180.png"
-                                    name="Mais Informações"
+                                    name={t("moreInformations")}
                                     size="large"
                                     hasTheme={false}
                                 />
                             </Stack>
 
                             <span>
-                                Mais Informações
+                                {t("moreInformations")}
                             </span>
                         </Stack>
                     </li>
@@ -67,12 +74,12 @@ function CommonNavBar({ children, navigate, isActive }) {
                             >
                                 <ClickableIcon
                                     iconSrc="/images/icons/home.png"
-                                    name="Início"
+                                    name={t("home")}
                                 />
                             </Stack>
 
                             <span>
-                                Início
+                                {t("home")}
                             </span>
                         </Stack>
                     </li>
@@ -94,12 +101,12 @@ function CommonNavBar({ children, navigate, isActive }) {
                             >
                                 <ClickableIcon
                                     iconSrc="/images/icons/database.png"
-                                    name="Explorar Dados"
+                                    name={t("exploreFitX")}
                                 />
                             </Stack>
 
                             <span>
-                                Explorar Dados
+                                {t("exploreFitX")}
                             </span>
                         </Stack>
                     </li>

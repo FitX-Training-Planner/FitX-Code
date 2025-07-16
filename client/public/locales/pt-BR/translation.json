@@ -326,10 +326,14 @@
     "hirings": "Contratações",
     "complaints": "Denúncias",
     "noTrainerPaymentPlans": "O treinador ainda não possui nenhum plano de pagamento",
-    "": "",
-    "": "",
-    "": "",
-    "": "",
-    "": "",
-    "": ""
+    "cancel": "Cancelar",
+    "trainingPlanNote": "Nota do plano",
+    "moreInformations": "Mais Informações",
+    "exploreFitX": "Explorar FitX",
+    "clients": "Clientes",
+    "chatsWithClients": "Conversas com Clientes",
+    "myWorkout": "Meu Treino",
+    "chatWithTrainer": "Conversa com Treinador",
+    "myProgress": "Meu Progresso",
+    "questionsWithCoachy": "Dúvidas com Coachy"
 }

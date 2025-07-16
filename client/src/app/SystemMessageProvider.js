@@ -1,9 +1,12 @@
 import { createContext, useContext } from "react";
 import toast, { Toaster } from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 const SystemMessageContext = createContext();
 
 export function SystemMessageProvider({ children }) {
+  const { t } = useTranslation();
+
   const commonStyles = {
     backgroundColor: "var(--bg-color)", 
     color: "var(--text-color)",
@@ -36,7 +39,7 @@ export function SystemMessageProvider({ children }) {
     return new Promise((resolve, reject) => {
       if (activeConfirmToastId) return;
 
-      activeConfirmToastId = toast.custom((t) => (
+      activeConfirmToastId = toast.custom((tst) => (
         <div
           style={{ 
             ...commonStyles,
@@ -76,7 +79,7 @@ export function SystemMessageProvider({ children }) {
                 resolve(true);
               }}
             >
-              Confirmar
+              {t("confirm")}
             </button>
 
             <button
@@ -95,7 +98,7 @@ export function SystemMessageProvider({ children }) {
                 resolve(false);
               }}
             >
-              Cancelar
+              {t("cancel")}
             </button>
           </div>
         </div>

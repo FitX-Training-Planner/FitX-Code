@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import Stack from "../../containers/Stack";
 import Title from "../../text/Title";
 import styles from "./TrainingCards.module.css";
@@ -11,6 +12,8 @@ function TrainingPlanInfo({
     titleColor = "--text-color",
     bgTitleColor = "--bg-color" 
 }) {
+    const { t } = useTranslation();
+
     return (
         <Stack>
             <Stack
@@ -38,7 +41,7 @@ function TrainingPlanInfo({
                     className={styles.plan_note}
                 >
                     <span>
-                        Nota do plano: 
+                        {t("trainingPlanNote")}: 
                     </span>
                     
                     {` ${note}`}
