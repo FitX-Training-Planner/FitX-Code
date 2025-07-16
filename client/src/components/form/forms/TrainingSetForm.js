@@ -6,8 +6,18 @@ import { isDurationSetValid, isRepsValid, isRestValid } from "../../../utils/val
 import Select from "../fields/Select";
 import TextInput from "../fields/TextInput";
 import { handleOnChangeSelect, handleOnChangeTextField } from "../../../utils/handlers/changeHandlers";
+import { useTranslation } from "react-i18next";
 
-function TrainingSetForm({ set, setSet, setSetError, handleSubmit, setTypes, trainingTechniques }) {
+function TrainingSetForm({
+    set,
+    setSet,
+    setSetError,
+    handleSubmit,
+    setTypes,
+    trainingTechniques
+}) {
+    const { t } = useTranslation();
+
     const arrays = useMemo(() => ({
         "setTypes": setTypes,
         "trainingTechniques": trainingTechniques
@@ -28,11 +38,11 @@ function TrainingSetForm({ set, setSet, setSetError, handleSubmit, setTypes, tra
             >
                 <Stack>
                     <p>
-                        - Os campos obrigatórios são marcados com "*".
+                        - {t("mandatoryFields")}
                     </p>
 
                     <p>
-                        - Preencha ou os campos de repetições ou o de tempo de isometria. *
+                        - {t("repsOrIsometry")} *
                     </p>
                 </Stack>
 
@@ -41,52 +51,52 @@ function TrainingSetForm({ set, setSet, setSetError, handleSubmit, setTypes, tra
                 > 
                     <TextInput
                         name="minReps"
-                        placeholder="Mínimo de repetições"
-                        labelText="Número Mínimo de Repetições"
+                        placeholder={t("minRepsPlaceholder")}
+                        labelText={t("minReps")}
                         value={set.minReps}
                         handleChange={(e) => handleOnChangeTextField(e, formattSecondsMinutesAndReps, () => isRepsValid(e.target.value, set.maxReps), set, setSet, setSetError, setErrors, "reps", false)}
-                        alertMessage="O número mínimo de repetições deve ser menor que o máximo e estar entre 1 e 100."
+                        alertMessage={t("alertMinReps")}
                         error={errors.reps}
                         maxLength={3}
                     />
 
                     <TextInput
                         name="maxReps"
-                        placeholder="Máximo de repetições"
-                        labelText="Número Máximo de Repetições"
+                        placeholder={t("maxRepsPlaceholder")}
+                        labelText={t("maxReps")}
                         value={set.maxReps}
                         handleChange={(e) => handleOnChangeTextField(e, formattSecondsMinutesAndReps, () => isRepsValid(set.minReps, e.target.value), set, setSet, setSetError, setErrors, "reps", false)}
-                        alertMessage="O número máximo de repetições deve ser maior que o mínimo e estar entre 1 e 100."
+                        alertMessage={t("alertMaxReps")}
                         error={errors.reps}
                         maxLength={3}
                     />
 
                     <TextInput
                         name="durationSeconds"
-                        placeholder="Insira a duração da isometria"
-                        labelText="Duração da Isometria em Segundos"
+                        placeholder={t("durationSecondsPlaceholder")}
+                        labelText={t("durationSeconds")}
                         value={set.durationSeconds}
                         handleChange={(e) => handleOnChangeTextField(e, formattSecondsMinutesAndReps, isDurationSetValid, set, setSet, setSetError, setErrors)}
-                        alertMessage="O tempo de isometria deve ter entre 5 e 600 segundos."
+                        alertMessage={t("alertDurationSeconds")}
                         error={errors.durationSeconds}
                         maxLength={3}
                     />
                     
                     <TextInput
                         name="restSeconds"
-                        placeholder="Insira a duração do descanso"
-                        labelText="Descanso para a Série em Segundos *"
+                        placeholder={t("restSecondsPlaceholder")}
+                        labelText={`${t("restSeconds")} *`}
                         value={set.restSeconds}
                         handleChange={(e) => handleOnChangeTextField(e, formattSecondsMinutesAndReps, isRestValid, set, setSet, setSetError, setErrors)}
-                        alertMessage="O tempo de descanso deve ter entre 15 e 600 segundos."
+                        alertMessage={t("alertRestSeconds")}
                         error={errors.restSeconds}
                         maxLength={3}
                     />
 
                     <Select
                         name="setType"
-                        placeholder="Selecione o tipo da série"
-                        labelText="Tipo da Série *"
+                        placeholder={t("setTypePlaceholder")}
+                        labelText={`${t("setType")} *`}
                         value={setTypes.find(type => String(type.ID) === String(set.setType?.ID))?.name}
                         handleChange={(e) => handleOnChangeSelect(e, arrays.setTypes, "name", set, setSet, setSetError)}
                         options={setTypes.map(type => type.name)}    
@@ -94,8 +104,8 @@ function TrainingSetForm({ set, setSet, setSetError, handleSubmit, setTypes, tra
 
                     <Select
                         name="trainingTechnique"
-                        placeholder="Selecione a técnica"
-                        labelText="Técnica de Treinamento"
+                        placeholder={t("trainingTechniquePlaceholder")}
+                        labelText={t("trainingTechnique")}
                         value={trainingTechniques.find(technique => String(technique.ID) === String(set.trainingTechnique?.ID))?.name}
                         handleChange={(e) => handleOnChangeSelect(e, arrays.trainingTechniques, "name", set, setSet, setSetError)}
                         options={trainingTechniques.map(technique => technique.name)}    
@@ -103,7 +113,7 @@ function TrainingSetForm({ set, setSet, setSetError, handleSubmit, setTypes, tra
                 </Stack>                   
 
                 <SubmitFormButton
-                    text="Criar ou Modificar Série"
+                    text={t("createSet")}
                 />
             </Stack>
         </form>

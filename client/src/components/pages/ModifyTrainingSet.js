@@ -10,8 +10,11 @@ import { validateSet } from "../../utils/validators/formValidator";
 import Stack from "../containers/Stack";
 import TrainingSetForm from "../form/forms/TrainingSetForm";
 import BackButton from "../form/buttons/BackButton";
+import { useTranslation } from "react-i18next";
 
 function ModifyExerciseSet() {
+    const { t } = useTranslation();
+
     const location = useLocation();
     
     const navigate = useNavigate();
@@ -60,7 +63,7 @@ function ModifyExerciseSet() {
         if (!(locationSet || locationSetOrder) || !locationTrainingDayOrder || !locationStepOrder || !locationExerciseOrder) {
             navigate("/");
             
-            notify("As informações do plano de treino não foram encontradas.", "error");
+            notify(t("notFoundTrainingPlanInfo"), "error");
 
             return;
         }
@@ -122,7 +125,7 @@ function ModifyExerciseSet() {
         }
 
         fetchData();
-    }, [exerciseDestination, getSetTypes, getTrainingTechniques, location.state, navigate, notify, trainingPlan.trainingDays]);
+    }, [exerciseDestination, getSetTypes, getTrainingTechniques, location.state, navigate, notify, trainingPlan.trainingDays, t]);
 
     const validateAndSaveSet = useCallback(() => {
         if (!validateSet(
@@ -134,7 +137,7 @@ function ModifyExerciseSet() {
             set.restSeconds,
             set.setType?.ID || null
         )) {
-            notify("Ainda há erros no formulário de série!", "error");
+            notify(t("alertErrorSet"), "error");
 
             return false;
         }
@@ -174,7 +177,7 @@ function ModifyExerciseSet() {
         }));
 
         return true;
-    }, [error, exerciseOrder, notify, set, setTrainingPlan, stepOrder, trainingDayOrder]);
+    }, [error, exerciseOrder, notify, set, setTrainingPlan, stepOrder, trainingDayOrder, t]);
 
     const handleOnSubmit = useCallback((e) => {
         e.preventDefault();
@@ -185,8 +188,8 @@ function ModifyExerciseSet() {
     }, [exerciseDestination, exerciseOrder, navigate, stepOrder, trainingDayOrder, validateAndSaveSet]);
 
     useEffect(() => {
-        document.title = "Modificar Série do Treino";
-    }, []);
+        document.title = t("modifySet");
+    }, [t]);
 
     return (
         <main
@@ -200,13 +203,13 @@ function ModifyExerciseSet() {
                 <Stack>
                     <Title
                         headingNumber={1}
-                        text="Modificar Série do Treino"
+                        text={t("modifySet")}
                     />
 
                     <Title
                         text={
                            set.ID && trainingDayOrder && stepOrder && exerciseOrder
-                            ? `Série ${set.orderInExercise} do Exercício ${exerciseOrder} da Sequência ${stepOrder} do Dia ${trainingDayOrder}` 
+                            ? `${t("set")} ${set.orderInExercise} ${t("ofExercise")} ${exerciseOrder} ${t("ofSequence")} ${stepOrder} ${t("ofDay")} ${trainingDayOrder}` 
                             : ""
                         }
                         headingNumber={2}
