@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import Stack from "../../containers/Stack";
 import ClickableIcon from "../../form/buttons/ClickableIcon";
 import ExerciseInfo from "./ExerciseInfo";
@@ -18,6 +19,8 @@ function ExerciseCard({
     handleRemoveExercise,
     handleDuplicateExercise
 }) {
+    const { t } = useTranslation();
+
     return (
         <Stack>
             <Stack
@@ -26,14 +29,14 @@ function ExerciseCard({
             >
                 <ClickableIcon
                     iconSrc="/images/icons/edit.png"
-                    name="Editar"
+                    name={t("edit")}
                     handleClick={handleModifyExercise}
                     size="small"
                 />
 
                 <ClickableIcon
                     iconSrc="/images/icons/remove.png"
-                    name="Remover"
+                    name={t("remove")}
                     handleClick={handleRemoveExercise}
                     size="small"
                 />
@@ -60,7 +63,7 @@ function ExerciseCard({
 
             <ClickableIcon
                 iconSrc="/images/icons/duplicate.png"
-                name="Duplicar"
+                name={t("duplicate")}
                 handleClick={handleDuplicateExercise}
                 size="small"
             />

@@ -7,8 +7,19 @@ import Title from "../../text/Title";
 import DndContextContainer from "../../sortable/DndContextContainer";
 import useWindowSize from "../../../hooks/useWindowSize";
 import ExerciseCard from "../../cards/training/ExerciseCard";
+import { useTranslation } from "react-i18next";
 
-function TrainingStepForm({ trainingStep, setTrainingStep, handleSubmit, handleAddExercise, handleDuplicateExercise, handleModifyExercise, handleRemoveExercise }) {
+function TrainingStepForm({
+    trainingStep,
+    setTrainingStep,
+    handleSubmit,
+    handleAddExercise,
+    handleDuplicateExercise,
+    handleModifyExercise,
+    handleRemoveExercise
+}) {
+    const { t } = useTranslation();
+
     const { width } = useWindowSize();
     
     return (
@@ -23,7 +34,7 @@ function TrainingStepForm({ trainingStep, setTrainingStep, handleSubmit, handleA
                 >
                     <Title
                         headingNumber={3}
-                        text="Exercícios da Sequência"
+                        text={t("stepExercises")}
                     />
 
                     <Stack>
@@ -75,14 +86,14 @@ function TrainingStepForm({ trainingStep, setTrainingStep, handleSubmit, handleA
 
                         <ClickableIcon
                             iconSrc="/images/icons/add.png"
-                            name="Adicionar Exercício"
+                            name={t("addExercise")}
                             handleClick={handleAddExercise}
                         />
                     </Stack>
                 </Stack>
 
                 <SubmitFormButton
-                    text="Criar ou Modificar sequência"
+                    text={t("createTrainingStep")}
                 />
             </Stack>
         </form>

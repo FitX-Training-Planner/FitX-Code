@@ -1,6 +1,7 @@
 import Stack from "../../containers/Stack";
 import Title from "../../text/Title";
 import styles from "./TrainingCards.module.css";
+import { useTranslation } from "react-i18next";
 
 function ExerciseInfo({ 
     children,
@@ -18,6 +19,8 @@ function ExerciseInfo({
     headingNumber, 
     titleColor = "--text-color", 
 }) {
+    const { t } = useTranslation();
+
     return (
         <Stack>
             <Stack
@@ -47,9 +50,9 @@ function ExerciseInfo({
                     && (pulleyHeightDescription || pulleyAttachmentName) && (
                         <span>
                             {`
-                                Polia 
-                                ${pulleyHeightDescription ? `na ${pulleyHeightDescription}` : ""} 
-                                ${pulleyAttachmentName ? `com ${pulleyAttachmentName}` : ""} 
+                                ${t("pulley")} 
+                                ${pulleyHeightDescription ? `${t("at")} ${pulleyHeightDescription}` : ""} 
+                                ${pulleyAttachmentName ? `${t("with")} ${pulleyAttachmentName}` : ""} 
                             `}
                         </span>
                     )
@@ -61,7 +64,7 @@ function ExerciseInfo({
                         className={styles.descriptioned_item}
                     >
                         <span>
-                            Pegada:
+                            {t("grip")}:
                         </span>
 
                         <span>
@@ -79,7 +82,7 @@ function ExerciseInfo({
                         className={styles.descriptioned_item}
                     >
                         <span>
-                            Movimento:
+                            {t("movement")}:
                         </span>
 
                         <span>
@@ -94,7 +97,7 @@ function ExerciseInfo({
                         className={styles.descriptioned_item}
                     >
                         <span>
-                            Posição:
+                            {t("position")}:
                         </span>
 
                         <span>
@@ -104,7 +107,7 @@ function ExerciseInfo({
                 }
 
                 <span>
-                    {`${sets.length} séries`}
+                    {sets.length} {t("sets")}
                 </span>  
             </Stack>
 
@@ -116,7 +119,7 @@ function ExerciseInfo({
                     style={{ lineClamp: maxNoteLines, WebkitLineClamp: maxNoteLines }}
                 >
                     <span>
-                        Nota do exercício: 
+                        {t("exerciseNote")}: 
                     </span>
                     
                     {` ${note}`}

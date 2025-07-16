@@ -9,8 +9,11 @@ import Stack from "../containers/Stack";
 import TrainingStepForm from "../form/forms/TrainingStepForm";
 import duplicateObjectInObjectList from "../../utils/generators/duplicate";
 import BackButton from "../form/buttons/BackButton";
+import { useTranslation } from "react-i18next";
 
 function ModifyTrainingStep() {
+    const { t } = useTranslation();
+
     const location = useLocation();
     
     const navigate = useNavigate();
@@ -45,7 +48,7 @@ function ModifyTrainingStep() {
         if (!(locationTrainingStep || locationStepOrder) || !locationTrainingDayOrder) {
             navigate("/");
             
-            notify("As informações do plano de treino não foram encontradas.", "error");
+            notify(t("notFoundTrainingPlanInfo"), "error");
 
             return;
         }
@@ -67,7 +70,7 @@ function ModifyTrainingStep() {
             locationTrainingStep || 
             { ...prevStep, orderInDay: locationStepOrder, ID: locationStepOrder }
         );
-    }, [location.state, navigate, notify, trainingPlan.trainingDays]);
+    }, [location.state, navigate, notify, trainingPlan.trainingDays, t]);
 
     const saveTrainingStep = useCallback(() => {
         setTrainingPlan(prevTrainingPlan => ({ 
@@ -93,7 +96,7 @@ function ModifyTrainingStep() {
 
     const addExercise = useCallback(() => {
         if (step.exercises.length >= 4) {
-            notify("Você atingiu o limite de 4 exercícios consecutivos para esta etapa de treino.", "error");
+            notify(t("limitAlertExercises"), "error");
 
             return;
         }
@@ -110,7 +113,7 @@ function ModifyTrainingStep() {
                 } 
             }
         )
-    }, [exerciseDestination, navigate, notify, saveTrainingStep, step.exercises, step.orderInDay, trainingDayOrder]);
+    }, [exerciseDestination, navigate, notify, saveTrainingStep, step.exercises, step.orderInDay, trainingDayOrder, t]);
 
     const duplicateExercise = useCallback((exercise) => {
         duplicateObjectInObjectList(
@@ -118,12 +121,12 @@ function ModifyTrainingStep() {
             step.exercises, 
             "exercises", 
             4, 
-            "Você atingiu o limite de 4 exercícios consecutivos para esta sequência.", 
+            t("limitAlertExercises"), 
             notify, 
             "orderInStep", 
             setStep
         )
-    }, [notify, step.exercises]);
+    }, [notify, step.exercises, t]);
 
     const modifyExercise = useCallback(exercise => {
         saveTrainingStep();
@@ -141,7 +144,7 @@ function ModifyTrainingStep() {
     }, [exerciseDestination, navigate, saveTrainingStep, step.orderInDay, trainingDayOrder]);
 
     const removeExercise = useCallback(async order => {
-        const userConfirmed = await confirm("Deseja remover esse exercício da sua sequência?");
+        const userConfirmed = await confirm(t("removeConfirmExercise"));
         
         if (userConfirmed) {
             setStep(prevTrainingStep => ({
@@ -149,9 +152,9 @@ function ModifyTrainingStep() {
                 exercises: removeAndReorder(prevTrainingStep.exercises, "orderInStep", order)
             }));
 
-            notify("Exercício da sequência removido!", "success");
+            notify(t("successRemoveExercise"), "success");
         }
-    }, [confirm, notify]);
+    }, [confirm, notify, t]);
 
     const handleOnSubmit = useCallback((e) => {
         e.preventDefault();
@@ -164,8 +167,8 @@ function ModifyTrainingStep() {
     }, [navigate, saveTrainingStep, trainingDayOrder]);
 
     useEffect(() => {
-        document.title = "Modificar Sequência do Treino";
-    }, []);
+        document.title = t("modifyTrainingStep");
+    }, [t]);
 
     return (
         <main
@@ -179,11 +182,11 @@ function ModifyTrainingStep() {
                 <Stack>
                     <Title
                         headingNumber={1}
-                        text="Modificar Sequência do Treino"
+                        text={t("modifyTrainingStep")}
                     />
 
                     <Title
-                        text={step.ID && trainingDayOrder ? `Sequência ${step.orderInDay} do Dia ${trainingDayOrder}` : ""}
+                        text={step.ID && trainingDayOrder ? `${t("step")} ${step.orderInDay} ${t("ofDay")} ${trainingDayOrder}` : ""}
                         headingNumber={2}
                         varColor="--light-theme-color"
                     />
