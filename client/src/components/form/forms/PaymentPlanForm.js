@@ -11,8 +11,18 @@ import Title from "../../text/Title";
 import { isPaymentPlanDurationValid, isPaymentPlanPriceValid } from "../../../utils/validators/paymentsValidator";
 import { formatPrice } from "../../../utils/formatters/payments/formatOnChange";
 import Benefit from "../fields/PaymentPlanBenefitInput";
+import { useTranslation } from "react-i18next";
 
-function PaymentPlanForm({ paymentPlan, setPaymentPlan, setPaymentPlanError, handleSubmit, handleAddBenefit, handleRemoveBenefit }) { 
+function PaymentPlanForm({
+    paymentPlan,
+    setPaymentPlan,
+    setPaymentPlanError,
+    handleSubmit,
+    handleAddBenefit,
+    handleRemoveBenefit
+}) { 
+    const { t } = useTranslation();
+
     const [errors, setErrors] = useState({
         name: false,
         fullPrice: false,
@@ -29,7 +39,7 @@ function PaymentPlanForm({ paymentPlan, setPaymentPlan, setPaymentPlanError, han
                 gap="3em"
             >
                 <p>
-                    - Os campos obrigatórios são marcados com "*".
+                    - {t("mandatoryFields")}
                 </p>
                 
                 <Stack
@@ -37,33 +47,33 @@ function PaymentPlanForm({ paymentPlan, setPaymentPlan, setPaymentPlanError, han
                 >    
                     <TextInput
                         name="name"
-                        placeholder="Insira o nome do plano"
-                        labelText="Nome do Plano de Pagamento *"
+                        placeholder={t("paymentPlanNamePlaceholder")}
+                        labelText={`${t("paymentPlanName")} *`}
                         value={paymentPlan.name}
                         handleChange={(e) => handleOnChangeTextField(e, formattNameAndNote, isPlanNameValid, paymentPlan, setPaymentPlan, setPaymentPlanError, setErrors)}
-                        alertMessage="O nome deve ter entre 1 e 50 caracteres."
+                        alertMessage={t("alertPaymentPlanName")}
                         error={errors.name}
                         maxLength={50}
                     />
 
                     <TextInput
                         name="fullPrice"
-                        placeholder="Insira o preço do plano"
-                        labelText="Preço *"
+                        placeholder={t("paymentPlanFullPricePlaceholder")}
+                        labelText={`${t("price")} *`}
                         value={paymentPlan.fullPrice}
                         handleChange={(e) => handleOnChangeTextField(e, formatPrice, isPaymentPlanPriceValid, paymentPlan, setPaymentPlan, setPaymentPlanError, setErrors)}
-                        alertMessage="O preço do plano deve ser um valor entre R$ 9,99 e R$ 99.999,99."
+                        alertMessage={t("alertPaymentPlanFullPrice")}
                         error={errors.fullPrice}
                         maxLength={8}
                     />
 
                     <TextInput
                         name="durationDays"
-                        placeholder="Insira a duração do contrato"
-                        labelText="Duração do Contrato em Dias *"
+                        placeholder={t("paymentPlanDurationDaysPlaceholder")}
+                        labelText={`${t("paymentPlanDurationDays")} *`}
                         value={paymentPlan.durationDays}
                         handleChange={(e) => handleOnChangeTextField(e, formattSecondsMinutesAndReps, isPaymentPlanDurationValid, paymentPlan, setPaymentPlan, setPaymentPlanError, setErrors)}
-                        alertMessage="A duração do contrato deve ter entre 1 dia e 2 anos."
+                        alertMessage={t("alertPaymentPlanDurationDays")}
                         error={errors.durationDays}
                         maxLength={3}
                     />
@@ -73,7 +83,7 @@ function PaymentPlanForm({ paymentPlan, setPaymentPlan, setPaymentPlanError, han
                     >
                         <Title
                             headingNumber={3}
-                            text="Benefícios do Plano"
+                            text={t("paymentPlanBenefits")}
                         />
 
                         <Stack>
@@ -109,7 +119,7 @@ function PaymentPlanForm({ paymentPlan, setPaymentPlan, setPaymentPlanError, han
 
                             <ClickableIcon
                                 iconSrc="/images/icons/add.png"
-                                name="Adicionar Benefício"
+                                name={t("addBenefit")}
                                 handleClick={handleAddBenefit}
                             />
                         </Stack>
@@ -117,18 +127,18 @@ function PaymentPlanForm({ paymentPlan, setPaymentPlan, setPaymentPlanError, han
 
                     <TextArea
                         name="description"
-                        placeholder="Insira a descrição do plano"
-                        labelText="Descrição"
+                        placeholder={t("paymentPlanDescriptionPlaceholder")}
+                        labelText={t("description")}
                         value={paymentPlan.description}
                         handleChange={(e) => handleOnChangeTextField(e, formattNameAndNote, isNoteValid, paymentPlan, setPaymentPlan, setPaymentPlanError, setErrors)}
-                        alertMessage="A descrição não deve ter mais que 500 caracteres."
+                        alertMessage={t("alertPaymentPlanDescription")}
                         error={errors.description}
                         maxLength={500}
                     />
                 </Stack>
 
                 <SubmitFormButton
-                    text={`${paymentPlan.ID ? "Modificar" : "Criar"} Plano de Pagamento`}
+                    text={`${paymentPlan.ID ? t("modify") : t("create")} ${t("paymentPlan")}`}
                 />
             </Stack>
         </form>

@@ -13,8 +13,11 @@ import { cleanCacheData } from "../../utils/cache/operations";
 import BackButton from "../form/buttons/BackButton";
 import { validatePaymentPlan } from "../../utils/validators/formValidator";
 import PaymentPlanForm from "../form/forms/PaymentPlanForm";
+import { useTranslation } from "react-i18next";
 
-function CreatePaymentPlan() {    
+function CreatePaymentPlan() { 
+    const { t } = useTranslation();
+
     const navigate = useNavigate();
 
     const location = useLocation();
@@ -59,7 +62,7 @@ function CreatePaymentPlan() {
 
     const addBenefit = useCallback(() => {   
         if (paymentPlan.benefits.length >= 8) {
-            notify("Você pode exibir até 8 benefícios no plano de pagamento.", "error");
+            notify(t("limitAlertPaymentPlanBenefits"), "error");
 
             return;
         }
@@ -74,10 +77,10 @@ function CreatePaymentPlan() {
                 }
             ] 
         }));
-    }, [notify, paymentPlan.benefits]);
+    }, [notify, paymentPlan.benefits, t]);
 
     const removeBenefit = useCallback(async ID => {
-        const userConfirmed = await confirm("Deseja remover esse benefício do seu plano?");
+        const userConfirmed = await confirm(t("removeConfirmPaymentPlanBenefit"));
         
         if (userConfirmed) {
             setPaymentPlan(prevPaymentPlan => ({
@@ -85,7 +88,7 @@ function CreatePaymentPlan() {
                 benefits: removeAndReorder(prevPaymentPlan.benefits, "ID", ID)
             }));
         }
-    }, [confirm, setPaymentPlan]);
+    }, [confirm, setPaymentPlan, t]);
 
     const handleOnSubmit = useCallback((e) => {
         e.preventDefault();
@@ -120,17 +123,17 @@ function CreatePaymentPlan() {
                 return api.put(`/trainers/me/payment-plans/${paymentPlan.ID}`, formData);
             };
 
-            loadingMessage = "Modificando";
-            successMessage = "Plano de pagamento modificado com sucesso!";
-            errorMessage = "Falha ao modificar plano!";
+            loadingMessage = t("modifying");
+            successMessage = t("successModifyPaymentPlan");
+            errorMessage = t("errorModifyPaymentPlan");
         } else {
             requestFn = () => {
                 return api.post(`/trainers/me/payment-plans`, formData);
             };
 
-            loadingMessage = "Criando";
-            successMessage = "Plano de pagamento criado com sucesso!";
-            errorMessage = "Falha ao criar plano!";
+            loadingMessage = t("creating");
+            successMessage = t("successCreatePaymentPlan");
+            errorMessage = t("errorCreatePaymentPlan");
         }
 
         const handleOnPostOrPutPlanSuccess = () => {
@@ -151,11 +154,11 @@ function CreatePaymentPlan() {
             successMessage, 
             errorMessage
         );
-    }, [error, navigate, postOrPutPlanRequest, paymentPlan]);
+    }, [error, navigate, postOrPutPlanRequest, paymentPlan, t]);
 
     useEffect(() => {
-        document.title = "Criar Plano de Pagamento";
-    }, []);
+        document.title = t("createPaymentPlan");
+    }, [t]);
 
     return (
         <main
@@ -173,18 +176,18 @@ function CreatePaymentPlan() {
                 >
                     <Title
                         headingNumber={1}
-                        text="Plano de Pagamento"
+                        text={t("paymentPlan")}
                     />
 
                     <Title
                         headingNumber={2}
-                        text={`${paymentPlan.ID ? "Modificar" : "Criar"} Plano`}
+                        text={`${paymentPlan.ID ? t("modify") : t("create")} ${t("plan")}`}
                         varColor="--light-theme-color"
                     />
 
                     {!paymentPlan.ID && (
                         <p>
-                            Crie um plano de pagamento personalizado para atrair mais clientes!
+                            {t("createPaymentPlanDescription")}
                         </p>
                     )}
                 </Stack>
