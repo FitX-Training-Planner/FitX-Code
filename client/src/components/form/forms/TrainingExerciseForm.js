@@ -13,8 +13,28 @@ import { handleOnChangeSelect, handleOnChangeTextField } from "../../../utils/ha
 import DndContextContainer from "../../sortable/DndContextContainer";
 import useWindowSize from "../../../hooks/useWindowSize";
 import SetCard from "../../cards/training/SetCard";
+import { useTranslation } from "react-i18next";
 
-function TrainingExerciseForm({ exercise, setExercise, setExerciseError, handleSubmit, handleAddSet, handleDuplicateSet, handleModifySet, handleRemoveSet, exercises, exerciseEquipments, bodyPositions, pulleyHeights, pulleyAttachments, gripTypes, gripWidths, lateralities }) {
+function TrainingExerciseForm({
+    exercise,
+    setExercise,
+    setExerciseError,
+    handleSubmit,
+    handleAddSet,
+    handleDuplicateSet,
+    handleModifySet,
+    handleRemoveSet,
+    exercises,
+    exerciseEquipments,
+    bodyPositions,
+    pulleyHeights,
+    pulleyAttachments,
+    gripTypes,
+    gripWidths,
+    lateralities
+}) {
+    const { t } = useTranslation();
+
     const { width } = useWindowSize();
     
     const arrays = useMemo(() => ({
@@ -57,7 +77,7 @@ function TrainingExerciseForm({ exercise, setExercise, setExerciseError, handleS
                 gap="3em"
             >
                 <p>
-                    - Os campos obrigatórios são marcados com "*".
+                    - {t("mandatoryFields")}
                 </p>
                 
                 <Stack
@@ -68,7 +88,7 @@ function TrainingExerciseForm({ exercise, setExercise, setExerciseError, handleS
                     >
                         <Title
                             headingNumber={3}
-                            text="Séries"
+                            text={t("sets")}
                         />
 
                         <Stack>
@@ -117,7 +137,7 @@ function TrainingExerciseForm({ exercise, setExercise, setExerciseError, handleS
 
                             <ClickableIcon
                                 iconSrc="/images/icons/add.png"
-                                name="Adicionar Série"
+                                name={t("addSet")}
                                 handleClick={handleAddSet}
                             />
                         </Stack>
@@ -125,8 +145,8 @@ function TrainingExerciseForm({ exercise, setExercise, setExerciseError, handleS
 
                     <Select
                         name="exercise"
-                        placeholder="Selecione o exercício"
-                        labelText="Exercício *"
+                        placeholder={t("exercisePlaceholder")}
+                        labelText={`${t("exercise")} *`}
                         value={exercises.find(ex => String(ex.ID) === String(exercise.exercise?.ID))?.name}
                         handleChange={handleOnChangeExercise}
                         options={exercises.map(ex => ex.name)}    
@@ -136,8 +156,8 @@ function TrainingExerciseForm({ exercise, setExercise, setExerciseError, handleS
                         <>
                             <Select
                                 name="exerciseEquipment"
-                                placeholder="Selecione o equipamento"
-                                labelText="Equipamento *"
+                                placeholder={t("exerciseEquipmentPlaceholder")}
+                                labelText={`${t("exerciseEquipment")} *`}
                                 value={exerciseEquipments.find(equipment => String(equipment.ID) === String(exercise.exerciseEquipment?.ID))?.name}
                                 handleChange={(e) => {
                                     handleOnChangeSelect(e, arrays.exerciseEquipments, "name", exercise, setExercise, setExerciseError);
@@ -148,8 +168,8 @@ function TrainingExerciseForm({ exercise, setExercise, setExerciseError, handleS
 
                             <Select
                                 name="bodyPosition"
-                                placeholder="Selecione a posição corporal"
-                                labelText="Posição Corporal"
+                                placeholder={t("bodyPositionPlaceholder")}
+                                labelText={t("bodyPosition")}
                                 value={bodyPositions.find(position => String(position.ID) === String(exercise.bodyPosition?.ID))?.description}
                                 handleChange={(e) => handleOnChangeSelect(e, arrays.bodyPositions, "description", exercise, setExercise, setExerciseError)}
                                 options={bodyPositions.map(position => position.description)}    
@@ -159,8 +179,8 @@ function TrainingExerciseForm({ exercise, setExercise, setExerciseError, handleS
                                 <>
                                     <Select
                                         name="pulleyHeight"
-                                        placeholder="Selecione a altura da polia"
-                                        labelText="Altura da Polia"
+                                        placeholder={t("pulleyHeightPlaceholder")}
+                                        labelText={t("pulleyHeight")}
                                         value={pulleyHeights.find(height => String(height.ID) === String(exercise.pulleyHeight?.ID))?.description}
                                         handleChange={(e) => handleOnChangeSelect(e, arrays.pulleyHeights, "description", exercise, setExercise, setExerciseError)}
                                         options={pulleyHeights.map(height => height.description)}    
@@ -168,8 +188,8 @@ function TrainingExerciseForm({ exercise, setExercise, setExerciseError, handleS
                                     
                                     <Select
                                         name="pulleyAttachment"
-                                        placeholder="Selecione o acessório da polia"
-                                        labelText="Acessório da Polia"
+                                        placeholder={t("pulleyAttachmentPlaceholder")}
+                                        labelText={t("pulleyAttachment")}
                                         value={pulleyAttachments.find(attachment => String(attachment.ID) === String(exercise.pulleyAttachment?.ID))?.name}
                                         handleChange={(e) => handleOnChangeSelect(e, arrays.pulleyAttachments, "name", exercise, setExercise, setExerciseError)}
                                         options={pulleyAttachments.map(attachment => attachment.name)}    
@@ -179,8 +199,8 @@ function TrainingExerciseForm({ exercise, setExercise, setExerciseError, handleS
 
                             <Select
                                 name="gripType"
-                                placeholder="Selecione o tipo da pegada"
-                                labelText="Tipo da Pegada"
+                                placeholder={t("gripTypePlaceholder")}
+                                labelText={t("gripType")}
                                 value={gripTypes.find(type => String(type.ID) === String(exercise.gripType?.ID))?.name}
                                 handleChange={(e) => handleOnChangeSelect(e, arrays.gripTypes, "name", exercise, setExercise, setExerciseError)}
                                 options={gripTypes.map(type => type.name)}    
@@ -188,8 +208,8 @@ function TrainingExerciseForm({ exercise, setExercise, setExerciseError, handleS
 
                             <Select
                                 name="gripWidth"
-                                placeholder="Selecione o espaçamento da pegada"
-                                labelText="Espaçamento da Pegada"
+                                placeholder={t("gripWidthPlaceholder")}
+                                labelText={t("gripWidth")}
                                 value={gripWidths.find(width => String(width.ID) === String(exercise.gripWidth?.ID))?.description}
                                 handleChange={(e) => handleOnChangeSelect(e, arrays.gripWidths, "description", exercise, setExercise, setExerciseError)}
                                 options={gripWidths.map(width => width.description)}    
@@ -197,8 +217,8 @@ function TrainingExerciseForm({ exercise, setExercise, setExerciseError, handleS
 
                             <Select
                                 name="laterality"
-                                placeholder="Selecione a forma de execução"
-                                labelText="Forma de execução"
+                                placeholder={t("lateralityPlaceholder")}
+                                labelText={t("laterality")}
                                 value={lateralities.find(laterality => String(laterality.ID) === String(exercise.laterality?.ID))?.type}
                                 handleChange={(e) => handleOnChangeSelect(e, arrays.lateralities, "type", exercise, setExercise, setExerciseError)}
                                 options={lateralities.map(laterality => laterality.type)}    
@@ -208,24 +228,24 @@ function TrainingExerciseForm({ exercise, setExercise, setExerciseError, handleS
                         <p
                             className={styles.exercise_alert}
                         >
-                            Esse exercício não pode ser personalizado!
+                            {t("impersonalizableExercise")}
                         </p>
                     )}
 
                     <TextArea
                         name="note"
-                        placeholder="Insira sua nota ou observação"
-                        labelText="Nota"
+                        placeholder={t("notePlaceholder")}
+                        labelText={t("note")}
                         value={exercise.note}
                         handleChange={(e) => handleOnChangeTextField(e, formattNameAndNote, isNoteValid, exercise, setExercise, setExerciseError, setErrors)}
-                        alertMessage="A nota não deve ter mais que 500 caracteres."
+                        alertMessage={t("alertNote500")}
                         error={errors.note}
                         maxLength={500}
                     />
                 </Stack>
 
                 <SubmitFormButton
-                    text="Criar ou Modificar Exercício"
+                    text={t("createExercise")}
                 />
             </Stack>
         </form>

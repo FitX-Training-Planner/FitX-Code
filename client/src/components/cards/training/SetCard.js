@@ -1,8 +1,23 @@
+import { useTranslation } from "react-i18next";
 import Stack from "../../containers/Stack";
 import ClickableIcon from "../../form/buttons/ClickableIcon";
 import SetInfo from "./SetInfo";
 
-function SetCard({ restSeconds, durationSeconds, trainingTechniqueName, setTypeName, minReps, maxReps, orderInExercise, headingNumber, handleModifySet, handleRemoveSet, handleDuplicateSet }) {
+function SetCard({
+    restSeconds,
+    durationSeconds,
+    trainingTechniqueName,
+    setTypeName,
+    minReps,
+    maxReps,
+    orderInExercise,
+    headingNumber,
+    handleModifySet,
+    handleRemoveSet,
+    handleDuplicateSet
+}) {
+    const { t } = useTranslation();
+
     return (
         <Stack>
             <Stack
@@ -11,14 +26,14 @@ function SetCard({ restSeconds, durationSeconds, trainingTechniqueName, setTypeN
             >
                 <ClickableIcon
                     iconSrc="/images/icons/edit.png"
-                    name="Editar"
+                    name={t("edit")}
                     handleClick={handleModifySet}
                     size="small"
                 />
 
                 <ClickableIcon
                     iconSrc="/images/icons/remove.png"
-                    name="Remover"
+                    name={t("remove")}
                     handleClick={handleRemoveSet}
                     size="small"
                 />
@@ -41,7 +56,7 @@ function SetCard({ restSeconds, durationSeconds, trainingTechniqueName, setTypeN
 
             <ClickableIcon
                 iconSrc="/images/icons/duplicate.png"
-                name="Duplicar"
+                name={t("duplicate")}
                 handleClick={handleDuplicateSet}
                 size="small"
             />

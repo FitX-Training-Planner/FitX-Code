@@ -12,8 +12,11 @@ import Stack from "../containers/Stack";
 import TrainingExerciseForm from "../form/forms/TrainingExerciseForm";
 import duplicateObjectInObjectList from "../../utils/generators/duplicate";
 import BackButton from "../form/buttons/BackButton";
+import { useTranslation } from "react-i18next";
 
 function ModifyExercise() {
+    const { t } = useTranslation();
+
     const location = useLocation();
     
     const navigate = useNavigate();
@@ -80,7 +83,7 @@ function ModifyExercise() {
         if (!(locationExercise || locationExerciseOrder) || !locationTrainingDayOrder || !locationStepOrder) {
             navigate("/");
             
-            notify("As informações do plano de treino não foram encontradas.", "error");
+            notify(t("notFoundTrainingPlanInfo"), "error");
 
             return;
         }
@@ -201,7 +204,7 @@ function ModifyExercise() {
         }
 
         fetchData();
-    }, [getBodyPositions, getExerciseEquipments, getExercises, getGripTypes, getGripWidths, getLateralities, getPulleyAttachments, getPulleyHeights, location.state, navigate, notify, stepDestination, trainingPlan.trainingDays]);
+    }, [getBodyPositions, getExerciseEquipments, getExercises, getGripTypes, getGripWidths, getLateralities, getPulleyAttachments, getPulleyHeights, location.state, navigate, notify, stepDestination, trainingPlan.trainingDays, t]);
 
     const validateAndSaveExercise = useCallback(() => {
         if (!validateExercise(
@@ -212,7 +215,7 @@ function ModifyExercise() {
             exercise.exerciseEquipment?.ID || null,
             exercise.exercise?.isFixed || null
         )) {
-            notify("Ainda há erros no formulário de exercício!", "error");
+            notify(t("alertErrorExercise"), "error");
 
             return false;
         }
@@ -245,11 +248,11 @@ function ModifyExercise() {
         }));
 
         return true;
-    }, [error, exercise, notify, setTrainingPlan, stepOrder, trainingDayOrder]);
+    }, [error, exercise, notify, setTrainingPlan, stepOrder, trainingDayOrder, t]);
 
     const addSet = useCallback(() => {
         if (exercise.sets.length >= 10) {
-            notify("Você atingiu o limite de 10 séries para este exercício.", "error");
+            notify(t("limitAlertSets"), "error");
 
             return;
         }
@@ -267,7 +270,7 @@ function ModifyExercise() {
                 } 
             }
         )
-    }, [exercise.sets, exercise.orderInStep, validateAndSaveExercise, navigate, setDestination, stepOrder, trainingDayOrder, notify]);
+    }, [exercise.sets, exercise.orderInStep, validateAndSaveExercise, navigate, setDestination, stepOrder, trainingDayOrder, notify, t]);
 
     const duplicateSet = useCallback((set) => {
         duplicateObjectInObjectList(
@@ -275,12 +278,12 @@ function ModifyExercise() {
             exercise.sets, 
             "sets", 
             10, 
-            "Você atingiu o limite de 10 séries para este exercício.", 
+            t("limitAlertSets"), 
             notify, 
             "orderInExercise", 
             setExercise
         )
-    }, [exercise.sets, notify]);
+    }, [exercise.sets, notify, t]);
 
     const modifySet = useCallback(set => {
         if (!validateAndSaveExercise()) return;
@@ -299,7 +302,7 @@ function ModifyExercise() {
     }, [validateAndSaveExercise, navigate, setDestination, exercise.orderInStep, stepOrder, trainingDayOrder]);
 
     const removeSet = useCallback(async order => {
-        const userConfirmed = await confirm("Deseja remover essa série do seu exercício?");
+        const userConfirmed = await confirm(t("removeConfirmSet"));
         
         if (userConfirmed) {
             setExercise(prevExercise => ({
@@ -307,9 +310,9 @@ function ModifyExercise() {
                 sets: removeAndReorder(prevExercise.sets, "orderInExercise", order)
             }));
 
-            notify("Série do exercício removida!", "success");
+            notify(t("successRemoveSet"), "success");
         }
-    }, [confirm, notify]);
+    }, [confirm, notify, t]);
 
     const handleOnSubmit = useCallback((e) => {
         e.preventDefault();
@@ -320,8 +323,8 @@ function ModifyExercise() {
     }, [navigate, stepDestination, stepOrder, trainingDayOrder, validateAndSaveExercise]);
 
     useEffect(() => {
-        document.title = "Modificar Exercício do Treino";
-    }, []);
+        document.title = t("modifyExercise");
+    }, [t]);
 
     return (
         <main
@@ -335,13 +338,13 @@ function ModifyExercise() {
                 <Stack>
                     <Title
                         headingNumber={1}
-                        text="Modificar Exercício do Treino"
+                        text={t("modifyExercise")}
                     />
 
                     <Title
                         text={
                             exercise.ID && trainingDayOrder && stepOrder
-                            ? `Exercício ${exercise.orderInStep} da Sequência ${stepOrder} do Dia ${trainingDayOrder}` 
+                            ? `${t("exercise")} ${exercise.orderInStep} ${t("ofSequence")} ${stepOrder} ${t("ofDay")} ${trainingDayOrder}` 
                             : ""
                         }
                         headingNumber={2}

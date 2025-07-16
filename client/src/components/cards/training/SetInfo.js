@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import convertTime from "../../../utils/formatters/text/convertTime";
 import Stack from "../../containers/Stack";
 import Title from "../../text/Title";
@@ -13,6 +14,8 @@ function SetInfo({
     trainingTechniqueName,
     headingNumber
 }) {
+    const { t } = useTranslation();
+
     return (
         <Stack>
             <Stack
@@ -20,7 +23,7 @@ function SetInfo({
                 className={styles.item_title}
             >
                 <span>
-                    Série {orderInExercise}
+                    {t("set")} {orderInExercise}
                 </span>
 
                 <Title
@@ -36,11 +39,11 @@ function SetInfo({
             >                                            
                 {minReps && maxReps ? (
                     <span>
-                        {`${minReps} - ${maxReps} repetições`}
+                        {minReps} - {maxReps} {t("reps")}
                     </span>    
                 ) : durationSeconds && (
                     <span>
-                        {`${convertTime(durationSeconds, "second")} em isometria`}
+                        {convertTime(durationSeconds, "second")} {t("inIsometry")}
                     </span>  
                 )}   
 
@@ -50,7 +53,7 @@ function SetInfo({
                         className={styles.descriptioned_item}
                     >
                         <span>
-                            Técnica:
+                            {t("technique")}:
                         </span>
 
                         <span>
@@ -64,7 +67,7 @@ function SetInfo({
                     className={styles.descriptioned_item}
                 >
                     <span>
-                        Descanso:
+                        {t("rest")}:
                     </span>
 
                     <span>
