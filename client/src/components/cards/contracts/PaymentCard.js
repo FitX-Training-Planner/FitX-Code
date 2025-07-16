@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import useWindowSize from "../../../hooks/useWindowSize";
 import { formatPriceToBR } from "../../../utils/formatters/payments/formatOnChange";
 import { formatDateToExtend } from "../../../utils/formatters/text/formatDate";
@@ -13,6 +14,8 @@ function PaymentCard({
     mercadoPagoTransactionId,
     receiptUrl
 }) {
+    const { t } = useTranslation();
+
     const { width } = useWindowSize();
     
     return (
@@ -26,7 +29,7 @@ function PaymentCard({
                     className={styles.descriptioned_item}
                 >
                     <span>
-                        Transação:
+                        {t("transaction")}:
                     </span>
 
                     <Stack
@@ -45,7 +48,7 @@ function PaymentCard({
                             </span>
 
                             <Alert
-                                alertMessage="Este ID é útil para rastrear e comprovar o pagamento, especialmente em casos de suporte. use-o como referência."
+                                alertMessage={t("alertTransactionId")}
                             />
                         </Stack>
                     </Stack>
@@ -60,7 +63,7 @@ function PaymentCard({
                         className={styles.descriptioned_item}
                     >
                         <span>
-                            Valor:
+                            {t("value")}:
                         </span>
 
                         <span>
@@ -75,7 +78,7 @@ function PaymentCard({
                         extraStyles={{ textAlign: width <= 440 ? "start" : "end" }}
                     >
                         <span>
-                            Método de Pagamento:
+                            {t("paymentMethod")}:
                         </span>
 
                         <span>
@@ -93,7 +96,7 @@ function PaymentCard({
                 className={styles.descriptioned_item}
             >
                 <span>
-                    URL do Recibo:
+                    {t("receiptUrl")}:
                 </span>
 
                 <Stack
@@ -107,8 +110,8 @@ function PaymentCard({
 
                     <ClickableIcon
                         iconSrc="/images/icons/redirect.png"
-                        name="Ver Recibo"
-                        handleClick={() => window.open(receiptUrl, "_blank", "noopener,noreferrer")}
+                        name={t("seeReceipt")}
+                        // handleClick={() => window.open(receiptUrl, "_blank", "noopener,noreferrer")}
                         size="small"
                     />
                 </Stack>

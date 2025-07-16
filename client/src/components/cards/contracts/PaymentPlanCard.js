@@ -5,6 +5,7 @@ import Stack from "../../containers/Stack";
 import ClickableIcon from "../../form/buttons/ClickableIcon";
 import styles from "./PaymentPlanCard.module.css";
 import useWindowSize from "../../../hooks/useWindowSize";
+import { useTranslation } from "react-i18next";
 
 function PaymentPlanCard({
     name,
@@ -15,6 +16,8 @@ function PaymentPlanCard({
     handleModifyPaymentPlan,
     handleRemovePaymentPlan
 }) {
+    const { t } = useTranslation();
+
     const { width } = useWindowSize();
     
     return (
@@ -28,14 +31,14 @@ function PaymentPlanCard({
                 >
                     <ClickableIcon
                         iconSrc="/images/icons/edit.png"
-                        name="Editar"
+                        name={t("edit")}
                         handleClick={handleModifyPaymentPlan}
                         size="small"
                     />
 
                     <ClickableIcon
                         iconSrc="/images/icons/remove.png"
-                        name="Remover"
+                        name={t("remove")}
                         handleClick={handleRemovePaymentPlan}
                         size="small"
                     />
@@ -81,7 +84,7 @@ function PaymentPlanCard({
                         className={styles.descriptioned_item}
                     >
                         <span>
-                            Duração dos Serviços:
+                            {t("servicesDuration")}:
                         </span>
 
                         <Stack
@@ -89,12 +92,12 @@ function PaymentPlanCard({
                             className={styles.plan_duration}
                         >
                             <span>
-                                {durationDays || 0} dia{durationDays === 1 ? "" : "s"}
+                                {durationDays || 0} {t("day")}{durationDays === 1 ? "" : "s"}
                             </span>
 
                             {durationDays > 6 && (
                                 <>
-                                    ou 
+                                    {t("or")}
 
                                     <span>
                                         {convertDays(durationDays)}
@@ -111,7 +114,7 @@ function PaymentPlanCard({
                             extraStyles={{ padding: width <= 440 ? "0" : "0 1em" }}
                         >
                             <span>
-                                Benefícios:
+                                {t("benefits")}:
                             </span>
 
                             <Stack>
@@ -143,7 +146,7 @@ function PaymentPlanCard({
                             extraStyles={{ padding: width <= 440 ? "0" : "0 1em" }}
                         >
                             <span>
-                                Descrição:
+                                {t("description")}:
                             </span>
 
                             <p>

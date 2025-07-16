@@ -18,8 +18,11 @@ import ClickableIcon from "../form/buttons/ClickableIcon";
 import LoadMoreButton from "../form/buttons/LoadMoreButton";
 import FilterItemsLayout from "../containers/FilterItemsLayout";
 import SearchInput from "../form/fields/SearchInput";
+import { useTranslation } from "react-i18next";
 
 function TrainerPayments() {
+    const { t } = useTranslation();
+
     const navigate = useNavigate();
 
     const { width } = useWindowSize();
@@ -40,14 +43,14 @@ function TrainerPayments() {
 
     const contractsFilters = useMemo(() => {
         return [
-            { value: "newest", text: "Mais novos" },
-            { value: "oldest", text: "Mais antigos" },
-            { value: "highest_value", text: "Maior valor" },
-            { value: "lowest_value", text: "Menor valor" },
-            { value: "longest_duration", text: "Mais longos" },
-            { value: "shortest_duration", text: "Mais curtos" }
+            { value: "newest", text: t("newests") },
+            { value: "oldest", text: t("oldests") },
+            { value: "highest_value", text: t("highestValue") },
+            { value: "lowest_value", text: t("lowestValue") },
+            { value: "longest_duration", text: t("longests") },
+            { value: "shortest_duration", text: t("shortests") }
         ]
-    }, []);  
+    }, [t]);  
     
     const [contracts, setContracts] = useState([]);
     const [showedContracts, setShowedContracts] = useState([]);
@@ -62,7 +65,7 @@ function TrainerPayments() {
         if (hasError) return;
 
         if ((updatedContracts.length < contractsLimit && updatedContracts.length !== 0) || updatedContracts.length % contractsLimit !== 0) {
-            notify("Você chegou ao fim dos seus contratos!");
+            notify(t("contractsEnding"));
 
             return;
         }
@@ -119,11 +122,11 @@ function TrainerPayments() {
             getContracts, 
             handleOnGetContractsSuccess, 
             handleOnGetContractsError, 
-            "Carregando contratos", 
-            "Contratos carregados!", 
-            "Falha ao carregar contratos!"
+            t("loadingContracts"), 
+            t("successContracts"), 
+            t("errorContracts")
         );
-    }, [getTrainerContracts, notify]);
+    }, [getTrainerContracts, notify, t]);
     
     const handleOnChangeFilter = useCallback((filter) => {
         setContracts([]);
@@ -174,29 +177,29 @@ function TrainerPayments() {
                 handleOnGetPaymentPlansError, 
                 undefined, 
                 undefined, 
-                "Falha ao recuperar planos de pagamento!"
+                t("errorPaymentPlans")
             );
         }
 
         fetchData();
-    }, [navigate, notify, isTrainer, user, getTrainerPaymentPlans, loadContracts, contractsError, contracts, contractsOffset, activeContractFilter.value]);
+    }, [navigate, notify, isTrainer, user, getTrainerPaymentPlans, loadContracts, contractsError, contracts, contractsOffset, activeContractFilter.value, t]);
 
     const addPaymentPlan = useCallback(() => {
         if (paymentPlans.length >= 6) {
-            notify("Você atingiu o limite de 6 planos de pagamento.", "error");
+            notify(t("limitAlertPaymentPlans"), "error");
 
             return;
         }
 
         navigate("/trainers/me/create-payment-plan")
-    }, [paymentPlans.length, navigate, notify]);
+    }, [paymentPlans.length, navigate, notify, t]);
 
     const modifyPaymentPlan = useCallback(paymentPlan => {
         navigate("/trainers/me/create-payment-plan", { state: { paymentPlan } })
     }, [navigate]);
 
     const removePlan = useCallback(async ID => {
-        const userConfirmed = await confirm("Deseja remover esse plano de pagamento?");
+        const userConfirmed = await confirm(t("removeConfirmPaymentPlan"));
         
         if (userConfirmed) {
             const removePaymentPlanReq = () => {
@@ -213,16 +216,16 @@ function TrainerPayments() {
                 removePaymentPlanReq, 
                 handleOnRemovePaymentPlanSuccess, 
                 () => undefined, 
-                "Removendo plano", 
-                "Plano removido!", 
-                "Falha ao remover plano!"
+                t("loadingRemovePaymentPlan"), 
+                t("successRemovePaymentPlan"), 
+                t("errorRemovePaymentPlan")
             );
         }
-    }, [confirm, removePaymentPlan]);
+    }, [confirm, removePaymentPlan, t]);
 
     useEffect(() => {
-        document.title = "Pagamentos e Contratos";
-    }, []);
+        document.title = t("paymentsAndContracts");
+    }, [t]);
 
     return (
         <NavBarLayout
@@ -240,7 +243,7 @@ function TrainerPayments() {
                     >
                         <Title
                             headingNumber={1}
-                            text="Pagamentos e Contratos"
+                            text={t("paymentsAndContracts")}
                         />
                     </Stack>
 
@@ -250,21 +253,21 @@ function TrainerPayments() {
                     >
                         <Title
                             headingNumber={2}
-                            text="Planos de Pagamento"
+                            text={t("paymentPlans")}
                         />
 
                         {paymentPlans.length === 0 ? (
                             paymentPlansError ? (
                                 <p>
-                                    Ocorreu um erro ao recuperar seus planos de pagamento!
+                                    {t("errorOcurredPaymentPlans")}
 
                                     <br/>
                                     
-                                    Recarregue a página ou tente de novo mais tarde.
+                                    {t("reloadOrTryLater")}
                                 </p>
                             ) : (
                                 <p>
-                                    Crie seu primeiro plano de pagamento clicando no botão abaixo.
+                                    {t("createPaymentPlanInstruction")}
                                 </p>
                             )
                         ) : (
@@ -275,34 +278,28 @@ function TrainerPayments() {
                                 gap="2em"
                                 maxElements={width <= 940 ? 1 : 2}
                                 className={styles.payment_plans}
-                            >
-                                {paymentPlans.length === 0 ? (
-                                    <p>
-                                        Crie seu primeiro plano de pagamento clicando no botão abaixo.
-                                    </p>
-                                ) : (
-                                    paymentPlans.map((plan, index) => (
-                                        <React.Fragment
-                                            key={index}
-                                        >
-                                            <PaymentPlanCard
-                                                name={plan.name} 
-                                                fullPrice={plan.fullPrice} 
-                                                durationDays={plan.durationDays} 
-                                                description={plan.description} 
-                                                benefits={plan.benefits}
-                                                handleModifyPaymentPlan={() => modifyPaymentPlan(plan)}
-                                                handleRemovePaymentPlan={() => removePlan(plan.ID)}
-                                            />
-                                        </React.Fragment>
-                                    ))
-                                )}
+                            >                               
+                                {paymentPlans.map((plan, index) => (
+                                    <React.Fragment
+                                        key={index}
+                                    >
+                                        <PaymentPlanCard
+                                            name={plan.name} 
+                                            fullPrice={plan.fullPrice} 
+                                            durationDays={plan.durationDays} 
+                                            description={plan.description} 
+                                            benefits={plan.benefits}
+                                            handleModifyPaymentPlan={() => modifyPaymentPlan(plan)}
+                                            handleRemovePaymentPlan={() => removePlan(plan.ID)}
+                                        />
+                                    </React.Fragment>
+                                ))}
                             </FlexWrap>
                         )}
 
                         <ClickableIcon
                             iconSrc="/images/icons/add.png"
-                            name="Adicionar Plano"
+                            name={t("addPaymentPlan")}
                             handleClick={addPaymentPlan}
                         />
                     </Stack>
@@ -313,7 +310,7 @@ function TrainerPayments() {
                     >
                         <Title
                             headingNumber={2}
-                            text="Contratos"
+                            text={t("contracts")}
                             varColor="--theme-color"
                         />
 
@@ -330,7 +327,7 @@ function TrainerPayments() {
                                 {!contractsError && contracts.length === 0 ? (
                                     !contractsLoading && (
                                         <p>
-                                            Você ainda não possui nenhum contrato.
+                                            {t("noContracts")}
                                         </p>
                                     )
                                 ) : (
@@ -338,8 +335,7 @@ function TrainerPayments() {
                                         gap="3em"
                                     >
                                         <SearchInput
-                                            placeholder="Filtrar por status..."
-                                            name="Filtrar"
+                                            placeholder={`${t("filterByStatus")}...`}
                                             searchText={contractsSearchText}
                                             setSearchText={setContractsSearchText}
                                             items={contracts}
@@ -374,7 +370,7 @@ function TrainerPayments() {
                                                 ))
                                             ) : (
                                                 <p>
-                                                    Sem resultado
+                                                    {t("noResult")}
                                                 </p>
                                             )}
                                         </Stack>
@@ -385,11 +381,11 @@ function TrainerPayments() {
                             {contractsError ? (
                                 <p>
                                     <>
-                                        Ocorreu um erro ao carregar seus contratos!
+                                        {t("errorOcurredContracts")}
 
                                         <br/>
                                         
-                                        Recarregue a página ou tente de novo mais tarde.
+                                        {t("reloadOrTryLater")}
                                     </>
                                 </p>
                             ) : (

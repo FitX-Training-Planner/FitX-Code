@@ -1,8 +1,14 @@
+import { useTranslation } from "react-i18next";
 import Stack from "../../containers/Stack";
 import ClickableIcon from "./ClickableIcon";
 import styles from "./LoadMoreButton.module.css";
 
-function LoadMoreButton({ text = "Carregar mais", handleLoad }) {
+function LoadMoreButton({ 
+    text, 
+    handleLoad 
+}) {
+    const { t } = useTranslation();
+
     return (
         <div
             type="button"
@@ -14,12 +20,12 @@ function LoadMoreButton({ text = "Carregar mais", handleLoad }) {
                 gap="0.5em"
                 justifyContent="center"
             >
-                {text}
+                {text || t("loadMore")}
 
                 <ClickableIcon
                     iconSrc="/images/icons/add.png"
                     size="small"
-                    name="Carregar"
+                    name={t("load")}
                     hasTheme={false}
                 />
             </Stack>

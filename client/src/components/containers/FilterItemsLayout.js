@@ -3,7 +3,13 @@ import styles from "./FilterItemsLayout.module.css";
 import NonBackgroundButton from "../form/buttons/NonBackgroundButton";
 import React from "react";
 
-export function FilterItemsLayout({ filters, activeFilter, setActiveFilter, handleChange, children }) {
+export function FilterItemsLayout({
+    filters,
+    activeFilter,
+    setActiveFilter,
+    handleChange,
+    children
+}) {
     return (
         <Stack
             gap="3em"

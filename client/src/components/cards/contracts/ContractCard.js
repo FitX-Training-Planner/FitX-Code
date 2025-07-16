@@ -7,6 +7,7 @@ import styles from "./ContractCard.module.css";
 import PaymentCard from "./PaymentCard";
 import { formatDateToExtend } from "../../../utils/formatters/text/formatDate";
 import useWindowSize from "../../../hooks/useWindowSize";
+import { useTranslation } from "react-i18next";
 
 function ContractCard({
     clientName,
@@ -23,6 +24,8 @@ function ContractCard({
     mercadoPagoTransactionId, 
     paymentReceiptUrl
 }) {
+    const { t } = useTranslation();
+
     const { width } = useWindowSize();
 
     const [viewPayment, setViewPayment] = useState(false);
@@ -37,12 +40,12 @@ function ContractCard({
                 className={`${styles.descriptioned_item} ${styles.payment_button_container}`}
             >
                 <span>
-                    {viewPayment ? "Pagamento" : formatDateToExtend(startDate)}
+                    {viewPayment ? t("payment") : formatDateToExtend(startDate)}
                 </span>
 
                 <ClickableIcon
                     iconSrc={`/images/icons/${viewPayment ? "exit" : "transaction"}.png`}
-                    name={viewPayment ? "Fechar" : "Ver Pagamento"}
+                    name={viewPayment ? t("close") : t("seePayment")}
                     handleClick={() => setViewPayment(prevViewPayment => !prevViewPayment)}
                 />
             </Stack>
@@ -60,7 +63,7 @@ function ContractCard({
                             className={styles.descriptioned_item}
                         >
                             <span>
-                                Plano de Pagamento:
+                                {t("paymentPlan")}:
                             </span>
 
                             <Stack
@@ -85,7 +88,7 @@ function ContractCard({
                                 alignItems={width <= 640 ? "center" : "start"}
                             >
                                 <span>
-                                    Contratante:
+                                    {t("contractor")}:
                                 </span>
 
                                 <Stack
@@ -115,11 +118,11 @@ function ContractCard({
                                     className={styles.descriptioned_item}
                                 >
                                     <span>
-                                        Duração do Plano:
+                                        {t("contractDuration")}:
                                     </span>
 
                                     <span>
-                                        {durationDays} Dias - {convertDays(durationDays)}
+                                        {durationDays} {t("days")} - {convertDays(durationDays)}
                                     </span>
                                 </Stack>
 
@@ -130,7 +133,7 @@ function ContractCard({
                                     className={styles.descriptioned_item}
                                 >
                                     <span>
-                                        Término:
+                                        {t("end")}:
                                     </span>
 
                                     <span>
