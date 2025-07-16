@@ -10,8 +10,11 @@ import TrainingPlanExpandedCard from "../cards/training/TrainingPlanExpandedCard
 import BackButton from "../form/buttons/BackButton";
 import Stack from "../containers/Stack";
 import FilterItemsById from "../form/buttons/FilterItemsById";
+import { useTranslation } from "react-i18next";
 
 function TrainingPlan() {
+    const { t } = useTranslation();
+
     const navigate = useNavigate();
 
     const { width } = useWindowSize();
@@ -62,18 +65,18 @@ function TrainingPlan() {
                 getPlan, 
                 handleOnGetPlanSuccess, 
                 handleOnGetPlanError, 
-                "Recuperando plano", 
-                "Plano recuperado!", 
-                "Falha ao recuperar plano!"
+                t("loadingTrainingPlan"), 
+                undefined, 
+                t("errorTrainingPlan")
             );
         }
 
         fetchData();
-    }, [navigate, notify, isTrainer, user, getTrainingPlan, id]);
+    }, [navigate, notify, isTrainer, user, getTrainingPlan, id, t]);
 
     useEffect(() => {
-        document.title = "Plano de Treino";
-    }, []);
+        document.title = t("trainingPlan");
+    }, [t]);
 
     return (
         <main>

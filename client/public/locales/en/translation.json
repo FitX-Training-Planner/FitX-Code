@@ -82,6 +82,21 @@
     "day": "Day",
     "exercises": "Exercises",
     "sets": "Sets",
-    "cardioSessions": "Cardio Sessions"
-
+    "cardioSessions": "Cardio Sessions",
+    "loadingTrainingPlan": "Loading plan",
+    "errorTrainingPlan": "Failed to loading plan!",
+    "trainingPlan": "Training Plan",
+    "goBack": "Go Back",
+    "": "",
+    "": "",
+    "": "",
+    "": "",
+    "": "",
+    "": "",
+    "": "",
+    "": "",
+    "": "",
+    "": "",
+    "": "",
+    "": ""
 }

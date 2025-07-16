@@ -9,8 +9,17 @@ import ExerciseInfo from "./ExerciseInfo";
 import CardioSessionInfo from "./CardioSessionInfo";
 import TrainingDayInfo from "./TrainingDayInfo";
 import TrainingPlanInfo from "./TrainingPlanInfo";
+import { useTranslation } from "react-i18next";
 
-function TrainingPlanExpandedCard({ planID, name, trainingNote, trainingDays = [], width }) {
+function TrainingPlanExpandedCard({
+    planID,
+    name,
+    trainingNote,
+    trainingDays = [],
+    width
+}) {
+    const { t } = useTranslation();
+
     return (
         <Stack
             className={styles.training_plan_card}
@@ -50,7 +59,7 @@ function TrainingPlanExpandedCard({ planID, name, trainingNote, trainingDays = [
                                                 <Stack>
                                                     <Title
                                                         headingNumber={3}
-                                                        text="Exercícios"
+                                                        text={t("exercises")}
                                                     />
 
                                                     <hr/>
@@ -142,7 +151,7 @@ function TrainingPlanExpandedCard({ planID, name, trainingNote, trainingDays = [
                                                 <Stack>
                                                     <Title
                                                         headingNumber={3}
-                                                        text="Sessões de Cardio"
+                                                        text={t("cardioSessions")}
                                                     />
 
                                                     <hr/>

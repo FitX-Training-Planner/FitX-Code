@@ -2,8 +2,11 @@ import { useNavigate } from "react-router-dom";
 import ClickableIcon from "./ClickableIcon";
 import styles from "./BackButton.module.css";
 import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
 
 const BackButton = ({ destiny = null }) => {
+    const { t } = useTranslation();
+    
     const navigate = useNavigate();
 
     const handleClick = useCallback(() => {
@@ -25,7 +28,7 @@ const BackButton = ({ destiny = null }) => {
         >
             <ClickableIcon
                 iconSrc="/images/icons/back.png"
-                name="Voltar"
+                name={t("goBack")}
                 size="small"
             />
         </div>
