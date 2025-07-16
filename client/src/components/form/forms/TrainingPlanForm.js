@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Stack from "../../containers/Stack";
 import SubmitFormButton from "../buttons/SubmitFormButton";
 import TextArea from "../fields/TextArea";
@@ -13,8 +13,20 @@ import DndContextContainer from "../../sortable/DndContextContainer";
 import Title from "../../text/Title";
 import useWindowSize from "../../../hooks/useWindowSize";
 import TrainingDayCard from "../../cards/training/TrainingDayCard";
+import { useTranslation } from "react-i18next";
 
-function TrainingPlanForm({ trainingPlan, setTrainingPlan, setTrainingPlanError, handleSubmit, handleAddTrainingDay, handleDuplicateTrainingDay, handleModifyTrainingDay, handleRemoveTrainingDay }) {
+function TrainingPlanForm({
+    trainingPlan,
+    setTrainingPlan,
+    setTrainingPlanError,
+    handleSubmit,
+    handleAddTrainingDay,
+    handleDuplicateTrainingDay,
+    handleModifyTrainingDay,
+    handleRemoveTrainingDay
+}) {
+    const { t } = useTranslation();
+
     const { width } = useWindowSize();
     
     const [errors, setErrors] = useState({
@@ -30,7 +42,7 @@ function TrainingPlanForm({ trainingPlan, setTrainingPlan, setTrainingPlanError,
                 gap="3em"
             >
                 <p>
-                    - Os campos obrigatórios são marcados com "*".
+                    - {t("mandatoryFields")}
                 </p>
                 
                 <Stack
@@ -38,11 +50,11 @@ function TrainingPlanForm({ trainingPlan, setTrainingPlan, setTrainingPlanError,
                 >    
                     <TextInput
                         name="name"
-                        placeholder="Insira o nome do plano"
-                        labelText="Nome do Plano de Treino *"
+                        placeholder={t("trainingPlanNamePlaceholder")}
+                        labelText={`${t("trainingPlanName")} *`}
                         value={trainingPlan.name}
                         handleChange={(e) => handleOnChangeTextField(e, formattNameAndNote, isPlanNameValid, trainingPlan, setTrainingPlan, setTrainingPlanError, setErrors)}
-                        alertMessage="O nome deve ter entre 1 e 50 caracteres."
+                        alertMessage={t("alertTrainingPlanName")}
                         error={errors.name}
                         maxLength={50}
                     />
@@ -52,7 +64,7 @@ function TrainingPlanForm({ trainingPlan, setTrainingPlan, setTrainingPlanError,
                     >
                         <Title
                             headingNumber={3}
-                            text="Dias do Plano"
+                            text={t("trainingPlanDays")}
                         />
 
                         <Stack>
@@ -106,7 +118,7 @@ function TrainingPlanForm({ trainingPlan, setTrainingPlan, setTrainingPlanError,
 
                             <ClickableIcon
                                 iconSrc="/images/icons/add.png"
-                                name="Adicionar Dia"
+                                name={t("addTrainingDay")}
                                 handleClick={handleAddTrainingDay}
                             />
                         </Stack>
@@ -114,18 +126,18 @@ function TrainingPlanForm({ trainingPlan, setTrainingPlan, setTrainingPlanError,
 
                     <TextArea
                         name="note"
-                        placeholder="Insira sua nota ou observação"
-                        labelText="Nota"
+                        placeholder={t("notePlaceholder")}
+                        labelText={t("note")}
                         value={trainingPlan.note}
                         handleChange={(e) => handleOnChangeTextField(e, formattNameAndNote, isNoteValid, trainingPlan, setTrainingPlan, setTrainingPlanError, setErrors)}
-                        alertMessage="A nota não deve ter mais que 500 caracteres."
+                        alertMessage={t("alertNote500")}
                         error={errors.note}
                         maxLength={500}
                     />
                 </Stack>
 
                 <SubmitFormButton
-                    text={`${trainingPlan.ID ? "Modificar" : "Criar"} Plano de Treino`}
+                    text={`${trainingPlan.ID ? t("modify") : t("create")} ${t("trainingPlan")}`}
                 />
             </Stack>
         </form>

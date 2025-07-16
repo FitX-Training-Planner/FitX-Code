@@ -3,8 +3,16 @@ import { CSS } from "@dnd-kit/utilities";
 import styles from "./SortableItem.module.css";
 import useWindowSize from "../../hooks/useWindowSize";
 import ClickableIcon from "../form/buttons/ClickableIcon";
+import { useTranslation } from "react-i18next";
 
-function SortableItem({ id, className, children, extraStyles }) {
+function SortableItem({
+    id,
+    className,
+    children,
+    extraStyles
+}) {
+    const { t } = useTranslation();
+    
     const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition } = useSortable({ id });
 
     const { width } = useWindowSize();
@@ -31,11 +39,11 @@ function SortableItem({ id, className, children, extraStyles }) {
                 ref={setActivatorNodeRef}
                 {...attributes}
                 {...listeners}
-                title="Arrastar"
+                title={t("drag")}
             >
                 <ClickableIcon
                     iconSrc="/images/icons/drag.png"
-                    name="Arrastar"
+                    name={t("drag")}
                 />
             </span>
         </div>

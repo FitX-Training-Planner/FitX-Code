@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import Stack from "../../containers/Stack";
 import Title from "../../text/Title";
 import styles from "./TrainingCards.module.css";
@@ -11,6 +12,8 @@ function TrainingDayInfo({
     titleColor = "--text-color",
     bgTitleColor = "--bg-color" 
 }) {
+    const { t } = useTranslation();
+
     return (
         <Stack>
             <Stack
@@ -19,7 +22,7 @@ function TrainingDayInfo({
                 extraStyles={{ backgroundColor: `var${bgTitleColor}` }}
             >              
                 <span>
-                    Dia {orderInPlan}
+                    {t("day")} {orderInPlan}
                 </span>
 
                 <Title
@@ -38,7 +41,7 @@ function TrainingDayInfo({
                     className={styles.note}
                 >
                     <span>
-                        Nota do dia: 
+                        {t("dayNote")}: 
                     </span>
                     
                     {` ${note}`}

@@ -4,6 +4,7 @@ import ClickableIcon from "../../form/buttons/ClickableIcon";
 import Title from "../../text/Title";
 import getStepType from "../../../utils/generators/stepType";
 import TrainingDayInfo from "./TrainingDayInfo";
+import { useTranslation } from "react-i18next";
 
 function TrainingDayCard({
     name,
@@ -18,6 +19,8 @@ function TrainingDayCard({
     handleDuplicateTrainingDay,
     viewWidth
 }) {
+    const { t } = useTranslation();
+
     return (
         <Stack>
             <Stack
@@ -26,14 +29,14 @@ function TrainingDayCard({
             >
                 <ClickableIcon
                     iconSrc="/images/icons/edit.png"
-                    name="Editar"
+                    name={t("edit")}
                     handleClick={handleModifyTrainingDay}
                     size="small"
                 />
 
                 <ClickableIcon
                     iconSrc="/images/icons/remove.png"
-                    name="Remover"
+                    name={t("remove")}
                     handleClick={handleRemoveTrainingDay}
                     size="small"
                 />
@@ -56,7 +59,7 @@ function TrainingDayCard({
                         <>
                             <Stack>
                                 <Title
-                                    text="Exercícios"
+                                    text={t("exercises")}
                                     headingNumber={headingNumber + 1}
                                     varColor="--theme-color"
                                 />
@@ -108,7 +111,7 @@ function TrainingDayCard({
                                 )}
 
                                 <Title
-                                    text="Sessões de Cardio"
+                                    text={t("cardioSessions")}
                                     headingNumber={headingNumber + 1}
                                     varColor="--theme-color"
                                 />
@@ -125,7 +128,7 @@ function TrainingDayCard({
                                                 gap="0.5em"
                                             >
                                                 <Title
-                                                    text={`Sessão ${session.usedID}`}
+                                                    text={`${t("session")} ${session.usedID}`}
                                                     headingNumber={headingNumber + 2}
                                                     textAlign="left"
                                                 />
@@ -156,7 +159,7 @@ function TrainingDayCard({
             
             <ClickableIcon
                 iconSrc="/images/icons/duplicate.png"
-                name="Duplicar"
+                name={t("duplicate")}
                 handleClick={handleDuplicateTrainingDay}
                 size="small"
             />

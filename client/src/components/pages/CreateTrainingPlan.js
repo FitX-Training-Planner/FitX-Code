@@ -15,8 +15,11 @@ import duplicateObjectInObjectList from "../../utils/generators/duplicate";
 import { verifyIsTrainer } from "../../utils/requests/verifyUserType";
 import { cleanCacheData } from "../../utils/cache/operations";
 import BackButton from "../form/buttons/BackButton";
+import { useTranslation } from "react-i18next";
 
-function CreateTrainingPlan() {    
+function CreateTrainingPlan() {   
+    const { t } = useTranslation();
+
     const navigate = useNavigate();
 
     const location = useLocation();
@@ -64,17 +67,17 @@ function CreateTrainingPlan() {
             trainingPlan.name,
             trainingPlan.note
         )) {
-            notify("Ainda há erros no formulário de plano de treino!", "error");
+            notify(t("errorAlertCreateTrainingPlan"), "error");
 
             return false;
         }
 
         return true;
-    }, [error, notify, trainingPlan.name, trainingPlan.note]);
+    }, [error, notify, trainingPlan.name, trainingPlan.note, t]);
 
     const addTrainingDay = useCallback(() => {   
         if (trainingPlan.trainingDays.length >= 9) {
-            notify("Você atingiu o limite de 9 dias para este plano de treino.", "error");
+            notify(t("limitAlertTrainingDays"), "error");
 
             return;
         }
@@ -83,7 +86,7 @@ function CreateTrainingPlan() {
             trainingDayDestination, 
             { state: { trainingDayOrder: getNextOrder(trainingPlan.trainingDays, "orderInPlan") } }
         )
-    }, [navigate, notify, trainingDayDestination, trainingPlan.trainingDays]);
+    }, [navigate, notify, trainingDayDestination, trainingPlan.trainingDays, t]);
 
     const duplicateTrainingDay = useCallback((day) => {
         duplicateObjectInObjectList(
@@ -91,19 +94,19 @@ function CreateTrainingPlan() {
             trainingPlan.trainingDays, 
             "trainingDays", 
             9, 
-            "Você atingiu o limite de 9 dias para este plano de treino.", 
+            t("limitAlertTrainingDays"), 
             notify, 
             "orderInPlan", 
             setTrainingPlan
         )
-    }, [notify, setTrainingPlan, trainingPlan.trainingDays]);
+    }, [notify, setTrainingPlan, trainingPlan.trainingDays, t]);
 
     const modifyTrainingDay = useCallback(trainingDay => {
         navigate(trainingDayDestination, { state: { trainingDay } });
     }, [navigate, trainingDayDestination]);
 
     const removeTrainingDay = useCallback(async order => {
-        const userConfirmed = await confirm("Deseja remover esse dia do seu treino?");
+        const userConfirmed = await confirm(t("removeConfirmTrainingDay"));
         
         if (userConfirmed) {
             setTrainingPlan(prevTrainingPlan => ({
@@ -113,7 +116,7 @@ function CreateTrainingPlan() {
 
             notify("Dia de treino removido!", "success");
         }
-    }, [confirm, notify, setTrainingPlan]);
+    }, [confirm, notify, setTrainingPlan, t]);
 
     const handleOnSubmit = useCallback((e) => {
         e.preventDefault();
@@ -146,17 +149,17 @@ function CreateTrainingPlan() {
                 return api.put(`/trainers/me/training-plans/${trainingPlan.ID}`, formData);
             };
 
-            loadingMessage = "Modificando";
-            successMessage = "Plano de treino modificado com sucesso!";
-            errorMessage = "Falha ao modificar plano!";
+            loadingMessage = t("modifying");
+            successMessage = t("successModifyTrainingPlan");
+            errorMessage = t("errorModifyTrainingPlan");
         } else {
             requestFn = () => {
                 return api.post(`/trainers/me/training-plans`, formData);
             };
 
-            loadingMessage = "Criando";
-            successMessage = "Plano de treino criado com sucesso!";
-            errorMessage = "Falha ao criar plano!";
+            loadingMessage = t("creating");
+            successMessage = t("successCreateTrainingPlan");
+            errorMessage = t("errorCreateTrainingPlan");
         }
 
         const handleOnPostOrPutPlanSuccess = () => {
@@ -179,11 +182,11 @@ function CreateTrainingPlan() {
             successMessage, 
             errorMessage
         );
-    }, [error, navigate, notify, postOrPutPlanRequest, resetTrainingPlan, trainingPlan, validatePlan]);
+    }, [error, navigate, notify, postOrPutPlanRequest, resetTrainingPlan, t, trainingPlan, validatePlan]);
 
     useEffect(() => {
-        document.title = "Criar Plano de Treino";
-    }, []);
+        document.title = t("createTrainingPlan");
+    }, [t]);
 
     return (
         <main
@@ -201,18 +204,18 @@ function CreateTrainingPlan() {
                 >
                     <Title
                         headingNumber={1}
-                        text="Plano de Treino"
+                        text={t("trainingPlan")}
                     />
 
                     <Title
                         headingNumber={2}
-                        text={`${trainingPlan.ID ? "Modificar" : "Criar"} Modelo`}
+                        text={`${trainingPlan.ID ? t("modify") : t("create")} ${t("model")}`}
                         varColor="--light-theme-color"
                     />
 
                     {!trainingPlan.ID && (
                         <p>
-                            Crie um plano de treino completo para usar com quantos clientes você quiser!
+                            {t("createTrainingPlanDescription")}
                         </p>
                     )}
                 </Stack>
