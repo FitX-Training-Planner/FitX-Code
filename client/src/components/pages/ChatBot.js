@@ -8,8 +8,11 @@ import api from "../../api/axios";
 import { validateMessage } from "../../utils/validators/formValidator";
 import useRequest from "../../hooks/useRequest";
 import { useSystemMessage } from "../../app/SystemMessageProvider";
+import { useTranslation } from "react-i18next";
 
 function ChatBot() {
+    const { t } = useTranslation();
+
     const navigate = useNavigate();
     
     const hasRun = useRef(false);
@@ -28,8 +31,7 @@ function ChatBot() {
         messages: [
             {
                 content: `
-                    Olá, ${user.name}! Estou aqui para responder todas as suas perguntas sobre 
-                    musculação, então pergunte o que quiser : )
+                    ${t("hi")}, ${user.name}! ${t("chatbotDescription")} : )
                 `,
                 createDate: new Date(),
                 isFromTrainer: true
@@ -66,8 +68,7 @@ function ChatBot() {
                 content: message.content.trim()
             }))
         ));
-        // obter a linguagem pelo i18
-        formData.append("isEnglish", false);
+        formData.append("isEnglish", user.config.isEnglish);
 
         setChat(prevChat => ({
             ...prevChat,
@@ -119,9 +120,9 @@ function ChatBot() {
             handleOnPostMsgError, 
             undefined, 
             undefined, 
-            "Falha ao enviar mensagem!"
+            t("errorSendMessage")
         );
-    }, [chat.messages, chatFormContext.message, messageError, postMessage]);
+    }, [chat.messages, chatFormContext.message, messageError, postMessage, t, user.config.isEnglish]);
 
     useEffect(() => {
         document.title = "Coachy Chatbot";

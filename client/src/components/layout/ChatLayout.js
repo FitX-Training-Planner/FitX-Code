@@ -6,8 +6,21 @@ import MessageForm from "../form/forms/MessageForm";
 import SendDocumentForm from "../form/forms/SendDocumentForm";
 import React, { useEffect, useRef } from "react";
 import useWindowSize from "../../hooks/useWindowSize";
+import { useTranslation } from "react-i18next";
 
-function ChatLayout({ isChatBot = true, chat, chatFormContext, setChatFormContext, setMessageError, setDocumentError, handleSendDocument, handleSendMessage, chatbotLoading }) {
+function ChatLayout({
+    isChatBot = true,
+    chat,
+    chatFormContext,
+    setChatFormContext,
+    setMessageError,
+    setDocumentError,
+    handleSendDocument,
+    handleSendMessage,
+    chatbotLoading
+}) {
+    const { t } = useTranslation();
+
     const { width } = useWindowSize();
 
     const messagesEndRef = useRef(null);
@@ -49,8 +62,8 @@ function ChatLayout({ isChatBot = true, chat, chatFormContext, setChatFormContex
                         <span>
                             {
                                 isChatBot 
-                                ? (chatbotLoading ? "Pensando..." : "Online") 
-                                : `Última modificação: ${formatDateTime(chat.updateDate)}`
+                                ? (chatbotLoading ? `${t("thinking")}...` : "Online") 
+                                : `${t("lastUpdate")}: ${formatDateTime(chat.updateDate)}`
                             }
                         </span>
                     </Stack>
@@ -105,7 +118,7 @@ function ChatLayout({ isChatBot = true, chat, chatFormContext, setChatFormContex
                                         </span>
 
                                         <span>
-                                            {message.isFromTrainer ? (isChatBot ? "Coachy" : chat.contact?.name) : "Você"}
+                                            {message.isFromTrainer ? (isChatBot ? "Coachy" : chat.contact?.name) : t("you")}
                                         </span>
                                     </Stack>
                                 </Stack>
@@ -113,7 +126,7 @@ function ChatLayout({ isChatBot = true, chat, chatFormContext, setChatFormContex
                                 {!isChatBot && (
                                     <span
                                         className={`${styles.view_indicator} ${message.isViewed ? styles.viewed : undefined}`}
-                                        title={message.isViewed ? "Vista" : "Não vista"}
+                                        title={message.isViewed ? t("viewed") : t("notViewed")}
                                     ></span>
                                 )}
                             </Stack>

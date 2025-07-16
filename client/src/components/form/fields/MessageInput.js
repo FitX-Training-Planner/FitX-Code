@@ -1,7 +1,16 @@
 import Stack from "../../containers/Stack";
 import styles from "./MessageInput.module.css";
 
-function MessageInput({ name, value = "", handleChange, maxLength, alertMessage, error, varTextColor = "--text-color", placeholder }) {
+function MessageInput({
+    name, 
+    value = "",
+    handleChange,
+    maxLength,
+    alertMessage,
+    error,
+    varTextColor = "--text-color", 
+    placeholder 
+}) {
     return (
         <Stack 
             className={styles.message_input} 

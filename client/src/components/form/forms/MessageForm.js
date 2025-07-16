@@ -4,8 +4,17 @@ import ClickableIcon from "../buttons/ClickableIcon";
 import MessageInput from "../fields/MessageInput";
 import Stack from "../../containers/Stack";
 import styles from "./MessageForm.module.css";
+import { useTranslation } from "react-i18next";
 
-function MessageForm({ chatFormContext, setChatFormContext, isChatBot, setMessageError, handleSubmit }) {
+function MessageForm({
+    chatFormContext,
+    setChatFormContext,
+    isChatBot,
+    setMessageError,
+    handleSubmit
+}) {
+    const { t } = useTranslation();
+    
     return (
         <form
             onSubmit={handleSubmit}
@@ -20,7 +29,7 @@ function MessageForm({ chatFormContext, setChatFormContext, isChatBot, setMessag
                     handleChange={(e) => handleOnChangeTextField(e, formattNameAndNote, undefined, chatFormContext, setChatFormContext, setMessageError)}
                     maxLength={isChatBot ? 100 : 1000}
                     varTextColor="--white-color"
-                    placeholder="Insira sua mensagem"
+                    placeholder={t("messagePlaceholder")}
                 />
 
                 <Stack
@@ -28,7 +37,7 @@ function MessageForm({ chatFormContext, setChatFormContext, isChatBot, setMessag
                 >
                     <ClickableIcon
                         iconSrc="/images/icons/send.png"
-                        name="Enviar mensagem"
+                        name={t("sendMessage")}
                         isSubmit
                         hasTheme={false}
                     />
