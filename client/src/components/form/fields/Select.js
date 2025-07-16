@@ -2,8 +2,19 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import Stack from "../../containers/Stack";
 import styles from "./Select.module.css";
 import SearchInput from "./SearchInput";
+import { useTranslation } from "react-i18next";
 
-function Select({ name, placeholder, labelText, value = "", handleChange, icon, options = [] }) {
+function Select({
+    name,
+    placeholder,
+    labelText,
+    value = "",
+    handleChange,
+    icon,
+    options = []
+}) {
+    const { t } = useTranslation();
+    
     const [isOpen, setIsOpen] = useState(false);
     const [selected, setSelected] = useState(value);
     const [isDarkTheme, setIsDarkTheme] = useState(false);
@@ -60,7 +71,7 @@ function Select({ name, placeholder, labelText, value = "", handleChange, icon, 
                     {icon && 
                         <img 
                             src={icon} 
-                            alt={`${labelText} Icon`}
+                            alt=""
                         />
                     }
 
@@ -81,8 +92,6 @@ function Select({ name, placeholder, labelText, value = "", handleChange, icon, 
                     {isOpen && (
                         <>
                             <SearchInput
-                                placeholder="Filtrar opções..."
-                                name="Filtrar"
                                 searchText={searchText}
                                 setSearchText={setSearchText}
                                 items={options}
@@ -114,7 +123,7 @@ function Select({ name, placeholder, labelText, value = "", handleChange, icon, 
                                             <li
                                                 key="_empty"
                                             >
-                                                Sem resultado
+                                                {t("noResult")}
                                             </li>
                                         )
 
@@ -122,7 +131,7 @@ function Select({ name, placeholder, labelText, value = "", handleChange, icon, 
                                         <li
                                             key="_loading"
                                         >
-                                            Carregando...
+                                            {t("loading")}...
                                         </li>
                                     )
                                 }

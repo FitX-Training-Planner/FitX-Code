@@ -10,8 +10,11 @@ import getAndSetInitialData from "../../utils/requests/initialData";
 import Stack from "../containers/Stack";
 import CardioSessionForm from "../form/forms/CardioSessionForm";
 import BackButton from "../form/buttons/BackButton";
+import { useTranslation } from "react-i18next";
 
 function ModifyCardioSession() {
+    const { t } = useTranslation();
+
     const location = useLocation();
     
     const navigate = useNavigate();
@@ -55,7 +58,7 @@ function ModifyCardioSession() {
         if (!(locationCardioSession || locationCardioSessionID) || !locationTrainingDayOrder) {
             navigate("/");
             
-            notify("As informações do plano de treino não foram encontradas.", "error");
+            notify(t("notFoundTrainingPlanInfo"), "error");
 
             return;
         }
@@ -92,7 +95,7 @@ function ModifyCardioSession() {
         }
 
         fetchData();
-    }, [destination, getCardioIntensities, getCardioOptions, location.state, navigate, notify]);
+    }, [destination, getCardioIntensities, getCardioOptions, location.state, navigate, notify, t]);
 
     const handleOnSubmit = useCallback((e) => {
         e.preventDefault();
@@ -105,7 +108,7 @@ function ModifyCardioSession() {
             cardioSession.cardioIntensity?.ID || null, 
             cardioSession.cardioOption?.ID || null
         )) {
-            notify("Ainda há erros no formulário de sessão de cardio!", "error");
+            notify(t("alertErrorCardioSession"), "error");
 
             return;
         }
@@ -131,11 +134,11 @@ function ModifyCardioSession() {
         }));
 
         navigate(destination, { state: { trainingDayOrder } });
-    }, [cardioSession, destination, error, navigate, notify, setTrainingPlan, trainingDayOrder]);
+    }, [cardioSession, destination, error, navigate, notify, setTrainingPlan, trainingDayOrder, t]);
 
     useEffect(() => {
-        document.title = "Modificar Sessão de Cardio";
-    }, []);
+        document.title = t("modifyCardioSession");
+    }, [t]);
     
     return (
         <main
@@ -149,11 +152,11 @@ function ModifyCardioSession() {
                 <Stack>
                     <Title
                         headingNumber={1}
-                        text="Modificar Sessão de Cardio"
+                        text={t("modifyCardioSession")}
                     />
 
                     <Title
-                        text={cardioSession.ID && trainingDayOrder ? `Sessão ${cardioSession.usedID} do Dia ${trainingDayOrder}` : ""}
+                        text={cardioSession.ID && trainingDayOrder ? `${t("session")} ${cardioSession.usedID} ${t("ofDay")} ${trainingDayOrder}` : ""}
                         headingNumber={2}
                         varColor="--light-theme-color"
                     />

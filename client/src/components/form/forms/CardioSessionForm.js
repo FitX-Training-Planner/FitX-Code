@@ -7,8 +7,18 @@ import { formattNameAndNote, formattSecondsMinutesAndReps } from "../../../utils
 import TextInput from "../fields/TextInput";
 import Select from "../fields/Select";
 import { handleOnChangeSelect, handleOnChangeTextField } from "../../../utils/handlers/changeHandlers";
+import { useTranslation } from "react-i18next";
 
-function CardioSessionForm({ cardioSession, setCardioSession, setCardioSessionError, handleSubmit, cardioOptions, cardioIntensities }) {
+function CardioSessionForm({
+    cardioSession,
+    setCardioSession,
+    setCardioSessionError,
+    handleSubmit,
+    cardioOptions,
+    cardioIntensities
+}) {
+    const { t } = useTranslation();
+
     const arrays = useMemo(() => ({
         "cardioIntensities": cardioIntensities,
         "cardioOptions": cardioOptions
@@ -27,7 +37,7 @@ function CardioSessionForm({ cardioSession, setCardioSession, setCardioSessionEr
                 gap="3em"
             >
                 <p>
-                    - Os campos obrigatórios são marcados com "*".
+                    - {t("mandatoryFields")}
                 </p>
 
                 <Stack
@@ -35,19 +45,19 @@ function CardioSessionForm({ cardioSession, setCardioSession, setCardioSessionEr
                 >
                     <TextInput
                         name="durationMinutes"
-                        placeholder="Insira a duração do cardio"
-                        labelText="Duração em Minutos *"
+                        placeholder={t("cardioDurationMinutesPlaceholder")}
+                        labelText={`${t("cardioDurationMinutes")} *`}
                         value={cardioSession.durationMinutes}
                         handleChange={(e) => handleOnChangeTextField(e, formattSecondsMinutesAndReps, isCardioDurationValid, cardioSession, setCardioSession, setCardioSessionError, setErrors)}
-                        alertMessage="A duração deve ter entre 10 e 600 minutos."
+                        alertMessage={t("alertCardioDurationMinutes")}
                         error={errors.durationMinutes}
                         maxLength={3}
                     />
 
                     <Select
                         name="cardioOption"
-                        placeholder="Selecione o tipo"
-                        labelText="Tipo do Cardio *"
+                        placeholder={t("cardioOptionPlaceholder")}
+                        labelText={`${t("cardioOption")} *`}
                         value={cardioOptions.find(option => String(option.ID) === String(cardioSession.cardioOption?.ID))?.name}
                         handleChange={(e) => handleOnChangeSelect(e, arrays.cardioOptions, "name", cardioSession, setCardioSession, setCardioSessionError)}
                         options={cardioOptions.map(option => option.name)}
@@ -55,8 +65,8 @@ function CardioSessionForm({ cardioSession, setCardioSession, setCardioSessionEr
 
                     <Select
                         name="cardioIntensity"
-                        placeholder="Selecione a intensidade"
-                        labelText="Intensidade do Cardio *"
+                        placeholder={t("cardioIntensityPlaceholder")}
+                        labelText={`${t("cardioIntensity")} *`}
                         value={cardioIntensities.find(intensity => String(intensity.ID) === String(cardioSession.cardioIntensity?.ID))?.type}
                         handleChange={(e) => handleOnChangeSelect(e, arrays.cardioIntensities, "type", cardioSession, setCardioSession, setCardioSessionError)}
                         options={cardioIntensities.map(intensity => intensity.type)}
@@ -65,26 +75,26 @@ function CardioSessionForm({ cardioSession, setCardioSession, setCardioSessionEr
                     <TextInput
                         type="time"
                         name="sessionTime"
-                        placeholder="Insira o horário do cardio"
-                        labelText="Horário"
+                        placeholder={t("cardioTimePlaceholder")}
+                        labelText={t("cardioTime")}
                         value={cardioSession.sessionTime}
                         handleChange={(e) => handleOnChangeTextField(e, undefined, undefined, cardioSession, setCardioSession, setCardioSessionError, setErrors)}
                     />
 
                     <TextArea
                         name="note"
-                        placeholder="Insira sua nota ou observação"
-                        labelText="Nota"
+                        placeholder={t("notePlaceholder")}
+                        labelText={t("note")}
                         value={cardioSession.note}
                         handleChange={(e) => handleOnChangeTextField(e, formattNameAndNote, isNoteValid, cardioSession, setCardioSession, setCardioSessionError, setErrors)}
-                        alertMessage="A nota não deve ter mais que 500 caracteres."
+                        alertMessage={t("alertNote500")}
                         error={errors.note}
                         maxLength={500}
                     />
                 </Stack>
 
                 <SubmitFormButton
-                    text="Criar ou Modificar Cardio"
+                    text={t("createCardioSession")}
                 />
             </Stack>
         </form>
