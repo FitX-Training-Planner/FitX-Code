@@ -22,7 +22,6 @@
 }
 
 .nav_bar:hover {
-    /* para a transição funcionar, um valor numérico deve ser usado */
     width: 20em;
 }
 
@@ -32,7 +31,6 @@
     gap: 2em;
     width: max-content;
     height: 100%;
-    /* padding: calc(var(--padding) * 2); */
 }
 
 .nav_bar_subdivision > ul > li,

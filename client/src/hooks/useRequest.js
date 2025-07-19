@@ -2,8 +2,11 @@ import { useState } from "react";
 import { getErrorMessageFromError } from "../utils/requests/errorMessage";
 import { useSystemMessage } from "../app/SystemMessageProvider";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export default function useRequest() {
+    const { t } = useTranslation();
+
     const navigate = useNavigate();
     
     const location = useLocation();
@@ -16,7 +19,7 @@ export default function useRequest() {
         if (loading) return;
 
         if (!navigator.onLine) {
-            notify("Erro de conexão! Verifique sua conexão ou tente novamente.", "error", "network");
+            notify(t("errorConnection"), "error", "network");
 
             return;
         }
@@ -37,7 +40,7 @@ export default function useRequest() {
             console.error(err);
 
             if (!err.response) {
-                notify("Você está offline! Verifique sua conexão.", "error", "network");
+                notify(t("errorConnection"), "error", "network");
 
                 setLoading(false);
                 
@@ -58,7 +61,7 @@ export default function useRequest() {
             } else if (status === 403) {
                 if (currentPath !== "/") navigate("/");
 
-                notify("Falha ao acessar recurso!", "error");
+                notify(t("errorAccess"), "error");
 
                 return;
             }

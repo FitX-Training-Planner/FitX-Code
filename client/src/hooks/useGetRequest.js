@@ -1,8 +1,11 @@
 import { useCallback } from "react";
 import useRequest from "./useRequest";
 import api from "../api/axios";
+import { useTranslation } from "react-i18next";
 
 export default function useGets() {
+    const { t } = useTranslation();
+
     const { request } = useRequest();
 
     const getCardioOptions = useCallback(async (handleSuccess, handleError) => {
@@ -12,7 +15,7 @@ export default function useGets() {
             handleError,
             undefined,
             undefined,
-            "Falha ao carregar opões de cardio!"
+            t("errorCardioOptions")
         );
     }, [request]);
 
@@ -23,7 +26,7 @@ export default function useGets() {
             handleError,
             undefined,
             undefined,
-            "Falha ao carregar intensidades de cardio!"
+            t("errorCardioIntensities")
         );
     }, [request]);
 
@@ -34,7 +37,7 @@ export default function useGets() {
             handleError,
             undefined,
             undefined,
-            "Falha ao carregar execícios!"
+            t("errorExercises")
         )
     }, [request]);
 
@@ -45,7 +48,7 @@ export default function useGets() {
             handleError,
             undefined,
             undefined,
-            "Falha ao carregar equipamentos"
+            t("errorExerciseEquipments")
         )
     }, [request]);
 
@@ -56,7 +59,7 @@ export default function useGets() {
             handleError,
             undefined,
             undefined,
-            "Falha ao carregar posições corporais!"
+            t("errorBodyPositions")
         )
     }, [request]);
 
@@ -67,7 +70,7 @@ export default function useGets() {
             handleError,
             undefined,
             undefined,
-            "Falha ao carregar alturas de polia!"
+            t("errorPulleyHeights")
         )
     }, [request]);
 
@@ -78,7 +81,7 @@ export default function useGets() {
             handleError,
             undefined,
             undefined,
-            "Falha ao carregar acessórios de polia!"
+            t("errorPulleyAttachments")
         )
     }, [request]);
 
@@ -89,7 +92,7 @@ export default function useGets() {
             handleError,
             undefined,
             undefined,
-            "Falha ao carregar tipos de pegada!"
+            t("errorGripTypes")
         )
     }, [request]);
 
@@ -100,7 +103,7 @@ export default function useGets() {
             handleError,
             undefined,
             undefined,
-            "Falha ao carregar espaçamentos de pegada!"
+            t("errorGripWidths")
         )
     }, [request]);
 
@@ -111,7 +114,7 @@ export default function useGets() {
             handleError,
             undefined,
             undefined,
-            "Falha ao carregar formas de execução!"
+            t("errorLateralities")
         )
     }, [request]);
 
@@ -122,7 +125,7 @@ export default function useGets() {
             handleError,
             undefined,
             undefined,
-            "Falha ao carregar tipos de séries!"
+            t("errorSetTypes")
         )
     }, [request]);
 
@@ -133,7 +136,7 @@ export default function useGets() {
             handleError,
             undefined,
             undefined,
-            "Falha ao carregar técnicas de treino!"
+            t("errorTrainingTechniques")
         )
     }, [request]);
 

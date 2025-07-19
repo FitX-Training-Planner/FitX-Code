@@ -335,5 +335,22 @@
     "myWorkout": "Meu Treino",
     "chatWithTrainer": "Conversa com Treinador",
     "myProgress": "Meu Progresso",
-    "questionsWithCoachy": "Dúvidas com Coachy"
+    "questionsWithCoachy": "Dúvidas com Coachy",
+    "loadingUser": "Carregando usuário",
+    "errorUser": "Falha ao recuperar usuário!",
+    "errorCardioOptions": "Falha ao carregar opões de cardio!",
+    "errorCardioIntensities": "Falha ao carregar intensidades de cardio!",
+    "errorExercises": "Falha ao carregar execícios!",
+    "errorExerciseEquipments": "Falha ao carregar equipamentos",
+    "errorBodyPositions": "Falha ao carregar posições corporais!",
+    "errorPulleyHeights": "Falha ao carregar alturas de polia!",
+    "errorPulleyAttachments": "Falha ao carregar acessórios de polia!",
+    "errorGripTypes": "Falha ao carregar tipos de pegada!",
+    "errorGripWidths": "Falha ao carregar espaçamentos de pegada!",
+    "errorLateralities": "Falha ao carregar formas de execução!",
+    "errorSetTypes": "Falha ao carregar tipos de séries!",
+    "errorTrainingTechniques": "Falha ao carregar técnicas de treino!",
+    "errorConnection": "Erro de conexão! Verifique sua conexão ou tente novamente.",
+    "errorAccess": "Falha ao acessar recurso!",
+    "successConfirmIdentity": "Código aceito!"
 }
