@@ -24,7 +24,6 @@ client/*.sw?
 
 # dependencies
 client/node_modules
-clien-cra/node_modules
 client/.pnp
 client/.pnp.js
 
