@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "serve dist -1 $PORT"
+    "start": "serve dist -l $PORT"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
