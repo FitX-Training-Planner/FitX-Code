@@ -1,10 +1,10 @@
 import api from "../../api/axios";
 
-export async function verifyIsClient(request, user, navigate, notify) {
+export async function verifyIsClient(request, user, navigate, notify, t) {
     if (!user.config.isClient) {
         navigate("/");
         
-        notify("Essa página só pode ser acessada por usuários comuns.", "error");
+        notify(t("errorNotClient"), "error");
 
         return false;
     }
@@ -20,11 +20,11 @@ export async function verifyIsClient(request, user, navigate, notify) {
     return isClient;
 };
 
-export async function verifyIsTrainer(request, user, navigate, notify) {
+export async function verifyIsTrainer(request, user, navigate, notify, t) {
     if (user.config.isClient) {
         navigate("/");
         
-        notify("Essa página só pode ser acessada por treinadores.", "error");
+        notify(t("errorNotTrainer"), "error");
 
         return false;
     }

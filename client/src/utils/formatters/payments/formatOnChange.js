@@ -15,7 +15,6 @@ export function formatPrice(price) {
     return `${integer},${decimal}`;
 }
 
-
 export function formatPriceToBR(price) {
     price = price.replace(",", ".");
 

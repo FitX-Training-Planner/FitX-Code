@@ -1,3 +1,3 @@
-export function getErrorMessageFromError(err) {
-    return err.response?.data?.message || "Erro não identificado.";
+export function getErrorMessageCodeError(err) {
+    return err.response?.data?.message ? `systemMessages.${err.response?.data?.message}` : null;
 }

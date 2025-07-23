@@ -9,7 +9,7 @@ export default async function getAndSetInitialData(getRequest, setData, navigate
         return true;
     }
 
-    const handleOnSuccess = (data) => {
+    const setOnSuccess = (data) => {
         setData(data);
 
         setCacheData(key, data);
@@ -20,16 +20,16 @@ export default async function getAndSetInitialData(getRequest, setData, navigate
     };
     
     const success = await new Promise((resolve) => {
-        getRequest(data => {
-            handleOnSuccess(data);
+        getRequest(
+            () => resolve(true),
+            () => {
+                handleOnError();
 
-            resolve(true);
-        },
-        () => {
-            handleOnError();
-
-            resolve(false);
-        });
+                resolve(false);
+            },
+            key,
+            setOnSuccess
+        );
     });
 
     return success;

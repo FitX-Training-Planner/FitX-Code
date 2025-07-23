@@ -1,4 +1,4 @@
-export function formatDate(date) {
+export function formatDate(date, t) {
     const newDate = new Date(date);
     const today = new Date();
     const yesterday = new Date();
@@ -8,8 +8,8 @@ export function formatDate(date) {
     const isToday = newDate.toDateString() === today.toDateString();
     const isYesterday = newDate.toDateString() === yesterday.toDateString();
 
-    if (isToday) return "hoje";
-    if (isYesterday) return "ontem";
+    if (isToday) return t("today");
+    if (isYesterday) return t("yesterday");
 
     const day = String(newDate.getDate()).padStart(2, "0");
     const month = String(newDate.getMonth() + 1).padStart(2, "0");
@@ -18,32 +18,17 @@ export function formatDate(date) {
     return `${day}/${month}/${year}`;
 }
 
-export function formatDateToExtend(date) {
+export function formatDateToExtend(date, locale) {
     const newDate = new Date(date);
 
-    const months = [
-        "janeiro", 
-        "fevereiro", 
-        "março", 
-        "abril", 
-        "maio", 
-        "junho",
-        "julho", 
-        "agosto", 
-        "setembro", 
-        "outubro", 
-        "novembro", 
-        "dezembro"
-    ];
-
-    const day = newDate.getDate();
-    const month = months[newDate.getMonth()];
-    const year = newDate.getFullYear();
-
-    return `${day} de ${month} de ${year}`;
+    return new Intl.DateTimeFormat(locale, {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+    }).format(newDate);
 }
 
-export function formatDateTime(dateTime) {
+export function formatDateTime(dateTime, t) {
     const date = new Date(dateTime);
 
     const formattedDate = formatDate(dateTime);
@@ -51,5 +36,5 @@ export function formatDateTime(dateTime) {
     const hour = String(date.getHours()).padStart(2, "0");
     const minutes = String(date.getMinutes()).padStart(2, "0");
 
-    return `${formattedDate} às ${hour}:${minutes}`;
+    return `${formattedDate} ${t("atHours")} ${hour}:${minutes}`;
 }

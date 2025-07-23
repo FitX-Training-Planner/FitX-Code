@@ -2,143 +2,218 @@ import { useCallback } from "react";
 import useRequest from "./useRequest";
 import api from "../api/axios";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 
 export default function useGets() {
     const { t } = useTranslation();
 
+    const user = useSelector(state => state.user);
+
     const { request } = useRequest();
 
-    const getCardioOptions = useCallback(async (handleSuccess, handleError) => {
+    const translateData = useCallback((data, translateKey, setFn) => {
+        if (!user.config.isEnglish) {
+            setFn(data);
+
+            return;
+        }
+
+        const translatedData = data.map(item => {
+            const translationPath = `databaseData.${translateKey}.${item.ID}`;
+            const translatedFields = t(translationPath, { returnObjects: true });
+
+            if (translatedFields && typeof translatedFields === "object") {
+                return {
+                    ...item,
+                    ...translatedFields
+                };
+            }
+
+            return item;
+        });
+
+        setFn(translatedData);
+    }, [t, user.config.isEnglish]);
+
+    const getCardioOptions = useCallback(async (handleSuccess, handleError, translateKey, setFn) => {
         await request(
             () => {return api.get("/training/cardio-options")},
-            handleSuccess,
+            (data) => {
+                handleSuccess();
+                
+                translateData(data, translateKey, setFn);
+            },
             handleError,
             undefined,
             undefined,
             t("errorCardioOptions")
         );
-    }, [request]);
+    }, [request, t, translateData]);
 
-    const getCardioIntensities = useCallback(async (handleSuccess, handleError) => {
+    const getCardioIntensities = useCallback(async (handleSuccess, handleError, translateKey, setFn) => {
         await request(
             () => {return api.get("/training/cardio-intensities")},
-            handleSuccess,
+            (data) => {
+                handleSuccess();
+                
+                translateData(data, translateKey, setFn);
+            },
             handleError,
             undefined,
             undefined,
             t("errorCardioIntensities")
         );
-    }, [request]);
+    }, [request, t, translateData]);
 
-    const getExercises = useCallback(async (handleSuccess, handleError) => {
+    const getExercises = useCallback(async (handleSuccess, handleError, translateKey, setFn) => {
         await request(
             () => {return api.get("/training/exercises")},
-            handleSuccess,
+            (data) => {
+                handleSuccess();
+                
+                translateData(data, translateKey, setFn);
+            },
             handleError,
             undefined,
             undefined,
             t("errorExercises")
         )
-    }, [request]);
+    }, [request, t, translateData]);
 
-    const getExerciseEquipments = useCallback(async (handleSuccess, handleError) => {
+    const getExerciseEquipments = useCallback(async (handleSuccess, handleError, translateKey, setFn) => {
         await request(
             () => {return api.get("/training/exercise-equipments")},
-            handleSuccess,
+            (data) => {
+                handleSuccess();
+                
+                translateData(data, translateKey, setFn);
+            },
             handleError,
             undefined,
             undefined,
             t("errorExerciseEquipments")
         )
-    }, [request]);
+    }, [request, t, translateData]);
 
-    const getBodyPositions = useCallback(async (handleSuccess, handleError) => {
+    const getBodyPositions = useCallback(async (handleSuccess, handleError, translateKey, setFn) => {
         await request(
             () => {return api.get("/training/body-positions")},
-            handleSuccess,
+            (data) => {
+                handleSuccess();
+                
+                translateData(data, translateKey, setFn);
+            },
             handleError,
             undefined,
             undefined,
             t("errorBodyPositions")
         )
-    }, [request]);
+    }, [request, t, translateData]);
 
-    const getPulleyHeights = useCallback(async (handleSuccess, handleError) => {
+    const getPulleyHeights = useCallback(async (handleSuccess, handleError, translateKey, setFn) => {
         await request(
             () => {return api.get("/training/pulley-heights")},
-            handleSuccess,
+            (data) => {
+                handleSuccess();
+                
+                translateData(data, translateKey, setFn);
+            },
             handleError,
             undefined,
             undefined,
             t("errorPulleyHeights")
         )
-    }, [request]);
+    }, [request, t, translateData]);
 
-    const getPulleyAttachments = useCallback(async (handleSuccess, handleError) => {
+    const getPulleyAttachments = useCallback(async (handleSuccess, handleError, translateKey, setFn) => {
         await request(
             () => {return api.get("/training/pulley-attachments")},
-            handleSuccess,
+            (data) => {
+                handleSuccess();
+                
+                translateData(data, translateKey, setFn);
+            },
             handleError,
             undefined,
             undefined,
             t("errorPulleyAttachments")
         )
-    }, [request]);
+    }, [request, t, translateData]);
 
-    const getGripTypes = useCallback(async (handleSuccess, handleError) => {
+    const getGripTypes = useCallback(async (handleSuccess, handleError, translateKey, setFn) => {
         await request(
             () => {return api.get("/training/grip-types")},
-            handleSuccess,
+            (data) => {
+                handleSuccess();
+                
+                translateData(data, translateKey, setFn);
+            },
             handleError,
             undefined,
             undefined,
             t("errorGripTypes")
         )
-    }, [request]);
+    }, [request, t, translateData]);
 
-    const getGripWidths = useCallback(async (handleSuccess, handleError) => {
+    const getGripWidths = useCallback(async (handleSuccess, handleError, translateKey, setFn) => {
         await request(
             () => {return api.get("/training/grip-widths")},
-            handleSuccess,
+            (data) => {
+                handleSuccess();
+                
+                translateData(data, translateKey, setFn);
+            },
             handleError,
             undefined,
             undefined,
             t("errorGripWidths")
         )
-    }, [request]);
+    }, [request, t, translateData]);
 
-    const getLateralities = useCallback(async (handleSuccess, handleError) => {
+    const getLateralities = useCallback(async (handleSuccess, handleError, translateKey, setFn) => {
         await request(
             () => {return api.get("/training/lateralities")},
-            handleSuccess,
+            (data) => {
+                handleSuccess();
+                
+                translateData(data, translateKey, setFn);
+            },
             handleError,
             undefined,
             undefined,
             t("errorLateralities")
         )
-    }, [request]);
+    }, [request, t, translateData]);
 
-    const getSetTypes = useCallback(async (handleSuccess, handleError) => {
+    const getSetTypes = useCallback(async (handleSuccess, handleError, translateKey, setFn) => {
         await request(
             () => {return api.get("/training/set-types")},
-            handleSuccess,
+            (data) => {
+                handleSuccess();
+                
+                translateData(data, translateKey, setFn);
+            },
             handleError,
             undefined,
             undefined,
             t("errorSetTypes")
         )
-    }, [request]);
+    }, [request, t, translateData]);
 
-    const getTrainingTechniques = useCallback(async (handleSuccess, handleError) => {
+    const getTrainingTechniques = useCallback(async (handleSuccess, handleError, translateKey, setFn) => {
         await request(
             () => {return api.get("/training/training-techniques")},
-            handleSuccess,
+            (data) => {
+                handleSuccess();
+                
+                translateData(data, translateKey, setFn);
+            },
             handleError,
             undefined,
             undefined,
             t("errorTrainingTechniques")
         )
-    }, [request]);
+    }, [request, t, translateData]);
 
     return {
         getCardioOptions,

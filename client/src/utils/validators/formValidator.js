@@ -213,26 +213,26 @@ export function validateSet(setError, setSetError, minReps, maxReps, durationSec
     return true;
 }
 
-export function validateAllElementsInTrainingPlan(trainingPlanError, setTrainingPlanError, trainingPlan) {
+export function validateAllElementsInTrainingPlan(trainingPlanError, setTrainingPlanError, trainingPlan, t) {
     if (trainingPlanError) {
-        return { error: true, message: "Erro no estado atual do plano de treino!" };
+        return { error: true, message: t("errorStateTrainingPlan") };
     }
 
     if (!validateTrainingPlan(false, setTrainingPlanError, trainingPlan.name, trainingPlan.note)) {
-        return { error: true, message: "Dados do plano de treino inválidos!" };
+        return { error: true, message: t("errorInvalidTrainingPlan") };
     }
 
     if (trainingPlan.trainingDays.length < 2) {
-        return { error: true, message: "O plano de treino deve ter pelo menos 2 dias de treino!" };
+        return { error: true, message: t("errorTrainingDaysMinLength") };
     }
 
     if (!trainingPlan.trainingDays.some(day => day.trainingSteps.length > 0 || day.cardioSessions.length > 0)) {
-        return { error: true, message: "O plano de treino deve ter pelo menos um dia com treino ou cardio!" };
+        return { error: true, message: t("errorTrainingPlanMinWorkouts") };
     }
 
     for (const day of trainingPlan.trainingDays) {
         if (!validateTrainingDay(false, setTrainingPlanError, day.name, day.note)) {
-            return { error: true, message: `Dados inválidos no dia de treino ${day.orderInPlan}!` };
+            return { error: true, message: `${t("errorTrainingDay")} ${day.orderInPlan}!` };
         }
 
         const isRestDay = day.isRestDay;
@@ -240,17 +240,17 @@ export function validateAllElementsInTrainingPlan(trainingPlanError, setTraining
         const hasCardioSessions = day.cardioSessions.length > 0;
 
         if (!isRestDay && !hasTrainingSteps) {
-            return { error: true, message: `O dia de treino ${day.orderInPlan} precisa ter pelo menos um exercício!` };
+            return { error: true, message: `${t("theTrainingDay")} ${day.orderInPlan} ${t("needsToHaveAtLeastOneExercise")}!` };
         }
 
         if (isRestDay && hasTrainingSteps) {
-            return { error: true, message: `O dia de descanso ${day.orderInPlan} não pode ter exercícios!` };
+            return { error: true, message: `${t("theRestDay")} ${day.orderInPlan} ${t("cantHasExercises")}!` };
         }
 
         if (hasCardioSessions) {
             for (const cardio of day.cardioSessions) {
                 if (!validateCardioSession(false, setTrainingPlanError, cardio.note, cardio.durationMinutes, cardio.cardioIntensity?.ID, cardio.cardioOption?.ID)) {
-                    return { error: true, message: `Cardio de ID ${cardio.ID} inválido no dia de treino ${day.orderInPlan}!` };
+                    return { error: true, message: `${t("cardio")} ${cardio.ID} ${t("invalidInTheTrainingDay")} ${day.orderInPlan}!` };
                 }
             }
         }
@@ -260,33 +260,33 @@ export function validateAllElementsInTrainingPlan(trainingPlanError, setTraining
                 const exercisesLenght = step.exercises.length;
 
                 if (exercisesLenght < 1) {
-                    return { error: true, message: `O exercício ${step.orderInDay} do dia de treino ${day.orderInPlan} está vazio!` };
+                    return { error: true, message: `${t("theExercise")} ${step.orderInDay} ${t("inTheTrainingDay")} ${day.orderInPlan} ${t("isEmpty")}!` };
                 }
 
                 for (const exercise of step.exercises) {
                     if (!validateExercise(false, setTrainingPlanError, exercise.note, exercise.exercise?.ID, exercise.exerciseEquipment?.ID, exercise.exercise?.isFixed)) {
                         if (exercisesLenght > 1) {
-                            return { error: true, message: `Exercício ${exercise.orderInStep} inválido na sequência ${step.orderInDay} no dia de treino ${day.orderInPlan}!` };
+                            return { error: true, message: `${t("exercise")} ${exercise.orderInStep} ${t("invalidInTheSequence")} ${step.orderInDay} ${t("inTheTrainingDay")} ${day.orderInPlan}!` };
                         } 
 
-                        return { error: true, message: `Exercício ${step.orderInDay} inválido no dia de treino ${day.orderInPlan}!` };
+                        return { error: true, message: `${t("exercise")} ${step.orderInDay} ${t("invalidInTheTrainingDay")} ${day.orderInPlan}!` };
                     }
 
                     if (exercise.sets.length < 1) {
                         if (exercisesLenght > 1) {
-                            return { error: true, message: `O exercício ${exercise.orderInStep} na sequência ${step.orderInDay} no dia de treino ${day.orderInPlan} precisa ter pelo menos uma série!` };
+                            return { error: true, message: `${t("theExercise")} ${exercise.orderInStep} ${t("inTheSequence")} ${step.orderInDay} ${t("inTheTrainingDay")} ${day.orderInPlan} ${t("needsToHaveAtLeastOneSet")}!` };
                         } 
 
-                        return { error: true, message: `O exercício ${step.orderInDay} no dia de treino ${day.orderInPlan} precisa ter pelo menos uma série!` };
+                        return { error: true, message: `${t("theExercise")} ${step.orderInDay} ${t("inTheTrainingDay")} ${day.orderInPlan} ${t("needsToHaveAtLeastOneSet")}!` };
                     }
 
                     for (const set of exercise.sets) {
                         if (!validateSet(false, setTrainingPlanError, set.minReps, set.maxReps, set.durationSeconds, set.restSeconds, set.setType?.ID)) {
                             if (exercisesLenght > 1) {
-                                return { error: true, message: `Série ${set.orderInExercise} inválida no exercício ${exercise.orderInStep} na sequência ${step.orderInDay} no dia de treino ${day.orderInPlan}!` };
+                                return { error: true, message: `${t("set")} ${set.orderInExercise} ${t("invalidInTheExercise")} ${exercise.orderInStep} ${t("inTheSequence")} ${step.orderInDay} ${t("inTheTrainingDay")} ${day.orderInPlan}!` };
                             } 
 
-                            return { error: true, message: `Série ${set.orderInExercise} inválida no exercício ${step.orderInDay} no dia de treino ${day.orderInPlan}!` };
+                            return { error: true, message: `${t("set")} ${set.orderInExercise} ${t("invalidInTheExercise")} ${step.orderInDay} ${t("inTheTrainingDay")} ${day.orderInPlan}!` };
                         }
 
                     }

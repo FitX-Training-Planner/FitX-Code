@@ -1,6 +1,6 @@
 import api from "../../api/axios";
 
-export default function authUser(ID, dispatch, navigate, notify, authRequest, setUser, isClient) {
+export default function authUser(ID, dispatch, navigate, authRequest, setUser, isClient, t) {    
     const formData = new FormData();
 
     formData.append("ID", ID);
@@ -24,8 +24,8 @@ export default function authUser(ID, dispatch, navigate, notify, authRequest, se
         postAuth, 
         handleOnAuthSuccess, 
         handleOnAuthError, 
-        "Autenticando", 
-        "Você foi autenticado com sucesso. Aproveite o FitX!", 
-        "Falha ao autenticar!"
+        t("loadingAuth"), 
+        t("successAuth"), 
+        t("errorAuth")
     );
 };

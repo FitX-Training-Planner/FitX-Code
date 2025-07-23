@@ -1,4 +1,4 @@
-export default function convertDays(amount, dayUnit = "day") {
+export default function convertDays(amount, dayUnit = "day", t) {
     let totalDays;
 
     switch (dayUnit) {
@@ -34,13 +34,13 @@ export default function convertDays(amount, dayUnit = "day") {
 
     const parts = [];
 
-    if (years) parts.push(`${years} ano${years > 1 ? "s" : ""}`);
+    if (years) parts.push(`${years} ${t("year")}${years > 1 ? "s" : ""}`);
 
-    if (months) parts.push(`${months} mês${months > 1 ? "es" : ""}`);
+    if (months) parts.push(`${months} ${months > 1 ? t("months") : t("month")}`);
  
-    if (weeks) parts.push(`${weeks} semana${weeks > 1 ? "s" : ""}`);
+    if (weeks) parts.push(`${weeks} ${t("week")}${weeks > 1 ? "s" : ""}`);
  
-    if (days) parts.push(`${days} dia${days > 1 ? "s" : ""}`);
+    if (days) parts.push(`${days} ${t("day")}${days > 1 ? "s" : ""}`);
 
-    return parts.length > 0 ? parts.join(", ") : "0 dias";
+    return parts.length > 0 ? parts.join(", ") : `0 ${t("days")}`;
 }

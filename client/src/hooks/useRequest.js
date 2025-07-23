@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { getErrorMessageFromError } from "../utils/requests/errorMessage";
-import { useSystemMessage } from "../app/SystemMessageProvider";
+import { getErrorMessageCodeError } from "../utils/requests/errorMessage";
+import { useSystemMessage } from "../app/useSystemMessage";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import toast from "react-hot-toast";
 
 export default function useRequest() {
     const { t } = useTranslation();
@@ -35,9 +36,13 @@ export default function useRequest() {
 
             handleSuccess(resp.data);
 
+            toast.dismiss(requestId);
+
             if (successMessage) notify(successMessage, "success", requestId);
         } catch (err) {
             console.error(err);
+
+            toast.dismiss(requestId);
 
             if (!err.response) {
                 notify(t("errorConnection"), "error", "network");
@@ -48,17 +53,15 @@ export default function useRequest() {
             }
 
             if (errorMessage) notify(errorMessage, "error");
+
+            const messageError = getErrorMessageCodeError(err)
             
-            notify(getErrorMessageFromError(err), "error", requestId);
+            if (messageError) notify(t(messageError), "error", requestId);
 
             const status = err?.response?.status;
             const currentPath = location.pathname;
 
-            if (status === 401) {
-                if (currentPath !== "/login") navigate("/login");
-
-                return;
-            } else if (status === 403) {
+            if (status === 403) {
                 if (currentPath !== "/") navigate("/");
 
                 notify(t("errorAccess"), "error");
