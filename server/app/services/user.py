@@ -4,6 +4,7 @@ from ..utils.cloudinary import upload_file
 from sqlalchemy.orm import joinedload
 from ..exceptions.api_error import ApiError
 from ..utils.serialize import serialize_user
+from ..utils.message_codes import MessageCodes
 
 def get_user_by_id(db, user_id, is_client):
     try:
@@ -11,7 +12,7 @@ def get_user_by_id(db, user_id, is_client):
             trainer = db.query(Trainer).filter(Trainer.ID == user_id).first()
 
             if not trainer:
-                raise ApiError("Treinador não encontrado.", 404)
+                raise ApiError(MessageCodes.TRAINER_NOT_FOUND, 404)
             
             user_id = trainer.fk_user_ID
 
@@ -21,7 +22,7 @@ def get_user_by_id(db, user_id, is_client):
         ).filter(Users.ID == user_id).first()
 
         if not user:
-            raise ApiError("Usuário não encontrado.", 404)
+            raise ApiError(MessageCodes.USER_NOT_FOUND, 404)
 
         return serialize_user(user)
     
@@ -50,7 +51,7 @@ def insert_user(
 ):
     try:
         if is_email_used(db, email):
-            raise ApiError("Já existe uma conta com esse e-mail.", 409)
+            raise ApiError(MessageCodes.ERROR_EMAIL_USED, 409)
 
         email_hash = hash_email(email)
 

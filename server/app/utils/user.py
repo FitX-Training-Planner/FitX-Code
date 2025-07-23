@@ -39,5 +39,3 @@ def send_email(email, template, subject):
 
     except Exception as e:
         print(f"Erro ao enviar e-mail: {e}")
-
-        raise ApiError("Erro ao enviar e-mail.", 500)

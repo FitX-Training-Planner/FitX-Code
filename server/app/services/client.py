@@ -2,6 +2,7 @@ from app.database.models import Users, PlanContract, ContractStatus
 from ..exceptions.api_error import ApiError
 from ..utils.serialize import serialize_training_contract
 from sqlalchemy.orm import joinedload, subqueryload
+from ..utils.message_codes import MessageCodes
 
 def get_client_training_contract(db, client_id):
     try:
@@ -43,7 +44,7 @@ def cancel_contract(db, client_id):
         )
 
         if not contract:
-            raise ApiError(f"Contrato ativo não encontrado.", 404)
+            raise ApiError(MessageCodes.ACTIVE_CONTRACT_NOT_FOUND, 404)
 
         contract.contract_status = (
             db.query(ContractStatus)

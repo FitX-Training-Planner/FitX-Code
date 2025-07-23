@@ -3,10 +3,11 @@ from ..services.user import insert_user, insert_photo
 from ..services.trainer import insert_trainer, insert_training_plan, get_trainer_plans, get_training_plan, modify_training_plan, remove_training_plan, insert_payment_plan, modify_payment_plan, remove_payment_plan, get_trainer_payment_plans, get_partial_trainer_contracts, get_partial_trainers
 from ..database.context_manager import get_db
 from ..exceptions.api_error import ApiError
-from ..utils.jwt_decorator import jwt_with_auto_refresh
+from flask_jwt_extended import jwt_required
 from ..utils.trainer_decorator import only_trainer
 from flask_jwt_extended import get_jwt_identity
 import json
+from ..utils.message_codes import MessageCodes
 
 trainer_bp = Blueprint("trainer", __name__, url_prefix="/trainers")
         
@@ -60,10 +61,10 @@ def post_trainer():
 
             print(f"{error_message}: {e}")
 
-            return jsonify({"message": "Erro interno no servidor."}), 500
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
 
 @trainer_bp.route("", methods=["GET"])
-@jwt_with_auto_refresh
+@jwt_required()
 def get_trainers():
     error_message = "Erro na rota de recuperação de treinadores"
 
@@ -83,10 +84,10 @@ def get_trainers():
         except Exception as e:
             print(f"{error_message}: {e}")
 
-            return jsonify({"message": "Erro interno no servidor."}), 500
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
 
 @trainer_bp.route("me/training-plans", methods=["POST"])
-@jwt_with_auto_refresh
+@jwt_required()
 @only_trainer
 def post_training_plan():
     error_message = "Erro na rota de criação de plano de treino"
@@ -113,10 +114,10 @@ def post_training_plan():
 
             print(f"{error_message}: {e}")
 
-            return jsonify({"message": "Erro interno no servidor."}), 500
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
         
 @trainer_bp.route("me/training-plans", methods=["GET"])
-@jwt_with_auto_refresh
+@jwt_required()
 @only_trainer
 def get_trainer_training_plans():
     error_message = "Erro na rota de recuperação de planos de treino"
@@ -137,10 +138,10 @@ def get_trainer_training_plans():
         except Exception as e:
             print(f"{error_message}: {e}")
 
-            return jsonify({"message": "Erro interno no servidor."}), 500
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
         
 @trainer_bp.route("me/training-plans/<int:plan_id>", methods=["GET"])
-@jwt_with_auto_refresh
+@jwt_required()
 @only_trainer
 def get_trainer_training_plan(plan_id):
     error_message = "Erro na rota de recuperação de plano de treino"
@@ -152,7 +153,7 @@ def get_trainer_training_plan(plan_id):
             plan = get_training_plan(db, plan_id)
 
             if str(identity) != str(plan.get("trainerID")):
-                raise ApiError("Os treinadores só podem acessar seus próprios planos de treino.", 403)
+                raise ApiError(MessageCodes.ERROR_TRAINER_AUTHOR_TRAINING_PLAN, 403)
 
             return jsonify(plan), 200
         
@@ -164,10 +165,10 @@ def get_trainer_training_plan(plan_id):
         except Exception as e:
             print(f"{error_message}: {e}")
 
-            return jsonify({"message": "Erro interno no servidor."}), 500
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
 
 @trainer_bp.route("me/training-plans/<int:plan_id>", methods=["PUT"])
-@jwt_with_auto_refresh
+@jwt_required()
 @only_trainer
 def modify_trainer_training_plan(plan_id):
     error_message = "Erro na rota de modificação de plano de treino"
@@ -194,10 +195,10 @@ def modify_trainer_training_plan(plan_id):
 
             print(f"{error_message}: {e}")
 
-            return jsonify({"message": "Erro interno no servidor."}), 500
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
 
 @trainer_bp.route("me/training-plans/<int:plan_id>", methods=["DELETE"])
-@jwt_with_auto_refresh
+@jwt_required()
 @only_trainer
 def remove_trainer_training_plan(plan_id):
     error_message = "Erro na rota de remoção de plano de treino"
@@ -222,10 +223,10 @@ def remove_trainer_training_plan(plan_id):
 
             print(f"{error_message}: {e}")
 
-            return jsonify({"message": "Erro interno no servidor."}), 500
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
 
 @trainer_bp.route("me/payment-plans", methods=["POST"])
-@jwt_with_auto_refresh
+@jwt_required()
 @only_trainer
 def post_payment_plan():
     error_message = "Erro na rota de criação de plano de pagamento"
@@ -262,10 +263,10 @@ def post_payment_plan():
 
             print(f"{error_message}: {e}")
 
-            return jsonify({"message": "Erro interno no servidor."}), 500
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
         
 @trainer_bp.route("me/payment-plans", methods=["GET"])
-@jwt_with_auto_refresh
+@jwt_required()
 @only_trainer
 def get_payment_plans():
     error_message = "Erro na rota de recuperação de planos de pagamento"
@@ -286,10 +287,10 @@ def get_payment_plans():
         except Exception as e:
             print(f"{error_message}: {e}")
 
-            return jsonify({"message": "Erro interno no servidor."}), 500
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
 
 @trainer_bp.route("me/payment-plans/<int:plan_id>", methods=["PUT"])
-@jwt_with_auto_refresh
+@jwt_required()
 @only_trainer
 def modify_trainer_payment_plan(plan_id):
     error_message = "Erro na rota de modificação de plano de pagamento"
@@ -327,10 +328,10 @@ def modify_trainer_payment_plan(plan_id):
 
             print(f"{error_message}: {e}")
 
-            return jsonify({"message": "Erro interno no servidor."}), 500
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
 
 @trainer_bp.route("me/payment-plans/<int:plan_id>", methods=["DELETE"])
-@jwt_with_auto_refresh
+@jwt_required()
 @only_trainer
 def remove_trainer_payment_plan(plan_id):
     error_message = "Erro na rota de remoção de plano de pagamento"
@@ -355,10 +356,10 @@ def remove_trainer_payment_plan(plan_id):
 
             print(f"{error_message}: {e}")
 
-            return jsonify({"message": "Erro interno no servidor."}), 500
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
 
 @trainer_bp.route("me/contracts", methods=["GET"])
-@jwt_with_auto_refresh
+@jwt_required()
 @only_trainer
 def get_trainer_contracts():
     error_message = "Erro na rota de recuperação de contratos do treinador"
@@ -381,4 +382,4 @@ def get_trainer_contracts():
         except Exception as e:
             print(f"{error_message}: {e}")
 
-            return jsonify({"message": "Erro interno no servidor."}), 500
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500

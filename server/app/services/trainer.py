@@ -4,13 +4,14 @@ from ..exceptions.api_error import ApiError
 from ..utils.formatters import safe_str, safe_int, safe_float, safe_bool, safe_time
 from ..utils.serialize import serialize_training_plan, serialize_payment_plan, serialize_contract, serialize_trainer_in_trainers
 from sqlalchemy.orm import joinedload, subqueryload
-from sqlalchemy import asc, desc, func, nulls_last
+from sqlalchemy import asc, desc, func
 from ..exceptions.api_error import ApiError
+from ..utils.message_codes import MessageCodes
 
 def insert_trainer(db, cref_number, decription, fk_user_ID):
     try:
         if is_cref_used(db, cref_number):
-            raise ApiError("Já existe uma conta com esse CREF.", 409)
+            raise ApiError(MessageCodes.ERROR_CREF_USED, 409)
 
         new_trainer = Trainer(
             cref_number=safe_str(cref_number),
@@ -124,10 +125,10 @@ def modify_training_plan(db, training_plan, training_plan_id, trainer_id):
         modified_training_plan = db.query(TrainingPlan).filter(TrainingPlan.ID == training_plan_id).first()
 
         if not modified_training_plan:
-            raise ApiError(f"Plano de treino não encontrado.", 404)
+            raise ApiError(MessageCodes.TRAINING_PLAN_NOT_FOUND, 404)
         
         if str(trainer_id) != str(modified_training_plan.fk_trainer_ID):
-            raise ApiError("Os treinadores só podem modificar seus próprios planos de treino.", 403)
+            raise ApiError(MessageCodes.ERROR_TRAINER_AUTHOR_TRAINING_PLAN, 403)
 
         modified_training_plan.name = training_plan.get("name")
         modified_training_plan.note = safe_str(training_plan.get("note"))
@@ -269,7 +270,7 @@ def get_training_plan(db, training_plan_id):
         )
 
         if training_plan is None:
-            raise ApiError("Plano de treino não encontrado.", 404)
+            raise ApiError(MessageCodes.TRAINING_PLAN_NOT_FOUND, 404)
 
         return serialize_training_plan(training_plan)
 
@@ -288,10 +289,10 @@ def remove_training_plan(db, training_plan_id, trainer_id):
         training_plan = db.query(TrainingPlan).filter(TrainingPlan.ID == training_plan_id).first()
 
         if not training_plan:
-            raise ApiError(f"Plano de treino não encontrado.", 404)
+            raise ApiError(MessageCodes.TRAINING_PLAN_NOT_FOUND, 404)
 
         if str(trainer_id) != str(training_plan.fk_trainer_ID):
-            raise ApiError("Os treinadores só podem remover seus próprios planos de treino.", 403)
+            raise ApiError(MessageCodes.ERROR_TRAINER_AUTHOR_TRAINING_PLAN, 403)
 
         db.delete(training_plan)
 
@@ -421,10 +422,10 @@ def modify_payment_plan(db, name, full_price, duration_days, description, benefi
         modified_payment_plan = db.query(PaymentPlan).filter(PaymentPlan.ID == payment_plan_id).first()
 
         if not modified_payment_plan:
-            raise ApiError(f"Plano de pagamento não encontrado.", 404)
+            raise ApiError(MessageCodes.TRAINING_PLAN_NOT_FOUND, 404)
         
         if str(trainer_id) != str(modified_payment_plan.fk_trainer_ID):
-            raise ApiError("Os treinadores só podem modificar seus próprios planos de pagamento.", 403)
+            raise ApiError(MessageCodes.ERROR_TRAINER_AUTHOR_TRAINING_PLAN, 403)
 
         modified_payment_plan.name = name
         modified_payment_plan.full_price = safe_float(full_price),
@@ -466,10 +467,10 @@ def remove_payment_plan(db, payment_plan_id, trainer_id):
         payment_plan = db.query(PaymentPlan).filter(PaymentPlan.ID == payment_plan_id).first()
 
         if not payment_plan:
-            raise ApiError(f"Plano de pagamento não encontrado.", 404)
+            raise ApiError(MessageCodes.TRAINING_PLAN_NOT_FOUND, 404)
 
         if str(trainer_id) != str(payment_plan.fk_trainer_ID):
-            raise ApiError("Os treinadores só podem remover seus próprios planos de pagamento.", 403)
+            raise ApiError(MessageCodes.ERROR_TRAINER_AUTHOR_TRAINING_PLAN, 403)
 
         db.delete(payment_plan)
 
@@ -550,7 +551,7 @@ def get_partial_trainer_contracts(db, offset, limit, sort, trainer_id):
             )
   
         else:
-            raise ApiError("Filtro de contratos inválido.", 400)
+            raise ApiError(MessageCodes.INVALID_CONTRACTS_FILTER, 400)
 
         contracts = query.offset(offset).limit(limit).all()
 
@@ -596,7 +597,7 @@ def get_partial_trainers(db, offset, limit, sort):
             )
 
         else:
-            raise ApiError("Filtro de treinadores inválido.", 400)
+            raise ApiError(MessageCodes.INVALID_TRAINERS_FILTER, 400)
 
         trainers = query.offset(offset).limit(limit).all()
 

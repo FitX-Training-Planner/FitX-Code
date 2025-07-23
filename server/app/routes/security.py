@@ -5,9 +5,9 @@ from ..utils.security import check_login, generate_code, verify_code, set_jwt_co
 from ..utils.user import is_email_used, send_email
 from ..services.user import get_user_by_id
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
-from ..utils.jwt_decorator import jwt_with_auto_refresh
 from ..utils.trainer_decorator import only_trainer
 from ..utils.client_decorator import only_client
+from ..utils.message_codes import MessageCodes
 
 security_bp = Blueprint("security", __name__)
 
@@ -35,7 +35,7 @@ def login():
         except Exception as e:
             print(f"{error_message}: {e}")
 
-            return jsonify({"message": "Erro interno no servidor."}), 500
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
 
 
 @security_bp.route("/sign-up", methods=["POST"])
@@ -47,7 +47,7 @@ def sign_up():
             data = request.form
             
             if is_email_used(db, data.get("email")):
-                raise ApiError("Já existe uma conta com esse e-mail.", 409)
+                raise ApiError(MessageCodes.ERROR_EMAIL_USED, 409)
 
             return "", 204
 
@@ -59,7 +59,7 @@ def sign_up():
         except Exception as e:
             print(f"{error_message}: {e}")
 
-            return jsonify({"message": "Erro interno no servidor."}), 500
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
 
 @security_bp.route("/identity-confirmation", methods=["POST"])
 def identity_confirmation():
@@ -91,7 +91,7 @@ def identity_confirmation():
     except Exception as e:
         print(f"{error_message}: {e}")
 
-        return jsonify({"message": "Erro interno no servidor."}), 500
+        return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
 
 
 @security_bp.route("/auth", methods=["POST"])
@@ -104,7 +104,7 @@ def auth():
             is_client = request.form.get("isClient")
 
             if not ID or is_client is None:
-                raise ApiError("Dados insuficiente para a autenticação.", 400)
+                raise ApiError(MessageCodes.AUTH_INSUFFICIENT_DATA, 400)
 
             is_client = is_client == "true"
 
@@ -123,7 +123,7 @@ def auth():
         except Exception as e:
             print(f"{error_message}: {e}")
 
-            return jsonify({"message": "Erro interno no servidor."}), 500
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
 
 @security_bp.route("/token/refresh", methods=["POST"])
 @jwt_required(refresh=True)  
@@ -134,16 +134,15 @@ def refresh_token():
         identity = get_jwt_identity()
 
         if not identity:
-            raise ApiError("Token inválido.", 401)
+            raise ApiError(MessageCodes.INVALID_TOKEN, 401)
         
-        response = ""
-        response.status_code = 204
-
         jwt_data = get_jwt()
 
         is_client = jwt_data.get("isClient") == "true"
 
-        return set_jwt_access_cookies(identity, {"isClient": is_client}, response)
+        response = jsonify({"success": "success"})
+
+        return set_jwt_access_cookies(identity, {"isClient": is_client}, response), 200
 
     except ApiError as e:
         print(f"{error_message}: {e}")
@@ -153,16 +152,16 @@ def refresh_token():
     except Exception as e:
         print(f"{error_message}: {e}")
 
-        return jsonify({"message": "Erro interno no servidor."}), 500
+        return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
 
 @security_bp.route("/is-trainer", methods=["POST"])
-@jwt_with_auto_refresh
+@jwt_required()
 @only_trainer
 def is_trainer():
     return "", 204
 
 @security_bp.route("/is-client", methods=["POST"])
-@jwt_with_auto_refresh
+@jwt_required()
 @only_client
 def is_client():
     return "", 204

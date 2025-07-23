@@ -1,5 +1,6 @@
 from ..__init__ import openai_client
 from ..exceptions.api_error import ApiError
+from .message_codes import MessageCodes
 
 def get_chatbot_response(message_history, is_english):
     try:
@@ -19,7 +20,7 @@ def get_chatbot_response(message_history, is_english):
     except Exception as e:
         print(f"Erro ao recuperar resposta do chatbot: {e}")
 
-        raise ApiError("Erro ao recuperar a resposta do chatbot.", 500)
+        raise ApiError(MessageCodes.ERROR_CHATBOT, 500)
 
 def get_system_message(is_english):
     if is_english:

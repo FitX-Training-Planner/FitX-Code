@@ -3,12 +3,13 @@ from ..services.user import get_user_by_id, insert_user, insert_photo
 from ..database.context_manager import get_db
 from ..exceptions.api_error import ApiError
 from flask_jwt_extended import get_jwt_identity, get_jwt
-from ..utils.jwt_decorator import jwt_with_auto_refresh
+from flask_jwt_extended import jwt_required
+from ..utils.message_codes import MessageCodes
 
 user_bp = Blueprint("user", __name__, url_prefix="/users")
 
 @user_bp.route("/me", methods=["GET"])
-@jwt_with_auto_refresh
+@jwt_required()
 def get_user():
     error_message = "Erro na rota de recuperação de usuário"
 
@@ -32,7 +33,7 @@ def get_user():
         except Exception as e:    
             print(f"{error_message}: {e}")
 
-            return jsonify({"message": "Erro interno no servidor."}), 500
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
         
 @user_bp.route("", methods=["POST"])
 def post_user():
@@ -77,4 +78,4 @@ def post_user():
 
             print(f"{error_message}: {e}")
 
-            return jsonify({"message": "Erro interno no servidor."}), 500
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500

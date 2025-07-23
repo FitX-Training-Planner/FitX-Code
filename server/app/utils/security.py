@@ -8,6 +8,7 @@ from flask_jwt_extended import create_access_token, create_refresh_token, set_ac
 from datetime import timedelta
 from sqlalchemy.orm import joinedload
 from ..exceptions.api_error import ApiError
+from .message_codes import MessageCodes
 
 def check_login(db, email, password):
     email_hash = hash_email(email)
@@ -15,7 +16,7 @@ def check_login(db, email, password):
     user = db.query(Users).options(joinedload(Users.trainer)).filter(Users.email_hash == email_hash).first()
 
     if user is None or not check_password(password, user.password):
-        raise ApiError("E-mail ou senha inválidos.", 401)
+        raise ApiError(MessageCodes.INVALID_LOGIN, 401)
     
     if user.trainer:
         return {"ID": user.trainer.ID, "isClient": False}
@@ -37,10 +38,10 @@ def verify_code(email, code):
     saved_code = redis_client.get(f"verify_code:{email_hash}")
 
     if saved_code is None:
-        raise ApiError("O código expirou.", 400)
+        raise ApiError(MessageCodes.EXPIRED_CODE, 400)
     
     if not saved_code == code.upper():
-        raise ApiError("Código inválido.", 400)
+        raise ApiError(MessageCodes.INVALID_CODE, 400)
 
     redis_client.delete(f"verify_code:{email_hash}")
 

@@ -1,6 +1,7 @@
 from flask import jsonify
 from flask_jwt_extended import verify_jwt_in_request, get_jwt
 from functools import wraps
+from .message_codes import MessageCodes
 
 def only_trainer(fn):
     @wraps(fn)
@@ -18,11 +19,11 @@ def only_trainer(fn):
             else:
                 print(f"{error_message}: O usuário não é um treinador.")
 
-                return jsonify({"message": "Acesso restrito a treinadores."}), 403
+                return jsonify({"message": MessageCodes.RESTRICT_ACCESS_TRAINER}), 403
 
         except Exception as e:
             print(f"{error_message}: {e}")
 
-            return jsonify({"message": "Token inválido ou ausente."}), 401
+            return jsonify({"message": MessageCodes.INVALID_TOKEN}), 401
 
     return wrapper

@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 from .config import AppConfig, CloudinaryConfig, FernetConfig, RedisConfig, CORSConfig, OpenaiConfig
 import cloudinary
 from flask_bcrypt import Bcrypt
@@ -9,6 +9,7 @@ from flask_jwt_extended import JWTManager
 from flask_mail import Mail
 import os
 from openai import OpenAI
+from .utils.message_codes import MessageCodes
 
 bcrypt = Bcrypt()
 
@@ -19,6 +20,24 @@ openai_client = OpenAI(api_key=OpenaiConfig.OPENAI_API_KEY)
 redis_client = redis.StrictRedis(**RedisConfig.settings)
 
 jwt = JWTManager()
+
+@jwt.unauthorized_loader
+def custom_unauthorized_response(callback):
+    print("Erro: Token ausente.")
+
+    return jsonify({"message": MessageCodes.INVALID_TOKEN}), 401
+
+@jwt.invalid_token_loader
+def custom_invalid_token_response(callback):
+    print(f"Erro: Token inválido: {callback}.")
+
+    return jsonify({"message": MessageCodes.INVALID_TOKEN}), 401
+
+@jwt.expired_token_loader
+def custom_expired_token_response(jwt_header, jwt_payload):
+    print("Erro: Token expirado.")
+
+    return jsonify({"message": MessageCodes.INVALID_TOKEN}), 401
 
 mail = Mail()
 

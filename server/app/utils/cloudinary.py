@@ -1,6 +1,7 @@
 import cloudinary
 import cloudinary.uploader
 from ..exceptions.api_error import ApiError
+from .message_codes import MessageCodes
 
 def upload_file(file):
     try:
@@ -11,4 +12,4 @@ def upload_file(file):
     except Exception as e:
         print(f"Erro ao fazer upload: {e}")
 
-        raise ApiError("Erro ao fazer o upload da foto.", 500)
+        raise ApiError(MessageCodes.ERROR_UPLOAD_PHOTO, 500)
