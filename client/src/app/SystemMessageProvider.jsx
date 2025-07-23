@@ -1,8 +1,6 @@
-import { createContext, useContext } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { useTranslation } from "react-i18next";
-
-const SystemMessageContext = createContext();
+import SystemMessageContext from "./SystemMessageContext";
 
 export function SystemMessageProvider({ 
   children 
@@ -38,10 +36,10 @@ export function SystemMessageProvider({
   let activeConfirmToastId = null;
 
   function confirm(message) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       if (activeConfirmToastId) return;
 
-      activeConfirmToastId = toast.custom((tst) => (
+      activeConfirmToastId = toast.custom(() => (
         <div
           style={{ 
             ...commonStyles,
@@ -121,8 +119,4 @@ export function SystemMessageProvider({
       {children}
     </SystemMessageContext.Provider>
   );
-}
-
-export function useSystemMessage() {
-    return useContext(SystemMessageContext);
 }

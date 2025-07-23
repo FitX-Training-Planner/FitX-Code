@@ -1,6 +1,5 @@
-import { createContext, useContext, useState } from "react";
-
-const ConfirmIdentityCallbackContext = createContext();
+import { useState } from "react";
+import ConfirmIdentityCallbackContext from "./ConfirmIdentityCallbackContext";
 
 export function ConfirmIdentityCallbackProvider({ 
   children 
@@ -8,14 +7,10 @@ export function ConfirmIdentityCallbackProvider({
   const [handleOnConfirmed, setHandleOnConfirmed] = useState(null);
 
   return (
-    <ConfirmIdentityCallbackContext.Provider 
+    <ConfirmIdentityCallbackContext.Provider
       value={{ handleOnConfirmed, setHandleOnConfirmed }}
     >
       {children}
     </ConfirmIdentityCallbackContext.Provider>
   );
-}
-
-export function useConfirmIdentityCallback() {
-  return useContext(ConfirmIdentityCallbackContext);
 }

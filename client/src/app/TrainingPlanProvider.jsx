@@ -1,6 +1,5 @@
-import { createContext, useCallback, useContext, useMemo, useState } from "react";
-
-const TrainingPlanContext = createContext();
+import { useCallback, useMemo, useState } from "react";
+import TrainingPlanContext from "./TrainingPlanContext";
 
 export const TrainingPlanProvider = ({ 
     children 
@@ -26,7 +25,3 @@ export const TrainingPlanProvider = ({
         </TrainingPlanContext.Provider>
     );
 };
-
-export function useTrainingPlan() {
-  return useContext(TrainingPlanContext);
-}
