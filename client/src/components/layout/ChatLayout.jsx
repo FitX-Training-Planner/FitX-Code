@@ -63,7 +63,7 @@ function ChatLayout({
                             {
                                 isChatBot 
                                 ? (chatbotLoading ? `${t("thinking")}...` : "Online") 
-                                : `${t("lastUpdate")}: ${formatDateTime(chat.updateDate)}`
+                                : `${t("lastUpdate")}: ${formatDateTime(chat.updateDate, t)}`
                             }
                         </span>
                     </Stack>
@@ -114,7 +114,7 @@ function ChatLayout({
                                         direction="row"
                                     >
                                         <span>
-                                            {formatDateTime(message.createDate)}
+                                            {formatDateTime(message.createDate, t)}
                                         </span>
 
                                         <span>

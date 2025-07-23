@@ -17,7 +17,7 @@ function ClientTrainingContractCard({
     contractEndDate,
     handleCancelContract
 }) {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
 
     const { width } = useWindowSize();
 
@@ -116,18 +116,18 @@ function ClientTrainingContractCard({
                                     extraStyles={{ textAlign: width <= 640 ? "center" : "end" }}
                                 >
                                     <span>
-                                        {formatDateToExtend(contractStartDate)}
+                                        {formatDateToExtend(contractStartDate, i18n.language)}
                                     </span>
 
                                     - 
 
                                     <span>
-                                        {formatDateToExtend(contractEndDate)}
+                                        {formatDateToExtend(contractEndDate, i18n.language)}
                                     </span>
                                 </Stack>
 
                                 <p>
-                                    {convertDays((new Date(contractEndDate) - new Date(contractStartDate) / (1)))} {t("remaining")}
+                                    {convertDays((new Date(contractEndDate) - new Date(contractStartDate) / (1000 * 60 * 60 * 24)), "day", t)} {t("remaining")}
                                 </p>
                             </Stack>
 

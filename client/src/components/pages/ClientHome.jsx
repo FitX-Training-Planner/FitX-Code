@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import useRequest from "../../hooks/useRequest";
-import { useSystemMessage } from "../../app/SystemMessageProvider";
+import { useSystemMessage } from "../../app/useSystemMessage";
 import useWindowSize from "../../hooks/useWindowSize";
 import { cleanCacheData, getCacheData, setCacheData } from "../../utils/cache/operations";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -127,7 +127,7 @@ function ClientHome() {
         hasRun.current = true;
         
         const fetchData = async () => {
-            const success = await verifyIsClient(isClient, user, navigate, notify);
+            const success = await verifyIsClient(isClient, user, navigate, notify, t);
 
             if (!success) return;
 
@@ -146,9 +146,9 @@ function ClientHome() {
             }
         
             const handleOnGetClientTrainingSuccess = (data) => {
-                setClientTraining(clientTrainingDefault);
+                setClientTraining(data);
 
-                setCacheData(clientTrainingStorageKey, clientTrainingDefault);
+                setCacheData(clientTrainingStorageKey, data);
             };
         
             const handleOnGetClientTrainingError = () => {
@@ -189,8 +189,8 @@ function ClientHome() {
                 handleOnCancelContractSuccess, 
                 () => undefined, 
                 t("loadingCancelContract"), 
-                t("errorCancelContract"),
-                t("successCancelContract")
+                t("successCancelContract"),
+                t("errorCancelContract")
             );
         }
     }, [cancelClientContract, clientTrainingDefault, confirm, t]);

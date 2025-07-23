@@ -7,7 +7,7 @@ import { verifyIsClient } from "../../utils/requests/verifyUserType";
 import api from "../../api/axios";
 import { validateMessage } from "../../utils/validators/formValidator";
 import useRequest from "../../hooks/useRequest";
-import { useSystemMessage } from "../../app/SystemMessageProvider";
+import { useSystemMessage } from "../../app/useSystemMessage";
 import { useTranslation } from "react-i18next";
 
 function ChatBot() {
@@ -46,13 +46,13 @@ function ChatBot() {
         hasRun.current = true;
 
         const verifyClient = async () => {
-            const success = await verifyIsClient(isClient, user, navigate, notify);
+            const success = await verifyIsClient(isClient, user, navigate, notify, t);
 
             if (!success) return;
         }
 
         verifyClient();
-    }, [navigate, notify, isClient, user]);
+    }, [navigate, notify, isClient, user, t]);
 
     const handleOnSubmit = useCallback((e) => {
         e.preventDefault();

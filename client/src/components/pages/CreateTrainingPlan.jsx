@@ -1,9 +1,9 @@
 import styles from "./CreateTrainingPlan.module.css";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Title from "../text/Title";
-import { useTrainingPlan } from "../../app/TrainingPlanProvider";
+import { useTrainingPlan } from "../../app/useTrainingPlan";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useSystemMessage } from "../../app/SystemMessageProvider";
+import { useSystemMessage } from "../../app/useSystemMessage";
 import { useSelector } from "react-redux";
 import { getNextOrder, removeAndReorder } from "../../utils/generators/generateOrder";
 import api from "../../api/axios";
@@ -48,7 +48,7 @@ function CreateTrainingPlan() {
         hasRun.current = true;
 
         const verifyTrainer = async () => {
-            const success = await verifyIsTrainer(isTrainer, user, navigate, notify);
+            const success = await verifyIsTrainer(isTrainer, user, navigate, notify, t);
 
             if (!success) return;
 
@@ -58,7 +58,7 @@ function CreateTrainingPlan() {
         }
 
         verifyTrainer();
-    }, [navigate, notify, isTrainer, user, location.state?.trainingPlan, setTrainingPlan]);
+    }, [navigate, notify, isTrainer, user, location.state?.trainingPlan, setTrainingPlan, t]);
 
     const validatePlan = useCallback(() => {
         if (!validateTrainingPlan(
@@ -126,7 +126,8 @@ function CreateTrainingPlan() {
         const verification = validateAllElementsInTrainingPlan(
             error,
             setError,
-            trainingPlan
+            trainingPlan,
+            t
         );
 
         if (verification.error) {

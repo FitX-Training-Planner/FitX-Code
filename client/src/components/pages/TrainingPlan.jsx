@@ -4,7 +4,7 @@ import useWindowSize from "../../hooks/useWindowSize";
 import { useEffect, useRef, useState } from "react";
 import { verifyIsTrainer } from "../../utils/requests/verifyUserType";
 import { useNavigate, useParams } from "react-router-dom";
-import { useSystemMessage } from "../../app/SystemMessageProvider";
+import { useSystemMessage } from "../../app/useSystemMessage";
 import api from "../../api/axios";
 import TrainingPlanExpandedCard from "../cards/training/TrainingPlanExpandedCard";
 import BackButton from "../form/buttons/BackButton";
@@ -43,7 +43,7 @@ function TrainingPlan() {
         hasRun.current = true;
         
         const fetchData = async () => {
-            const success = await verifyIsTrainer(isTrainer, user, navigate, notify);
+            const success = await verifyIsTrainer(isTrainer, user, navigate, notify, t);
 
             if (!success) return;
             

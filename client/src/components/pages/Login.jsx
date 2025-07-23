@@ -9,7 +9,7 @@ import { CSSTransition, SwitchTransition } from "react-transition-group";
 import { validateLoginRequestData, validateSignUpRequestData } from "../../utils/validators/formValidator";
 import ClickableIcon from "../form/buttons/ClickableIcon";
 import useRequest from "../../hooks/useRequest";
-import { useConfirmIdentityCallback } from "../../app/ConfirmIdentityCallbackProvider";
+import { useConfirmIdentityCallback } from "../../app/useConfirmIdentityCallback";
 import authUser from "../../utils/requests/auth";
 import api from "../../api/axios";
 import useWindowSize from "../../hooks/useWindowSize";
@@ -64,8 +64,8 @@ function Login() {
         const handleOnLoginSuccess = (data) => {
             navigate("/code-confirmation", { state: { localUser: {...localUser, ID: data.ID}, origin: "login" } });
 
-            setHandleOnConfirmed(() => (ID, dispatch, navigate, notify, authRequest, setUser) => 
-                authUser(ID, dispatch, navigate, notify, authRequest, setUser, data.isClient)
+            setHandleOnConfirmed(() => (ID, dispatch, navigate, authRequest, setUser) => 
+                authUser(ID, dispatch, navigate, authRequest, setUser, data.isClient, t)
             );
         };
         

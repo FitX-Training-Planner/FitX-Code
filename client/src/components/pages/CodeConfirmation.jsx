@@ -4,10 +4,10 @@ import CodeConfirmationForm from "../form/forms/CodeConfirmationForm";
 import Title from "../text/Title";
 import Stack from "../containers/Stack";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useSystemMessage } from "../../app/SystemMessageProvider";
+import { useSystemMessage } from "../../app/useSystemMessage";
 import useRequest from "../../hooks/useRequest";
 import NonBackgroundButton from "../form/buttons/NonBackgroundButton";
-import { useConfirmIdentityCallback } from "../../app/ConfirmIdentityCallbackProvider";
+import { useConfirmIdentityCallback } from "../../app/useConfirmIdentityCallback";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../slices/user/userSlice";
 import api from "../../api/axios";
@@ -106,7 +106,7 @@ function CodeConfirmation() {
 
         const handleOnConfirmCodeSuccess = () => {
             origin === "login" 
-            ? handleOnConfirmed(localUser.ID, dispatch, navigate, notify, authRequest, setUser)
+            ? handleOnConfirmed(localUser.ID, dispatch, navigate, authRequest, setUser)
             : handleOnConfirmed();
         }
 
@@ -122,7 +122,7 @@ function CodeConfirmation() {
             t("successConfirmIdentity"), 
             t("errorConfirmIdentity")
         );
-    }, [error, code, localUser.email, localUser.ID, confirmIdentityRequest, t, origin, handleOnConfirmed, dispatch, navigate, notify, authRequest]);
+    }, [error, code, localUser.email, localUser.ID, confirmIdentityRequest, t, origin, handleOnConfirmed, dispatch, navigate, authRequest]);
 
     useEffect(() => {
         document.title = t("confirmIdentity");

@@ -24,7 +24,7 @@ function ContractCard({
     mercadoPagoTransactionId, 
     paymentReceiptUrl
 }) {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
 
     const { width } = useWindowSize();
 
@@ -40,7 +40,7 @@ function ContractCard({
                 className={`${styles.descriptioned_item} ${styles.payment_button_container}`}
             >
                 <span>
-                    {viewPayment ? t("payment") : formatDateToExtend(startDate)}
+                    {viewPayment ? t("payment") : formatDateToExtend(startDate, i18n.language)}
                 </span>
 
                 <ClickableIcon
@@ -122,7 +122,7 @@ function ContractCard({
                                     </span>
 
                                     <span>
-                                        {durationDays} {t("days")} - {convertDays(durationDays)}
+                                        {durationDays} {t("days")} - {convertDays(durationDays, "day", t)}
                                     </span>
                                 </Stack>
 
@@ -137,7 +137,7 @@ function ContractCard({
                                     </span>
 
                                     <span>
-                                        {formatDateToExtend(endDate)}
+                                        {formatDateToExtend(endDate, i18n.language)}
                                     </span>
                                 </Stack>
                             </Stack>

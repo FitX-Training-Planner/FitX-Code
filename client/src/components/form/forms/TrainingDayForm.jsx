@@ -16,6 +16,7 @@ import StepCard from "../../cards/training/StepCard";
 import useWindowSize from "../../../hooks/useWindowSize";
 import CardioSessionCard from "../../cards/training/CardioSessionCard";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 
 function TrainingDayForm({
     trainingDay,
@@ -33,6 +34,8 @@ function TrainingDayForm({
     handleRemoveCardioSession
 }) {
     const { t } = useTranslation();
+
+    const user = useSelector(state => state.user);
     
     const { width } = useWindowSize();
     
@@ -49,7 +52,7 @@ function TrainingDayForm({
                 gap="3em"
             >
                 <p>
-                    - t("mandatoryFields")
+                    - {t("mandatoryFields")}
                 </p>
                 
                 <Stack
@@ -170,8 +173,24 @@ function TrainingDayForm({
                                         <CardioSessionCard
                                             usedID={session.usedID}
                                             note={session.note}
-                                            cardioOptionName={session.cardioOption?.name}
-                                            cardioIntensityType={session.cardioIntensity?.type}
+                                            cardioOptionName={
+                                                session.cardioOption?.ID
+                                                ? (
+                                                    user.config.isEnglish 
+                                                    ? t(`databaseData.cardioOptions.${session.cardioOption.ID}.name`) 
+                                                    : session.cardioOption.name
+                                                )
+                                                : undefined
+                                            }
+                                            cardioIntensityType={
+                                                session.cardioIntensity?.ID
+                                                ? (
+                                                    user.config.isEnglish 
+                                                    ? t(`databaseData.cardioIntensities.${session.cardioIntensity.ID}.type`) 
+                                                    : session.cardioIntensity.type
+                                                )
+                                                : undefined
+                                            }
                                             durationMinutes={session.durationMinutes}
                                             sessionTime={session.sessionTime}
                                             headingNumber={4}

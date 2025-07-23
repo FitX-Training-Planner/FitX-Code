@@ -14,7 +14,7 @@ function PaymentCard({
     mercadoPagoTransactionId,
     receiptUrl
 }) {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
 
     const { width } = useWindowSize();
     
@@ -36,7 +36,7 @@ function PaymentCard({
                         gap="0.5em"
                     >
                         <span>
-                            {formatDateToExtend(transactionDate)}
+                            {formatDateToExtend(transactionDate, i18n.language)}
                         </span>
 
                         <Stack

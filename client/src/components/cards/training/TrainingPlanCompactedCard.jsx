@@ -7,6 +7,7 @@ import FlexWrap from "../../containers/FlexWrap";
 import convertTime from "../../../utils/formatters/text/convertTime";
 import getStepType from "../../../utils/generators/stepType";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 
 function TrainingPlanCompactedCard({
     headingNumber,
@@ -19,6 +20,8 @@ function TrainingPlanCompactedCard({
     width
 }) {
     const { t } = useTranslation();
+
+    const user = useSelector(state => state.user);
 
     return (
         <Stack
@@ -130,7 +133,7 @@ function TrainingPlanCompactedCard({
                                                             >
                                                                 <Title
                                                                     headingNumber={headingNumber + 3}
-                                                                    text={`${step.orderInDay} - ${getStepType(step.exercises)}`}
+                                                                    text={`${step.orderInDay} - ${getStepType(step.exercises, user.config.isEnglish && t)}`}
                                                                 />
                                                                 
                                                                 {[...step.exercises]
@@ -145,7 +148,7 @@ function TrainingPlanCompactedCard({
                                                                             >
                                                                                 {step.exercises.length > 1 && (
                                                                                     <span>
-                                                                                        {exercise.exercise.name}
+                                                                                        {user.config.isEnglish ? t(`databaseData.exercises.${exercise.exercise.ID}.name`) : exercise.exercise.name}
                                                                                     </span>
                                                                                 )}
 
@@ -187,15 +190,15 @@ function TrainingPlanCompactedCard({
                                                             className={styles.cardio_session}
                                                         >
                                                             <span>
-                                                                {session.cardioOption.name}
+                                                                {user.config.isEnglish ? t(`databaseData.cardioOptions.${session.cardioOption.ID}.name`) : session.cardioOption.name}
                                                             </span>
 
                                                             <span>
-                                                                {session.cardioIntensity.type}
+                                                                {user.config.isEnglish ? t(`databaseData.cardioIntensities.${session.cardioIntensity.ID}.type`) : session.cardioIntensity.type}
                                                             </span>
 
                                                             <span>
-                                                                {convertTime(session.durationMinutes, "minute")}
+                                                                {convertTime(session.durationMinutes, "minute", t)}
                                                             </span>
                                                         </Stack>
                                                     </React.Fragment>

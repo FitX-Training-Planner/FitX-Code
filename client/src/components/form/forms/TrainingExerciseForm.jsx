@@ -14,6 +14,7 @@ import DndContextContainer from "../../sortable/DndContextContainer";
 import useWindowSize from "../../../hooks/useWindowSize";
 import SetCard from "../../cards/training/SetCard";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 
 function TrainingExerciseForm({
     exercise,
@@ -34,6 +35,8 @@ function TrainingExerciseForm({
     lateralities
 }) {
     const { t } = useTranslation();
+
+    const user = useSelector(state => state.user);
 
     const { width } = useWindowSize();
     
@@ -120,8 +123,24 @@ function TrainingExerciseForm({
                                             <SetCard
                                                 restSeconds={set.restSeconds}
                                                 durationSeconds={set.durationSeconds}
-                                                trainingTechniqueName={set.trainingTechnique?.name}
-                                                setTypeName={set.setType?.name}
+                                                setTypeName={
+                                                    set.setType?.ID
+                                                    ? (
+                                                        user.config.isEnglish 
+                                                        ? t(`databaseData.setTypes.${set.setType.ID}.name`) 
+                                                        : set.setType.name
+                                                    )
+                                                    : undefined
+                                                }
+                                                trainingTechniqueName={
+                                                    set.trainingTechnique?.ID
+                                                    ? (
+                                                        user.config.isEnglish 
+                                                        ? t(`databaseData.trainingTechniques.${set.trainingTechnique.ID}.name`) 
+                                                        : set.trainingTechnique.name
+                                                    )
+                                                    : undefined
+                                                }
                                                 minReps={set.minReps}
                                                 maxReps={set.maxReps}
                                                 orderInExercise={set.orderInExercise}

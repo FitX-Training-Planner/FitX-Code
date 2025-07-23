@@ -39,7 +39,7 @@ function CardioSessionInfo({
                 gap="0.5em"
             >
                 <span>
-                    {convertTime(durationMinutes, "minute")}
+                    {convertTime(durationMinutes, "minute", t)}
                 </span>
 
                 <span>

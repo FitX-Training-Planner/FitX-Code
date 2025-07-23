@@ -33,6 +33,10 @@
     width: calc(100% - 2em);
 }
 
+.descriptioned_item {
+    text-align: center;
+}
+
 .descriptioned_item > span:first-child {
     font-weight: bold;
 }

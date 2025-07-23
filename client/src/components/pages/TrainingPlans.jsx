@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSystemMessage } from "../../app/SystemMessageProvider";
+import { useSystemMessage } from "../../app/useSystemMessage";
 import { useSelector } from "react-redux";
 import api from "../../api/axios";
 import useRequest from "../../hooks/useRequest";
@@ -46,7 +46,7 @@ function TrainingPlans() {
         hasRun.current = true;
         
         const fetchData = async () => {
-            const success = await verifyIsTrainer(isTrainer, user, navigate, notify);
+            const success = await verifyIsTrainer(isTrainer, user, navigate, notify, t);
 
             if (!success) return;
 

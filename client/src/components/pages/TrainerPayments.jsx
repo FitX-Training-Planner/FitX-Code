@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import useRequest from "../../hooks/useRequest";
-import { useSystemMessage } from "../../app/SystemMessageProvider";
+import { useSystemMessage } from "../../app/useSystemMessage";
 import useWindowSize from "../../hooks/useWindowSize";
 import { getCacheData, removeItemFromCacheList, setCacheData } from "../../utils/cache/operations";
 import React, { useCallback, useMemo, useEffect, useRef, useState } from "react";
@@ -81,32 +81,7 @@ function TrainerPayments() {
         }
         
         const handleOnGetContractsSuccess = (data) => {
-            const testContract = [{
-                startDate: new Date(),        
-                endDate: new Date(),
-                status: "Vencido",        
-                trainerID: 1,
-                client: {
-                    ID: 2,
-                    name: "Paulo Henrique",
-                    photoUrl: "/images/icons/chatbot2.png"
-                },
-                paymentPlan: {
-                    ID: 1,
-                    durationDays: "270",
-                    name: "Plano de mestre"
-                },
-                paymentTransaction: {
-                    ID: 1,
-                    amount: "10000.50",
-                    paymentMethod: "PIX",
-                    createDate: new Date(),
-                    mercadopagoTransactionID: "19283829",
-                    receiptUrl: "https://mercadopago/transaction/receipt/192838382834783939394"
-                }
-            }];
-            
-            const newContracts = [...updatedContracts, ...testContract];
+            const newContracts = [...updatedContracts, ...data];
 
             setContracts(newContracts);
             setShowedContracts(newContracts);
@@ -143,7 +118,7 @@ function TrainerPayments() {
         hasRun.current = true;
         
         const fetchData = async () => {
-            const success = await verifyIsTrainer(isTrainer, user, navigate, notify);
+            const success = await verifyIsTrainer(isTrainer, user, navigate, notify, t);
 
             if (!success) return;
 
@@ -356,12 +331,28 @@ function TrainerPayments() {
                                                             clientPhoto={contract.client?.photoUrl} 
                                                             startDate={contract.startDate} 
                                                             endDate={contract.endDate} 
-                                                            status={contract.status} 
+                                                            status={
+                                                                contract.status?.ID
+                                                                ? (
+                                                                    user.config.isEnglish 
+                                                                    ? t(`databaseData.contractStatus.${contract.status.ID}.name`) 
+                                                                    : contract.status.name
+                                                                )
+                                                                : undefined
+                                                            } 
                                                             durationDays={contract.paymentPlan?.durationDays} 
                                                             paymentPlanName={contract.paymentPlan?.name} 
                                                             paymentPlanID={contract.paymentPlan?.ID}
                                                             paymentAmount={contract.paymentTransaction?.amount} 
-                                                            paymentMethod={contract.paymentTransaction?.paymentMethod} 
+                                                            paymentMethod={
+                                                                contract.paymentTransaction?.paymentMethod?.ID
+                                                                ? (
+                                                                    user.config.isEnglish 
+                                                                    ? t(`databaseData.paymentMethods.${contract.paymentTransaction.paymentMethod.ID}.name`) 
+                                                                    : contract.paymentTransaction.paymentMethod.name
+                                                                )
+                                                                : undefined
+                                                            }
                                                             paymentTransactionDate={contract.paymentTransaction?.createDate} 
                                                             mercadoPagoTransactionId={contract.paymentTransaction?.mercadopagoTransactionID} 
                                                             paymentReceiptUrl={contract.paymentTransaction?.receiptUrl} 

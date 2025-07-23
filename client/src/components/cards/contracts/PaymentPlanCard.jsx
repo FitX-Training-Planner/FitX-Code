@@ -100,7 +100,7 @@ function PaymentPlanCard({
                                     {t("or")}
 
                                     <span>
-                                        {convertDays(durationDays)}
+                                        {convertDays(durationDays, "day", t)}
                                     </span>
                                 </>
                             )}

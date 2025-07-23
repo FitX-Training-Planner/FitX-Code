@@ -4,6 +4,7 @@ import ClickableIcon from "../../form/buttons/ClickableIcon";
 import Title from "../../text/Title";
 import styles from "./TrainingCards.module.css";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 
 function StepCard({
     exercises,
@@ -14,6 +15,8 @@ function StepCard({
     handleDuplicateStep
 }) {
     const { t }= useTranslation();
+
+    const user = useSelector(state => state.user);
 
     return (
         <Stack>
@@ -49,7 +52,7 @@ function StepCard({
 
                 {exercises.length === 1 &&
                     <span>
-                        {exercises[0].exercise.name}
+                        {user.config.isEnglish ? t(`databaseData.exercises.${exercises[0].exercise.ID}.name`) : exercises[0].exercise.name}
                     </span>
                 }
             </Stack>
@@ -71,7 +74,7 @@ function StepCard({
                             <Stack>
                                 {exercises.length !== 1 &&
                                     <Title
-                                        text={exercise.exercise.name}
+                                        text={user.config.isEnglish ? t(`databaseData.exercises.${exercise.exercise.ID}.name`) : exercise.exercise.name}
                                         headingNumber={headingNumber + 1}
                                     /> 
                                 }
@@ -81,7 +84,7 @@ function StepCard({
                                 >
                                     {exercise.exerciseEquipment?.name && (
                                         <span>
-                                            {exercise.exerciseEquipment.name}
+                                            {user.config.isEnglish ? t(`databaseData.exerciseEquipments.${exercise.exerciseEquipment.ID}.name`) : exercise.exerciseEquipment.name}
                                         </span>
                                     )}
 

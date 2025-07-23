@@ -43,7 +43,7 @@ function SetInfo({
                     </span>    
                 ) : durationSeconds && (
                     <span>
-                        {convertTime(durationSeconds, "second")} {t("inIsometry")}
+                        {convertTime(durationSeconds, "second", t)} {t("inIsometry")}
                     </span>  
                 )}   
 
@@ -71,7 +71,7 @@ function SetInfo({
                     </span>
 
                     <span>
-                        {convertTime(restSeconds, "second")}
+                        {convertTime(restSeconds, "second", t)}
                     </span>
                 </Stack>
             </Stack>

@@ -2,7 +2,7 @@ import styles from "./CreateTrainingPlan.module.css";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Title from "../text/Title";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useSystemMessage } from "../../app/SystemMessageProvider";
+import { useSystemMessage } from "../../app/useSystemMessage";
 import { useSelector } from "react-redux";
 import { getNextOrder, removeAndReorder } from "../../utils/generators/generateOrder";
 import api from "../../api/axios";
@@ -48,7 +48,7 @@ function CreatePaymentPlan() {
         hasRun.current = true;
 
         const verifyTrainer = async () => {
-            const success = await verifyIsTrainer(isTrainer, user, navigate, notify);
+            const success = await verifyIsTrainer(isTrainer, user, navigate, notify, t);
 
             if (!success) return;
 
@@ -58,7 +58,7 @@ function CreatePaymentPlan() {
         }
 
         verifyTrainer();
-    }, [navigate, notify, isTrainer, user, location.state?.paymentPlan, setPaymentPlan]);
+    }, [navigate, notify, isTrainer, user, location.state?.paymentPlan, setPaymentPlan, t]);
 
     const addBenefit = useCallback(() => {   
         if (paymentPlan.benefits.length >= 8) {

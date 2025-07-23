@@ -8,6 +8,7 @@ import DndContextContainer from "../../sortable/DndContextContainer";
 import useWindowSize from "../../../hooks/useWindowSize";
 import ExerciseCard from "../../cards/training/ExerciseCard";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 
 function TrainingStepForm({
     trainingStep,
@@ -21,6 +22,8 @@ function TrainingStepForm({
     const { t } = useTranslation();
 
     const { width } = useWindowSize();
+
+    const user = useSelector(state => state.user);
     
     return (
         <form
@@ -65,14 +68,78 @@ function TrainingStepForm({
                                     >
                                         <ExerciseCard
                                             sets={exercise.sets}
-                                            exerciseName={exercise.exercise?.name}
-                                            exerciseEquipmentName={exercise.exerciseEquipment?.name}
-                                            pulleyHeightDescription={exercise.pulleyHeight?.description}
-                                            pulleyAttachmentName={exercise.pulleyAttachment?.name}
-                                            gripTypeName={exercise.gripType?.name}
-                                            gripWidthDescription={exercise.gripWidth?.description}
-                                            bodyPositionDescription={exercise.bodyPosition?.description}
-                                            lateralityType={exercise.laterality?.type}
+                                            exerciseName={
+                                                exercise.exercise?.ID
+                                                ? (
+                                                    user.config.isEnglish 
+                                                    ? t(`databaseData.exercises.${exercise.exercise.ID}.name`) 
+                                                    : exercise.exercise.name
+                                                )
+                                                : undefined
+                                            }
+                                            exerciseEquipmentName={
+                                                exercise.exerciseEquipment?.ID
+                                                ? (
+                                                    user.config.isEnglish 
+                                                    ? t(`databaseData.exerciseEquipments.${exercise.exerciseEquipment.ID}.name`) 
+                                                    : exercise.exerciseEquipment.name
+                                                )
+                                                : undefined
+                                            }
+                                            pulleyHeightDescription={
+                                                exercise.pulleyHeight?.ID
+                                                ? (
+                                                    user.config.isEnglish 
+                                                    ? t(`databaseData.pulleyHeights.${exercise.pulleyHeight.ID}.description`) 
+                                                    : exercise.pulleyHeight.description
+                                                )
+                                                : undefined
+                                            }
+                                            pulleyAttachmentName={
+                                                exercise.pulleyAttachment?.ID
+                                                ? (
+                                                    user.config.isEnglish 
+                                                    ? t(`databaseData.pulleyAttachments.${exercise.pulleyAttachment.ID}.name`) 
+                                                    : exercise.pulleyAttachment.name
+                                                )
+                                                : undefined
+                                            }
+                                            gripTypeName={
+                                                exercise.gripType?.ID
+                                                ? (
+                                                    user.config.isEnglish 
+                                                    ? t(`databaseData.gripTypes.${exercise.gripType.ID}.name`) 
+                                                    : exercise.gripType.name
+                                                )
+                                                : undefined
+                                            }
+                                            gripWidthDescription={
+                                                exercise.gripWidth?.ID
+                                                ? (
+                                                    user.config.isEnglish 
+                                                    ? t(`databaseData.gripWidths.${exercise.gripWidth.ID}.description`) 
+                                                    : exercise.gripWidth.description
+                                                )
+                                                : undefined
+                                            }
+                                            bodyPositionDescription={
+                                                exercise.bodyPosition?.ID
+                                                ? (
+                                                    user.config.isEnglish 
+                                                    ? t(`databaseData.bodyPositions.${exercise.bodyPosition.ID}.description`) 
+                                                    : exercise.bodyPosition.description
+                                                )
+                                                : undefined
+                                            }
+                                            lateralityType={
+                                                exercise.laterality?.ID
+                                                ? (
+                                                    user.config.isEnglish 
+                                                    ? t(`databaseData.lateralities.${exercise.laterality.ID}.type`) 
+                                                    : exercise.laterality.type
+                                                )
+                                                : undefined
+                                            }
                                             note={exercise.note}
                                             headingNumber={4}
                                             handleModifyExercise={() => handleModifyExercise(exercise)}

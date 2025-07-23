@@ -5,6 +5,7 @@ import Title from "../../text/Title";
 import getStepType from "../../../utils/generators/stepType";
 import TrainingDayInfo from "./TrainingDayInfo";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 
 function TrainingDayCard({
     name,
@@ -20,6 +21,8 @@ function TrainingDayCard({
     viewWidth
 }) {
     const { t } = useTranslation();
+
+    const user = useSelector(state => state.user);
 
     return (
         <Stack>
@@ -76,7 +79,7 @@ function TrainingDayCard({
                                                 gap="0.5em"
                                             >
                                                 <Title
-                                                    text={getStepType(step.exercises)}
+                                                    text={getStepType(step.exercises, user.config.isEnglish && t)}
                                                     headingNumber={headingNumber + 2}
                                                     textAlign="left"
                                                 />
@@ -90,7 +93,7 @@ function TrainingDayCard({
                                                             <span
                                                                 key={index}
                                                             >
-                                                                {exercise.exercise.name}
+                                                                {user.config.isEnglish ? t(`databaseData.exercises.${exercise.exercise.ID}.name`) : exercise.exercise.name}
                                                             </span>
                                                         ))}
                                                     </Stack>
@@ -137,12 +140,12 @@ function TrainingDayCard({
                                                     gap="0.5em"
                                                     alignItems="start"
                                                 >
-                                                    <span>
-                                                        {session.cardioOption.name}
+                                                     <span>
+                                                        {user.config.isEnglish ? t(`databaseData.cardioOptions.${session.cardioOption.ID}.name`) : session.cardioOption.name}
                                                     </span>
 
                                                     <span>
-                                                        {session.cardioIntensity.type}
+                                                        {user.config.isEnglish ? t(`databaseData.cardioIntensities.${session.cardioIntensity.ID}.type`) : session.cardioIntensity.type}
                                                     </span>
                                                 </Stack>
                                             </Stack>

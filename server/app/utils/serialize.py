@@ -197,9 +197,13 @@ def serialize_payment_plan(plan):
 
 def serialize_contract(contract):
     return {
+        "ID": contract.ID,
         "startDate": contract.start_date,        
         "endDate": contract.end_date,
-        "status": contract.contract_status.name,        
+        "status": {
+            "ID": contract.contract_status.ID,
+            "name": contract.contract_status.name
+        },      
         "trainerID": contract.fk_trainer_ID,
         "client": {
             "ID": contract.user.ID,
@@ -214,7 +218,10 @@ def serialize_contract(contract):
         "paymentTransaction": {
             "ID": contract.payment_transaction.ID,
             "amount": serialize_field(contract.payment_transaction.amount),
-            "paymentMethod": contract.payment_transaction.payment_method.name,
+            "paymentMethod": {
+                "ID": contract.payment_transaction.payment_method.ID,
+                "name": contract.payment_transaction.payment_method.name
+            },
             "createDate": contract.payment_transaction.create_date,
             "mercadopagoTransactionID": serialize_field(contract.payment_transaction.mercadopago_transaction_ID),
             "receiptUrl": contract.payment_transaction.receipt_url

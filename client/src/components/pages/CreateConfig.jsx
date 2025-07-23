@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ConfigForm from "../form/forms/ConfigForm";
 import useRequest from "../../hooks/useRequest";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useSystemMessage } from "../../app/SystemMessageProvider";
+import { useSystemMessage } from "../../app/useSystemMessage";
 import { setUser } from "../../slices/user/userSlice";
 import { useDispatch } from "react-redux";
 import authUser from "../../utils/requests/auth";
@@ -79,7 +79,7 @@ function CreateConfig() {
         };
 
         const handleOnPostUserSuccess = (data) => {
-            authUser(data.userID, dispatch, navigate, notify, authRequest, setUser, true);
+            authUser(data.userID, dispatch, navigate, authRequest, setUser, true, t);
         }
 
         postUserRequest(
@@ -90,7 +90,7 @@ function CreateConfig() {
             undefined, 
             t("errorCreateUser")
         );
-    }, [authRequest, config.email_notification_permission, config.is_complainter_anonymous, config.is_dark_theme, config.is_english, config.is_rater_anonymous, config.photoFile, dispatch, localUser.email, localUser.name, localUser.password, navigate, notify, postUserRequest, t]);
+    }, [authRequest, config.email_notification_permission, config.is_complainter_anonymous, config.is_dark_theme, config.is_english, config.is_rater_anonymous, config.photoFile, dispatch, localUser.email, localUser.name, localUser.password, navigate, postUserRequest, t]);
 
     useEffect(() => {
         document.title = t("configs");

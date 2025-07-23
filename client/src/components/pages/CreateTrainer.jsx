@@ -4,7 +4,7 @@ import PhotoInput from "../form/fields/PhotoInput";
 import TrainerForm from "../form/forms/TrainerForm";
 import { validateTrainerPostRequestData } from "../../utils/validators/formValidator";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useSystemMessage } from "../../app/SystemMessageProvider";
+import { useSystemMessage } from "../../app/useSystemMessage";
 import api from "../../api/axios";
 import authUser from "../../utils/requests/auth";
 import { useDispatch } from "react-redux";
@@ -96,7 +96,7 @@ function CreateTrainer() {
         };
 
         const handleOnPostTrainerSuccess = (data) => {
-            authUser(data.userID, dispatch, navigate, notify, authRequest, setUser, false);
+            authUser(data.userID, dispatch, navigate, authRequest, setUser, false, t);
         }
 
         const handleOnPostTrainerError = () => {
@@ -111,7 +111,7 @@ function CreateTrainer() {
             undefined, 
             t("errorCreateUser")
         );
-    }, [authRequest, dispatch, error, localUser.config.email_notification_permission, localUser.config.is_complainter_anonymous, localUser.config.is_dark_theme, localUser.config.is_english, localUser.config.is_rater_anonymous, localUser.config.photoFile, localUser.email, localUser.name, localUser.password, navigate, notify, postTrainerRequest, t, trainer.crefUF, trainer.cref_number, trainer.description]);
+    }, [authRequest, dispatch, error, localUser.config.email_notification_permission, localUser.config.is_complainter_anonymous, localUser.config.is_dark_theme, localUser.config.is_english, localUser.config.is_rater_anonymous, localUser.config.photoFile, localUser.email, localUser.name, localUser.password, navigate, postTrainerRequest, t, trainer.crefUF, trainer.cref_number, trainer.description]);
 
     useEffect(() => {
         document.title = t("trainerProfile");
