@@ -1,4 +1,37 @@
 {
+    "systemMessages": {
+        "RESTRICT_ACCESS_TRAINER": "Access restricted to trainers.",
+        "RESTRICT_ACCESS_CLIENT": "Access restricted to regular users.",
+        "INVALID_TOKEN": "Invalid or missing token.",
+        "ERROR_UPLOAD_PHOTO": "Unable to upload photo.",
+        "ERROR_CHATBOT": "Unable to chat with Coachy.",
+        "INVALID_LOGIN": "Invalid email or password.",
+        "EXPIRED_CODE": "The code has expired.",
+        "INVALID_CODE": "Invalid code.",
+        "TRAINER_NOT_FOUND": "Trainer not found.",
+        "USER_NOT_FOUND": "User not found.",
+        "ERROR_EMAIL_USED": "An account with this e-mail already exists.",
+        "ERROR_LOADING_CARDIO_OPTIONS": "Unable to load cardio options.",
+        "ERROR_LOADING_CARDIO_INTENSITIES": "Unable to load cardio intensities.",
+        "ERROR_LOADING_EXERCISES": "Unable to load exercises.",
+        "ERROR_LOADING_EXERCISE_EQUIPMENTS": "Unable to load equipment.",
+        "ERROR_LOADING_BODY_POSITIONS": "Unable to load body positions.",
+        "ERROR_LOADING_PULLEY_HEIGHTS": "Unable to load pulley heights.",
+        "ERROR_LOADING_PULLEY_ATTACHMENTS": "Unable to load pulley attachments.",
+        "ERROR_LOADING_GRIP_TYPES": "Unable to load grip types.",
+        "ERROR_LOADING_GRIP_WIDTHS": "Unable to load grip spacings.",
+        "ERROR_LOADING_LATERALITIES": "Unable to load execution methods.",
+        "ERROR_LOADING_SET_TYPES": "Unable to load set types.",
+        "ERROR_LOADING_TRAINING_TECHNIQUES": "Unable to load training techniques.",
+        "ERROR_CREF_USED": "An account with this CREF already exists.",
+        "TRAINING_PLAN_NOT_FOUND": "Training plan not found.",
+        "ERROR_TRAINER_AUTHOR_TRAINING_PLAN": "Trainers can only manage their own training plans.",
+        "INVALID_CONTRACTS_FILTER": "Invalid contract filter.",
+        "INVALID_TRAINERS_FILTER": "Invalid trainer filter.",
+        "ACTIVE_CONTRACT_NOT_FOUND": "Active contract not found.",
+        "AUTH_INSUFFICIENT_DATA": "Insufficient data for authentication.",
+        "ERROR_SERVER": "Internal server error."
+    },
     "loadingCheckData": "Checking data",
     "errorLogin": "Login failed!",
     "errorSignUp": "Data check failed!",
@@ -160,7 +193,7 @@
     "createTrainingStep": "Create or Modify Sequence",
     "addExercise": "Add Exercise",
     "pulley": "Pulley",
-    "at": "At",
+    "at": "at",
     "with": "with",
     "grip": "Grip",
     "movement": "Movement",
@@ -346,11 +379,744 @@
     "errorPulleyHeights": "Failed to load pulley heights!",
     "errorPulleyAttachments": "Failed to load pulley attachments!",
     "errorGripTypes": "Failed to load grip types!",
-    "errorGripWidths": "Failed to load grip widths!",
-    "errorLateralities": "Failed to load execution types!",
+    "errorGripWidths": "Failed to load grip spacings!",
+    "errorLateralities": "Failed to load execution methods!",
     "errorSetTypes": "Failed to load set types!",
     "errorTrainingTechniques": "Failed to load training techniques!",
     "errorConnection": "Connection error! Verify your connection or try again.",
     "errorAccess": "Failed to access feature!",
-    "successConfirmIdentity": "Accepted code!"
+    "successConfirmIdentity": "Accepted code!",
+    "loadingAuth": "Authenticating",
+    "successAuth": "You have been successfully authenticated. Enjoy FitX!",
+    "errorAuth": "Failed to authenticate!",
+    "errorNotClient": "This page can only be accessed by regular users.",
+    "errorNotTrainer": "This page can only be accessed by trainers.",
+    "errorStateTrainingPlan": "Error in the current state of the training plan!",
+    "errorTrainingPlanMinWorkouts": "The training plan must have at least one day with training or cardio!",
+    "errorTrainingDaysMinLength": "The training plan must have at least two training days!",
+    "errorInvalidTrainingPlan": "Invalid training plan data!",
+    "errorTrainingDay": "Invalid data on the training day",
+    "theTrainingDay": "The training day",
+    "needsToHaveAtLeastOneExercise": "must have at least one exercise",
+    "theRestDay": "The rest day",
+    "cantHasExercises": "can't have exercises",
+    "invalidInTheExercise": "invalid in the exercise",
+    "inTheTrainingDay": "on the training day",
+    "theExercise": "The exercise",
+    "cardio": "Cardio",
+    "invalidInTheTrainingDay": "invalid in the training day",
+    "inTheSequence": "in the sequence",
+    "isEmpty": "is empty",
+    "invalidInTheSequence": "invalid in the sequence",
+    "needsToHaveAtLeastOneSet": "needs to have at least one set",
+    "year": "Year",
+    "week": "Week",
+    "months": "Months",
+    "month": "Month",
+    "seconds": "Seconds",
+    "minutes": "Minutes",
+    "hours": "Hours",
+    "atHours": "at",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "databaseData": {
+        "muscleGroups": {
+            "1": {
+                "name": "Abdomen"
+            },
+            "2": {
+                "name": "Biceps"
+            },
+            "3": {
+                "name": "Triceps"
+            },
+            "4": {
+                "name": "Forearm"
+            },
+            "5": {
+                "name": "Shoulder"
+            },
+            "6": {
+                "name": "Chest"
+            },
+            "7": {
+                "name": "Quadriceps"
+            },
+            "8": {
+                "name": "Adductor"
+            },
+            "9": {
+                "name": "Trapezius"
+            },
+            "10": {
+                "name": "Dorsal"
+            },
+            "11": {
+                "name": "Lower Back"
+            },
+            "12": {
+                "name": "Hamstrings"
+            },
+            "13": {
+                "name": "Glutes"
+            },
+            "14": {
+                "name": "Calf"
+            }
+        },
+        "exercises": {
+            "1": {
+                "name": "Triceps French Curl",
+                "description": "Push a weight upward with your arms overhead. Move only your forearm."
+            },
+            "2": {
+                "name": "Triceps Pulley",
+                "description": "Push a weight downward with your arms at your sides on a high pulley. Move only your forearm."
+            },
+            "3": {
+                "name": "Triceps Forehead",
+                "description": "Push a weight forward with your arms in front of your head. Move only your forearm."
+            },
+            "4": {
+                "name": "Triceps Kickback",
+                "description": "Push a weight backward with your arms at your sides while leaning forward on a high pulley. Move only your forearm."
+            },
+            "5": {
+                "name": "Triceps Dip",
+                "description": "Push a weight down with your arms at your sides. Use only your arm."
+            },
+            "6": {
+                "name": "Wrist Curl",
+                "description": "Move a weight with your arms still. Use only your wrist."
+            },
+            "7": {
+                "name": "Wrist Adduction",
+                "description": "Move a single weight toward your pinky finger with your arms still. Use only your wrist."
+            },
+            "8": {
+                "name": "Wrist Abduction",
+                "description": "Move a single weight toward your thumb with your arms still. Use only your wrist."
+            },
+            "9": {
+                "name": "Finger Curl",
+                "description": "Move a single weight with your arms still. Use only your fingers."
+            },
+            "10": {
+                "name": "Hand Weight Support",
+                "description": "Hold and hold a weight with your hands."
+            },
+            "11": {
+                "name": "Wrist Roller",
+                "description": "Twist and untwist a barbell attached to weights."
+            },
+            "12": {
+                "name": "Traditional Barbell Curl",
+                "description": "Pull a weight upward with your arms at your sides and your palms facing up. Move only your forearm."
+            },
+            "13": {
+                "name": "Reverse Curl",
+                "description": "Pull a weight up with your arms at your sides and your palms facing down. Move only your forearm."
+            },
+            "14": {
+                "name": "Traditional Scott Curl",
+                "description": "Pull a weight up with your arms resting in front of your torso and your palms facing up. Move only your forearm."
+            },
+            "15": {
+                "name": "Reverse Scott Curl",
+                "description": "Pull a weight up with your arms resting in front of your torso and your palms facing down. Move only your forearm."
+            },
+            "16": {
+                "name": "Spider Curl",
+                "description": "Pull a weight up with your arms hanging loosely in front of your torso while leaning forward. Move only your forearm."
+            },
+            "17": {
+                "name": "Incline Curl",
+                "description": "Pull a weight upward with your arms behind your torso. Move only your forearm."
+            },
+            "18": {
+                "name": "Concentration Curl",
+                "description": "Pull a weight toward your chest with your arms in front of your torso leaning forward. Move only your forearm."
+            },
+            "19": {
+                "name": "Cross Curl",
+                "description": "Pull a weight toward your head with your arms at your sides. Move only your forearm."
+            },
+            "20": {
+                "name": "Bench Press",
+                "description": "Push a weight in front of your torso. Move only your arm."
+            },
+            "21": {
+                "name": "Incline Bench Press",
+                "description": "Push a weight forward and upward from your torso. Move only your arm."
+            },
+            "22": {
+                "name": "Decline Bench Press",
+                "description": "Push a weight forward and downward from your torso. Move only your arm."
+            },
+            "23": {
+                "name": "Straight Crucifix",
+                "description": "Bring your arms together in front of your torso with them slightly bent. Move only your arm."
+            },
+            "24": {
+                "name": "Declined Crucifix",
+                "description": "Bring your arms together in front of your torso and close to your legs with them slightly bent. Move only your arm."
+            },
+            "25": {
+                "name": "Inclined Crucifix",
+                "description": "Bring your arms together in front of your torso and close to your head with them slightly bent. Move only your arm."
+            },
+            "26": {
+                "name": "Flexion",
+                "description": "Lie on the floor face down and push yourself up. Move only your arm."
+            },
+            "27": {
+                "name": "Lateral Raise",
+                "description": "Raise your arms alongside your torso with them slightly bent. Move only your arm."
+            },
+            "28": {
+                "name": "Front Raise",
+                "description": "Raise your arms together in front of your torso with them slightly bent. Move only your arm."
+            },
+            "29": {
+                "name": "Reverse Crucifix",
+                "description": "Pull a weight toward your back with your arms at shoulder height and slightly bent. Move only your arm."
+            },
+            "30": {
+                "name": "Pressure",
+                "description": "Push a weight up over your head. Move only your arm."
+            },
+            "31": {
+                "name": "Upright Row",
+                "description": "Pull a weight up to chest height. Move only your arm."
+            },
+            "32": {
+                "name": "Face Pulldown",
+                "description": "Pull a weight up toward your head with your arms at shoulder height. Move only your arm and shoulder."
+            },
+            "33": {
+                "name": "Shrug",
+                "description": "Pull your shoulders up with your arms still."
+            },
+            "34": {
+                "name": "Pull Down",
+                "description": "Pull a weight up to neck height with your arms overhead. Move only your arm and shoulder."
+            },
+            "35": {
+                "name": "Traditional Row",
+                "description": "Pull a weight toward your torso, either while supported, inclined, or on machines. Move only your arm and shoulder."
+            },
+            "36": {
+                "name": "Horseback Row",
+                "description": "Pull a weight toward your torso, while standing or leaning on a T-bar machine, using an angled path. Move only your arm and shoulder."
+            },
+            "37": {
+                "name": "Low Row",
+                "description": "Pull a weight toward your torso, while seated and on a low pulley. Move only your arm and shoulder."
+            },
+            "38": {
+                "name": "Pulldown",
+                "description": "Pull a weight up to your navel with your arms slightly bent and in line with your shoulders, using an angled path. Move only your arm and shoulder."
+            },
+            "39": {
+                "name": "Pullover",
+                "description": "Pull a weight up to your chest with your arms slightly bent and in line with your shoulders, using an angled path, while lying down. Move only your arm and shoulder."
+            },
+            "40": {
+                "name": "Lumbar Extension",
+                "description": "Lift your torso and extend your spine with your legs attached to a Roman bench. Move only your torso and spine."
+            },
+            "41": {
+                "name": "Hammer Curl",
+                "description": "Pull a weight up with your arms at your sides and your palms facing your torso. Move only your forearm."
+            },
+            "42": {
+                "name": "Standing Calf Curls",
+                "description": "Standing with your toes, lifting your heels. Move only your heel."
+            },
+            "43": {
+                "name": "Seated Calf Curls",
+                "description": "Seated with your legs bent, lifting your heels. Move only your heel."
+            },
+            "44": {
+                "name": "Flexed Hip Calf Curls",
+                "description": "Standing with your toes, lifting your heels, lifting your heels. Move only your heel."
+            },
+            "45": {
+                "name": "Cold Curl Table",
+                "description": "Pull a weight with it resting on your feet or the back of your shin, while lying down. Move only your knee."
+            },
+            "46": {
+                "name": "Cold Curl Chair",
+                "description": "Pull a weight with it resting on the back of your shin, while sitting. Move only your knee."
+            },
+            "47": {
+                "name": "Standing Leg Curl",
+                "description": "Pull a weight with it supported on the back of your shin, while standing. Move only your knee."
+            },
+            "48": {
+                "name": "Stiff",
+                "description": "Lift a weight from the floor with your hands and your legs slightly bent. Move only your hips."
+            },
+            "49": {
+                "name": "Good Morning",
+                "description": "Lift a weight supported on your back with your legs slightly bent. Move only your hips."
+            },
+            "50": {
+                "name": "Nordic Curl",
+                "description": "With your feet together and your shin supported, lower and raise your legs with your hips slightly bent. Move only your knee."
+            },
+            "51": {
+                "name": "Pelvic Lift",
+                "description": "Lift a weight with it supported on your hips and the backs and soles of your feet supported, while lying down. Move only your hips."
+            },
+            "52": {
+                "name": "Chair Abductor",
+                "description": "Open your legs with the lateral part of your thigh supported, while sitting. Move only your leg."
+            },
+            "53": {
+                "name": "Standing Hip Abduction",
+                "description": "Open your legs with the weight attached or supported by the heel, while standing. Move only your leg."
+            },
+            "54": {
+                "name": "Glute Kickback",
+                "description": "Push a weight behind your body with your legs. Move only your leg."
+            },
+            "55": {
+                "name": "Bulgarian",
+                "description": "Squat with one leg, with the foot of the other leg resting on a bench behind your torso. Move only your leg and hip."
+            },
+            "56": {
+                "name": "Sumo Squat",
+                "description": "Squat with your legs wide apart. Move only your leg and hip."
+            },
+            "57": {
+                "name": "Sumo Deadlift",
+                "description": "Lift a weight from the floor with your hands and legs wide apart. Move only your hips and leg."
+            },
+            "58": {
+                "name": "Traditional Deadlift",
+                "description": "Lift a weight from the floor with your hands, with your legs shoulder-width apart. Move only your hips and legs."
+            },
+            "59": {
+                "name": "Romanian Deadlift",
+                "description": "Lift a weight from the floor with your hands and with your hips higher than in a traditional deadlift. Move only your hips and legs."
+            },
+            "60": {
+                "name": "Seated Hip Adductor",
+                "description": "Close your legs with your inner thigh supported while seated. Move only your leg."
+            },
+            "61": {
+                "name": "Standing Hip Adduction",
+                "description": "Close your legs with the weight held or supported by your heel while standing. Move only your leg."
+            },
+            "62": {
+                "name": "Seated Hip Extension",
+                "description": "Push the weight in a kicking motion while seated or lying down. Move only your knee."
+            },
+            "63": {
+                "name": "Traditional Squat",
+                "description": "Squat with your legs shoulder-width apart and your weight supported by your back or held in your hands. Move only your leg and hips."
+            },
+            "64": {
+                "name": "Front Squat",
+                "description": "Squat with your legs shoulder-width apart and your weight supported by your shoulders in front of your torso. Move only your leg and hips."
+            },
+            "65": {
+                "name": "Roman Squat",
+                "description": "Squat with your legs shoulder-width apart, feet locked, and your calves supported. Move only your leg and hips."
+            },
+            "66": {
+                "name": "Leg Press",
+                "description": "Push a weighted platform using your legs, while sitting or lying down. Move only your leg."
+            },
+            "67": {
+                "name": "Stride",
+                "description": "Simulate walking with long strides and squatting with your front leg with each step. Move only your leg and hips."
+            },
+            "68": {
+                "name": "Lunge",
+                "description": "Squat with one leg, with the foot of the other leg resting on the floor behind your torso. Move only your leg and hips."
+            },
+            "69": {
+                "name": "Climbing Crunch",
+                "description": "Lie on your stomach and stand up with your arms resting on the floor while trying to bring your legs to your chest. Move only your legs."
+            },
+            "70": {
+                "name": "Supra Crunch",
+                "description": "Lie on your stomach, bend your legs, and raise your torso by arching your spine. Move only your torso and spine."
+            },
+            "71": {
+                "name": "Lying Lower Crunch",
+                "description": "Lie on your stomach and raise your legs, bending your spine. Move only your leg and spine."
+            },
+            "72": {
+                "name": "Lower Crunch on Pull-Up Bar",
+                "description": "Hold onto a pull-up bar and raise your legs, bending your spine. Move only your leg and spine."
+            },
+            "73": {
+                "name": "Supported Lower Crunch",
+                "description": "Support your arms and back and raise your legs, bending your spine. Move only your leg and spine."
+            },
+            "74": {
+                "name": "Plank",
+                "description": "Lie on your stomach and stay upright with your arms resting on the floor, torso and legs aligned."
+            },
+            "75": {
+                "name": "Bicycle Crunch",
+                "description": "Lie on your stomach with your legs and spine bent, simulating a pedal stroke. Rotate your torso and move only your leg."
+            },
+            "76": {
+                "name": "Oblique Crunch on Pull-Up Bar",
+                "description": "Hold onto a pull-up bar and raise your legs, bending your spine and rotating your torso. Rotate your torso and move only your leg and spine."
+            },
+            "77": {
+                "name": "Lying Oblique Crunch",
+                "description": "Lie on your stomach, bend your legs, and lift your torso while rotating it by flexing your spine. Rotate your torso and move only your torso and spine."            
+            }
+        },
+        "bodyPositions": {
+            "1": {
+                "description": "Standing"
+            },
+            "2": {
+                "description": "Standing with the torso inclined"
+            },
+            "3": {
+                "description": "Seated"
+            },
+            "4": {
+                "description": "Sitting on the upright bench (with your back to the bench)"
+            },
+            "5": {
+                "description": "Sitting on the upright bench (facing the bench)"
+            },
+            "6": {
+                "description": "Sitting on the bench inclined at 75° (with your back to the bench)"
+            },
+            "7": {
+                "description": "Sitting on the bench inclined at 75° (facing the bench)"
+            },
+            "8": {
+                "description": "Sitting on the bench inclined at 60° (with your back to the bench)"
+            },
+            "9": {
+                "description": "Sitting on the bench inclined at 60° (facing the bench)"
+            },
+            "10": {
+                "description": "Lying on the bench inclined at 45° (on your back)"
+            },
+            "11": {
+                "description": "Lying on the bench inclined at 45° (face down)"
+            },
+            "12": {
+                "description": "Lying on the bench inclined at 30° (on your back)"
+            },
+            "13": {
+                "description": "Lying on the bench inclined at 30° (face down)"
+            },
+            "14": {
+                "description": "Lying on the bench inclined at 15° (on your back)"
+            },
+            "15": {
+                "description": "Lying on the bench inclined at 15° (face down)"
+            },
+            "16": {
+                "description": "Lying on the non-inclined bench (on your back)"
+            },
+            "17": {
+                "description": "Lying on the non-inclined bench (face down)"
+            },
+            "18": {
+                "description": "Lying on the bench declined at 15° (on your back)"
+            },
+            "19": {
+                "description": "Lying on the bench declined at 15° (face down)"
+            },
+            "20": {
+                "description": "Lying on the bench declined at 30° (on your back)"
+            },
+            "21": {
+                "description": "Lying on the bench declined at 30° (face down)"
+            },
+            "22": {
+                "description": "Lying on the bench declined at 45° (on your back)"
+            },
+            "23": {
+                "description": "Lying on the bench declined at 45° (face down)"
+            },
+            "24": {
+                "description": "Lying on the floor (on your back)"
+            },
+            "25": {
+                "description": "Lying on the floor (face down)"
+            }
+        },
+        "exerciseEquipments": {
+            "1": {
+                "name": "Dumbbells",
+                "description": "Free weights used with one hand."
+            },
+            "2": {
+                "name": "Barbell",
+                "description": "Straight bar, W, H, or hexagonal bar."
+            },
+            "3": {
+                "name": "Guided Barbell",
+                "description": "Bar attached to a Smith machine."
+            },
+            "4": {
+                "name": "Machine",
+                "description": "Guided machine with weight plates."
+            },
+            "5": {
+                "name": "Free",
+                "description": "Bodyweight exercise."
+            },
+            "6": {
+                "name": "Pulley",
+                "description": "Equipment with pulleys and various accessories."
+            },
+            "7": {
+                "name": "Elastic Band",
+                "description": "Bands that resist or assist movement."
+            },
+            "8": {
+                "name": "Ankle Weights",
+                "description": "Weights attached to the ankles or wrists."
+            }
+        },
+        "pulleyHeights": {
+            "1": {
+                "description": "Foot Height"
+            },
+            "2": {
+                "description": "Shin Height"
+            },
+            "3": {
+                "description": "Thigh Height"
+            },
+            "4": {
+                "description": "Abdomen Height"
+            },
+            "5": {
+                "description": "Chest Height"
+            },
+            "6": {
+                "description": "Head Height"
+            },
+            "7": {
+                "description": "Maximum Height"
+            }
+        },
+        "pulleyAttachments": {
+            "1": {
+                "name": "Straight Bar"
+            },
+            "2": {
+                "name": "W-Bar"
+            },
+            "3": {
+                "name": "H-Bar"
+            },
+            "4": {
+                "name": "Triangle Bar"
+            },
+            "5": {
+                "name": "Anatomical Bar"
+            },
+            "6": {
+                "name": "Short Rope"
+            },
+            "7": {
+                "name": "Long Rope"
+            },
+            "8": {
+                "name": "Pull-Up Bar"
+            },
+            "9": {
+                "name": "Ankle Strap"
+            }
+        },
+        "gripTypes": {
+            "1": {
+                "name": "Pronation"
+            },
+            "2": {
+                "name": "Semi-Pronation"
+            },
+            "3": {
+                "name": "Neutral"
+            },
+            "4": {
+                "name": "Semi-supinated"
+            },
+            "5": {
+                "name": "Supinated"
+            },
+            "6": {
+                "name": "Pronating"
+            },
+            "7": {
+                "name": "Supinating"
+            }
+        },
+        "gripWidths": {
+            "1": {
+                "description": "Closed"
+            },
+            "2": {
+                "description": "Medium"
+            },
+            "3": {
+                "description": "Wide"
+            }
+        },
+        "lateralities": {
+            "1": {
+                "type": "Bilateral"
+            },
+            "2": {
+                "type": "Unilateral"
+            },
+            "3": {
+                "type": "Alternate"
+            }
+        },
+        "trainingTechniques": {
+            "1": {
+                "name": "Drop Set",
+                "description": "Two or more load reductions each time you reach failure in a set."
+            },
+            "2": {
+                "name": "Rest-Pause",
+                "description": "Two or more short rests each time you reach failure in a set."
+            },
+            "3": {
+                "name": "Post-Set Partials",
+                "description": "Partial repetitions after reaching failure in a set."
+            },
+            "4": {
+                "name": "Elongated Phase Partials",
+                "description": "Partial repetitions at the point of greatest elongation in the movement."
+            },
+            "5": {
+                "name": "Contracted Phase Partials",
+                "description": "Partial repetitions at the point of greatest contraction in the movement."
+            },
+            "6": {
+                "name": "Forced Reps",
+                "description": "Repetitions performed with assistance after reaching failure in a set."
+            },
+            "7": {
+                "name": "Negative Reps",
+                "description": "Repetitions performed with assistance during the concentric phase of the movement."
+            },
+            "8": {
+                "name": "Cluster Set",
+                "description": "Small divisions of a series with short pauses between them."
+            },
+            "9": {
+                "name": "FST-7",
+                "description": "Seven sets with short breaks between sets and maintaining a stretch in the target muscle during rests."
+            },
+            "10": {
+                "name": "Dead Stop",
+                "description": "Repetitions with a rest at the point of greatest elongation of the movement."
+            },
+            "11": {
+                "name": "Peak Concentration",
+                "description": "Repetitions with a pause at the point of greatest contraction of the movement."
+            },
+            "12": {
+                "name": "Zero Point",
+                "description": "Repetitions with a pause at the point of greatest elongation of the movement."
+            }
+        },
+        "setTypes": {
+            "1": {
+                "name": "Warm-up",
+                "description": "Low-intensity sets designed to lubricate joints, activate target muscles, and improve neuromuscular connectivity."
+            },
+            "2": {
+                "name": "Feeder",
+                "description": "Moderate-intensity sets used to adjust the load for main sets and reduce the risk of injury."
+            },
+            "3": {
+                "name": "Work",
+                "description": "Effective sets with sufficient intensity to reach or approach concentric failure within the prescribed repetition range."
+            },
+            "4": {
+                "name": "Top",
+                "description": "Effective sets with maximum intensity, performed to concentric or technical failure, within the prescribed repetition range."
+            }
+        },
+        "cardioOptions": {
+            "1": {
+                "name": "Treadmill"
+            },
+            "2": {
+                "name": "Recumbent Exercise Bike"
+            },
+            "3": {
+                "name": "Upright Exercise Bike"
+            },
+            "4": {
+                "name": "Elliptical"
+            },
+            "5": {
+                "name": "Rowing Machine"
+            },
+            "6": {
+                "name": "Stair Simulator"
+            }
+        },
+        "cardioIntensities": {
+            "1": {
+                "type": "Zone 1",
+                "description": "Use of 50-60% of maximum heart rate."
+            },
+            "2": {
+                "type": "Zone 2",
+                "description": "Use of 60-70% of maximum heart rate."
+            },
+            "3": {
+                "type": "Zone 3",
+                "description": "Use of 70-80% of maximum heart rate."
+            },
+            "4": {
+                "type": "Zone 4",
+                "description": "Use of 80-90% of maximum heart rate."
+            },
+            "5": {
+                "type": "Zone 5",
+                "description": "Use of 90-100% of maximum heart rate."
+            },
+            "6": {
+                "type": "HIIT",
+                "description": "Interval training with alternating periods of high and low intensity."
+            }
+        },
+        "paymentMethods": {
+            "1": {
+                "name": "PIX"
+            },
+            "2": {
+                "name": "Credit Card"
+            },
+            "3": {
+                "name": "Debit Card"
+            }
+        },
+        "contractStatus": {
+            "1": {
+                "name": "Active"
+            },
+            "2": {
+                "name": "Expired"
+            },
+            "3": {
+                "name": "Canceled"
+            }
+        }
+    }
 }
