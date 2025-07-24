@@ -133,7 +133,6 @@ hr {
 .fade-exit {
   opacity: 1;
   transform: translateX(0);
-
 }
 
 .fade-exit-active {
@@ -178,7 +177,7 @@ hr {
   background-color: var(--dark-theme-color);
 }
 
-@media screen and (max-width: 640px) {
+@media screen and (max-width: 640px) {  
   :root {
     --title-size: 32px;
     --small-title-size: 22px;
@@ -186,5 +185,35 @@ hr {
     --text-size: 12px;
     --small-text-size: 10px;
     --large-text-size: 16px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 15px;
+  }
+}
+
+@media screen and (max-width: 440px) {
+  :root {
+    --title-size: 24px;
+    --small-title-size: 18px;
+    --large-title-size: 30px;
+    --text-size: 11px;
+    --small-text-size: 9px;
+    --large-text-size: 15px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 12px;
+    border: 1px solid transparent;
   }
 }
