@@ -30,7 +30,8 @@
         "INVALID_TRAINERS_FILTER": "Filtro de treinadores inválido.",
         "ACTIVE_CONTRACT_NOT_FOUND": "Contrato ativo não encontrado.",
         "AUTH_INSUFFICIENT_DATA": "Dados insuficiente para a autenticação.",
-        "ERROR_SERVER": "Erro interno no servidor."
+        "ERROR_SERVER": "Erro interno no servidor.",
+        "USER_EMAIL_NOT_EXISTS": "Nenhuma conta FitX com esse e-mail existe."
     },
     "loadingCheckData": "Checando dados",
     "errorLogin": "Falha ao logar!",
@@ -418,5 +419,12 @@
     "hours": "Horas",
     "atHours": "às",
     "today": "Hoje",
-    "yesterday": "Ontem"
+    "yesterday": "Ontem",
+    "newPasswordPlaceholder": "Insira sua nova senha",
+    "newPassword": "Nova Senha",
+    "update": "Atualizar",
+    "recoverPasswordPlaceholder": "Prencha os campos abaixo com o e-mail da sua conta FitX e uma nova senha para ela.",
+    "recoverPassword": "Recuperação de Senha",
+    "errorRecoverPassword": "Falha ao atualizar senha!",
+    "successRecoverPassword": "Sua senha foi atualizada!"
 }

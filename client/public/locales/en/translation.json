@@ -30,7 +30,8 @@
         "INVALID_TRAINERS_FILTER": "Invalid trainer filter.",
         "ACTIVE_CONTRACT_NOT_FOUND": "Active contract not found.",
         "AUTH_INSUFFICIENT_DATA": "Insufficient data for authentication.",
-        "ERROR_SERVER": "Internal server error."
+        "ERROR_SERVER": "Internal server error.",
+        "USER_EMAIL_NOT_EXISTS": "No FitX account with that e-mail exists."
     },
     "loadingCheckData": "Checking data",
     "errorLogin": "Login failed!",
@@ -419,6 +420,13 @@
     "atHours": "at",
     "today": "Today",
     "yesterday": "Yesterday",
+    "newPasswordPlaceholder": "Enter your new password",
+    "newPassword": "New Password",
+    "update": "Update",
+    "recoverPasswordPlaceholder": "Fill in the boxes below with your FitX account's e-mail and a new password for it.",
+    "recoverPassword": "Recover Password",
+    "errorRecoverPassword": "Failed to update password!",
+    "successRecoverPassword": "Your password has been updated!",
     "databaseData": {
         "muscleGroups": {
             "1": {
