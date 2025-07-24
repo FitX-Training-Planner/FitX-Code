@@ -1,6 +1,6 @@
 .code_confirmation_form_container > p {
-    font-size: var(--large-text-size);
     text-align: center;
+    font-size: var(--large-text-size);
 }
 
 .code {
@@ -8,6 +8,10 @@
 }
 
 .user_info {
+    text-align: center;
+}
+
+.user_info > span {
     font-weight: var(--medium-font-weight);
     color: var(--light-theme-color);
 }

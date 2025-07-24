@@ -62,7 +62,7 @@ function Login() {
         }
         
         const handleOnLoginSuccess = (data) => {
-            navigate("/code-confirmation", { state: { localUser: {...localUser, ID: data.ID}, origin: "login" } });
+            navigate("/code-confirmation", { state: { localUser: { email: localUser.email, ID: data.ID}, origin: "login" } });
 
             setHandleOnConfirmed(() => (ID, dispatch, navigate, authRequest, setUser) => 
                 authUser(ID, dispatch, navigate, authRequest, setUser, data.isClient, t)
@@ -99,16 +99,16 @@ function Login() {
         }
     
         const handleOnSignUpSuccess = () => {
-            navigate("/code-confirmation", { state: { localUser, origin: "signUp" } });
+            navigate("/code-confirmation", { state: { localUser: { email: localUser.email }, origin: "signUp" } });
+        
+            setHandleOnConfirmed(() => () => {
+                navigate("/create-config", { state: { localUser } });
+            });
         };
     
         const handleOnSignUpError = () => {
             setSignUpError(true);
         };
-    
-        setHandleOnConfirmed(() => () => {
-            navigate("/create-config", { state: { localUser } });
-        });
     
         signUpRequest(
             postSignUp,

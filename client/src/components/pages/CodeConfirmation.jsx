@@ -38,9 +38,8 @@ function CodeConfirmation() {
         { value: "", order: 4 }
     ]);    
     const [localUser, setLocalUser] = useState({
-        name: "",
-        email: "",
-        password: ""
+        ID: null,
+        email: ""
     });    
     const [origin, setOrigin] = useState("login");
     const [error, setError] = useState(false);
@@ -105,9 +104,13 @@ function CodeConfirmation() {
         }
 
         const handleOnConfirmCodeSuccess = () => {
-            origin === "login" 
-            ? handleOnConfirmed(localUser.ID, dispatch, navigate, authRequest, setUser)
-            : handleOnConfirmed();
+            if (origin === "login") {
+                handleOnConfirmed(localUser.ID, dispatch, navigate, authRequest, setUser);
+            } else if (origin === "signUp") {
+                handleOnConfirmed();
+            } else if (origin === "recoverPassword") {
+                handleOnConfirmed();
+            }
         }
 
         const handleOnConfirmCodeError = () => {
@@ -133,7 +136,6 @@ function CodeConfirmation() {
             className={styles.code_confirmation_page}
         >
             <Stack
-                className={styles.code_confirmation_container}
                 gap="2em"
             >
                 <Title

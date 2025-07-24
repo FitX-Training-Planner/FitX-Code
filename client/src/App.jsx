@@ -86,17 +86,17 @@ function App() {
     const theme = user.config.isDarkTheme ? "dark" : "light";
 
     document.documentElement.setAttribute("data-theme", theme);
-  }, [dispatch, getUserRequest, location.pathname, navigate, user.config.isDarkTheme]);
+  }, [dispatch, getUserRequest, location.pathname, navigate, user.config.isDarkTheme, t]);
 
   useEffect(() => {
     const isEnglish = user.ID ? user.config.isEnglish : navigator.language?.toLowerCase().startsWith("en");
 
     const lang = isEnglish ? "en" : "pt-BR";
 
-    document.documentElement.setAttribute("lang", lang);
+    if (i18n.language !== lang) i18n.changeLanguage(lang);
 
-    i18n.changeLanguage(lang);
-  }, [user.config.isEnglish, user.ID]);
+    document.documentElement.setAttribute("lang", lang);
+  }, [user.config.isEnglish, user.ID, i18n]);
 
   return (
     canRender && (

@@ -86,12 +86,12 @@ function CodeConfirmationForm({
                 </p>
             
                 <Stack>
-                    <p>
+                    <p
+                        className={styles.user_info}
+                    >
                         {t("codePlaceholder")} 
 
-                        <span
-                            className={styles.user_info}
-                        >
+                        <span>
                             {` ${email}:`}
                         </span>
                     </p>
