@@ -3,7 +3,7 @@ from ..database.context_manager import get_db
 from ..exceptions.api_error import ApiError
 from ..utils.security import check_login, generate_code, verify_code, set_jwt_cookies, set_jwt_access_cookies
 from ..utils.user import is_email_used, send_email
-from ..services.user import get_user_by_id
+from ..services.user import get_user_by_id, get_user_id_by_email, modify_user_password
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from ..utils.trainer_decorator import only_trainer
 from ..utils.client_decorator import only_client
@@ -37,6 +37,29 @@ def login():
 
             return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
 
+@security_bp.route("/recover-password", methods=["POST"])
+def recover_password():
+    error_message = "Erro na rota de recuperação de senha"
+
+    with get_db() as db:
+        try:
+            data = request.form
+            
+            user_id = get_user_id_by_email(db, data.get("email"))
+
+            modify_user_password(db, user_id, data.get("newPassword"))
+
+            return "", 204
+
+        except ApiError as e:
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": str(e)}), e.status_code
+
+        except Exception as e:
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
 
 @security_bp.route("/sign-up", methods=["POST"])
 def sign_up():

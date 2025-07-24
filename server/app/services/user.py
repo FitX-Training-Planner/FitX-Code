@@ -36,6 +36,16 @@ def get_user_by_id(db, user_id, is_client):
 
         raise Exception(f"Erro ao recuperar o usuário: {e}")
 
+def get_user_id_by_email(db, email):
+    email_hash = hash_email(email)
+
+    user = db.query(Users).options(joinedload(Users.trainer)).filter(Users.email_hash == email_hash).first()
+
+    if user is None:
+        raise ApiError(MessageCodes.USER_EMAIL_NOT_EXISTS, 404)
+
+    return user.ID
+
 def insert_user(
     db,
     name,
@@ -117,3 +127,26 @@ def insert_photo(db, photo_file):
         print(f"Erro ao salvar foto: {e}")
 
         raise Exception(f"Erro ao salvar a foto: {e}")
+    
+def modify_user_password(db, user_id, new_password): 
+    try:
+        user = db.query(Users).filter(Users.ID == user_id).first()
+
+        if not user:
+            raise ApiError(MessageCodes.USER_NOT_FOUND, 404)
+
+        user.password = hash_password(new_password)
+
+        db.commit()
+
+        return True
+
+    except ApiError as e:
+        print(f"Erro ao modificar senha do usuário: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao modificar senha do usuário: {e}")
+
+        raise Exception(f"Erro ao modificar a senha do usuário: {e}")
