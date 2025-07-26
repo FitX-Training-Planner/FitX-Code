@@ -1,0 +1,13 @@
+[build]
+command = "npm run build"
+
+[deploy]
+start_command = "npm run start"
+healthcheck_path = "/"
+
+[static]
+publish = "dist"
+
+[[static.rewrites]]
+source = "/**"
+destination = "/index.html"
