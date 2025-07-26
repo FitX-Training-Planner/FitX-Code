@@ -27,7 +27,7 @@ api.interceptors.response.use(
       } catch (err) {
         console.error(err);
 
-        // window.location.href = "/login";
+        window.location.href = "/login";
         
         return Promise.reject(err);
       }
