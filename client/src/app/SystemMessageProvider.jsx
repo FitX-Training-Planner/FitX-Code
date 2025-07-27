@@ -25,13 +25,19 @@ export function SystemMessageProvider({
   };
 
   function notify(text, type = "success", id = null) {  
+    const toastId = id || `${type}-${Date.now()}`;
+    
     if (type === "success") {
-      toast.success(text, { ...toastProps, duration: 5000, id: id });
+      toast.success(text, { ...toastProps, duration: 5000, id: toastId });
     } else if (type === "error") {
-      toast.error(text, { ...toastProps, duration: 5000, id: id });
+      toast.error(text, { ...toastProps, duration: 5000, id: toastId });
     } else if (type === "loading") {
-      toast.loading(`${text}...`, { ...toastProps, duration: 5000, id: id })
+      toast.loading(`${text}...`, { ...toastProps, duration: 5000, id: toastId })
     }
+
+    setTimeout(() => {
+      toast.dismiss(toastId);
+    }, 5000);
   }
 
   let activeConfirmToastId = null;
