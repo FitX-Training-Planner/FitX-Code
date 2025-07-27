@@ -20,7 +20,8 @@ export function SystemMessageProvider({
 
   const toastProps = {
     style: commonStyles,
-    position: "top-right"
+    position: "top-right",
+    pauseOnHover: false
   };
 
   function notify(text, type = "success", id = null) {  
