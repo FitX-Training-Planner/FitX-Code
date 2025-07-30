@@ -4,6 +4,7 @@ import { useSystemMessage } from "../app/useSystemMessage";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
+import api from "../api/axios";
 
 export default function useRequest() {
     const { t } = useTranslation();
@@ -15,6 +16,20 @@ export default function useRequest() {
     const { notify } = useSystemMessage();
 
     const [loading, setLoading] = useState(false);
+
+    async function refreshToken() {
+        try {
+            await api.post("/token/refresh");
+
+            return true;
+        } catch (err) {
+            console.error(err);
+
+            navigate("/login");
+
+            return false;
+        }
+    }
 
     async function request(requestFn, handleSuccess, handleError, loadingMessage, successMessage, errorMessage) {
         if (loading) return;
@@ -52,14 +67,47 @@ export default function useRequest() {
                 return;
             }
 
-            if (errorMessage) notify(errorMessage, "error");
+            function notifyErrorMessage() {
+                if (errorMessage) notify(errorMessage, "error");
 
-            const messageError = getErrorMessageCodeError(err)
-            
-            if (messageError) notify(t(messageError), "error", requestId);
+                const messageError = getErrorMessageCodeError(err)
+                
+                if (messageError) notify(t(messageError), "error", requestId);
+            }
 
             const status = err?.response?.status;
             const currentPath = location.pathname;
+            const code = err.response?.data?.message;
+
+            if (status === 401 && code === "INVALID_TOKEN" && err.config && !err.config._retry) {
+                err.config._retry = true;
+
+                const refreshed = await refreshToken();
+
+                if (refreshed) {
+                    try {
+                        const retryResp = await api(err.config);
+
+                        handleSuccess(retryResp.data);
+
+                        if (successMessage) notify(successMessage, "success", requestId);
+
+                        return;
+                    } catch (retryErr) {
+                        console.error(retryErr);
+
+                        notifyErrorMessage();
+
+                        handleError(retryErr);
+                        
+                        return;
+                    }
+                }
+
+                return;
+            }
+
+            notifyErrorMessage();
 
             if (status === 403) {
                 if (currentPath !== "/") navigate("/");
