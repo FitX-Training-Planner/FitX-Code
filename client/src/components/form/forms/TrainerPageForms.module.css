@@ -1,0 +1,6 @@
+.rating_form,
+.complaint_form {
+    --border: 2px solid var(--theme-color);
+    border-top: var(--border);
+    border-bottom: var(--border);
+}
