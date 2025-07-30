@@ -129,7 +129,7 @@ def auth():
             if not ID or is_client is None:
                 raise ApiError(MessageCodes.AUTH_INSUFFICIENT_DATA, 400)
 
-            is_client = is_client == "true"
+            is_client = is_client.lower() == "true"
 
             user = get_user_by_id(db, ID, is_client)
 
@@ -161,7 +161,7 @@ def refresh_token():
         
         jwt_data = get_jwt()
 
-        is_client = jwt_data.get("isClient") == "true"
+        is_client = str(jwt_data.get("isClient")).lower() == "true"
 
         response = jsonify({"success": "success"})
 
