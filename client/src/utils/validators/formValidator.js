@@ -1,6 +1,6 @@
 import { isPaymentPlanBenefitDescriptionValid, isPaymentPlanDurationValid, isPaymentPlanPriceValid } from "./paymentsValidator";
 import { isCardioDurationValid, isDurationSetValid, isNoteValid, isPlanNameValid, isRepsValid, isRestValid } from "./trainingValidator";
-import { isCREFValid, isDocumentValid, isEmailValid, isMessageValid, isNameValid, isPasswordValid, isTrainerDescriptionValid } from "./userValidator";
+import { isCREFValid, isDocumentValid, isEmailValid, isMessageValid, isNameValid, isPasswordValid, isRatingCommentValid, isTrainerDescriptionValid } from "./userValidator";
 
 export function hasEmptyFieldsInObject(object) {
     return Object.values(object).some(value => value === null || value === "")
@@ -355,6 +355,30 @@ export function validatePaymentPlan(paymentPlanError, setPaymentPlanError, name,
 
             return false;
         }  
+    }
+
+    return true;
+}
+
+export function validateComplaint(complaintError, setComplaintError, reason) {
+    if (complaintError) return false;
+
+    if (!isRatingCommentValid(reason)) {
+        setComplaintError(true);
+
+        return false;
+    }
+
+    return true;
+}
+
+export function validateRating(ratingError, setRatingError, comment) {
+    if (ratingError) return false;
+
+    if (!isRatingCommentValid(comment)) {
+        setRatingError(true);
+
+        return false;
     }
 
     return true;

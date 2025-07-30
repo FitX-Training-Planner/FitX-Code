@@ -37,3 +37,7 @@ export function isTrainerDescriptionValid(description) {
 export function isMessageValid(message, isChatBot) {
     return message.length <= (isChatBot ? 100 : 1000);
 }
+
+export function isRatingCommentValid(comment) {
+    return comment.length <= 255;
+}

@@ -31,7 +31,7 @@ export function formatDateToExtend(date, locale) {
 export function formatDateTime(dateTime, t) {
     const date = new Date(dateTime);
 
-    const formattedDate = formatDate(dateTime);
+    const formattedDate = formatDate(dateTime, t);
 
     const hour = String(date.getHours()).padStart(2, "0");
     const minutes = String(date.getMinutes()).padStart(2, "0");
