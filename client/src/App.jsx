@@ -23,6 +23,7 @@ import TrainingPlan from "./components/pages/TrainingPlan";
 import TrainerPayments from "./components/pages/TrainerPayments";
 import CreatePaymentPlan from "./components/pages/CreatePaymentPlan";
 import { useTranslation } from "react-i18next";
+import Trainer from "./components/pages/Trainer";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -134,6 +135,11 @@ function App() {
         <Route
           path="/recover-password"
           element={<RecoverPassword />}
+        />
+
+        <Route
+          path="/trainers/:id"
+          element={<Trainer />}
         />
 
         <Route
