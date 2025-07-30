@@ -1,10 +1,10 @@
-from app.database.models import Trainer, TrainingPlan, TrainingDay, TrainingDayStep, StepExercise, ExerciseSet, CardioSession, PaymentPlan, PaymentPlanBenefit, PlanContract, Users, PaymentTransaction
+from app.database.models import Trainer, TrainingPlan, TrainingDay, TrainingDayStep, StepExercise, ExerciseSet, CardioSession, PaymentPlan, PaymentPlanBenefit, PlanContract, Users, PaymentTransaction, Rating, Complaint, ComplaintLike, RatingLike
 from ..utils.trainer import is_cref_used
 from ..exceptions.api_error import ApiError
 from ..utils.formatters import safe_str, safe_int, safe_float, safe_bool, safe_time
-from ..utils.serialize import serialize_training_plan, serialize_payment_plan, serialize_contract, serialize_trainer_in_trainers
+from ..utils.serialize import serialize_training_plan, serialize_payment_plan, serialize_contract, serialize_trainer_in_trainers, serialize_rating, serialize_complaint
 from sqlalchemy.orm import joinedload, subqueryload
-from sqlalchemy import asc, desc, func
+from sqlalchemy import asc, desc, func, case
 from ..exceptions.api_error import ApiError
 from ..utils.message_codes import MessageCodes
 
@@ -582,7 +582,14 @@ def get_partial_trainers(db, offset, limit, sort):
             query = query.order_by(desc(Trainer.contracts_number))
 
         elif sort == "best_rated":
-            query = query.order_by(desc(Trainer.rate))
+            C = 2.5  # média global esperada
+            m = 1 # número mínimo de avaliações para ser considerado confiável
+            
+            query = query.order_by(
+                desc(
+                    (Trainer.rates_number / (Trainer.rates_number + m)) * Trainer.rate + (m / (Trainer.rates_number + m)) * C
+                )
+            )
 
         elif sort == "most_affordable":
             query = query.order_by(
@@ -643,3 +650,493 @@ def update_trainer_price_info(db, trainer_id):
         print(f"Erro ao atualizar informações de preço do treinador: {e}")
 
         raise Exception(f"Erro ao atualizar as informações de preço do treinador: {e}")
+
+def get_partial_trainer_complaints(db, offset, limit, trainer_id, viewer_id = None):
+    try:
+        offset = int(offset)
+        limit = int(limit)
+
+        result = []
+        
+        extra_offset = 0
+
+        viewer_complaint = None
+
+        if offset == 0 and viewer_id:
+            viewer_complaint = get_user_complaint_for_trainer(db, trainer_id, viewer_id)
+
+            if viewer_complaint:
+                extra_offset = 1
+
+        query = (
+            db.query(Complaint)
+            .options(
+                subqueryload(Complaint.user)
+                    .joinedload(Users.media)
+            )
+            .filter(Complaint.fk_trainer_ID == trainer_id)
+        )
+
+        if viewer_complaint:
+            query = query.filter(Complaint.ID != viewer_complaint.ID)
+
+        complaints = (
+            query.order_by(Complaint.likes_number.desc())
+            .offset(offset + extra_offset)
+            .limit(limit - extra_offset)
+            .all()
+        )
+
+        all_complaints = [viewer_complaint] if viewer_complaint else []
+        all_complaints += complaints
+
+        if viewer_id:
+            complaint_ids = [c.ID for c in all_complaints]
+
+            liked_complaint_ids = set(
+                row.fk_complaint_ID for row in db.query(ComplaintLike)
+                .filter(
+                    ComplaintLike.fk_user_ID == viewer_id,
+                    ComplaintLike.fk_complaint_ID.in_(complaint_ids)
+                )
+                .all()
+            )
+
+            for complaint in all_complaints:
+                has_liked = complaint.ID in liked_complaint_ids
+
+                result.append(serialize_complaint(complaint, has_liked))
+        
+        else:
+            result = [serialize_complaint(c) for c in all_complaints]
+
+        return result
+    
+    except ApiError as e:
+        print(f"Erro ao recuperar denúncias do treinador: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao recuperar denúncias do treinador: {e}")
+
+        raise Exception(f"Erro ao recuperar as denúncias do treinador: {e}")
+
+def get_user_complaint_for_trainer(db, trainer_id, user_id):
+    return (
+        db.query(Complaint)
+        .options(
+            subqueryload(Complaint.user)
+                .joinedload(Users.media)
+        )
+        .filter(
+            Complaint.fk_trainer_ID == trainer_id,
+            Complaint.fk_user_ID == user_id
+        )
+        .first()
+    )
+
+def get_partial_trainer_ratings(db, offset, limit, trainer_id, viewer_id = None):
+    try:
+        offset = int(offset)
+        limit = int(limit)
+
+        result = []
+        
+        extra_offset = 0
+
+        viewer_rating = None
+
+        if offset == 0 and viewer_id:
+            viewer_rating = get_user_rating_for_trainer(db, trainer_id, viewer_id)
+
+            if viewer_rating:
+                extra_offset = 1
+
+        query = (
+            db.query(Rating)
+            .options(
+                subqueryload(Rating.user)
+                    .joinedload(Users.media)
+            )
+            .filter(Rating.fk_trainer_ID == trainer_id)
+        )
+
+        if viewer_rating:
+            query = query.filter(Rating.ID != viewer_rating.ID)
+
+        ratings = (
+            query.order_by(Rating.likes_number.desc())
+            .offset(offset + extra_offset)
+            .limit(limit - extra_offset)
+            .all()
+        )
+
+        all_ratings = [viewer_rating] if viewer_rating else []
+        all_ratings += ratings
+
+        if viewer_id:
+            rating_ids = [r.ID for r in all_ratings]
+
+            liked_rating_ids = set(
+                row.fk_rating_ID for row in db.query(RatingLike)
+                .filter(
+                    RatingLike.fk_user_ID == viewer_id,
+                    RatingLike.fk_rating_ID.in_(rating_ids)
+                )
+                .all()
+            )
+
+            for rating in all_ratings:
+                has_liked = rating.ID in liked_rating_ids
+
+                result.append(serialize_rating(rating, has_liked))
+        
+        else:
+            result = [serialize_rating(r) for r in all_ratings]
+
+        return result
+    
+    except ApiError as e:
+        print(f"Erro ao recuperar avaliações do treinador: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao recuperar avaliações do treinador: {e}")
+
+        raise Exception(f"Erro ao recuperar as avaliações do treinador: {e}")
+
+def get_user_rating_for_trainer(db, trainer_id, user_id):
+    return (
+        db.query(Rating)
+        .options(
+            subqueryload(Rating.user)
+                .joinedload(Users.media)
+        )
+        .filter(
+            Rating.fk_trainer_ID == trainer_id,
+            Rating.fk_user_ID == user_id
+        )
+        .first()
+    )
+    
+def get_trainer_profile(db, trainer_id):
+    try:
+        trainer = (
+            db.query(Trainer)
+            .options(
+                subqueryload(Trainer.user)
+                    .joinedload(Users.media),
+                subqueryload(Trainer.payment_plans)
+                    .subqueryload(PaymentPlan.payment_plan_benefits)
+            )
+            .filter(Trainer.ID == trainer_id)
+            .first()
+        )
+
+        if trainer is None:
+            raise ApiError(MessageCodes.TRAINER_NOT_FOUND, 404)
+
+        data = serialize_trainer_in_trainers(trainer) 
+
+        data["paymentPlans"] = [serialize_payment_plan(plan) for plan in trainer.payment_plans]
+
+        return data
+
+    except ApiError as e:
+        print(f"Erro ao recuperar treinador: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao recuperar treinador: {e}")
+
+        raise Exception(f"Erro ao recuperar o treinador: {e}")
+
+def like_complaint(db, complaint_id, user_id):
+    try:
+        has_add = False
+
+        has_like = (
+            db.query(ComplaintLike)
+            .filter(ComplaintLike.fk_user_ID == user_id, ComplaintLike.fk_complaint_ID == complaint_id)
+            .first()
+        )
+
+        if has_like is None:
+            like = ComplaintLike(
+                fk_user_ID=user_id, 
+                fk_complaint_ID=complaint_id
+            )
+
+            db.add(like)
+
+            has_add = True
+
+        else:
+            db.delete(has_like)
+
+        db.commit()
+        
+        update_complaint_likes_info(db, complaint_id, has_add)
+
+        return True
+    
+    except ApiError as e:
+        print(f"Erro ao curtir denúncia de treinador: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao curtir denúncia de treinador: {e}")
+
+        raise Exception(f"Erro ao curtir a denúncia de treinador: {e}")
+
+def update_complaint_likes_info(db, complaint_id, has_add):
+    try:
+        db.query(Complaint).filter(Complaint.ID == complaint_id).update({
+            Complaint.likes_number: func.greatest(Complaint.likes_number + (1 if has_add else -1), 0)
+        })
+
+        db.commit()
+    
+    except ApiError as e:
+        print(f"Erro ao atualizar número de curtidas da denúncia: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao atualizar número de curtidas da denúncia: {e}")
+
+        raise Exception(f"Erro ao atualizar o número de curtidas da denúncia: {e}")
+    
+def like_rating(db, rating_id, user_id):
+    try:
+        has_add = False
+
+        has_like = (
+            db.query(RatingLike)
+            .filter(RatingLike.fk_user_ID == user_id, RatingLike.fk_rating_ID == rating_id)
+            .first()
+        )
+
+        if has_like is None:
+            like = RatingLike(
+                fk_user_ID=user_id, 
+                fk_rating_ID=rating_id
+            )
+
+            db.add(like)
+
+            has_add = True
+
+        else:
+            db.delete(has_like)
+
+        db.commit()
+        
+        update_rating_likes_info(db, rating_id, has_add)
+
+        return True
+    
+    except ApiError as e:
+        print(f"Erro ao curtir avaliação de treinador: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao curtir avaliação de treinador: {e}")
+
+        raise Exception(f"Erro ao curtir a avaliação de treinador: {e}")
+    
+def update_rating_likes_info(db, rating_id, has_add):
+    try:
+        db.query(Rating).filter(Rating.ID == rating_id).update({
+            Rating.likes_number: func.greatest(Rating.likes_number + (1 if has_add else -1), 0)
+        })
+
+        db.commit()
+    
+    except ApiError as e:
+        print(f"Erro ao atualizar número de curtidas da avaliação: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao atualizar número de curtidas da avaliação: {e}")
+
+        raise Exception(f"Erro ao atualizar o número de curtidas da avaliação: {e}")
+
+def insert_trainer_rating(db, rating, comment, trainer_id, viewer_id):
+    try:
+        existing_rating = (
+            db.query(Rating)
+            .filter(Rating.fk_user_ID == viewer_id, Rating.fk_trainer_ID == trainer_id)
+            .first()
+        )
+
+        if existing_rating:
+            raise ApiError(MessageCodes.ERROR_ALREADY_RATE, 409)
+        
+        new_rating = Rating(
+            rating=safe_int(rating), 
+            comment=safe_str(comment),
+            fk_user_ID=viewer_id,
+            fk_trainer_ID=trainer_id
+        )
+
+        db.add(new_rating)
+
+        db.commit()
+
+        update_trainer_rate_info(db, trainer_id, True, new_rating.rating)
+
+        db.refresh(new_rating)
+
+        return serialize_rating(new_rating, False)
+    
+    except ApiError as e:
+        print(f"Erro ao avaliar treinador: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao avaliar treinador: {e}")
+
+        raise Exception(f"Erro ao avaliar o treinador: {e}")
+    
+def update_trainer_rate_info(db, trainer_id, has_add, manipulated_rating_value):
+    try:
+        db.query(Trainer).filter(Trainer.ID == trainer_id).update({
+            Trainer.rates_number: func.greatest(Trainer.rates_number + (1 if has_add else -1), 0),
+            Trainer.rate: case(
+                (has_add, (Trainer.rate * Trainer.rates_number + manipulated_rating_value) / (Trainer.rates_number + 1)),
+                else_=(
+                    (Trainer.rate * Trainer.rates_number - manipulated_rating_value) / func.greatest(Trainer.rates_number - 1, 1)
+                )
+            )
+        })
+
+        db.commit()
+    
+    except ApiError as e:
+        print(f"Erro ao atualizar informações de avaliação do treinador: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao atualizar informações de avaliação do treinador: {e}")
+
+        raise Exception(f"Erro ao atualizar as informações de avaliação do treinador: {e}")
+    
+def insert_trainer_complaint(db, reason, trainer_id, viewer_id):
+    try:
+        existing_complaint = (
+            db.query(Complaint)
+            .filter(Complaint.fk_user_ID == viewer_id, Complaint.fk_trainer_ID == trainer_id)
+            .first()
+        )
+
+        if existing_complaint:
+            raise ApiError(MessageCodes.ERROR_ALREADY_COMPLAINT, 409)
+        
+        new_complaint = Complaint(
+            reason=safe_str(reason),
+            fk_user_ID=viewer_id,
+            fk_trainer_ID=trainer_id
+        )
+
+        db.add(new_complaint)
+
+        db.commit()
+
+        update_trainer_complaints_number(db, trainer_id, True)
+
+        db.refresh(new_complaint)
+
+        return serialize_complaint(new_complaint, False)
+    
+    except ApiError as e:
+        print(f"Erro ao denunciar treinador: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao denunciar treinador: {e}")
+
+        raise Exception(f"Erro ao denunciar o treinador: {e}")
+    
+def update_trainer_complaints_number(db, trainer_id, has_add):
+    try:
+        db.query(Trainer).filter(Trainer.ID == trainer_id).update({
+            Trainer.complaints_number: func.greatest(Trainer.complaints_number + (1 if has_add else -1), 0)
+        })
+
+        db.commit()
+    
+    except ApiError as e:
+        print(f"Erro ao atualizar número de denúncias do treinador: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao atualizar número de denúncias do treinador: {e}")
+
+        raise Exception(f"Erro ao atualizar o número de denúncias do treinador: {e}")
+
+def remove_complaint(db, complaint_id, user_id):
+    try:
+        complaint = db.query(Complaint).filter(Complaint.ID == complaint_id).first()
+
+        if not complaint:
+            raise ApiError(MessageCodes.COMPLAINT_NOT_FOUND, 404)
+
+        if str(user_id) != str(complaint.fk_user_ID):
+            raise ApiError(MessageCodes.ERROR_USER_AUTHOR_COMPLAINT, 403)
+
+        db.delete(complaint)
+
+        db.commit()
+
+        update_trainer_complaints_number(db, complaint.fk_trainer_ID, False)
+
+        return True
+
+    except ApiError as e:
+        print(f"Erro ao remover denúncia: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao remover denúncia: {e}")
+
+        raise Exception(f"Erro ao remover a denúncia: {e}")
+    
+def remove_rating(db, rating_id, user_id):
+    try:
+        rating = db.query(Rating).filter(Rating.ID == rating_id).first()
+
+        if not rating:
+            raise ApiError(MessageCodes.RATING_NOT_FOUND, 404)
+
+        if str(user_id) != str(rating.fk_user_ID):
+            raise ApiError(MessageCodes.ERROR_USER_AUTHOR_RATING, 403)
+
+        db.delete(rating)
+
+        db.commit()
+
+        update_trainer_rate_info(db, rating.fk_trainer_ID, False, rating.rating)
+
+        return True
+
+    except ApiError as e:
+        print(f"Erro ao remover avaliação: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao remover avaliação: {e}")
+
+        raise Exception(f"Erro ao remover a avaliação: {e}")
