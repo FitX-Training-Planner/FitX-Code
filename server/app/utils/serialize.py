@@ -235,8 +235,10 @@ def serialize_trainer_in_trainers(trainer):
         "photoUrl": trainer.user.media.url if trainer.user.fk_media_ID and trainer.user.media else None,
         "crefNumber": trainer.cref_number if trainer.cref_number else None,
         "rate": serialize_field(trainer.rate),
+        "ratesNumber": serialize_field(trainer.rates_number),
         "contractsNumber": serialize_field(trainer.contracts_number),
         "complaintsNumber": serialize_field(trainer.complaints_number),
+        "description": serialize_field(trainer.description),
         "paymentPlans": [
             {
                 "fullPrice": serialize_field(plan.full_price),
@@ -266,3 +268,47 @@ def serialize_training_contract(training_contract):
             "endDate": training_contract.end_date
         }
     }
+
+def serialize_rating(rating, has_liked):
+    data = {
+        "ID": rating.ID,
+        "raterID": rating.user.ID,
+        "rating": serialize_field(rating.rating),
+        "comment": serialize_field(rating.comment),
+        "createDate": rating.create_date,
+        "likesNumber": serialize_field(rating.likes_number),
+        "hasLiked": has_liked
+    }
+
+    if not rating.user.is_rater_anonymous:
+        data["rater"] = {
+            "name": rating.user.name,
+            "photoUrl": 
+                rating.user.media.url 
+                if rating.user.fk_media_ID and rating.user.media 
+                else None
+        }
+
+    return data
+
+def serialize_complaint(complaint, has_liked):
+    data = {
+        "ID": complaint.ID,
+        "complainterID": complaint.user.ID,
+        "reason": serialize_field(complaint.reason),
+        "createDate": complaint.create_date,
+        "likesNumber": serialize_field(complaint.likes_number),
+        "hasLiked": has_liked
+    }
+
+    if not complaint.user.is_complainter_anonymous:
+        data["complainter"] = {
+            "name": complaint.user.name,
+            "photoUrl": (
+                complaint.user.media.url
+                if complaint.user.fk_media_ID and complaint.user.media
+                else None
+            )
+        }
+
+    return data
