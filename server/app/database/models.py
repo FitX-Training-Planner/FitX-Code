@@ -72,6 +72,8 @@ class Rating(Base):
     ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     rating = Column(TINYINT(unsigned=True), nullable=False)   
     comment = Column(String(255))
+    create_date = Column(DATE, nullable=False, server_default=func.now())
+    likes_number = Column(INTEGER(unsigned=True), default=0, nullable=False) 
     fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="SET NULL"), index=True)
     fk_trainer_ID = Column(INTEGER(unsigned=True), ForeignKey("trainer.ID", ondelete="CASCADE"), index=True, nullable=False)
 
@@ -82,11 +84,24 @@ class Rating(Base):
         UniqueConstraint("fk_user_ID", "fk_trainer_ID", name="uq_user_trainer_rating"),
     )
 
+class RatingLike(Base):
+    __tablename__ = "rating_like"
+
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
+    fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="SET NULL"), index=True)
+    fk_rating_ID = Column(INTEGER(unsigned=True), ForeignKey("rating.ID", ondelete="CASCADE"), index=True, nullable=False)
+
+    __table_args__ = (
+        UniqueConstraint("fk_user_ID", "fk_rating_ID", name="uq_user_rating_like"),
+    )
+
 class Complaint(Base):
     __tablename__ = "complaint"
 
     ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     reason = Column(String(255))
+    create_date = Column(DATE, nullable=False, server_default=func.now())
+    likes_number = Column(INTEGER(unsigned=True), default=0, nullable=False) 
     fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="SET NULL"), index=True)
     fk_trainer_ID = Column(INTEGER(unsigned=True), ForeignKey("trainer.ID", ondelete="CASCADE"), index=True, nullable=False)
 
@@ -95,6 +110,17 @@ class Complaint(Base):
     
     __table_args__ = (
         UniqueConstraint("fk_user_ID", "fk_trainer_ID", name="uq_user_trainer_complaint"),
+    )
+
+class ComplaintLike(Base):
+    __tablename__ = "complaint_like"
+
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
+    fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="SET NULL"), index=True)
+    fk_complaint_ID = Column(INTEGER(unsigned=True), ForeignKey("complaint.ID", ondelete="CASCADE"), index=True, nullable=False)
+
+    __table_args__ = (
+        UniqueConstraint("fk_user_ID", "fk_complaint_ID", name="uq_user_complaint_like"),
     )
 
 class MuscleGroup(Base):

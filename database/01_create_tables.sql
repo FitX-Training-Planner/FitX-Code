@@ -82,6 +82,8 @@ CREATE TABLE IF NOT EXISTS rating (
     ID INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     rating TINYINT UNSIGNED NOT NULL,   
     comment VARCHAR(255),
+    create_date DATE NOT NULL DEFAULT (CURRENT_DATE),
+    likes_number INT UNSIGNED NOT NULL DEFAULT 0,
     fk_user_ID INT UNSIGNED,
     fk_trainer_ID INT UNSIGNED NOT NULL,
     FOREIGN KEY (fk_user_ID) REFERENCES users(ID),
@@ -91,9 +93,23 @@ CREATE TABLE IF NOT EXISTS rating (
     INDEX idx_fk_user_ID (fk_user_ID)
 );
 
+CREATE TABLE IF NOT EXISTS rating_like (
+    ID INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    fk_user_ID INT UNSIGNED,
+    fk_rating_ID INT UNSIGNED NOT NULL,
+    FOREIGN KEY (fk_user_ID) REFERENCES users(ID),
+    FOREIGN KEY (fk_rating_ID) REFERENCES rating(ID),
+    UNIQUE (fk_user_ID, fk_rating_ID),
+    INDEX idx_fk_user_ID (fk_user_ID),
+    INDEX idx_fk_rating_ID (fk_rating_ID)
+);
+
+
 CREATE TABLE IF NOT EXISTS complaint (
     ID INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     reason VARCHAR(255),
+    create_date DATE NOT NULL DEFAULT (CURRENT_DATE),
+    likes_number INT UNSIGNED NOT NULL DEFAULT 0,
     fk_user_ID INT UNSIGNED,
     fk_trainer_ID INT UNSIGNED NOT NULL,
     FOREIGN KEY (fk_user_ID) REFERENCES users(ID),
@@ -101,6 +117,17 @@ CREATE TABLE IF NOT EXISTS complaint (
     UNIQUE (fk_user_ID, fk_trainer_ID),
     INDEX idx_fk_trainer_ID (fk_trainer_ID),
     INDEX idx_fk_user_ID (fk_user_ID)
+);
+
+CREATE TABLE IF NOT EXISTS complaint_like (
+    ID INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    fk_user_ID INT UNSIGNED,
+    fk_complaint_ID INT UNSIGNED NOT NULL,
+    FOREIGN KEY (fk_user_ID) REFERENCES users(ID),
+    FOREIGN KEY (fk_complaint_ID) REFERENCES complaint(ID),
+    UNIQUE (fk_user_ID, fk_complaint_ID),
+    INDEX idx_fk_user_ID (fk_user_ID),
+    INDEX idx_fk_complaint_ID (fk_complaint_ID)
 );
 
 CREATE TABLE IF NOT EXISTS muscle_group (
