@@ -1,0 +1,39 @@
+.trainer_main_info_container {
+    --photo-bg-height: 50dvh;
+    position: relative;
+    height: calc(100dvh - 1em);
+}
+
+.trainer_photo_background {
+    filter: brightness(0.5);
+    height: 50%;
+    overflow: hidden;
+}
+
+.trainer_photo_background > img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    transition: var(--fast-transition);
+}
+
+.trainer_photo {
+    position: absolute;
+    transform: translateY(calc(var(--photo-bg-height) - 50%));
+}
+
+.trainer_main_info {
+    height: 50%;
+    padding: 100px 1em 0;
+}
+
+.trainer_description {
+    background-color: var(--theme-color);
+    padding: 1em 1em 3em;
+}
+
+.payment_plans_container,
+.ratings_container,
+.complaints_container {
+    padding: 0 1em;
+}
