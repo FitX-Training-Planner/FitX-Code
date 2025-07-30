@@ -88,7 +88,7 @@ function PaymentPlanCard({
                         </span>
 
                         <Stack
-                            gap="0.2em"
+                            gap="0.5em"
                             className={styles.plan_duration}
                         >
                             <span>

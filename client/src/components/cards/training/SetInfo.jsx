@@ -30,9 +30,9 @@ function SetInfo({
                     headingNumber={headingNumber}
                     text={setTypeName}
                 />
-
-                <hr/>
             </Stack>
+
+            <hr/>
 
             <Stack
                 gap="0.5em"

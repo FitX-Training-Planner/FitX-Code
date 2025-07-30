@@ -31,9 +31,9 @@ function CardioSessionInfo({
                     headingNumber={headingNumber}
                     varColor={titleColor}
                 />
-
-                <hr/>
             </Stack>
+
+            <hr/>
 
             <Stack
                 gap="0.5em"

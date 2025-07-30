@@ -86,7 +86,7 @@ function SmallTrainerProfessionalCard({
                     />
 
                     <span>
-                        {formatNumberShort(rate)}
+                        {Number(rate).toFixed(2)}
                     </span>
                 </Stack>
 
@@ -125,9 +125,7 @@ function SmallTrainerProfessionalCard({
                 </Stack>
             </Stack>
 
-            {paymentPlans.length !== 0 && (
-                <hr/>
-            )}
+            <hr/>
 
             {paymentPlans.length !== 0 ? (
                 <Stack

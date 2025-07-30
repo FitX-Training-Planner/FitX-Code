@@ -38,9 +38,9 @@ function ExerciseInfo({
                         {exerciseEquipmentName}
                     </span>
                 )}
-
-                <hr/>
             </Stack>
+
+            <hr/>
 
             <Stack
                 gap="0.5em"
