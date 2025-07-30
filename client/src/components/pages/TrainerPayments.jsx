@@ -64,7 +64,7 @@ function TrainerPayments() {
     const loadContracts = useCallback((hasError, updatedContracts, offset, filter) => {
         if (hasError) return;
 
-        if ((updatedContracts.length < contractsLimit && updatedContracts.length !== 0) || updatedContracts.length % contractsLimit !== 0) {
+        if ((updatedContracts.length < contractsLimit && updatedContracts.length !== 0) || updatedContracts.length % contractsLimit !== 0 || (offset !== 0 && updatedContracts.length === 0)) {
             notify(t("contractsEnding"));
 
             return;
@@ -92,13 +92,15 @@ function TrainerPayments() {
         const handleOnGetContractsError = () => {
             setContractsError(true);
         };
+
+        const isFirstLoading = offset === 0;
     
         getTrainerContracts(
             getContracts, 
             handleOnGetContractsSuccess, 
             handleOnGetContractsError, 
-            t("loadingContracts"), 
-            t("successContracts"), 
+            !isFirstLoading ? t("loadingContracts") : undefined, 
+            !isFirstLoading ? t("successContracts") : undefined, 
             t("errorContracts")
         );
     }, [getTrainerContracts, notify, t]);

@@ -14,8 +14,8 @@ import FilterItemsLayout from "../containers/FilterItemsLayout";
 import { useNavigate } from "react-router-dom";
 import styles from "./Home.module.css";
 import LoadMoreButton from "../form/buttons/LoadMoreButton";
-import ClientTrainingContractCard from "../cards/contracts/ClientTrainingContractCard";
-import SmallTrainerProfessionalCard from "../cards/contracts/SmallTrainerProfessionalCard";
+import ClientTrainingContractCard from "../cards/user/ClientTrainingContractCard";
+import SmallTrainerProfessionalCard from "../cards/user/SmallTrainerProfessionalCard";
 import { useTranslation } from "react-i18next";
 
 function ClientHome() {
@@ -36,7 +36,7 @@ function ClientHome() {
             
     const user = useSelector(state => state.user);
 
-    const clientTrainingStorageKey = "paymentPlans";
+    const clientTrainingStorageKey = "clientTraining";
     const trainersLimit = 20;
 
     const trainersFilters = useMemo(() => {
@@ -49,6 +49,7 @@ function ClientHome() {
     }, [t]);  
     const clientTrainingDefault = useMemo(() => {
         return {
+            loaded: false,
             trainer: {
                 ID: 1,
                 name: "Paulo Henrique",
@@ -67,7 +68,7 @@ function ClientHome() {
         }
     }, []);
 
-    const [clientTraining, setClientTraining] = useState(clientTrainingDefault);
+    const [clientTraining, setClientTraining] = useState(null);
     const [clientTrainingError, setClientTrainingError] = useState(false);
     const [trainers, setTrainers] = useState([]);
     const [trainersError, setTrainersError] = useState(false);
@@ -77,7 +78,7 @@ function ClientHome() {
     const loadTrainers = useCallback((hasError, updatedTrainers, offset, filter) => {
         if (hasError) return;
 
-        if ((updatedTrainers.length < trainersLimit && updatedTrainers.length !== 0) || updatedTrainers.length % trainersLimit !== 0) {
+        if ((updatedTrainers.length < trainersLimit && updatedTrainers.length !== 0) || updatedTrainers.length % trainersLimit !== 0 || (offset !== 0 && updatedTrainers.length === 0)) {
             notify(t("noTrainers"));
 
             return;
@@ -103,12 +104,14 @@ function ClientHome() {
             setTrainersError(true);
         };
     
+        const isFirstLoading = offset === 0;
+
         getTrainers(
             getSearchedTrainers, 
             handleOnGetTrainersSuccess, 
             handleOnGetTrainersError, 
-            t("loadingTrainers"), 
-            t("successTrainers"), 
+            !isFirstLoading ? t("loadingTrainers") : undefined, 
+            !isFirstLoading ? t("successTrainers") : undefined, 
             t("errorTrainers")
         );
     }, [getTrainers, notify, t]);
@@ -137,14 +140,14 @@ function ClientHome() {
             
             if (cachedData) {
                 setClientTraining(cachedData);
-
+                
                 return;
             }
-
+            
             const getTraining = () => {
                 return api.get(`/me/training-contract`);
             }
-        
+            
             const handleOnGetClientTrainingSuccess = (data) => {
                 setClientTraining(data);
 
@@ -244,15 +247,13 @@ function ClientHome() {
                                         {t("reloadOrTryLater")}
                                     </p>
                                 ) : (
-                                    !trainingLoading && (
-                                        <p>
-                                            {t("noContractActive")}
+                                    <p>
+                                        {t("noContractActive")}
 
-                                            <br/>
+                                        <br/>
 
-                                            {t("searchTrainersInstruction")}
-                                        </p>
-                                    )
+                                        {t("searchTrainersInstruction")}
+                                    </p>
                                 )
                             ) : (
                                 <ClientTrainingContractCard
