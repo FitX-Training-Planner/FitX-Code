@@ -1,0 +1,14 @@
+.complaint_card,
+.rating_card {
+    padding: 1em;
+}
+
+:where(.rater_container, .complainter_container) > span {
+    min-width: max-content;
+    color: var(--gray-color);
+}
+
+:where(.rater, .complainter) > :where(p, span) {
+    color: var(--light-theme-color);
+    font-weight: bold;
+}
