@@ -41,3 +41,4 @@ Este repositório contém o código e documentos relacionados ao projeto FitX, u
 <a href="https://www.flaticon.com/br/icones-gratis/estrela" title="estrela ícones">Estrela ícones criados por Pixel perfect - Flaticon</a>
 <a href="https://www.flaticon.com/br/icones-gratis/aperto-de-mao-de-parceria" title="aperto de mão de parceria ícones">Aperto de mão de parceria ícones criados por Aranagraphics - Flaticon</a>
 <a href="https://www.flaticon.com/br/icones-gratis/ponto-de-exclamacao" title="ponto de exclamação ícones">Ponto de exclamação ícones criados por Flat Icons - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/forte" title="forte ícones">Forte ícones criados por Freepik - Flaticon</a>
