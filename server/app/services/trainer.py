@@ -2,7 +2,7 @@ from app.database.models import Trainer, TrainingPlan, TrainingDay, TrainingDayS
 from ..utils.trainer import is_cref_used
 from ..exceptions.api_error import ApiError
 from ..utils.formatters import safe_str, safe_int, safe_float, safe_bool, safe_time
-from ..utils.serialize import serialize_training_plan, serialize_payment_plan, serialize_contract, serialize_trainer_in_trainers, serialize_rating, serialize_complaint
+from ..utils.serialize import serialize_training_plan, serialize_payment_plan, serialize_contract, serialize_trainer_in_trainers, serialize_rating, serialize_complaint, serialize_CRC_info
 from sqlalchemy.orm import joinedload, subqueryload
 from sqlalchemy import asc, desc, func, case
 from ..exceptions.api_error import ApiError
@@ -36,6 +36,45 @@ def insert_trainer(db, cref_number, decription, fk_user_ID):
         print(f"Erro ao criar treinador: {e}")
 
         raise Exception(f"Erro ao criar o treinador: {e}")
+    
+def modify_trainer_data(db, trainer_id, cref_number = None, description = None):
+    try:
+        trainer = db.query(Trainer).filter(Trainer.ID== trainer_id).first()
+        
+        if trainer is None:
+            raise ApiError(MessageCodes.TRAINER_NOT_FOUND, 404)
+
+        updated_fields = {}
+
+        if cref_number is not None:
+            if trainer.cref_number:
+                raise ApiError(MessageCodes.ERROR_TRAINER_ALREADY_HAS_CREF, 409)
+            
+            if is_cref_used(db, cref_number):
+                raise ApiError(MessageCodes.ERROR_CREF_USED, 409)
+
+            trainer.cref_number = safe_str(cref_number)
+
+            updated_fields["crefNumber"] = trainer.cref_number
+
+        if description is not None:
+            trainer.description = safe_str(description)
+            
+            updated_fields["description"] = trainer.description
+
+        db.commit()
+
+        return updated_fields
+
+    except ApiError as e:
+        print(f"Erro ao modificar treinador: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao modificar treinador: {e}")
+
+        raise Exception(f"Erro ao modificar o treinador: {e}")
 
 def insert_training_plan(db, training_plan, trainer_id):
     try:
@@ -571,11 +610,13 @@ def get_partial_trainers(db, offset, limit, sort):
     try:
         query = (
             db.query(Trainer)
+            .join(Trainer.user)
             .join(PaymentPlan, isouter=True)
             .options(
                 subqueryload(Trainer.user)
                     .joinedload(Users.media)
             )
+            .filter(Users.is_active == True)
         )
 
         if sort == "most_popular":
@@ -838,6 +879,9 @@ def get_trainer_profile(db, trainer_id):
         if trainer is None:
             raise ApiError(MessageCodes.TRAINER_NOT_FOUND, 404)
 
+        if not trainer.user.is_active:
+            raise ApiError(MessageCodes.TRAINER_DEACTIVATED, 404)
+        
         data = serialize_trainer_in_trainers(trainer) 
 
         data["paymentPlans"] = [serialize_payment_plan(plan) for plan in trainer.payment_plans]
@@ -1140,3 +1184,28 @@ def remove_rating(db, rating_id, user_id):
         print(f"Erro ao remover avaliação: {e}")
 
         raise Exception(f"Erro ao remover a avaliação: {e}")
+    
+def get_trainer_info(db, trainer_id):
+    try:
+        trainer = (
+            db.query(Trainer)
+            .filter(Trainer.ID == trainer_id)
+            .first()
+        )
+
+        if trainer is None:
+            raise ApiError(MessageCodes.TRAINER_NOT_FOUND, 404)
+
+        data = serialize_CRC_info(trainer) 
+
+        return data
+
+    except ApiError as e:
+        print(f"Erro ao recuperar informações de base do treinador: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao recuperar informações de base do treinador: {e}")
+
+        raise Exception(f"Erro ao recuperar as informações de base do treinador: {e}")

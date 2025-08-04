@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from ..services.user import insert_user, insert_photo
-from ..services.trainer import insert_trainer, insert_training_plan, get_trainer_plans, get_training_plan, modify_training_plan, remove_training_plan, insert_payment_plan, modify_payment_plan, remove_payment_plan, get_trainer_payment_plans, get_partial_trainer_contracts, get_partial_trainers, get_partial_trainer_complaints, get_partial_trainer_ratings, like_complaint, like_rating, get_trainer_profile, insert_trainer_rating, insert_trainer_complaint, remove_complaint, remove_rating
+from ..services.trainer import insert_trainer, insert_training_plan, get_trainer_plans, get_training_plan, modify_training_plan, remove_training_plan, insert_payment_plan, modify_payment_plan, remove_payment_plan, get_trainer_payment_plans, get_partial_trainer_contracts, get_partial_trainers, get_partial_trainer_complaints, get_partial_trainer_ratings, like_complaint, like_rating, get_trainer_profile, insert_trainer_rating, insert_trainer_complaint, remove_complaint, remove_rating, get_trainer_info, modify_trainer_data
 from ..database.context_manager import get_db
 from ..exceptions.api_error import ApiError
 from flask_jwt_extended import jwt_required
@@ -683,3 +683,63 @@ def remove_trainer_rating(rating_id):
             print(f"{error_message}: {e}")
 
             return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
+        
+@trainer_bp.route("me/base-info", methods=["GET"])
+@jwt_required()
+@only_trainer
+def get_traine_base_info():
+    error_message = "Erro na rota de recuperação de informações de base do treinador"
+
+    with get_db() as db:
+        try:        
+            identity = get_jwt_identity()
+
+            info = get_trainer_info(db, identity)
+
+            return jsonify(info), 200
+        
+        except ApiError as e:
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": str(e)}), e.status_code
+
+        except Exception as e:
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
+        
+@trainer_bp.route("/me", methods=["PUT"])
+@jwt_required()
+@only_trainer
+def modify_trainer():
+    error_message = "Erro na rota de modificação do treinador"
+
+    with get_db() as db:
+        try:
+            data = request.form
+
+            identity = get_jwt_identity()
+
+            modified_data = modify_trainer_data(
+                db, 
+                identity,
+                data.get("crefNumber"),
+                data.get("description")
+            )
+
+            return jsonify(modified_data), 200
+
+        except ApiError as e:
+            db.rollback()
+
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": str(e)}), e.status_code
+
+        except Exception as e:
+            db.rollback()
+
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
+
