@@ -1,0 +1,13 @@
+.ratings_container,
+.complaints_container,
+.payment_plans_container {
+    padding: 1em;
+}
+
+.payment_plans_container {
+    background-color: var(--theme-color);
+}
+
+.payment_plans_container > p {
+    text-align: center;
+}
