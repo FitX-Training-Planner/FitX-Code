@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { getErrorMessageCodeError } from "../utils/requests/errorMessage";
 import { useSystemMessage } from "../app/useSystemMessage";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -17,7 +17,15 @@ export default function useRequest() {
 
     const [loading, setLoading] = useState(false);
 
-    async function refreshToken() {
+    const notifyErrorMessage = useCallback((err, errorMessage, requestId) => {
+        if (errorMessage) notify(errorMessage, "error");
+
+        const messageError = getErrorMessageCodeError(err)
+        
+        if (messageError) notify(t(messageError), "error", requestId);
+    }, [notify, t]);
+
+    const refreshToken = useCallback(async (requestId) => {
         try {
             await api.post("/token/refresh");
 
@@ -25,11 +33,13 @@ export default function useRequest() {
         } catch (err) {
             console.error(err);
 
+            notifyErrorMessage(err, undefined, requestId)
+
             navigate("/login");
 
             return false;
         }
-    }
+    }, [navigate, notifyErrorMessage])
 
     async function request(requestFn, handleSuccess, handleError, loadingMessage, successMessage, errorMessage) {
         if (loading) return;
@@ -67,14 +77,6 @@ export default function useRequest() {
                 return;
             }
 
-            function notifyErrorMessage() {
-                if (errorMessage) notify(errorMessage, "error");
-
-                const messageError = getErrorMessageCodeError(err)
-                
-                if (messageError) notify(t(messageError), "error", requestId);
-            }
-
             const status = err?.response?.status;
             const currentPath = location.pathname;
             const code = err.response?.data?.message;
@@ -82,7 +84,7 @@ export default function useRequest() {
             if (status === 401 && code === "INVALID_TOKEN" && err.config && !err.config._retry) {
                 err.config._retry = true;
 
-                const refreshed = await refreshToken();
+                const refreshed = await refreshToken(requestId);
 
                 if (refreshed) {
                     try {
@@ -96,7 +98,7 @@ export default function useRequest() {
                     } catch (retryErr) {
                         console.error(retryErr);
 
-                        notifyErrorMessage();
+                        notifyErrorMessage(retryErr, errorMessage, requestId);
 
                         handleError(retryErr);
                         
@@ -107,7 +109,7 @@ export default function useRequest() {
                 return;
             }
 
-            notifyErrorMessage();
+            notifyErrorMessage(err, errorMessage, requestId);
 
             if (status === 403) {
                 if (currentPath !== "/") navigate("/");
