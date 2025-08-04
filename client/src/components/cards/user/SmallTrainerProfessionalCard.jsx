@@ -6,8 +6,8 @@ import ClickableIcon from "../../form/buttons/ClickableIcon";
 import FlexWrap from "../../containers/FlexWrap";
 import { formatPriceToBR } from "../../../utils/formatters/payments/formatOnChange";
 import React from "react";
-import { formatNumberShort } from "../../../utils/formatters/text/formatNumber";
 import { useTranslation } from "react-i18next";
+import TrainerCRCInfo from "../../layout/TrainerCRCInfo";
 
 function SmallTrainerProfessionalCard({
     name,
@@ -62,70 +62,25 @@ function SmallTrainerProfessionalCard({
                 </Stack>
 
                 {crefNumber && (
-                    <span>
-                        CREF {crefNumber}
-                    </span>
+                    <Stack
+                        direction={width <= 440 ? "column" : "row"}
+                        justifyContent="start"
+                        gap="0.5em"
+                    >
+                        CREF
+
+                        <span>
+                            {crefNumber}
+                        </span>
+                    </Stack>
                 )}
             </Stack>
 
-            <hr/>
-
-            <Stack
-                direction="row"
-            >
-                <Stack
-                    direction="row"
-                    gap="0.5em"
-                    justifyContent="center"
-                >
-                    <ClickableIcon
-                        iconSrc="/images/icons/rated.png"
-                        name={t("averageGrade")}
-                        size={width <= 440 ? "small" : "medium"}
-                        hasTheme={false}
-                    />
-
-                    <span>
-                        {Number(rate).toFixed(2)}
-                    </span>
-                </Stack>
-
-                <Stack
-                    direction="row"
-                    gap="0.5em"
-                    justifyContent="center"
-                >
-                    <ClickableIcon
-                        iconSrc="/images/icons/contracts.png"
-                        name={t("hirings")}
-                        size={width <= 440 ? "small" : "medium"}
-                        hasTheme={false}
-                    />
-
-                    <span>
-                        {formatNumberShort(contractsNumber)}
-                    </span>
-                </Stack>
-
-                <Stack
-                    direction="row"
-                    gap="0.5em"
-                    justifyContent="center"
-                >
-                    <ClickableIcon
-                        iconSrc="/images/icons/complaints.png"
-                        name={t("complaints")}
-                        size={width <= 440 ? "small" : "medium"}
-                        hasTheme={false}
-                    />
-
-                    <span>
-                        {formatNumberShort(complaintsNumber)}
-                    </span>
-                </Stack>
-            </Stack>
-
-            <hr/>
+            <TrainerCRCInfo
+                rate={rate}
+                complaintsNumber={complaintsNumber}
+                contractsNumber={contractsNumber}
+            />
 
             {paymentPlans.length !== 0 ? (
                 <Stack
