@@ -98,11 +98,11 @@ function RatingCard({
                         justifyContent="start"
                     >
                         <ClickableIcon
-                            iconSrc={`/images/icons/${hasLiked ? "liked" : "like"}.png`}
+                            iconSrc={`/images/icons/${hasLiked || !handleLike ? "liked" : "like"}.png`}
                             size="small"
                             hasTheme={false}
                             name={t("like")}
-                            handleClick={handleLike}
+                            handleClick={handleLike || undefined}
                         />
 
                         <span>
@@ -110,7 +110,7 @@ function RatingCard({
                         </span>
                     </Stack>
 
-                    {String(raterID) === String(user.ID) && (
+                    {String(raterID) === String(user.ID) && handleRemoveRating && (
                         <Stack
                             alignItems="end"
                         >

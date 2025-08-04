@@ -52,7 +52,8 @@ export function SystemMessageProvider({
             ...commonStyles,
             display: "flex",
             flexDirection: "column",
-            gap: "0.5em"
+            gap: "1em",
+            minWidth: "20em"
           }}
         >
           <p

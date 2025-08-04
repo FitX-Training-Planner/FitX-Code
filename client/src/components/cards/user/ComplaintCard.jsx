@@ -40,7 +40,7 @@ function ComplaintCard({
                         <>
                             <PhotoInput
                                 blobUrl={complainterPhotoUrl}
-                                size="small"
+                                size="tiny"
                                 disabled
                             />
 
@@ -78,11 +78,11 @@ function ComplaintCard({
                         justifyContent="start"
                     >
                         <ClickableIcon
-                            iconSrc={`/images/icons/${hasLiked ? "liked" : "like"}.png`}
+                            iconSrc={`/images/icons/${hasLiked || !handleLike ? "liked" : "like"}.png`}
                             size="small"
                             name={t("like")}
                             hasTheme={false}
-                            handleClick={handleLike}
+                            handleClick={handleLike || undefined}
                         />
 
                         <span>
@@ -90,7 +90,7 @@ function ComplaintCard({
                         </span>
                     </Stack>
 
-                    {String(complainterID) === String(user.ID) && (
+                    {String(complainterID) === String(user.ID) && handleRemoveComplaint && (
                         <Stack
                             alignItems="end"
                         >
