@@ -27,14 +27,26 @@ export function validateLoginRequestData(loginError, setLoginError, email, passw
 export function validateSignUpRequestData(signUpError, setSignUpError, name, email, password) {
     if (signUpError) return false;
 
-    if (hasEmptyFieldsInObject({ name, email, password })) {
+    if (!password || !isPasswordValid(password)) {
         setSignUpError(true);
 
         return false;
     }
 
-    if (!(isNameValid(name) && isEmailValid(email) && isPasswordValid(password))) {
-        setSignUpError(true);
+    return validateModifyUserRequestData(signUpError, setSignUpError, name, email);
+}
+
+export function validateModifyUserRequestData(userError, setUserError, name, email) {
+    if (userError) return false;
+
+    if (hasEmptyFieldsInObject({ name, email })) {
+        setUserError(true);
+
+        return false;
+    }
+
+    if (!(isNameValid(name) && isEmailValid(email))) {
+        setUserError(true);
 
         return false;
     }

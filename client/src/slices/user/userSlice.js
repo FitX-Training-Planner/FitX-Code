@@ -26,7 +26,7 @@ const userSlice = createSlice({
             ...action.payload,
             config: {
                 ...state.config,
-                ...action.payload.config,
+                ...(action.payload.config || {}),
             }
         }),
         resetUser: () => initialState
