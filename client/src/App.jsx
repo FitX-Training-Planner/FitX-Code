@@ -24,6 +24,10 @@ import TrainerPayments from "./components/pages/TrainerPayments";
 import CreatePaymentPlan from "./components/pages/CreatePaymentPlan";
 import { useTranslation } from "react-i18next";
 import Trainer from "./components/pages/Trainer";
+import MyProfile from "./components/pages/MyProfile";
+import ErrorPage from "./components/pages/ErrorPage";
+import Loader from "./components/layout/Loader";
+import { getErrorMessageCodeError } from "./utils/requests/errorMessage";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -42,13 +46,14 @@ function App() {
 
   const [canRender, setCanRender] = useState(false);
   
-  useEffect(() => {
+  useEffect(() => {    
     const excludedPaths = [
       "/login",
       "/create-config",
       "/code-confirmation",
       "/create-trainer",
-      "/recover-password"
+      "/recover-password",
+      "/error"
     ];
 
     const shouldSkip = excludedPaths.includes(location.pathname);
@@ -56,6 +61,8 @@ function App() {
     if (shouldSkip) setCanRender(true);
     
     if (!shouldSkip && !hasRun.current) {
+      setCanRender(false);
+
       hasRun.current = true;
       
       const getUser = () => {
@@ -71,6 +78,8 @@ function App() {
       const handleOnGetUserError = (err) => {
         if (err?.response?.status === 404) {
           navigate("/login");
+        } else {
+          navigate("/error", { state: { status: err?.response?.status, message: t(getErrorMessageCodeError(err)) } });
         }
       };
 
@@ -100,104 +109,122 @@ function App() {
   }, [user.config.isEnglish, user.ID, i18n]);
 
   return (
-    canRender && (
+    <>
       <Routes>
         <Route
-          exact
-          path="/"
-          element={user.config.isClient ? (
-            <ClientHome />
-          ) : (
-            <TrainerHome />
-          )}
-        />
-
-        <Route
-          path="/login"
-          element={<Login />}
-        />
-
-        <Route
-          path="/create-config"
-          element={<CreateConfig />}
-        />
-
-        <Route
-          path="/create-trainer"
-          element={<CreateTrainer />}
-        />
-
-        <Route
-          path="/code-confirmation"
-          element={<CodeConfirmation />}
-        />
-
-        <Route
-          path="/recover-password"
-          element={<RecoverPassword />}
-        />
-
-        <Route
-          path="/trainers/:id"
-          element={<Trainer />}
-        />
-
-        <Route
-          path="/trainers/me/training-plans"
-          element={<TrainingPlans />}
+          path="/error"
+          element={<ErrorPage />}
         />
         
-        <Route
-          path="/trainers/me/payments"
-          element={<TrainerPayments />}
-        />
+        {canRender && (
+          <>
+            <Route
+              exact
+              path="/"
+              element={user.config.isClient ? (
+                <ClientHome />
+              ) : (
+                <TrainerHome />
+              )}
+            />
 
-        <Route
-          path="/trainers/me/create-payment-plan"
-          element={<CreatePaymentPlan />}
-        />
+            <Route
+              path="/login"
+              element={<Login />}
+            />
 
-        <Route
-          path="/trainers/me/training-plans/:id"
-          element={<TrainingPlan />}
-        />
+            <Route
+              path="/create-config"
+              element={<CreateConfig />}
+            />
 
-        <Route
-          path="/trainers/me/create-training-plan"
-          element={<CreateTrainingPlan />}
-        />
+            <Route
+              path="/create-trainer"
+              element={<CreateTrainer />}
+            />
 
-        <Route
-          path="/trainers/me/create-training-plan/modify-training-day"
-          element={<ModifyTrainingDay />}
-        />
+            <Route
+              path="/code-confirmation"
+              element={<CodeConfirmation />}
+            />
 
-        <Route
-          path="/trainers/me/create-training-plan/modify-training-day/modify-cardio-session"
-          element={<ModifyCardioSession />}
-        />
+            <Route
+              path="/recover-password"
+              element={<RecoverPassword />}
+            />
 
-        <Route
-          path="/trainers/me/create-training-plan/modify-training-day/modify-training-step"
-          element={<ModifyTrainingStep />}
-        />
+            <Route
+              path="/me"
+              element={<MyProfile />}
+            />
 
-        <Route
-          path="/trainers/me/create-training-plan/modify-training-day/modify-training-step/modify-exercise"
-          element={<ModifyExercise />}
-        />
+            <Route
+              path="/trainers/:id"
+              element={<Trainer />}
+            />
 
-        <Route
-          path="/trainers/me/create-training-plan/modify-training-day/modify-training-step/modify-exercise/modify-set"
-          element={<ModifyExerciseSet />}
-        />
+            <Route
+              path="/trainers/me/training-plans"
+              element={<TrainingPlans />}
+            />
+            
+            <Route
+              path="/trainers/me/payments"
+              element={<TrainerPayments />}
+            />
 
-        <Route 
-          path="/questions-chatbot"
-          element={<ChatBot />}
-        />
+            <Route
+              path="/trainers/me/create-payment-plan"
+              element={<CreatePaymentPlan />}
+            />
+
+            <Route
+              path="/trainers/me/training-plans/:id"
+              element={<TrainingPlan />}
+            />
+
+            <Route
+              path="/trainers/me/create-training-plan"
+              element={<CreateTrainingPlan />}
+            />
+
+            <Route
+              path="/trainers/me/create-training-plan/modify-training-day"
+              element={<ModifyTrainingDay />}
+            />
+
+            <Route
+              path="/trainers/me/create-training-plan/modify-training-day/modify-cardio-session"
+              element={<ModifyCardioSession />}
+            />
+
+            <Route
+              path="/trainers/me/create-training-plan/modify-training-day/modify-training-step"
+              element={<ModifyTrainingStep />}
+            />
+
+            <Route
+              path="/trainers/me/create-training-plan/modify-training-day/modify-training-step/modify-exercise"
+              element={<ModifyExercise />}
+            />
+
+            <Route
+              path="/trainers/me/create-training-plan/modify-training-day/modify-training-step/modify-exercise/modify-set"
+              element={<ModifyExerciseSet />}
+            />
+
+            <Route 
+              path="/questions-chatbot"
+              element={<ChatBot />}
+            />
+          </>
+        )}
       </Routes>
-    )
+
+      {!canRender && (
+        <Loader />
+      )}
+    </>
   );
 }
 
