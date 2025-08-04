@@ -9,6 +9,7 @@
     padding: 1em;
     position: relative;
     cursor: default;
+    touch-action: none;
 }
 
 .sortable_item > span {
@@ -28,6 +29,7 @@
     border: 2px var(--border);
     padding: 0.2em;
     border-radius: 50%;
+    touch-action: none;
 }
 
 .sortable_item > span > button {

@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { closestCorners, DndContext, KeyboardSensor, PointerSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { arrayMove, horizontalListSortingStrategy, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { restrictToParentElement } from '@dnd-kit/modifiers';
@@ -16,10 +16,17 @@ function DndContextContainer({
     children 
 }) {
     const { width } = useWindowSize();
-    
+
+    const isMobile = useMemo(() => {
+        return window.matchMedia("(pointer: coarse)").matches;
+    }, []);
+
     const sensors = useSensors(
-        useSensor(PointerSensor),
-        useSensor(TouchSensor),
+        useSensor(isMobile ? TouchSensor : PointerSensor, {
+            activationConstraint: isMobile
+            ? { delay: 150, tolerance: 5 }
+            : undefined
+        }),
         useSensor(KeyboardSensor, {
             coordinateGetter: sortableKeyboardCoordinates
         })
