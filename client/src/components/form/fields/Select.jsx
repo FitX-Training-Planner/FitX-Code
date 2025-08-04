@@ -3,6 +3,7 @@ import Stack from "../../containers/Stack";
 import styles from "./Select.module.css";
 import SearchInput from "./SearchInput";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 
 function Select({
     name,
@@ -14,16 +15,13 @@ function Select({
     options = []
 }) {
     const { t } = useTranslation();
+
+    const user = useSelector(state => state.user);
     
     const [isOpen, setIsOpen] = useState(false);
     const [selected, setSelected] = useState(value);
-    const [isDarkTheme, setIsDarkTheme] = useState(false);
     const [searchText, setSearchText] = useState("");
     const [showedOptions, setShowedOptions] = useState(options);
-    
-    useEffect(() => {
-        setIsDarkTheme(document.documentElement.getAttribute("data-theme") === "dark");
-    }, []);
 
     const selectRef = useRef(null);
 
@@ -63,7 +61,7 @@ function Select({
             className={styles.select_container} 
         >
             <Stack 
-                className={`${styles.select_container} ${isDarkTheme ? styles.dark_theme : undefined}`} 
+                className={`${styles.select_container} ${user.config.isDarkTheme ? styles.dark_theme : undefined}`} 
                 gap="0.2em"
                 alignItems="start"
             >

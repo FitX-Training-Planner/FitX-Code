@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
 import Stack from "../../containers/Stack";
 import styles from "./TextInput.module.css";
+import { useSelector } from "react-redux";
 
 function TextArea({ 
     name, 
@@ -13,15 +13,11 @@ function TextArea({
     error = false, 
     maxLength 
 }) {
-    const [isDarkTheme, setIsDarkTheme] = useState(false);
-        
-    useEffect(() => {
-        setIsDarkTheme(document.documentElement.getAttribute("data-theme") === "dark");
-    }, []);
+    const user = useSelector(state => state.user);
     
     return (
         <Stack 
-            className={`${styles.text_input} ${isDarkTheme ? styles.dark_theme : undefined}`} 
+            className={`${styles.text_input} ${user.config.isDarkTheme ? styles.dark_theme : undefined}`} 
             gap="0.2em"
         >
             <label 
