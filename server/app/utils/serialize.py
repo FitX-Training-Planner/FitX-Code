@@ -269,7 +269,7 @@ def serialize_training_contract(training_contract):
         }
     }
 
-def serialize_rating(rating, has_liked):
+def serialize_rating(rating, has_liked = None):
     data = {
         "ID": rating.ID,
         "raterID": rating.user.ID,
@@ -291,7 +291,7 @@ def serialize_rating(rating, has_liked):
 
     return data
 
-def serialize_complaint(complaint, has_liked):
+def serialize_complaint(complaint, has_liked = None):
     data = {
         "ID": complaint.ID,
         "complainterID": complaint.user.ID,
@@ -312,3 +312,12 @@ def serialize_complaint(complaint, has_liked):
         }
 
     return data
+
+# contracts, rating, complaints
+def serialize_CRC_info(trainer):
+    return {
+        "rate": serialize_field(trainer.rate),
+        "ratesNumber": serialize_field(trainer.rates_number),
+        "contractsNumber": serialize_field(trainer.contracts_number),
+        "complaintsNumber": serialize_field(trainer.complaints_number),
+    }

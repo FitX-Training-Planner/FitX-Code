@@ -39,6 +39,7 @@ def cancel_contract(db, client_id):
         contract = (
             db.query(PlanContract)
             .join(ContractStatus)
+            .options(joinedload(PlanContract.user))
             .filter(PlanContract.fk_user_ID == client_id, ContractStatus.name == "Ativo")
             .first()
         )
@@ -51,6 +52,8 @@ def cancel_contract(db, client_id):
             .filter(ContractStatus.name == "Cancelado")
             .first()
         )
+
+        contract.user.fk_training_plan_ID = None
         
         db.commit()
 
