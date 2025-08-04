@@ -1,13 +1,8 @@
-.payment_plans_container {
-    background-color: var(--theme-color);
-    padding: 1em;
-}
-
 .title_container,
 .contracts_container {
     padding: 0 1em;
 }
 
-:where(.payment_plans_container, .contracts, .payment_plans) > p {
+.contracts > p {
     text-align: center;
 }

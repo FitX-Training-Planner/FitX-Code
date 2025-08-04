@@ -10,15 +10,13 @@ import { useNavigate } from "react-router-dom";
 import NavBarLayout from "../containers/NavBarLayout";
 import Stack from "../containers/Stack";
 import Title from "../text/Title";
-import PaymentPlanCard from "../cards/contracts/PaymentPlanCard";
 import ContractCard from "../cards/contracts/ContractCard";
 import styles from "./TrainerPayments.module.css";
-import FlexWrap from "../containers/FlexWrap";
-import ClickableIcon from "../form/buttons/ClickableIcon";
 import LoadMoreButton from "../form/buttons/LoadMoreButton";
 import FilterItemsLayout from "../containers/FilterItemsLayout";
 import SearchInput from "../form/fields/SearchInput";
 import { useTranslation } from "react-i18next";
+import PaymentPlansContainer from "../layout/PaymentPlansContainer";
 
 function TrainerPayments() {
     const { t } = useTranslation();
@@ -224,62 +222,13 @@ function TrainerPayments() {
                         />
                     </Stack>
 
-                    <Stack
-                        className={styles.payment_plans_container}
-                        gap="3em"
-                    >
-                        <Title
-                            headingNumber={2}
-                            text={t("paymentPlans")}
-                        />
-
-                        {paymentPlans.length === 0 ? (
-                            paymentPlansError ? (
-                                <p>
-                                    {t("errorOcurredPaymentPlans")}
-
-                                    <br/>
-                                    
-                                    {t("reloadOrTryLater")}
-                                </p>
-                            ) : (
-                                <p>
-                                    {t("createPaymentPlanInstruction")}
-                                </p>
-                            )
-                        ) : (
-                            <FlexWrap
-                                direction="row"
-                                justifyContent="center"
-                                alignItems="center"
-                                gap="2em"
-                                maxElements={width <= 940 ? 1 : 2}
-                                className={styles.payment_plans}
-                            >                               
-                                {paymentPlans.map((plan, index) => (
-                                    <React.Fragment
-                                        key={index}
-                                    >
-                                        <PaymentPlanCard
-                                            name={plan.name} 
-                                            fullPrice={plan.fullPrice} 
-                                            durationDays={plan.durationDays} 
-                                            description={plan.description} 
-                                            benefits={plan.benefits}
-                                            handleModifyPaymentPlan={() => modifyPaymentPlan(plan)}
-                                            handleRemovePaymentPlan={() => removePlan(plan.ID)}
-                                        />
-                                    </React.Fragment>
-                                ))}
-                            </FlexWrap>
-                        )}
-
-                        <ClickableIcon
-                            iconSrc="/images/icons/add.png"
-                            name={t("addPaymentPlan")}
-                            handleClick={addPaymentPlan}
-                        />
-                    </Stack>
+                    <PaymentPlansContainer
+                        paymentPlans={paymentPlans}
+                        paymentPlansError={paymentPlansError}
+                        handleAddPaymentPlan={addPaymentPlan}
+                        handleModifyPaymentPlan={modifyPaymentPlan}
+                        handleRemovePaymentPlan={removePlan}
+                    />
 
                     <Stack
                         className={styles.contracts_container}
@@ -382,11 +331,10 @@ function TrainerPayments() {
                                     </>
                                 </p>
                             ) : (
-                                !contractsLoading && (
-                                    <LoadMoreButton
-                                        handleLoad={() => loadContracts(contractsError, contracts, contractsOffset, activeContractFilter.value)}
-                                    />
-                                )
+                                <LoadMoreButton
+                                    handleLoad={() => loadContracts(contractsError, contracts, contractsOffset, activeContractFilter.value)}
+                                    loading={contractsLoading}
+                                />
                             )}
                         </Stack>
                     </Stack>

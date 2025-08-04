@@ -8,6 +8,7 @@
     filter: brightness(0.5);
     height: 50%;
     overflow: hidden;
+    background-color: var(--light-theme-color);
 }
 
 .trainer_photo_background > img {
@@ -30,10 +31,4 @@
 .trainer_description {
     background-color: var(--theme-color);
     padding: 1em 1em 3em;
-}
-
-.payment_plans_container,
-.ratings_container,
-.complaints_container {
-    padding: 0 1em;
 }

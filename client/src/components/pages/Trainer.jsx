@@ -1,18 +1,10 @@
 import { useTranslation } from "react-i18next";
 import Stack from "../containers/Stack";
 import styles from "./Trainer.module.css";
-import React, { useCallback, useEffect, useState, useRef, useMemo } from "react";
+import { useCallback, useEffect, useState, useRef, useMemo } from "react";
 import PhotoInput from "../form/fields/PhotoInput";
 import Title from "../text/Title";
 import { formatNumberShort } from "../../utils/formatters/text/formatNumber";
-import PaymentPlanCard from "../cards/contracts/PaymentPlanCard";
-import FlexWrap from "../containers/FlexWrap";
-import useWindowSize from "../../hooks/useWindowSize";
-import RatingForm from "../form/forms/RatingForm";
-import ComplaintForm from "../form/forms/ComplaintForm";
-import RatingCard from "../cards/user/RatingCard";
-import ComplaintCard from "../cards/user/ComplaintCard";
-import LoadMoreButton from "../form/buttons/LoadMoreButton";
 import useRequest from "../../hooks/useRequest";
 import { useSystemMessage } from "../../app/useSystemMessage";
 import api from "../../api/axios";
@@ -21,13 +13,15 @@ import { useSelector } from "react-redux";
 import { verifyIsClient } from "../../utils/requests/verifyUserType";
 import { validateComplaint, validateRating } from "../../utils/validators/formValidator";
 import ClickableIcon from "../form/buttons/ClickableIcon";
+import RatingsContainer from "../layout/RatingsContainer";
+import ComplaintsContainer from "../layout/ComplaintsContainer";
+import PaymentPlansContainer from "../layout/PaymentPlansContainer";
+import BackButton from "../form/buttons/BackButton";
 
 function Trainer() {
     const { t } = useTranslation();
     
     const navigate = useNavigate();
-
-    const { width } = useWindowSize();
 
     const { notify, confirm } = useSystemMessage();
 
@@ -394,7 +388,7 @@ function Trainer() {
         }
     }, [confirm, removeComplaintReq, t]);
 
-    const handleOnRemoveRating = useCallback(async ID => {
+    const handleOnRemoveRating = useCallback(async (ID, removedRate) => {
         const userConfirmed = await confirm(t("removeConfirmRating"));
         
         if (userConfirmed) {
@@ -408,7 +402,7 @@ function Trainer() {
                 setTrainer(prevTrainer => ({ 
                     ...prevTrainer, 
                     ratesNumber: Number(prevTrainer.ratesNumber) - 1, 
-                    rate: (Number(prevTrainer.rate) * Number(prevTrainer.ratesNumber) - Number(rating.rating)) / Math.max(Number(prevTrainer.ratesNumber) - 1, 1)
+                    rate: (Number(prevTrainer.rate) * Number(prevTrainer.ratesNumber) - Number(removedRate)) / Math.max(Number(prevTrainer.ratesNumber) - 1, 1)
                 }));
             };
 
@@ -421,318 +415,119 @@ function Trainer() {
                 t("errorRemoveRating")
             );
         }
-    }, [confirm, rating.rating, removeRatingReq, t]);
+    }, [confirm, removeRatingReq, t]);
     
     useEffect(() => {
         document.title = t("trainer")
     }, [t]);
 
     return (
-        <main
-            // className={styles.page}
-        >
+        <main>
+            <BackButton/>
+
             <Stack
                 gap="5em"
             >
-                <Stack
-                    className={styles.trainer_main_info_container}
-                    justifyContent="start"
-                    gap="0"
-                >
+                <Stack>
                     <Stack
-                        className={styles.trainer_photo_background}
-                        justifyContent="center"
+                        className={styles.trainer_main_info_container}
+                        justifyContent="start"
+                        gap="0"
                     >
-                        <img
-                            src={trainer.photoUrl}
-                            alt=""
-                        />
-                    </Stack>
-
-                    <Stack
-                        className={styles.trainer_photo}
-                    >
-                        <PhotoInput
-                            blobUrl={trainer.photoUrl}
-                            disabled
-                            size="large"
-                        />
-                    </Stack>
-
-                    <Stack
-                        className={styles.trainer_main_info}
-                        justifyContent="center"
-                    >
-                        <Title
-                            headingNumber={1}
-                            text={trainer.name}
-                            varColor="--theme-color"
-                        />
-
-                        <Stack>
-                            {trainer.crefNumber && (
-                                <span>
-                                    CREF {trainer.crefNumber}
-                                </span>
-                            )}
-
-                            <Stack
-                                direction="row"
-                                gap="0.5em"
-                                justifyContent="center"
-                            >
-                                <ClickableIcon
-                                    iconSrc="/images/icons/contracts.png"
-                                    name={t("hirings")}
-                                    hasTheme={false}
-                                />
-
-                                <span>
-                                    {formatNumberShort(trainer.contractsNumber)}
-                                </span>
-                            </Stack>
-                        </Stack>
-                    </Stack>
-                </Stack>
-
-                <Stack
-                    gap="3em"
-                    className={styles.payment_plans_container}
-                >
-                    <Title
-                        headingNumber={2}
-                        text={t("paymentPlans")}
-                    />
-
-                    {trainer.paymentPlans.length !== 0 ? (
-                        <FlexWrap
-                            direction="row"
+                        <Stack
+                            className={styles.trainer_photo_background}
                             justifyContent="center"
-                            alignItems="center"
-                            gap="2em"
-                            maxElements={width <= 940 ? 1 : 2}
-                        >                               
-                            {trainer.paymentPlans.map((plan, index) => (
-                                <React.Fragment
-                                    key={index}
+                        >
+                            <img
+                                src={trainer.photoUrl || "/images/icons/user.png"}
+                                alt=""
+                            />
+                        </Stack>
+
+                        <Stack
+                            className={styles.trainer_photo}
+                        >
+                            <PhotoInput
+                                blobUrl={trainer.photoUrl}
+                                disabled
+                                size="large"
+                            />
+                        </Stack>
+
+                        <Stack
+                            className={styles.trainer_main_info}
+                            justifyContent="center"
+                        >
+                            <Title
+                                headingNumber={1}
+                                text={trainer.name}
+                                varColor="--theme-color"
+                            />
+
+                            <Stack>
+                                {trainer.crefNumber && (
+                                    <span>
+                                        CREF {trainer.crefNumber}
+                                    </span>
+                                )}
+
+                                <Stack
+                                    direction="row"
+                                    gap="0.5em"
+                                    justifyContent="center"
                                 >
-                                    <PaymentPlanCard
-                                        name={plan.name} 
-                                        fullPrice={plan.fullPrice} 
-                                        durationDays={plan.durationDays} 
-                                        description={plan.description} 
-                                        benefits={plan.benefits}
+                                    <ClickableIcon
+                                        iconSrc="/images/icons/contracts.png"
+                                        name={t("hirings")}
+                                        hasTheme={false}
                                     />
-                                </React.Fragment>
-                            ))}
-                        </FlexWrap>
-                    ) : (
-                        <p>
-                            {t("noTrainerPaymentPlans")}
-                        </p>
-                    )}
-                </Stack>
 
-                <Stack
-                    alignItems="start"
-                    className={styles.ratings_container}
-                >
-                    <Title
-                        headingNumber={2}
-                        text={t("ratings")}
-                    />
-
-                    <Stack
-                        alignItems="start"
-                    >
-                        <Stack
-                            direction="row"
-                            gap="0.5em"
-                            justifyContent="start"
-                        >
-                            <ClickableIcon
-                                iconSrc="/images/icons/rated.png"
-                                name={t("averageGrade")}
-                                hasTheme={false}
-                            />
-
-                            <span>
-                                {Number(trainer.rate).toFixed(2)}
-                            </span>
-                        </Stack>
-
-                        <span>
-                            {formatNumberShort(trainer.ratesNumber)} {t("ratings")}
-                        </span>
-                    </Stack>
-
-                    <Stack
-                        gap="3em"
-                    >
-                        <RatingForm
-                            rating={rating}
-                            setRating={setRating}
-                            setRatingError={setRatingError}
-                            handleSubmit={handleOnRating}
-                        />
-
-                        <Stack
-                            gap="2em"
-                        >
-                            <Stack>
-                                {!ratingsError && ratingsLoading ? (
-                                    <p>
-                                        {t("loadingRatings")}...
-                                    </p>
-                                ) : (
-                                    <Stack
-                                        gap="2em"
-                                    >
-                                        {ratings.length !== 0 ? (
-                                            ratings.map((r, index) => (
-                                                <React.Fragment
-                                                    key={index} 
-                                                >
-                                                    <RatingCard
-                                                        rating={r.rating}
-                                                        comment={r.comment}
-                                                        createDate={r.createDate}
-                                                        likesNumber={r.likesNumber}
-                                                        raterID={r.raterID}
-                                                        raterName={r.rater?.name}
-                                                        raterPhotoUrl={r.rater?.photoUrl}
-                                                        handleLike={() => handleOnLikeRating(r.ID)}
-                                                        hasLiked={r.hasLiked}
-                                                        handleRemoveRating={() => handleOnRemoveRating(r.ID)}
-                                                    />
-                                                </React.Fragment>
-                                            ))
-                                        ) : (
-                                            <p>
-                                                {t("noRatingsFinded")}
-                                            </p>
-                                        )}
-                                    </Stack>
-                                )}
+                                    <span>
+                                        {formatNumberShort(trainer.contractsNumber)}
+                                    </span>
+                                </Stack>
                             </Stack>
-
-                            {ratingsError ? (
-                                <p>
-                                    <>
-                                        {t("errorOcurredRatings")}
-
-                                        <br/>
-                                        
-                                        {t("reloadOrTryLater")}
-                                    </>
-                                </p>
-                            ) : (
-                                !ratingsLoading && (
-                                    <LoadMoreButton
-                                        handleLoad={() => loadRatings(ratingsError, ratings, ratingsOffset)}
-                                    />
-                                )
-                            )}
                         </Stack>
                     </Stack>
-                </Stack>
 
-                <Stack
-                    alignItems="start"
-                    className={styles.complaints_container}
-                >
-                    <Title
-                        headingNumber={2}
-                        text={t("complaints")}
+                    <PaymentPlansContainer
+                        paymentPlans={trainer.paymentPlans}
+                        viewerIsClient
                     />
-
-                    <Stack>
-                        <Stack
-                            direction="row"
-                            gap="0.5em"
-                            justifyContent="start"
-                        >
-                            <ClickableIcon
-                                iconSrc="/images/icons/complaints.png"
-                                name={t("complaints")}
-                                hasTheme={false}
-                            />
-
-                            <span>
-                                {formatNumberShort(trainer.complaintsNumber)}
-                            </span>
-                        </Stack>
-                    </Stack>
-
-                    <Stack
-                        gap="3em"
-                    >
-                        <ComplaintForm
-                            complaint={complaint}
-                            setComplaint={setComplaint}
-                            setComplaintError={setComplaintError}
-                            handleSubmit={handleOnComplaint}
-                        />
-
-                        <Stack
-                            gap="2em"
-                        >
-                            <Stack>
-                                {!complaintsError && complaintsLoading ? (
-                                    <p>
-                                        {t("loadingComplaints")}...
-                                    </p>
-                                ) : (
-                                    <Stack
-                                        gap="2em"
-                                    >
-                                        {complaints.length !== 0 ? (
-                                            complaints.map((c, index) => (
-                                                <React.Fragment
-                                                    key={index}
-                                                >
-                                                    <ComplaintCard
-                                                        reason={c.reason}
-                                                        createDate={c.createDate}
-                                                        likesNumber={c.likesNumber}
-                                                        complainterID={c.complainterID}
-                                                        complainterName={c.complainter?.name}
-                                                        complainterPhotoUrl={c.complainter?.photoUrl}
-                                                        handleLike={() => handleOnLikeComplaint(c.ID)}
-                                                        hasLiked={c.hasLiked}
-                                                        handleRemoveComplaint={() => handleOnRemoveComplaint(c.ID)}
-                                                    />
-                                                </React.Fragment>
-                                            ))
-                                        ) : (
-                                            <p>
-                                                {t("noComplaintsFinded")}
-                                            </p>
-                                        )}
-                                    </Stack>
-                                )}
-                            </Stack>
-
-                            {complaintsError ? (
-                                <p>
-                                    <>
-                                        {t("errorOcurredComplaints")}
-
-                                        <br/>
-                                        
-                                        {t("reloadOrTryLater")}
-                                    </>
-                                </p>
-                            ) : (
-                                !complaintsLoading && (
-                                    <LoadMoreButton
-                                        handleLoad={() => loadComplaints(complaintsError, complaints, complaintsOffset)}
-                                    />
-                                )
-                            )}
-                        </Stack>                                                             
-                    </Stack>
                 </Stack>
+
+                <RatingsContainer
+                    ratings={ratings}
+                    ratingsError={ratingsError}
+                    ratingsOffset={ratingsOffset}
+                    ratingsLoading={ratingsLoading}
+                    handleLoadRatings={loadRatings}
+                    trainerRate={trainer.rate}
+                    trainerRatesNumber={trainer.ratesNumber}
+                    viewerIsClient
+                    handleLikeRating={handleOnLikeRating}
+                    handleRemoveRating={handleOnRemoveRating}
+                    rating={rating}
+                    setRating={setRating}
+                    setRatingError={setRatingError}
+                    handleRating={handleOnRating}
+                />
+
+                <ComplaintsContainer
+                    complaints={complaints}
+                    complaintsError={complaintsError}
+                    complaintsOffset={complaintsOffset}
+                    complaintsLoading={complaintsLoading}
+                    handleLoadComplaints={loadComplaints}
+                    trainerComplaintsNumber={trainer.complaintsNumber}
+                    viewerIsClient
+                    handleLikeComplaint={handleOnLikeComplaint}
+                    handleRemoveComplaint={handleOnRemoveComplaint}
+                    complaint={complaint}
+                    setComplaint={setComplaint}
+                    setComplaintError={setComplaintError}
+                    handleComplaint={handleOnComplaint}
+                />
 
                 {trainer.description && (
                     <Stack

@@ -285,38 +285,32 @@ function ClientHome() {
                                     setActiveFilter={setActiveTrainerFilter}
                                     handleChange={handleOnChangeFilter}
                                 >
-                                    {!trainersError && trainersLoading ? (
-                                        <p>
-                                            {t("loadingTrainers")}...
-                                        </p>
-                                    ) : (
-                                        <Stack
-                                            gap="2em"
-                                        >
-                                            {trainers.length !== 0 ? (
-                                                trainers.map((trainer, index) => (
-                                                    <React.Fragment
-                                                        key={index}
-                                                    >
-                                                        <SmallTrainerProfessionalCard
-                                                            name={trainer.name} 
-                                                            photoUrl={trainer.photoUrl} 
-                                                            crefNumber={trainer.crefNumber} 
-                                                            rate={trainer.rate} 
-                                                            contractsNumber={trainer.contractsNumber} 
-                                                            complaintsNumber={trainer.complaintsNumber} 
-                                                            paymentPlans={trainer.paymentPlans} 
-                                                            handleExpand={() => navigate(`/trainers/${trainer.ID}`)}
-                                                        />
-                                                    </React.Fragment>
-                                                ))
-                                            ) : (
-                                                <p>
-                                                    {t("noTrainersFinded")}
-                                                </p>
-                                            )}
-                                        </Stack>
-                                    )}
+                                    <Stack
+                                        gap="2em"
+                                    >
+                                        {trainers.length !== 0 ? (
+                                            trainers.map((trainer, index) => (
+                                                <React.Fragment
+                                                    key={index}
+                                                >
+                                                    <SmallTrainerProfessionalCard
+                                                        name={trainer.name} 
+                                                        photoUrl={trainer.photoUrl} 
+                                                        crefNumber={trainer.crefNumber} 
+                                                        rate={trainer.rate} 
+                                                        contractsNumber={trainer.contractsNumber} 
+                                                        complaintsNumber={trainer.complaintsNumber} 
+                                                        paymentPlans={trainer.paymentPlans} 
+                                                        handleExpand={() => navigate(`/trainers/${trainer.ID}`)}
+                                                    />
+                                                </React.Fragment>
+                                            ))
+                                        ) : (
+                                            <p>
+                                                {t("noTrainersFinded")}
+                                            </p>
+                                        )}
+                                    </Stack>
                                 </FilterItemsLayout>
 
                                 {trainersError ? (
@@ -330,11 +324,10 @@ function ClientHome() {
                                         </>
                                     </p>
                                 ) : (
-                                    !trainersLoading && (
-                                        <LoadMoreButton
-                                            handleLoad={() => loadTrainers(trainersError, trainers, trainersOffset, activeTrainerFilter.value)}
-                                        />
-                                    )
+                                    <LoadMoreButton
+                                        handleLoad={() => loadTrainers(trainersError, trainers, trainersOffset, activeTrainerFilter.value)}
+                                        loading={trainersLoading}
+                                    />
                                 )}
                             </Stack>
                         </Stack>
