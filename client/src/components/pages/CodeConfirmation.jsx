@@ -110,6 +110,10 @@ function CodeConfirmation() {
                 handleOnConfirmed();
             } else if (origin === "recoverPassword") {
                 handleOnConfirmed();
+            } else if (origin === "deleteAccount") {
+                handleOnConfirmed();
+            } else if (origin === "modifyEmail") {
+                handleOnConfirmed();
             }
         }
 

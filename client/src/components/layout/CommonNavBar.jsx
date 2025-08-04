@@ -121,8 +121,8 @@ function CommonNavBar({
             >
                 <ul>
                     <li
-                        onClick={() => navigate("/me/profile")}
-                        className={isActive("/me/profile") ? styles.selected : undefined}
+                        onClick={() => navigate("/me")}
+                        className={isActive("/me") ? styles.selected : undefined}
                     >
                         <Stack
                             justifyContent="start"

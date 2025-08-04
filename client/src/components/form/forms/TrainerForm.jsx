@@ -103,7 +103,7 @@ function TrainerForm({
                                 name="crefUF"
                                 placeholder={t("crefUfPlaceholder")}
                                 labelText={t("crefUf")}
-                                value={trainer.cref_UF}
+                                value={trainer.crefUF}
                                 handleChange={(e) => handleOnChangeSelect(e, UFs, undefined, trainer, setTrainer, setTrainerError)}
                                 icon="/images/icons/location.png"
                                 options={UFs}
