@@ -1,9 +1,9 @@
-from flask import Blueprint, jsonify, request, render_template
+from flask import Blueprint, jsonify, request, render_template, make_response
 from ..database.context_manager import get_db
 from ..exceptions.api_error import ApiError
-from ..utils.security import check_login, generate_code, verify_code, set_jwt_cookies, set_jwt_access_cookies
+from ..utils.security import check_login, generate_code, verify_code, set_jwt_cookies, set_jwt_access_cookies, unset_jwt_cookies
 from ..utils.user import is_email_used, send_email
-from ..services.user import get_user_by_id, get_user_id_by_email, modify_user_password
+from ..services.user import get_user_by_id, get_user_id_by_email, modify_user_password, toggle_activate_profile
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from ..utils.trainer_decorator import only_trainer
 from ..utils.client_decorator import only_client
@@ -136,6 +136,8 @@ def auth():
             response = jsonify(user)
             response.status_code = 200
 
+            toggle_activate_profile(db, ID, is_client, True)
+
             return set_jwt_cookies(ID, is_client, response)
             
         except ApiError as e:
@@ -176,6 +178,27 @@ def refresh_token():
         print(f"{error_message}: {e}")
 
         return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
+    
+@security_bp.route("/logout", methods=["DELETE"])
+@jwt_required()
+def logout():
+    error_message = "Erro na rota de logout"
+
+    with get_db() as db:
+        try:
+            response = make_response("", 204)
+
+            return unset_jwt_cookies(response)
+
+        except ApiError as e:
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": str(e)}), e.status_code
+
+        except Exception as e:
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
 
 @security_bp.route("/is-trainer", methods=["POST"])
 @jwt_required()

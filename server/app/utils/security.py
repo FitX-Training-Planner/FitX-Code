@@ -4,7 +4,7 @@ import random
 import string
 from ..utils.user import hash_email
 from ..__init__ import redis_client
-from flask_jwt_extended import create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies
+from flask_jwt_extended import create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies, unset_access_cookies, unset_refresh_cookies
 from datetime import timedelta
 from sqlalchemy.orm import joinedload
 from ..exceptions.api_error import ApiError
@@ -48,7 +48,6 @@ def verify_code(email, code):
     return True
 
 def set_jwt_cookies(ID, is_client, response):
-
     set_jwt_refresh_cookies(str(ID), {"isClient": is_client}, response)
     set_jwt_access_cookies(str(ID), {"isClient": is_client}, response)
 
@@ -71,5 +70,11 @@ def set_jwt_refresh_cookies(identity, additional_claims, response):
     )
 
     set_refresh_cookies(response, refresh_token)
+
+    return response
+
+def unset_jwt_cookies(response):
+    unset_access_cookies(response)
+    unset_refresh_cookies(response)
 
     return response
