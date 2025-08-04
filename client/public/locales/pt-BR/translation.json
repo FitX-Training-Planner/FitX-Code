@@ -503,5 +503,7 @@
     "modifyEmailConfirm": "Deseja alterar seu e-mail?",
     "loadingModifyPhoto": "Atualizando foto de perfil",
     "errorModifyPhoto": "Falha ao atualizar foto!",
-    "error": "Erro"
+    "error": "Erro",
+    "pageNotFound": "Página não Encontrada",
+    "backToHome": "Voltar para o Início"
 }

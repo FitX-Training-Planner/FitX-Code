@@ -504,6 +504,8 @@
     "loadingModifyPhoto": "Updating profile photo",
     "errorModifyPhoto": "Failed to update photo!",
     "error": "Error",
+    "pageNotFound": "Page not Found",
+    "backToHome": "Back to Home",
     "databaseData": {
         "muscleGroups": {
             "1": {

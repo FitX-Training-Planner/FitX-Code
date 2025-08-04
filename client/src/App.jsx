@@ -47,16 +47,24 @@ function App() {
   const [canRender, setCanRender] = useState(false);
   
   useEffect(() => {    
-    const excludedPaths = [
-      "/login",
-      "/create-config",
-      "/code-confirmation",
-      "/create-trainer",
-      "/recover-password",
-      "/error"
+    const validPaths = [
+      "/",
+      "/me",
+      "/trainers/:id",
+      "/trainers/me/training-plans",
+      "/trainers/me/payments",
+      "/trainers/me/create-payment-plan",
+      "/trainers/me/training-plans/:id",
+      "/trainers/me/create-training-plan",
+      "/trainers/me/create-training-plan/modify-training-day",
+      "/trainers/me/create-training-plan/modify-training-day/modify-cardio-session",
+      "/trainers/me/create-training-plan/modify-training-day/modify-training-step",
+      "/trainers/me/create-training-plan/modify-training-day/modify-training-step/modify-exercise",
+      "/trainers/me/create-training-plan/modify-training-day/modify-training-step/modify-exercise/modify-set",
+      "/questions-chatbot"
     ];
 
-    const shouldSkip = excludedPaths.includes(location.pathname);
+    const shouldSkip = !validPaths.includes(location.pathname);
 
     if (shouldSkip) setCanRender(true);
     
@@ -216,6 +224,15 @@ function App() {
             <Route 
               path="/questions-chatbot"
               element={<ChatBot />}
+            />
+              
+            <Route
+              path="*"
+              element={
+                <ErrorPage 
+                  pageNotFound
+                />
+              }
             />
           </>
         )}

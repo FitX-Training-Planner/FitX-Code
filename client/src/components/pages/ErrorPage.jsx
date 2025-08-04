@@ -3,8 +3,9 @@ import { useTranslation } from "react-i18next";
 import Stack from "../containers/Stack";
 import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./ErrorPage.module.css";
+import NonBackgroundButton from "../form/buttons/NonBackgroundButton";
 
-function ErrorPage() {
+function ErrorPage({ pageNotFound = false }) {
     const { t } = useTranslation();
 
     const location = useLocation();
@@ -20,10 +21,16 @@ function ErrorPage() {
         const status = location.state?.errorStatus;
         const message = location.state?.errorMessage;
 
-        if (!(status && message)) navigate("/");
-
-        setError({ status, message });
-    }, [location.state?.errorMessage, location.state?.errorStatus, navigate]);
+        if (pageNotFound) {
+            setError({ status: "404", message: t("pageNotFound") })
+        } else {
+            if (!(status && message)) {
+                navigate("/");
+            } else {
+                setError({ status, message });
+            }
+        }
+    }, [location.state?.errorMessage, location.state?.errorStatus, navigate, pageNotFound, t]);
 
     useEffect(() => {
         document.title = t("error");
@@ -41,15 +48,25 @@ function ErrorPage() {
                 />
 
                 <Stack
-                    className={styles.error_container}
+                    gap="4em"
                 >
-                    <span>
-                        {error.status}
-                    </span>
+                    <Stack
+                        className={styles.error_container}
+                    >
+                        <span>
+                            {error.status}
+                        </span>
 
-                    <p>
-                        {error.message}
-                    </p>
+                        <p>
+                            {error.message}
+                        </p>
+                    </Stack>
+
+                    <NonBackgroundButton
+                        text={t("backToHome")}
+                        handleClick={() => navigate("/")}
+                        varColor="--light-theme-color"
+                    />
                 </Stack>
             </Stack>
         </main>
