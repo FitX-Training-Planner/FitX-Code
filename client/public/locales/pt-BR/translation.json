@@ -38,7 +38,11 @@
         "ERROR_USER_AUTHOR_COMPLAINT": "Os usuários só podem manipular suas próprias denúncias.",
         "RATING_NOT_FOUND": "Avaliação não encontrada.",
         "ERROR_USER_AUTHOR_RATING": "Os usuários só podem manipular suas próprias avaliações.",
-        "ERROR_TRAINER_ALREADY_HAS_CREF": "Você não pode modificar nem criar um CREF quando já possui um."
+        "ERROR_TRAINER_ALREADY_HAS_CREF": "Você não pode modificar nem criar um CREF quando já possui um.",
+        "MP_TOKEN_ERROR": "Nâo foi possível concluir a autenticação com o Mercado Pago.",
+        "MP_TOKEN_REFRESH_ERROR": "Nâo foi possível renovar o token do Mercado Pago.",
+        "ERROR_NOT_MP_CONNECT": "Você precisa se conectar ao Mercado Pago antes de tentar renovar o token de acesso.",
+        "ERROR_ALREADY_CONNECT_MP": "Você já está concetado com o Mercado Pago."
     },
     "loadingCheckData": "Checando dados",
     "errorLogin": "Falha ao logar!",
@@ -505,5 +509,9 @@
     "errorModifyPhoto": "Falha ao atualizar foto!",
     "error": "Erro",
     "pageNotFound": "Página não Encontrada",
-    "backToHome": "Voltar para o Início"
+    "backToHome": "Voltar para o Início",
+    "mercadopagoConnect": "Conectar-se ao Mercado Pago",
+    "errorGetId": "Falha ao recuperar ID do usuário!",
+    "alreadyMPConnected": "Você já está conectado com o Mercado Pago!",
+    "connectMPInstruction": "Para receber pagamentos, você deve criar uma conta no Mercado Pago e se conectar à ela pelo FitX."
 }

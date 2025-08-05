@@ -38,7 +38,11 @@
         "ERROR_USER_AUTHOR_COMPLAINT": "Users can only manage their own complaints.",
         "RATING_NOT_FOUND": "Review not found.",
         "ERROR_USER_AUTHOR_RATING": "Users can only manage their own reviews.",
-        "ERROR_TRAINER_ALREADY_HAS_CREF": "You can't modify or create a CREF when you already have it."
+        "ERROR_TRAINER_ALREADY_HAS_CREF": "You can't modify or create a CREF when you already have it.",
+        "MP_TOKEN_ERROR": "Unable to conclude the oauth with Mercado Pago.",
+        "MP_TOKEN_REFRESH_ERROR": "Unable to refresh token of Mercado Pago.",
+        "ERROR_NOT_MP_CONNECT": "You need to connect with Mercado Pago before you try to refresh the access token.",
+        "ERROR_ALREADY_CONNECT_MP": "You are already connected to Mercado Pago."
     },
     "loadingCheckData": "Checking data",
     "errorLogin": "Login failed!",
@@ -506,6 +510,10 @@
     "error": "Error",
     "pageNotFound": "Page not Found",
     "backToHome": "Back to Home",
+    "mercadopagoConnect": "Connect to Mercado Pago",
+    "errorGetId": "Failed to load user ID!",
+    "alreadyMPConnected": "You are already connected to Mercado Pago!",
+    "connectMPInstruction": "To receive payments, you need to create a account in Mercado Pago and connect to it through the FitX.",
     "databaseData": {
         "muscleGroups": {
             "1": {

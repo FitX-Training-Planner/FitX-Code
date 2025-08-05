@@ -43,3 +43,4 @@ Este repositório contém o código e documentos relacionados ao projeto FitX, u
 <a href="https://www.flaticon.com/br/icones-gratis/ponto-de-exclamacao" title="ponto de exclamação ícones">Ponto de exclamação ícones criados por Flat Icons - Flaticon</a>
 <a href="https://www.flaticon.com/br/icones-gratis/forte" title="forte ícones">Forte ícones criados por Freepik - Flaticon</a>
 <a href="https://www.flaticon.com/br/icones-gratis/academia" title="academia ícones">Academia ícones criados por Frey Wazza - Flaticon</a>
+<a target="_blank" href="https://icons8.com/icon/nTLVtpxsNPaz/mercado-pago">pagamento de mercado</a> ícone por <a target="_blank" href="https://icons8.com">Icons8</a>
