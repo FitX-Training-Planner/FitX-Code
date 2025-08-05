@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, render_template, make_response
+from flask import Blueprint, jsonify, request, render_template, make_response, redirect
 from ..database.context_manager import get_db
 from ..exceptions.api_error import ApiError
 from ..utils.security import check_login, generate_code, verify_code, set_jwt_cookies, set_jwt_access_cookies, unset_jwt_cookies
@@ -8,6 +8,11 @@ from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from ..utils.trainer_decorator import only_trainer
 from ..utils.client_decorator import only_client
 from ..utils.message_codes import MessageCodes
+from ..config import MercadopagoConfig
+from ..services.trainer import insert_mercadopago_trainer_info
+import requests
+import os
+from datetime import datetime, timedelta, timezone
 
 security_bp = Blueprint("security", __name__)
 
@@ -199,6 +204,105 @@ def logout():
             print(f"{error_message}: {e}")
 
             return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
+
+@security_bp.route("/mercadopago/connect/<int:trainer_id>", methods=["GET"])
+@jwt_required()
+@only_trainer
+def connect_mercado_pago(trainer_id):
+    error_message = "Erro na rota de conexão com o mercado pago"
+
+    try:
+        authorization_url = (
+            "https://auth.mercadopago.com.br/authorization"
+            f"?client_id={MercadopagoConfig.MP_CLIENT_ID}"
+            f"&response_type=code"
+            f"&platform_id=mp"
+            f"&state={trainer_id}"
+            f"&redirect_uri={MercadopagoConfig.MP_REDIRECT_URI}"
+        )
+
+        return redirect(authorization_url)
+    
+    except ApiError as e:
+        print(f"{error_message}: {e}")
+
+        return jsonify({"message": str(e)}), e.status_code
+
+    except Exception as e:
+        print(f"{error_message}: {e}")
+
+        return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
+
+@security_bp.route("/mercadopago/oauth/callback", methods=["GET"])
+def oauth_callback():
+    error_message = "Erro na rota de autenticação pelo mercado pago"
+
+    args = request.args
+
+    payload = {
+        "grant_type": "authorization_code",
+        "client_id": MercadopagoConfig.MP_CLIENT_ID,
+        "client_secret": MercadopagoConfig.MP_CLIENT_SECRET,
+        "code": args.get("code"),
+        "redirect_uri": MercadopagoConfig.MP_REDIRECT_URI
+    }
+
+    response = requests.post("https://api.mercadopago.com/oauth/token", json=payload)
+    
+    if response.status_code != 200:
+        raise ApiError(MessageCodes.MP_TOKEN_ERROR, 500)
+
+    data = response.json()
+
+    access_token = data["access_token"]
+    refresh_token = data["refresh_token"]
+    mp_user_id = str(data["user_id"])
+    expires_in = int(data["expires_in"])
+
+    token_expiration = datetime.now(timezone.utc) + timedelta(seconds=expires_in)
+
+    with get_db() as db:
+        try:
+            insert_mercadopago_trainer_info(db, mp_user_id, access_token, refresh_token, token_expiration, args.get("state"))
+
+            frontend_url = os.getenv("FRONT_END_URL")
+            frontend_redirect_url = f"{frontend_url}/me"
+
+            return redirect(frontend_redirect_url)
+        
+        except ApiError as e:
+            db.rollback()
+
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": str(e)}), e.status_code
+
+        except Exception as e:
+            db.rollback()
+
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
+        
+@security_bp.route("/me/id", methods=["GET"])
+@jwt_required()
+def get_id():
+    error_message = "Erro na rota de recuperação do id do usuário"
+
+    try:
+        identity = get_jwt_identity()
+
+        return jsonify({"ID": identity}), 200
+
+    except ApiError as e:
+        print(f"{error_message}: {e}")
+
+        return jsonify({"message": str(e)}), e.status_code
+
+    except Exception as e:
+        print(f"{error_message}: {e}")
+
+        return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
 
 @security_bp.route("/is-trainer", methods=["POST"])
 @jwt_required()
