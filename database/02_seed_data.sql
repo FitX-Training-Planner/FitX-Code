@@ -400,8 +400,7 @@ INSERT INTO cardio_intensity (type, description, intensity_level) VALUES
 
 INSERT INTO payment_method (name) VALUES
 ('PIX'),
-('Cartão de Crédito'),
-('Cartão de Débito');
+('Cartão de Crédito');
 
 INSERT INTO contract_status (name) VALUES 
 ('Ativo'),

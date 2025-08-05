@@ -61,3 +61,8 @@ class CORSConfig:
 
 class OpenaiConfig:
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+class MercadopagoConfig:
+    MP_CLIENT_ID = os.getenv("MP_CLIENT_ID")
+    MP_REDIRECT_URI = os.getenv("MP_REDIRECT_URI")
+    MP_CLIENT_SECRET = os.getenv("MP_CLIENT_SECRET")

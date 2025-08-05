@@ -73,6 +73,10 @@ CREATE TABLE IF NOT EXISTS trainer (
     complaints_number INT UNSIGNED NOT NULL DEFAULT 0, 
     best_price_plan DECIMAL(7,2) UNSIGNED,
     best_value_ratio FLOAT UNSIGNED,
+    mp_user_id VARCHAR(100),
+    mp_access_token VARCHAR(512),
+    mp_refresh_token VARCHAR(512),
+    mp_token_expiration DATETIME,
     fk_user_ID INT UNSIGNED NOT NULL UNIQUE,
     FOREIGN KEY (fk_user_ID) REFERENCES users(ID),
     INDEX idx_fk_user_ID (fk_user_ID)

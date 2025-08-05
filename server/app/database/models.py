@@ -52,6 +52,10 @@ class Trainer(Base):
     complaints_number = Column(INTEGER(unsigned=True), default=0, nullable=False) 
     best_price_plan = Column(DECIMAL(7, 2, unsigned=True), default=None, nullable=True) 
     best_value_ratio = Column(FLOAT(unsigned=True), default=None, nullable=True)
+    mp_user_id = Column(String(100), unique=True)
+    mp_access_token = Column(String(512), unique=True)
+    mp_refresh_token = Column(String(512), unique=True)
+    mp_token_expiration = Column(DATETIME)
     fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="CASCADE", name="fk_trainer_user"), index=True, nullable=False, unique=True)
 
     user = relationship("Users", back_populates="trainer")
