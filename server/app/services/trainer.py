@@ -5,8 +5,10 @@ from ..utils.formatters import safe_str, safe_int, safe_float, safe_bool, safe_t
 from ..utils.serialize import serialize_training_plan, serialize_payment_plan, serialize_contract, serialize_trainer_in_trainers, serialize_rating, serialize_complaint, serialize_CRC_info
 from sqlalchemy.orm import joinedload, subqueryload
 from sqlalchemy import asc, desc, func, case
-from ..exceptions.api_error import ApiError
 from ..utils.message_codes import MessageCodes
+from datetime import datetime, timezone, timedelta
+import requests
+from ..config import MercadopagoConfig
 
 def insert_trainer(db, cref_number, decription, fk_user_ID):
     try:
@@ -1209,3 +1211,120 @@ def get_trainer_info(db, trainer_id):
         print(f"Erro ao recuperar informações de base do treinador: {e}")
 
         raise Exception(f"Erro ao recuperar as informações de base do treinador: {e}")
+
+def get_valid_mp_token(db, trainer_id):
+    try:
+        trainer = (
+            db.query(Trainer)
+            .filter(Trainer.ID == trainer_id)
+            .first()
+        )
+
+        if trainer is None:
+            raise ApiError(MessageCodes.TRAINER_NOT_FOUND, 404)
+
+        if datetime.now(timezone.utc) < trainer.mp_token_expiration:
+            return trainer.mp_access_token
+        
+        else:
+            return refresh_mp_token(db, trainer_id, trainer.mp_refresh_token)
+
+    except ApiError as e:
+        print(f"Erro ao recuperar token válido do Mercado Pago do treinador: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao recuperar token válido do Mercado Pago do treinador: {e}")
+
+        raise Exception(f"Erro ao recuperar o token válido do Mercado Pago do treinador: {e}")
+
+def insert_mercadopago_trainer_info(db, mp_user_id, access_token, refresh_token, token_expiration, trainer_id):
+    try:
+        trainer = (
+            db.query(Trainer)
+            .filter(Trainer.ID == trainer_id)
+            .first()
+        )
+
+        if trainer is None:
+            raise ApiError(MessageCodes.TRAINER_NOT_FOUND, 404)
+        
+        if trainer.mp_user_id:
+            raise ApiError(MessageCodes.ERROR_ALREADY_CONNECT_MP, 409)
+
+        trainer.mp_user_id = mp_user_id
+        trainer.mp_access_token = access_token
+        trainer.mp_refresh_token = refresh_token
+        trainer.mp_token_expiration = token_expiration
+
+        db.commit()
+
+        return True
+
+    except ApiError as e:
+        print(f"Erro ao inserir informações de autenticação do Mercado Pago do treinador: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao inserir informações de autenticação do Mercado Pago do treinador: {e}")
+
+        raise Exception(f"Erro ao inserir as informações de autenticação do Mercado Pago do treinador: {e}")
+
+def update_mercadopago_trainer_token(db, new_access_token, new_refresh_token, new_expiration, trainer_id):
+    try:
+        trainer = (
+            db.query(Trainer)
+            .filter(Trainer.ID == trainer_id)
+            .first()
+        )
+
+        if trainer is None:
+            raise ApiError(MessageCodes.TRAINER_NOT_FOUND, 404)
+
+        if trainer.mp_user_id is None:
+            raise ApiError(MessageCodes.ERROR_NOT_MP_CONNECT, 400)
+
+        trainer.mp_access_token = new_access_token
+        trainer.mp_refresh_token = new_refresh_token
+        trainer.mp_token_expiration = new_expiration
+
+        db.commit()
+
+        return True
+
+    except ApiError as e:
+        print(f"Erro ao atualizar token de acesso do Mercado Pago do treinador: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao atualizar token de acesso do Mercado Pago do treinador: {e}")
+
+        raise Exception(f"Erro ao atualizar o token de acesso do Mercado Pago do treinador: {e}")
+
+def refresh_mp_token(db, trainer_id, mp_refresh_token):
+    payload = {
+        "grant_type": "refresh_token",
+        "client_id": MercadopagoConfig.MP_CLIENT_ID,
+        "client_secret": MercadopagoConfig.MP_CLIENT_SECRET,
+        "refresh_token": mp_refresh_token
+    }
+
+    response = requests.post("https://api.mercadopago.com/oauth/token", json=payload)
+
+    if response.status_code != 200:
+        raise ApiError(MessageCodes.MP_TOKEN_REFRESH_ERROR, 500)
+
+    data = response.json()
+
+    new_access_token = data["access_token"]
+    new_refresh_token = data["refresh_token"]
+    expires_in = data["expires_in"]
+
+    new_expiration = datetime.now(timezone.utc) + timedelta(seconds=expires_in)
+
+    update_mercadopago_trainer_token(db, new_access_token, new_refresh_token, new_expiration, trainer_id)
+
+    return new_access_token
