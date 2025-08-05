@@ -320,4 +320,5 @@ def serialize_CRC_info(trainer):
         "ratesNumber": serialize_field(trainer.rates_number),
         "contractsNumber": serialize_field(trainer.contracts_number),
         "complaintsNumber": serialize_field(trainer.complaints_number),
+        "hasConnectedMP": True if trainer.mp_user_id else False
     }
