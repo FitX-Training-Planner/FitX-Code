@@ -1,0 +1,19 @@
+.mercadopago_button {
+    padding: 0 0.5em;
+    border: 1px solid var(--text-color);
+    border-radius: 20px;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    transition: var(--fast-transition);
+}
+
+.mercadopago_button:hover {
+    border-color: var(--bg-color);
+    color: var(--bg-color);
+    background-color: var(--text-color);
+}
+
+.mercadopago_button img {
+    height: 2.5em;
+    display: block;
+}

@@ -21,6 +21,8 @@ import { validateModifyUserRequestData, validateTrainerPostRequestData } from ".
 import TrainerCRCInfo from "../layout/TrainerCRCInfo";
 import PhotoInput from "../form/fields/PhotoInput";
 import BackButton from "../form/buttons/BackButton";
+import Alert from "../messages/Alert";
+import MercadopagoConnectButton from "../layout/MercadopagoConnectButton";
 
 function MyProfile() {
     const { t } = useTranslation();
@@ -48,6 +50,7 @@ function MyProfile() {
     const { request: modifyConfigReq } = useRequest();
     const { request: modifyTrainerReq } = useRequest();
     const { request: modifyPhotoReq } = useRequest();
+    const { request: getIdReq } = useRequest();
     const { request: verifyEmailReq } = useRequest();
 
     const user = useSelector(state => state.user);
@@ -73,7 +76,8 @@ function MyProfile() {
         rate: "",
         ratesNumber: "",
         contractsNumber: "",
-        complaintsNumber: ""
+        complaintsNumber: "",
+        hasConnectedMP: false
     });
     const [ratings, setRatings] = useState([]);
     const [ratingsError, setRatingsError] = useState(false);
@@ -492,6 +496,25 @@ function MyProfile() {
         );
     }, [dispatch, modifyTrainerError, modifyTrainerReq, t, trainerInfo.description, trainerInfo.newCrefNumber, trainerInfo.newCrefUF, user.description]);
 
+    const handleOnConnectMP = useCallback(async () => {
+        const getId = () => {
+            return api.get(`/me/id`);
+        }
+    
+        const handleOnGetIdSuccess = (data) => {
+            window.location.href = `${import.meta.env.VITE_API_URL}/mercadopago/connect/${data.ID}`;
+        };
+
+        getIdReq(
+            getId, 
+            handleOnGetIdSuccess, 
+            () => undefined, 
+            undefined, 
+            undefined, 
+            t("errorGetId")
+        );
+    }, [getIdReq, t]);
+
     const userHasChanged = useMemo(() => {
         if (
             usedEmail !== changedUser.email ||
@@ -629,6 +652,48 @@ function MyProfile() {
                     gap="3em"
                     alignItems="end"
                 >
+                    {!user.config.isClient && (
+                        <Stack
+                            alignItems="start"
+                        >
+                            <hr/>
+
+                            {trainerInfo.hasConnectedMP ? (
+                                <Stack
+                                    className={styles.mercadopago_img_container}
+                                    direction="row"
+                                    justifyContent="start"
+                                >
+                                    <img
+                                        src="/images/icons/mercadopago.png"
+                                        alt=""
+                                    />
+
+                                    <p>
+                                        {t("alreadyMPConnected")}
+                                    </p>
+                                </Stack>
+                            ) : (
+                                <>
+                                    <MercadopagoConnectButton
+                                        handleConnect={handleOnConnectMP}
+                                    />
+
+                                    <Stack
+                                        direction="row"
+                                        justifyContent="start"
+                                    >
+                                        <Alert/>
+        
+                                        {t("connectMPInstruction")}
+                                    </Stack>
+                                </>
+                            )}
+
+                            <hr/>
+                        </Stack>
+                    )}
+
                     <Stack>
                         <form
                             onSubmit={handleOnDeactivateProfile}
