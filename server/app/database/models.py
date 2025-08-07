@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Boolean, ForeignKey, VARBINARY, CHAR, TEXT, DATE, func, TIME, Computed, DATETIME, UniqueConstraint
+from sqlalchemy import Column, String, Boolean, ForeignKey, VARBINARY, CHAR, TEXT, DATE, func, TIME, Computed, DATETIME, UniqueConstraint, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.mysql import TINYINT, SMALLINT, INTEGER, FLOAT, DECIMAL
 from .database_connection import Base
@@ -56,7 +56,7 @@ class Trainer(Base):
     mp_user_id = Column(String(100), unique=True)
     mp_access_token = Column(VARBINARY(255), unique=True)
     mp_refresh_token = Column(VARBINARY(255), unique=True)
-    mp_token_expiration = Column(DATETIME)
+    mp_token_expiration = Column(DateTime(timezone=True))
     fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="CASCADE", name="fk_trainer_user"), index=True, nullable=False, unique=True)
 
     user = relationship("Users", back_populates="trainer")
