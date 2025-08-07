@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from ..exceptions.api_error import ApiError
-from ..services.client import get_client_training_contract, cancel_contract
+from ..services.client import get_client_training_contract, cancel_contract, create_payment
 from flask_jwt_extended import jwt_required
 from ..utils.client_decorator import only_client
 from ..utils.openai import get_chatbot_response
@@ -77,6 +77,36 @@ def cancel_client_contract():
             cancel_contract(db, identity)
 
             return "", 204
+        
+        except ApiError as e:
+            db.rollback()
+
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": str(e)}), e.status_code
+
+        except Exception as e:
+            db.rollback()
+
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
+
+@client_bp.route("/payment", methods=["POST"])
+@jwt_required()
+@only_client
+def payment():
+    error_message = "Erro na rota de pagamento"
+
+    with get_db() as db:
+        try:        
+            data = request.form
+
+            identity = get_jwt_identity()
+
+            payment_data = create_payment(db, identity, data.get("paymentPlanId"))
+
+            return jsonify(payment_data), 201
         
         except ApiError as e:
             db.rollback()
