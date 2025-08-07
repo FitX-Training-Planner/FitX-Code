@@ -1223,7 +1223,7 @@ def get_valid_mp_token(db, trainer_id):
         if trainer is None:
             raise ApiError(MessageCodes.TRAINER_NOT_FOUND, 404)
 
-        if datetime.now(timezone.utc) < trainer.mp_token_expiration:
+        if datetime.now(timezone.utc) < trainer.mp_token_expiration.replace(tzinfo=timezone.utc):
             return decrypt_email(trainer.mp_access_token)
         
         else:
