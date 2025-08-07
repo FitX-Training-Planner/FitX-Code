@@ -26,6 +26,8 @@ import { useTranslation } from "react-i18next";
 import Trainer from "./components/pages/Trainer";
 import MyProfile from "./components/pages/MyProfile";
 import ErrorPage from "./components/pages/ErrorPage";
+import PaymentSuccess from "./components/pages/PaymentSuccess";
+import PaymentFailure from "./components/pages/PaymentFailure";
 import Loader from "./components/layout/Loader";
 import { getErrorMessageCodeError } from "./utils/requests/errorMessage";
 
@@ -224,6 +226,23 @@ function App() {
             <Route 
               path="/questions-chatbot"
               element={<ChatBot />}
+            />
+
+            <Route 
+              path="/payment/success"
+              element={<PaymentSuccess />}
+            />
+            
+            <Route 
+              path="/payment/failure"
+              element={<PaymentFailure 
+                hasFailed
+              />}
+            />
+
+            <Route 
+              path="/payment/pending"
+              element={<PaymentFailure />}
             />
               
             <Route
