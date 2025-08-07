@@ -218,12 +218,8 @@ def serialize_contract(contract):
         "paymentTransaction": {
             "ID": contract.payment_transaction.ID,
             "amount": serialize_field(contract.payment_transaction.amount),
-            "paymentMethod": {
-                "ID": contract.payment_transaction.payment_method.ID,
-                "name": contract.payment_transaction.payment_method.name
-            },
             "createDate": contract.payment_transaction.create_date,
-            "mercadopagoTransactionID": serialize_field(contract.payment_transaction.mercadopago_transaction_ID),
+            "mercadopagoTransactionID": serialize_field(contract.payment_transaction.mp_transaction_id),
             "receiptUrl": contract.payment_transaction.receipt_url
         }
     }

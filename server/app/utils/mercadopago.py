@@ -1,7 +1,7 @@
 import mercadopago
 import os
 
-def create_payment_preference(trainer_access_token, item_id, title, description, price, payer_email, payment_id):
+def create_payment_preference(trainer_access_token, item_id, title, description, price, payer_email, transaction_id):
     sdk = mercadopago.SDK(trainer_access_token)
 
     frontend_base_url = os.getenv("FRONT_END_URL")
@@ -23,10 +23,10 @@ def create_payment_preference(trainer_access_token, item_id, title, description,
         "back_urls": {
             "success": f"{frontend_base_url}/payment/success",
             "failure": f"{frontend_base_url}/payment/failure",
-            "pending": f"{frontend_base_url}/payment/failure",
+            "pending": f"{frontend_base_url}/payment/pending",
         },
         "auto_return": "all",
-        "external_reference": str(payment_id),
+        "external_reference": str(transaction_id),
         "binary_mode": True,
         "purpose": "wallet_purchase",
         "payment_methods": {
@@ -34,7 +34,8 @@ def create_payment_preference(trainer_access_token, item_id, title, description,
                 { "id": "ticket" },
                 { "id": "atm" } 
             ]
-        }
+        },
+        "notification_url": f"{os.getenv("API_URL")}/mercadopago/webhook"
     }
 
     preference_response = sdk.preference().create(preference_data)

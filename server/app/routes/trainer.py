@@ -628,7 +628,7 @@ def post_trainer_complaint(trainer_id):
 
             return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
 
-@trainer_bp.route("complaints//<int:complaint_id>", methods=["DELETE"])
+@trainer_bp.route("complaints/<int:complaint_id>", methods=["DELETE"])
 @jwt_required()
 @only_client
 def remove_trainer_complaint(complaint_id):
@@ -656,7 +656,7 @@ def remove_trainer_complaint(complaint_id):
 
             return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
 
-@trainer_bp.route("ratings//<int:rating_id>", methods=["DELETE"])
+@trainer_bp.route("ratings/<int:rating_id>", methods=["DELETE"])
 @jwt_required()
 @only_client
 def remove_trainer_rating(rating_id):

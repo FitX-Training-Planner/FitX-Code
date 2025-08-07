@@ -9,6 +9,7 @@ from ..utils.message_codes import MessageCodes
 from datetime import datetime, timezone, timedelta
 import requests
 from ..config import MercadopagoConfig
+from ..utils.user import encrypt_email, decrypt_email
 
 def insert_trainer(db, cref_number, decription, fk_user_ID):
     try:
@@ -559,10 +560,9 @@ def get_partial_trainer_contracts(db, offset, limit, sort, trainer_id):
             .join(PaymentTransaction, isouter=True)
             .join(PaymentPlan, isouter=True)
             .options(
-                subqueryload(PlanContract.payment_plan),
-                subqueryload(PlanContract.payment_transaction)
-                    .joinedload(PaymentTransaction.payment_method),
-                subqueryload(PlanContract.contract_status),
+                joinedload(PlanContract.payment_plan),
+                joinedload(PlanContract.payment_transaction),
+                joinedload(PlanContract.contract_status),
                 subqueryload(PlanContract.user)
                     .joinedload(Users.media)
             )
@@ -1224,10 +1224,10 @@ def get_valid_mp_token(db, trainer_id):
             raise ApiError(MessageCodes.TRAINER_NOT_FOUND, 404)
 
         if datetime.now(timezone.utc) < trainer.mp_token_expiration:
-            return trainer.mp_access_token
+            return decrypt_email(trainer.mp_access_token)
         
         else:
-            return refresh_mp_token(db, trainer_id, trainer.mp_refresh_token)
+            return refresh_mp_token(db, trainer_id, decrypt_email(trainer.mp_refresh_token))
 
     except ApiError as e:
         print(f"Erro ao recuperar token válido do Mercado Pago do treinador: {e}")
@@ -1254,8 +1254,8 @@ def insert_mercadopago_trainer_info(db, mp_user_id, access_token, refresh_token,
             raise ApiError(MessageCodes.ERROR_ALREADY_CONNECT_MP, 409)
 
         trainer.mp_user_id = mp_user_id
-        trainer.mp_access_token = access_token
-        trainer.mp_refresh_token = refresh_token
+        trainer.mp_access_token = encrypt_email(access_token)
+        trainer.mp_refresh_token = encrypt_email(refresh_token)
         trainer.mp_token_expiration = token_expiration
 
         db.commit()
@@ -1286,8 +1286,8 @@ def update_mercadopago_trainer_token(db, new_access_token, new_refresh_token, ne
         if trainer.mp_user_id is None:
             raise ApiError(MessageCodes.ERROR_NOT_MP_CONNECT, 400)
 
-        trainer.mp_access_token = new_access_token
-        trainer.mp_refresh_token = new_refresh_token
+        trainer.mp_access_token = encrypt_email(new_access_token)
+        trainer.mp_refresh_token = encrypt_email(new_refresh_token)
         trainer.mp_token_expiration = new_expiration
 
         db.commit()
