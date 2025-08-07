@@ -42,7 +42,13 @@
         "MP_TOKEN_ERROR": "Unable to conclude the oauth with Mercado Pago.",
         "MP_TOKEN_REFRESH_ERROR": "Unable to refresh token of Mercado Pago.",
         "ERROR_NOT_MP_CONNECT": "You need to connect with Mercado Pago before you try to refresh the access token.",
-        "ERROR_ALREADY_CONNECT_MP": "You are already connected to Mercado Pago."
+        "ERROR_ALREADY_CONNECT_MP": "You are already connected to Mercado Pago.",
+        "PAYMENT_PLAN_NOT_FOUND": "Payment plan not found.",
+        "ERROR_ALREADY_CONTRACT_ACTIVE": "You already have a active contract! Cancel your contract to finish this action.",
+        "MP_PAYMENT_ID_NOT_FOUND": "Unable to find the payment's ID.",
+        "MP_PAYMENT_NOT_FOUND": "Unable to find the payment data.",
+        "MP_PREFERENCE_ID_NOT_FOUND": "The preference's ID wasn't find in the payment.",
+        "TRANSACTION_NOT_FOUND": "Unable to find the payment's transaction."
     },
     "loadingCheckData": "Checking data",
     "errorLogin": "Login failed!",
@@ -336,7 +342,6 @@
     "transaction": "Transaction",
     "alertTransactionId": "This ID is useful for tracking and verifying payment, especially in support cases. Use it as a reference.",
     "value": "Amount",
-    "paymentMethod": "Payment Method",
     "receiptUrl": "Receipt URL",
     "seeReceipt": "View Receipt",
     "mostPopulars": "Most Popular",
@@ -514,6 +519,12 @@
     "errorGetId": "Failed to load user ID!",
     "alreadyMPConnected": "You are already connected to Mercado Pago!",
     "connectMPInstruction": "To receive payments, you need to create a account in Mercado Pago and connect to it through the FitX.",
+    "pay": "Pay",
+    "errorCreatePay": "Failed when trying to pay plan!",
+    "paymentSuccess": "Payment Completed",
+    "paymentFailure": "Pending Payment",
+    "paymentSuccessAlert": "Now you can chat with your new coach, receive training plans, and track your progress under professional supervision!",
+    "paymentFailureAlert": "Payment was not completed or failed! Please wait for payment to complete or contact FitX support.",
     "databaseData": {
         "muscleGroups": {
             "1": {
@@ -1189,17 +1200,6 @@
             "6": {
                 "type": "HIIT",
                 "description": "Interval training with alternating periods of high and low intensity."
-            }
-        },
-        "paymentMethods": {
-            "1": {
-                "name": "PIX"
-            },
-            "2": {
-                "name": "Credit Card"
-            },
-            "3": {
-                "name": "Debit Card"
             }
         },
         "contractStatus": {
