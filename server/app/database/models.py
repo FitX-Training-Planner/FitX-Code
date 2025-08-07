@@ -53,8 +53,8 @@ class Trainer(Base):
     best_price_plan = Column(DECIMAL(7, 2, unsigned=True), default=None, nullable=True) 
     best_value_ratio = Column(FLOAT(unsigned=True), default=None, nullable=True)
     mp_user_id = Column(String(100), unique=True)
-    mp_access_token = Column(String(512), unique=True)
-    mp_refresh_token = Column(String(512), unique=True)
+    mp_access_token = Column(VARBINARY(255), unique=True)
+    mp_refresh_token = Column(VARBINARY(255), unique=True)
     mp_token_expiration = Column(DATETIME)
     fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="CASCADE", name="fk_trainer_user"), index=True, nullable=False, unique=True)
 
@@ -379,28 +379,22 @@ class PaymentPlan(Base):
         UniqueConstraint("name", "fk_trainer_ID", name="uq_name_trainer_payment_plan"),
     )
 
-class PaymentMethod(Base):
-    __tablename__ = "payment_method"
-
-    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
-    name = Column(String(30), nullable=False, unique=True)
-
 class PaymentTransaction(Base):
     __tablename__ = "payment_transaction"
 
     ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     amount = Column(DECIMAL(7, 2, unsigned=True), nullable=False)
     create_date = Column(DATETIME, nullable=False, server_default=func.now())
-    mercadopago_transaction_ID = Column(String(100), unique=True)
+    is_finished = Column(Boolean, nullable=False, default=False)
+    mp_preference_id = Column(String(100), unique=True)
+    mp_transaction_id = Column(String(100), unique=True)
     receipt_url = Column(TEXT)
     fk_payment_plan_ID = Column(INTEGER(unsigned=True), ForeignKey("payment_plan.ID", ondelete="SET NULL"), index=True)
-    fk_payment_method_ID = Column(INTEGER(unsigned=True), ForeignKey("payment_method.ID"), index=True)
     fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="SET NULL"), index=True)
     fk_trainer_ID = Column(INTEGER(unsigned=True), ForeignKey("trainer.ID", ondelete="SET NULL"), index=True)
     
     payment_plan = relationship("PaymentPlan", back_populates="payment_transactions")
     plan_contract = relationship("PlanContract", back_populates="payment_transaction", uselist=False, passive_deletes=True)
-    payment_method = relationship("PaymentMethod")
     user = relationship("Users", back_populates="payment_transactions")
     trainer = relationship("Trainer", back_populates="payment_transactions")
 

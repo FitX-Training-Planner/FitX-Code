@@ -8,7 +8,6 @@ DROP TABLE IF EXISTS exercise_set_log;
 DROP TABLE IF EXISTS body_composition;
 DROP TABLE IF EXISTS payment_plan_benefit;
 DROP TABLE IF EXISTS payment_transaction;
-DROP TABLE IF EXISTS payment_method;
 DROP TABLE IF EXISTS payment_plan;
 DROP TABLE IF EXISTS cardio_session;
 DROP TABLE IF EXISTS cardio_intensity;
@@ -74,8 +73,8 @@ CREATE TABLE IF NOT EXISTS trainer (
     best_price_plan DECIMAL(7,2) UNSIGNED,
     best_value_ratio FLOAT UNSIGNED,
     mp_user_id VARCHAR(100),
-    mp_access_token VARCHAR(512),
-    mp_refresh_token VARCHAR(512),
+    mp_access_token VARBINARY(255),
+    mp_refresh_token VARBINARY(255),
     mp_token_expiration DATETIME,
     fk_user_ID INT UNSIGNED NOT NULL UNIQUE,
     FOREIGN KEY (fk_user_ID) REFERENCES users(ID),
@@ -336,23 +335,18 @@ CREATE TABLE IF NOT EXISTS payment_plan (
     INDEX idx_fk_trainer_ID (fk_trainer_ID)
 );
 
-CREATE TABLE IF NOT EXISTS payment_method (
-    ID INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(30) NOT NULL UNIQUE
-);
-
 CREATE TABLE IF NOT EXISTS payment_transaction (
     ID INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     amount DECIMAL(7,2) UNSIGNED NOT NULL,
     create_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    mercadopago_transaction_ID VARCHAR(100) UNIQUE,
+    is_finished BOOLEAN NOT NULL DEFAULT 0
+    mp_preference_id VARCHAR(100) UNIQUE,
+    mp_transaction_id VARCHAR(100) UNIQUE,
     receipt_url TEXT,
     fk_payment_plan_ID INT UNSIGNED,
-    fk_payment_method_ID INT UNSIGNED,
     fk_user_ID INT UNSIGNED,
     fk_trainer_ID INT UNSIGNED,
     FOREIGN KEY (fk_payment_plan_ID) REFERENCES payment_plan(ID),
-    FOREIGN KEY (fk_payment_method_ID) REFERENCES payment_method(ID),
     FOREIGN KEY (fk_user_ID) REFERENCES users(ID),
     FOREIGN KEY (fk_trainer_ID) REFERENCES trainer(ID),
     INDEX idx_fk_payment_plan_ID (fk_payment_plan_ID),

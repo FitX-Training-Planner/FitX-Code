@@ -398,10 +398,6 @@ INSERT INTO cardio_intensity (type, description, intensity_level) VALUES
 ('Zona 5', 'Utilização de 90-100% da frequência cardíaca máxima.', 5),
 ('HIIT', 'Treino intervalado com períodos alternados de alta e baixa intensidade.', 4);
 
-INSERT INTO payment_method (name) VALUES
-('PIX'),
-('Cartão de Crédito');
-
 INSERT INTO contract_status (name) VALUES 
 ('Ativo'),
 ('Vencido'),
