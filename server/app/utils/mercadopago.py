@@ -5,6 +5,7 @@ def create_payment_preference(trainer_access_token, item_id, title, description,
     sdk = mercadopago.SDK(trainer_access_token)
 
     frontend_base_url = os.getenv("FRONT_END_URL")
+    api_url = os.getenv("API_URL")
 
     preference_data = {
         "items": [
@@ -35,7 +36,7 @@ def create_payment_preference(trainer_access_token, item_id, title, description,
                 { "id": "atm" } 
             ]
         },
-        "notification_url": f"{os.getenv("API_URL")}/mercadopago/webhook"
+        "notification_url": f"{api_url}/mercadopago/webhook"
     }
 
     preference_response = sdk.preference().create(preference_data)
