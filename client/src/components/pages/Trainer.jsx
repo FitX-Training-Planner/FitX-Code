@@ -39,6 +39,7 @@ function Trainer() {
     const { request: getTrainerReq } = useRequest();
     const { request: removeComplaintReq } = useRequest();
     const { request: removeRatingReq } = useRequest();
+    const { request: payReq } = useRequest();
 
     const user = useSelector(state => state.user);
 
@@ -416,6 +417,29 @@ function Trainer() {
             );
         }
     }, [confirm, removeRatingReq, t]);
+
+    const handleOnPay = useCallback(async (ID) => {
+        const formData = new FormData();
+
+        formData.append("paymentPlanId", ID)
+
+        const pay = () => {
+            return api.post(`/payment`, formData);
+        }
+    
+        const handleOnPaySuccess = (data) => {
+            window.location.href = data.init_point;
+        };
+
+        payReq(
+            pay, 
+            handleOnPaySuccess, 
+            () => undefined, 
+            undefined, 
+            undefined, 
+            t("errorCreatePay")
+        );
+    }, [payReq, t]);
     
     useEffect(() => {
         document.title = t("trainer")
@@ -493,6 +517,7 @@ function Trainer() {
                     <PaymentPlansContainer
                         paymentPlans={trainer.paymentPlans}
                         viewerIsClient
+                        handlePayPaymentPlan={handleOnPay}
                     />
                 </Stack>
 

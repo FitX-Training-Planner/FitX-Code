@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import useWindowSize from "../../../hooks/useWindowSize";
 import { formatPriceToBR } from "../../../utils/formatters/payments/formatOnChange";
 import { formatDateToExtend } from "../../../utils/formatters/text/formatDate";
 import Stack from "../../containers/Stack";
@@ -9,14 +8,11 @@ import styles from "./ContractCard.module.css";
 
 function PaymentCard({
     amount,
-    method,
     transactionDate,
     mercadoPagoTransactionId,
     receiptUrl
 }) {
     const { t, i18n } = useTranslation();
-
-    const { width } = useWindowSize();
     
     return (
         <Stack
@@ -54,9 +50,7 @@ function PaymentCard({
                     </Stack>
                 </Stack>
 
-                <Stack
-                    direction={width <= 440 ? "column" : "row"}
-                >
+                <Stack>
                     <Stack
                         gap="0.2em"
                         alignItems="start"
@@ -68,21 +62,6 @@ function PaymentCard({
 
                         <span>
                             {formatPriceToBR(amount)}
-                        </span>
-                    </Stack>
-
-                    <Stack
-                        gap="0.2em"
-                        className={styles.descriptioned_item}
-                        alignItems={width <= 440 ? "start" : "end"}
-                        extraStyles={{ textAlign: width <= 440 ? "start" : "end" }}
-                    >
-                        <span>
-                            {t("paymentMethod")}:
-                        </span>
-
-                        <span>
-                            {method}
                         </span>
                     </Stack>
                 </Stack>
@@ -111,7 +90,7 @@ function PaymentCard({
                     <ClickableIcon
                         iconSrc="/images/icons/redirect.png"
                         name={t("seeReceipt")}
-                        // handleClick={() => window.open(receiptUrl, "_blank", "noopener,noreferrer")}
+                        handleClick={() => window.open(receiptUrl, "_blank", "noopener,noreferrer")}
                         size="small"
                     />
                 </Stack>

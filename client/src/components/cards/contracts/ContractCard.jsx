@@ -19,7 +19,6 @@ function ContractCard({
     paymentPlanName,
     paymentPlanID,
     paymentAmount, 
-    paymentMethod, 
     paymentTransactionDate, 
     mercadoPagoTransactionId, 
     paymentReceiptUrl
@@ -156,7 +155,6 @@ function ContractCard({
             ) : (
                 <PaymentCard
                     amount={paymentAmount} 
-                    method={paymentMethod} 
                     transactionDate={paymentTransactionDate} 
                     mercadoPagoTransactionId={mercadoPagoTransactionId} 
                     receiptUrl={paymentReceiptUrl} 

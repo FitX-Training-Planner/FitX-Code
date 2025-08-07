@@ -295,15 +295,6 @@ function TrainerPayments() {
                                                             paymentPlanName={contract.paymentPlan?.name} 
                                                             paymentPlanID={contract.paymentPlan?.ID}
                                                             paymentAmount={contract.paymentTransaction?.amount} 
-                                                            paymentMethod={
-                                                                contract.paymentTransaction?.paymentMethod?.ID
-                                                                ? (
-                                                                    user.config.isEnglish 
-                                                                    ? t(`databaseData.paymentMethods.${contract.paymentTransaction.paymentMethod.ID}.name`) 
-                                                                    : contract.paymentTransaction.paymentMethod.name
-                                                                )
-                                                                : undefined
-                                                            }
                                                             paymentTransactionDate={contract.paymentTransaction?.createDate} 
                                                             mercadoPagoTransactionId={contract.paymentTransaction?.mercadopagoTransactionID} 
                                                             paymentReceiptUrl={contract.paymentTransaction?.receiptUrl} 

@@ -14,6 +14,7 @@ function PaymentPlansContainer({
     handleAddPaymentPlan,
     handleModifyPaymentPlan,
     handleRemovePaymentPlan,
+    handlePayPaymentPlan,
     viewerIsClient
 }) {
     const { t } = useTranslation();
@@ -50,6 +51,7 @@ function PaymentPlansContainer({
                                 benefits={plan.benefits}
                                 handleModifyPaymentPlan={!viewerIsClient ? () => handleModifyPaymentPlan(plan) : undefined}
                                 handleRemovePaymentPlan={!viewerIsClient ? () => handleRemovePaymentPlan(plan.ID) : undefined}
+                                handlePayPaymentPlan={viewerIsClient ? () => handlePayPaymentPlan(plan.ID) : undefined}
                             />
                         </React.Fragment>
                     ))}

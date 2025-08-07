@@ -14,7 +14,8 @@ function PaymentPlanCard({
     description,
     benefits,
     handleModifyPaymentPlan,
-    handleRemovePaymentPlan
+    handleRemovePaymentPlan,
+    handlePayPaymentPlan
 }) {
     const { t } = useTranslation();
 
@@ -24,7 +25,7 @@ function PaymentPlanCard({
         <Stack
             className={styles.payment_plan_card}
         >
-            {handleModifyPaymentPlan && handleRemovePaymentPlan && (
+            {handleModifyPaymentPlan && handleRemovePaymentPlan ? (
                 <Stack
                     direction="row"
                     gap="0.5em"
@@ -43,6 +44,18 @@ function PaymentPlanCard({
                         size="small"
                     />
                 </Stack>
+            ) : (
+                handlePayPaymentPlan && (
+                    <Stack
+                        alignItems="end"
+                    >
+                        <ClickableIcon
+                            iconSrc="/images/icons/transaction.png"
+                            name={t("pay")}
+                            handleClick={handlePayPaymentPlan}
+                        />
+                    </Stack>
+                )
             )}
 
             <Stack
