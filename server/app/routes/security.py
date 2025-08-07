@@ -318,7 +318,10 @@ def mercadopago_webhook():
             
             transaction = (
                 db.query(PaymentTransaction)
-                .options(joinedload(PaymentTransaction.payment_plan))
+                .options(
+                    joinedload(PaymentTransaction.payment_plan),
+                    joinedload(PaymentTransaction.trainer)    
+                )
                 .filter(PaymentTransaction.mp_preference_id == preference_id)
                 .first()
             )
@@ -357,6 +360,8 @@ def mercadopago_webhook():
                         .scalar()
                     )
                 )
+
+                transaction.trainer.contracts_number += 1
 
                 db.add(new_contract)
 
