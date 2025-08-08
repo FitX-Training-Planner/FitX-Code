@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Boolean, ForeignKey, VARBINARY, CHAR, TEXT, DATE, func, TIME, Computed, DATETIME, UniqueConstraint, DateTime
+from sqlalchemy import Column, String, Boolean, ForeignKey, VARBINARY, CHAR, TEXT, DATE, func, TIME, DATETIME, UniqueConstraint, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.mysql import TINYINT, SMALLINT, INTEGER, FLOAT, DECIMAL
 from .database_connection import Base

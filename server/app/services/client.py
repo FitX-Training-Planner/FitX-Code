@@ -45,35 +45,17 @@ def check_client_active_contract(db, client_id):
             .first()
         )
 
-        if not contract:
-            return None
-
-        today = date.today()
-
-        if contract.end_date < today:
-            contract.contract_status = (
-                db.query(ContractStatus)
-                .filter(ContractStatus.name == "Vencido")
-                .first()
-            )
-
-            contract.user.fk_training_plan_ID = None
-
-            db.commit()
-
-            return None
-
         return contract
 
     except ApiError as e:
-        print(f"Erro ao verificar contrato ativo do cliente: {e}")
+        print(f"Erro ao recuperar contrato ativo do cliente: {e}")
 
         raise
 
     except Exception as e:
-        print(f"Erro ao verificar contrato ativo do cliente: {e}")
+        print(f"Erro ao recuperar contrato ativo do cliente: {e}")
 
-        raise Exception(f"Erro ao verificar o contrato ativo do cliente: {e}")
+        raise Exception(f"Erro ao recuperar o contrato ativo do cliente: {e}")
     
 def cancel_contract(db, client_id):
     try:
