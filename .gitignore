@@ -52,3 +52,10 @@ __pycache__/
 
 # redis server
 server/redis
+
+# worker items
+# venv
+worker/venv
+
+# env
+worker/.env
