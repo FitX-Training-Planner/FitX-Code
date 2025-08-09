@@ -493,7 +493,7 @@
     "loadingDeactivateProfile": "Deactivating profile",
     "successDeactivateProfile": "Profile deactivated! Login to FitX with your account details to activate it again.",
     "errorDeactivateProfile": "Failed to deactivate profile!",
-    "deleteAccountConfirm": "Do you want to delete your account? All your data will be erased without any chance of recovery.",
+    "deleteAccountConfirm": "Do you want to delete your account? All your data will be erased without any chance of recovery and your active contract will be rescinded.",
     "loadingDeleteAccount": "Deleting account",
     "successDeleteAccount": "Account deleted!",
     "errorDeleteAccount": "Failed to delete account!",
@@ -1214,7 +1214,7 @@
                 "name": "Canceled"
             },
             "4": {
-                "name": "Rescindido"
+                "name": "Rescinded"
             }
         }
     }

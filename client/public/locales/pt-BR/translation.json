@@ -493,7 +493,7 @@
     "loadingDeactivateProfile": "Desativando perfil",
     "successDeactivateProfile": "Perfil desativado! Entre no FitX com os dados da sua conta para ativá-lo novamente.",
     "errorDeactivateProfile": "Falha ao desativar perfil!",
-    "deleteAccountConfirm": "Deseja excluir sua conta? Todos os seus dados serão apagados sem chance de recuperação.",
+    "deleteAccountConfirm": "Deseja excluir sua conta? Todos os seus dados serão apagados sem chance de recuperação e seu contrato ativo será rescindido.",
     "loadingDeleteAccount": "Excluindo conta",
     "successDeleteAccount": "Conta excluída!",
     "errorDeleteAccount": "Falha ao excluir conta!",
