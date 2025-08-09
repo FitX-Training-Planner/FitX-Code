@@ -424,6 +424,9 @@ def get_trainer_plans(db, trainer_id):
 
 def insert_payment_plan(db, name, full_price, duration_days, description, benefits, trainer_id):
     try:
+        if not check_trainer_mp_connection(db, trainer_id):
+            raise ApiError(MessageCodes.ERROR_NOT_MP_CONNECT, 400)
+        
         new_plan = PaymentPlan(
             name=name, 
             full_price=safe_float(full_price),
@@ -531,6 +534,26 @@ def remove_payment_plan(db, payment_plan_id, trainer_id):
         print(f"Erro ao remover plano de pagamento: {e}")
 
         raise Exception(f"Erro ao remover o plano de pagamento: {e}")
+
+def check_trainer_mp_connection(db, trainer_id):
+    try:
+        trainer = (
+            db.query(Trainer)
+            .filter(Trainer.ID == trainer_id)
+            .first()
+        )
+
+        return True if trainer.mp_user_id else False
+
+    except ApiError as e:
+        print(f"Erro ao verificar conexão com o Mercado Pago e o treinador: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao verificar conexão com o Mercado Pago e o treinador: {e}")
+
+        raise Exception(f"Erro ao verificar a conexão com o Mercado Pago e o treinador: {e}")
 
 def get_trainer_payment_plans(db, trainer_id):
     try:

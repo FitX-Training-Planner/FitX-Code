@@ -88,9 +88,7 @@ def cancel_contract(db, client_id):
 
 def create_payment(db, client_id, payment_plan_id):
     try:
-        contract = check_client_active_contract(db, client_id)
-
-        if contract is not None:
+        if check_client_active_contract(db, client_id) is not None:
             raise ApiError(MessageCodes.ERROR_ALREADY_CONTRACT_ACTIVE, 409)
         
         payment_plan = (
