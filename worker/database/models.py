@@ -1,7 +1,7 @@
 from sqlalchemy import Column, String, ForeignKey, DATE, Boolean, VARBINARY, CHAR, TEXT
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.mysql import INTEGER
-from .database_connection import Base
+from database.database_connection import Base
 from datetime import datetime
 
 class Users(Base):

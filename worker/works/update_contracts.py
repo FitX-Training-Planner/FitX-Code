@@ -1,6 +1,6 @@
 from datetime import date
-from ..database.models import ContractStatus, PlanContract
-from ..database.context_manager import get_db
+from database.models import ContractStatus, PlanContract
+from database.context_manager import get_db
 from sqlalchemy.orm import joinedload
 
 def run():
