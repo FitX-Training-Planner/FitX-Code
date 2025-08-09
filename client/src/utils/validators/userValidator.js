@@ -15,7 +15,7 @@ export function isPasswordValid(password) {
 }
 
 export function isPhotoValid(photoFile) {
-    return photoFile.size <= 1 * 1024 * 1024;
+    return photoFile.size <= 2 * 1024 * 1024;
 }
 
 export function isDocumentValid(documentFile) {
