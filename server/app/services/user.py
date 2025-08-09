@@ -1,10 +1,12 @@
-from ..database.models import Users, Media, Trainer
+from ..database.models import Users, Media, Trainer, ContractStatus
 from ..utils.user import is_email_used, hash_email, encrypt_email, hash_password, decrypt_email
 from ..utils.cloudinary import upload_file
 from sqlalchemy.orm import joinedload
 from ..exceptions.api_error import ApiError
 from ..utils.serialize import serialize_user
 from ..utils.message_codes import MessageCodes
+from .client import check_client_active_contract
+from .trainer import check_trainer_active_contract
 
 def get_user_by_id(db, user_id, is_client):
     try:
@@ -44,12 +46,24 @@ def delete_user_account(db, user_id, is_client):
             if not trainer:
                 raise ApiError(MessageCodes.TRAINER_NOT_FOUND, 404)
             
+            if check_trainer_active_contract(db, user_id):
+                raise ApiError(MessageCodes.TRAINER_HAS_ACTIVE_CONTRACT, 409)
+            
             user_id = trainer.fk_user_ID
 
         user = db.query(Users).filter(Users.ID == user_id).first()
 
         if not user:
             raise ApiError(MessageCodes.USER_NOT_FOUND, 404)
+        
+        active_contract = check_client_active_contract(db, user_id) if is_client else None
+        
+        if active_contract:
+            active_contract.contract_status = (
+                db.query(ContractStatus)
+                .filter(ContractStatus.name == "Rescindido")
+                .first()
+            )
         
         db.delete(user)
 
@@ -74,6 +88,9 @@ def toggle_activate_profile(db, user_id, is_client, is_active):
 
             if not trainer:
                 raise ApiError(MessageCodes.TRAINER_NOT_FOUND, 404)
+            
+            if not is_active and check_trainer_active_contract(db, user_id):
+                raise ApiError(MessageCodes.TRAINER_HAS_ACTIVE_CONTRACT, 409)
             
             user_id = trainer.fk_user_ID
 

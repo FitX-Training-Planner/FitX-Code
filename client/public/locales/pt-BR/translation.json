@@ -48,7 +48,8 @@
         "MP_PAYMENT_ID_NOT_FOUND": "Não foi possível encontrar o ID do pagamento.",
         "MP_PAYMENT_NOT_FOUND": "Não foi possível buscar os dados do pagamento.",
         "MP_PREFERENCE_ID_NOT_FOUND": "O ID da preferência não foi encontrado no pagamento.",
-        "TRANSACTION_NOT_FOUND": "Não foi possível encontrar a transação do pagamento."
+        "TRANSACTION_NOT_FOUND": "Não foi possível encontrar a transação do pagamento.",
+        "TRAINER_HAS_ACTIVE_CONTRACT": "Não é possivel excluir ou desativar o perfil enquanto houver contratos ativos."
     },
     "loadingCheckData": "Checando dados",
     "errorLogin": "Falha ao logar!",

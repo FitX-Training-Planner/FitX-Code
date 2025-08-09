@@ -411,7 +411,7 @@ class PlanContract(Base):
     ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     start_date = Column(DATE, nullable=False, default=datetime.now)
     end_date = Column(DATE, nullable=False)
-    fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="CASCADE"), index=True, nullable=False)
+    fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="SET NULL"), index=True)
     fk_trainer_ID = Column(INTEGER(unsigned=True), ForeignKey("trainer.ID", ondelete="CASCADE"), index=True, nullable=False)
     fk_payment_plan_ID = Column(INTEGER(unsigned=True), ForeignKey("payment_plan.ID", ondelete="SET NULL"), index=True)
     fk_payment_transaction_ID = Column(INTEGER(unsigned=True), ForeignKey("payment_transaction.ID", ondelete="SET NULL"), index=True)

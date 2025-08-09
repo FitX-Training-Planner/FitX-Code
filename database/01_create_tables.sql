@@ -363,7 +363,7 @@ CREATE TABLE IF NOT EXISTS plan_contract (
     ID INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     start_date DATE NOT NULL DEFAULT (CURRENT_DATE),
     end_date DATE NOT NULL,
-    fk_user_ID INT UNSIGNED NOT NULL,
+    fk_user_ID INT UNSIGNED,
     fk_trainer_ID INT UNSIGNED NOT NULL,
     fk_payment_plan_ID INT UNSIGNED,
     fk_payment_transaction_ID INT UNSIGNED,

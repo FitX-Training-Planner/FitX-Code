@@ -401,4 +401,5 @@ INSERT INTO cardio_intensity (type, description, intensity_level) VALUES
 INSERT INTO contract_status (name) VALUES 
 ('Ativo'),
 ('Vencido'),
-('Cancelado');
+('Cancelado'),
+('Rescindido');

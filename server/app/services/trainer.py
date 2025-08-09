@@ -1,4 +1,4 @@
-from app.database.models import Trainer, TrainingPlan, TrainingDay, TrainingDayStep, StepExercise, ExerciseSet, CardioSession, PaymentPlan, PaymentPlanBenefit, PlanContract, Users, PaymentTransaction, Rating, Complaint, ComplaintLike, RatingLike
+from app.database.models import Trainer, TrainingPlan, TrainingDay, TrainingDayStep, StepExercise, ExerciseSet, CardioSession, PaymentPlan, PaymentPlanBenefit, PlanContract, Users, PaymentTransaction, Rating, Complaint, ComplaintLike, RatingLike, ContractStatus
 from ..utils.trainer import is_cref_used
 from ..exceptions.api_error import ApiError
 from ..utils.formatters import safe_str, safe_int, safe_float, safe_bool, safe_time
@@ -554,6 +554,30 @@ def check_trainer_mp_connection(db, trainer_id):
         print(f"Erro ao verificar conexão com o Mercado Pago e o treinador: {e}")
 
         raise Exception(f"Erro ao verificar a conexão com o Mercado Pago e o treinador: {e}")
+    
+def check_trainer_active_contract(db, trainer_id):
+    try:
+        contract = (
+            db.query(PlanContract)
+            .join(ContractStatus)
+            .filter(
+                PlanContract.fk_trainer_ID == trainer_id,
+                ContractStatus.name == "Ativo"
+            )
+            .first()
+        )
+
+        return contract is not None
+
+    except ApiError as e:
+        print(f"Erro ao verificar existência de contrato ativo do treinador: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao verificar existência de contrato ativo do treinador: {e}")
+
+        raise Exception(f"Erro ao verificar a existência de contrato ativo do treinador: {e}")
 
 def get_trainer_payment_plans(db, trainer_id):
     try:
