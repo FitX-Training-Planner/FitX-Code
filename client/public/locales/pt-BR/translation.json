@@ -493,7 +493,7 @@
     "loadingDeactivateProfile": "Desativando perfil",
     "successDeactivateProfile": "Perfil desativado! Entre no FitX com os dados da sua conta para ativá-lo novamente.",
     "errorDeactivateProfile": "Falha ao desativar perfil!",
-    "deleteAccountConfirm": "Deseja excluir sua conta? Todos os seus dados serão apagados sem chance de recuperação e seu contrato ativo será rescindido.",
+    "deleteAccountConfirm": "Deseja excluir sua conta? Todos os seus dados serão apagados sem chance de recuperação. Caso você seja cliente e tenha um contrato ativo, então ele será rescindido.",
     "loadingDeleteAccount": "Excluindo conta",
     "successDeleteAccount": "Conta excluída!",
     "errorDeleteAccount": "Falha ao excluir conta!",
@@ -523,7 +523,9 @@
     "pay": "Pagar",
     "errorCreatePay": "Falha ao tentar pagar plano!",
     "paymentSuccess": "Pagamento Concluído",
-    "paymentFailure": "Pagamento Pendente",
+    "paymentPending": "Pagamento Pendente",
+    "paymentFailure": "Pagamento Falho",
     "paymentSuccessAlert": "Agora você pode conversar com seu novo treinador, receber treinos e acompanhar sua evolução com a supervisão de um profissional!",
-    "paymentFailureAlert": "O pagamento não foi finalizado ou falhou! Aguarde o pagamento ser finalizado ou entre em contato com o suporte do FitX."
+    "paymentFailureAlert": "O pagamento não foi finalizado ou falhou! Aguarde o pagamento ser finalizado ou entre em contato com o suporte do FitX.",
+    "mpFeeAlert": "O valor recebido pelo treinador será o valor do plano definido abaixo menos a taxa de 4% a 5% cobrada pelo Mercado Pago."
 }

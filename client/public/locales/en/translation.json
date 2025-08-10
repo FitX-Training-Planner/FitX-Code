@@ -493,7 +493,7 @@
     "loadingDeactivateProfile": "Deactivating profile",
     "successDeactivateProfile": "Profile deactivated! Login to FitX with your account details to activate it again.",
     "errorDeactivateProfile": "Failed to deactivate profile!",
-    "deleteAccountConfirm": "Do you want to delete your account? All your data will be erased without any chance of recovery and your active contract will be rescinded.",
+    "deleteAccountConfirm": "Do you want to delete your account? All your data will be erased without any chance of recovery. If you're a client and have a active contract, so it will be rescinded.",
     "loadingDeleteAccount": "Deleting account",
     "successDeleteAccount": "Account deleted!",
     "errorDeleteAccount": "Failed to delete account!",
@@ -523,9 +523,11 @@
     "pay": "Pay",
     "errorCreatePay": "Failed when trying to pay plan!",
     "paymentSuccess": "Payment Completed",
-    "paymentFailure": "Pending Payment",
+    "paymentPending": "Pending Payment",
+    "paymentFailure": "Payment Failed",
     "paymentSuccessAlert": "Now you can chat with your new coach, receive training plans, and track your progress under professional supervision!",
     "paymentFailureAlert": "Payment was not completed or failed! Please wait for payment to complete or contact FitX support.",
+    "mpFeeAlert": "The amount the trainer receives will be the plan price defined below minus the 4% to 5% fee charged by Mercado Pago.",
     "databaseData": {
         "muscleGroups": {
             "1": {

@@ -33,9 +33,10 @@ function PaymentFailure({
                 >
                     <Stack
                         className={styles.error_container}
+                        gap="3em"
                     >
                         <Title
-                            text={t("paymentFailure")}
+                            text={t(hasFailed ?  "paymentFailure" : "paymentPending")}
                             headingNumber={1}
                         />
 

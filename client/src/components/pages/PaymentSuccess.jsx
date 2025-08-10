@@ -31,6 +31,7 @@ function PaymentSuccess() {
                 >
                     <Stack
                         className={styles.error_container}
+                        gap="3em"
                     >
                         <Title
                             text={t("paymentSuccess")}

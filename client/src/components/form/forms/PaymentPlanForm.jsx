@@ -12,6 +12,7 @@ import { isPaymentPlanDurationValid, isPaymentPlanPriceValid } from "../../../ut
 import { formatPrice } from "../../../utils/formatters/payments/formatOnChange";
 import Benefit from "../fields/PaymentPlanBenefitInput";
 import { useTranslation } from "react-i18next";
+import Alert from "../../messages/Alert";
 
 function PaymentPlanForm({
     paymentPlan,
@@ -56,16 +57,29 @@ function PaymentPlanForm({
                         maxLength={50}
                     />
 
-                    <TextInput
-                        name="fullPrice"
-                        placeholder={t("paymentPlanFullPricePlaceholder")}
-                        labelText={`${t("price")} *`}
-                        value={paymentPlan.fullPrice}
-                        handleChange={(e) => handleOnChangeTextField(e, formatPrice, isPaymentPlanPriceValid, paymentPlan, setPaymentPlan, setPaymentPlanError, setErrors)}
-                        alertMessage={t("alertPaymentPlanFullPrice")}
-                        error={errors.fullPrice}
-                        maxLength={8}
-                    />
+                    <Stack>
+                        <Stack
+                            direction="row"
+                            justifyContent="start"
+                        >
+                            <Alert />   
+
+                            <p>
+                                {t("mpFeeAlert")}
+                            </p>
+                        </Stack>
+
+                        <TextInput
+                            name="fullPrice"
+                            placeholder={t("paymentPlanFullPricePlaceholder")}
+                            labelText={`${t("price")} *`}
+                            value={paymentPlan.fullPrice}
+                            handleChange={(e) => handleOnChangeTextField(e, formatPrice, isPaymentPlanPriceValid, paymentPlan, setPaymentPlan, setPaymentPlanError, setErrors)}
+                            alertMessage={t("alertPaymentPlanFullPrice")}
+                            error={errors.fullPrice}
+                            maxLength={8}
+                        />
+                    </Stack>
 
                     <TextInput
                         name="durationDays"

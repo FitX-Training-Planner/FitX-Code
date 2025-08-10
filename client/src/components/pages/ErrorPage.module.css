@@ -2,7 +2,7 @@
     --banners-width: 10%;
     height: 100dvh;
     position: relative;
-    padding: 2em var(--banners-width);
+    padding: 2em calc(var(--banners-width) + 1em);
 }
 
 .error_page_container > img {
@@ -14,10 +14,13 @@
 .error_container > span {
     font-size: var(--large-title-size);
     font-weight: bold;
+    text-align: center;
 }
 
 .error_container > p {
     font-size: var(--large-text-size);
+    text-align: center;
+    hyphens: none;
 }
 
 .error_page_container::before {
