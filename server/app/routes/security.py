@@ -291,16 +291,42 @@ def oauth_callback():
 def mercadopago_webhook():
     error_message = "Erro na rota de recebimento de notificação do mercado pago"
 
+    print("=== MERCADO PAGO WEBHOOK RECEBIDO ===")
+    print("Parâmetros (request.args):", request.args)
+    print("Body JSON:", request.get_json(silent=True))
+    print("======================================")
+
     with get_db() as db:
         try:
             args = request.args
 
-            payment_id = args.get("id") or args.get("data.id")
+            topic = args.get("type") or args.get("topic")
+            resource_id = args.get("id") or args.get("data.id")
 
-            if not payment_id:
+            if not resource_id:
                 raise ApiError(MessageCodes.MP_PAYMENT_ID_NOT_FOUND, 400)
 
+            payment_id = None
+
             fallback_sdk = mercadopago.SDK(os.getenv("MP_CLIENT_ACCESS_TOKEN"))
+
+            if topic == "payment":
+                payment_id = resource_id
+
+            elif topic == "merchant_order":
+                merchant_order = fallback_sdk.merchant_order().get(resource_id)
+
+                if merchant_order["status"] != 200:
+                    raise ApiError(MessageCodes.MP_PAYMENT_NOT_FOUND, 500)
+
+                payments = merchant_order["response"].get("payments", [])
+
+                if payments:
+                    payment_id = payments[0].get("id")
+            
+            if not payment_id:
+                raise ApiError(MessageCodes.MP_PAYMENT_NOT_FOUND, 404)
+
             fallback_result = fallback_sdk.payment().get(payment_id)
 
             if fallback_result["status"] != 200:
