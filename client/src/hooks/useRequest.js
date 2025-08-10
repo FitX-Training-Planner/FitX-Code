@@ -63,7 +63,7 @@ export default function useRequest() {
 
             toast.dismiss(requestId);
 
-            if (successMessage) notify(successMessage, "success", requestId);
+            if (successMessage) notify(successMessage, "success", `${requestId}success`);
         } catch (err) {
             console.error(err);
 
@@ -92,13 +92,13 @@ export default function useRequest() {
 
                         handleSuccess(retryResp.data);
 
-                        if (successMessage) notify(successMessage, "success", requestId);
+                        if (successMessage) notify(successMessage, "success", `${requestId}success`);
 
                         return;
                     } catch (retryErr) {
                         console.error(retryErr);
 
-                        notifyErrorMessage(retryErr, errorMessage, requestId);
+                        notifyErrorMessage(retryErr, errorMessage, `${requestId}error`);
 
                         handleError(retryErr);
                         
@@ -109,15 +109,15 @@ export default function useRequest() {
                 return;
             }
 
-            notifyErrorMessage(err, errorMessage, requestId);
-
             if (status === 403) {
                 if (currentPath !== "/") navigate("/");
-
+                
                 notify(t("errorAccess"), "error");
-
+                
                 return;
             }
+            
+            notifyErrorMessage(err, errorMessage, `${requestId}error`);
             
             handleError(err);
         } finally {
