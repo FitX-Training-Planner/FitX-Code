@@ -47,3 +47,4 @@ Este repositório contém o código e documentos relacionados ao projeto FitX, u
 <a href="https://www.flaticon.com/br/icones-gratis/verifica" title="verifica ícones">Verifica ícones criados por Freepik - Flaticon</a>
 <a href="https://www.flaticon.com/br/icones-gratis/relogio" title="relógio ícones">Relógio ícones criados por SumberRejeki - Flaticon</a>
 <a href="https://www.flaticon.com/br/icones-gratis/perto" title="perto ícones">Perto ícones criados por Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/salve" title="salve ícones">Salve ícones criados por Yuan Design - Flaticon</a>
