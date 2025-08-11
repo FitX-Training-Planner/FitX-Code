@@ -35,3 +35,7 @@ export function formattTrainerDescription(description) {
 
     return formattedDescription;
 }
+
+export function formattTrainerMaxActiveContracts(value) {
+    return removeNonNumbers(value).replace(/^0+/, "1");
+}

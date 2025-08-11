@@ -1,6 +1,6 @@
 import { isPaymentPlanBenefitDescriptionValid, isPaymentPlanDurationValid, isPaymentPlanPriceValid } from "./paymentsValidator";
 import { isCardioDurationValid, isDurationSetValid, isNoteValid, isPlanNameValid, isRepsValid, isRestValid } from "./trainingValidator";
-import { isCREFValid, isDocumentValid, isEmailValid, isMessageValid, isNameValid, isPasswordValid, isRatingCommentValid, isTrainerDescriptionValid } from "./userValidator";
+import { isCREFValid, isDocumentValid, isEmailValid, isMaxActiveContractsValid, isMessageValid, isNameValid, isPasswordValid, isRatingCommentValid, isTrainerDescriptionValid } from "./userValidator";
 
 export function hasEmptyFieldsInObject(object) {
     return Object.values(object).some(value => value === null || value === "")
@@ -54,12 +54,18 @@ export function validateModifyUserRequestData(userError, setUserError, name, ema
     return true;
 }
 
-export function validateTrainerPostRequestData(trainerError, setTrainerError, crefNumber, description, crefUF) {
+export function validateTrainerPostRequestData(trainerError, setTrainerError, crefNumber, description, crefUF, maxActiveContracts) {
     if (trainerError) return false;
 
     const hasCref = crefNumber || crefUF;
 
     if (!isTrainerDescriptionValid(description)) {
+        setTrainerError(true);
+    
+        return false;   
+    }
+
+    if (!maxActiveContracts || !isMaxActiveContractsValid(maxActiveContracts)) {
         setTrainerError(true);
     
         return false;   

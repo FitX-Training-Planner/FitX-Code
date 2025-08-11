@@ -41,3 +41,7 @@ export function isMessageValid(message, isChatBot) {
 export function isRatingCommentValid(comment) {
     return comment.length <= 255;
 }
+
+export function isMaxActiveContractsValid(value) {
+    return Number(value) >= 1 && Number(value) <= 30;
+}
