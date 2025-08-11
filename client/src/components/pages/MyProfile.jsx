@@ -510,7 +510,7 @@ function MyProfile() {
 
             setTrainerInfo(prevInfo => ({
                 ...prevInfo,
-                crefNumber: data.user.crefNumber || prevInfo.crefNumber,
+                crefNumber: data.crefNumber || prevInfo.crefNumber,
                 newCrefNumber: "",
                 newCrefUF: ""
             }));
