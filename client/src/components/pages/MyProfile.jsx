@@ -70,10 +70,10 @@ function MyProfile() {
         isEnglish: user.config.isEnglish,
     });
     const [trainerInfo, setTrainerInfo] = useState({
-        crefNumber: user.crefNumber || "",
+        crefNumber: user.crefNumber,
         newCrefNumber: "",
         newCrefUF: "",
-        description: user.description || "",
+        description: user.description,
         rate: "",
         ratesNumber: "",
         contractsNumber: "",
@@ -510,9 +510,10 @@ function MyProfile() {
 
             setTrainerInfo(prevInfo => ({
                 ...prevInfo,
-                crefNumber: data.user.crefNumber || prevInfo.crefNumber,
+                crefNumber: data.crefNumber || prevInfo.crefNumber,
                 newCrefNumber: "",
-                newCrefUF: ""
+                newCrefUF: "",
+                maxActiveContracts: data.maxActiveContracts || prevInfo.maxActiveContracts
             }));
 
             if (data.maxActiveContracts) setPrevMaxActiveContracts(data.maxActiveContracts)
@@ -578,10 +579,10 @@ function MyProfile() {
 
     const trainerHasChanged = useMemo(() => {
         if (
-            !trainerInfo.description !== !user.description ||
+            ((trainerInfo.description ?? "") !== (user.description ?? "")) ||
             trainerInfo.newCrefNumber || 
             trainerInfo.newCrefUF ||
-            trainerInfo.maxActiveContracts !== prevMaxActiveContracts
+            (trainerInfo.maxActiveContracts !== prevMaxActiveContracts)
         ) {
             return true;
         }
@@ -740,7 +741,9 @@ function MyProfile() {
                             <form
                                 onSubmit={handleOnToggleContractsPaused}
                             >   
-                                <Stack>
+                                <Stack
+                                    alignItems="start"
+                                >
                                     <SubmitFormButton
                                         text={t(trainerInfo.isContractsPaused ? "unpauseContracts" : "pauseContracts")}
                                         varBgColor="--light-theme-color"

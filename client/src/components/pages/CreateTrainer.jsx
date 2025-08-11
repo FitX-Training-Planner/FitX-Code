@@ -75,7 +75,7 @@ function CreateTrainer() {
     const handleOnSubmit = useCallback((e) => {
         e.preventDefault();
 
-        if (!validateTrainerPostRequestData(error, setError, trainer.cref_number, trainer.description, trainer.crefUF)) return;
+        if (!validateTrainerPostRequestData(error, setError, trainer.cref_number, trainer.description, trainer.crefUF, 10)) return;
 
         const postTrainerFormData = new FormData();
 
