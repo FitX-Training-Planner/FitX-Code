@@ -52,6 +52,7 @@ function MyProfile() {
     const { request: modifyPhotoReq } = useRequest();
     const { request: getIdReq } = useRequest();
     const { request: verifyEmailReq } = useRequest();
+    const { request: toggleContractsPauseReq } = useRequest();
 
     const user = useSelector(state => state.user);
 
@@ -77,8 +78,11 @@ function MyProfile() {
         ratesNumber: "",
         contractsNumber: "",
         complaintsNumber: "",
-        hasConnectedMP: false
+        maxActiveContracts: "",
+        hasConnectedMP: false,
+        isContractsPaused: false
     });
+    const [prevMaxActiveContracts, setPrevMaxActiveContracts] = useState("");
     const [ratings, setRatings] = useState([]);
     const [ratingsError, setRatingsError] = useState(false);
     const [ratingsOffset, setRatingsOffset] = useState(0);
@@ -213,6 +217,8 @@ function MyProfile() {
         
             const handleOnGetTrainerInfoSuccess = (data) => {
                 setTrainerInfo(prevInfo => ({ ...prevInfo, ...data }));
+
+                setPrevMaxActiveContracts(data.maxActiveContracts);
             };
 
             getTrainerInfoReq(
@@ -231,6 +237,31 @@ function MyProfile() {
 
         fetchData();
     }, [complaints, complaintsError, complaintsOffset, getTrainerInfoReq, getUserEmailReq, loadComplaints, loadRatings, location.state?.updatedEmail, navigate, ratings, ratingsError, ratingsOffset, t, user.config.isClient]);
+
+    const handleOnToggleContractsPaused = useCallback(async (e) => {
+        e.preventDefault();
+
+        const userConfirmed = await confirm(t(trainerInfo.isContractsPaused ? "unpauseContractsConfirm" : "pauseContractsConfirm"));
+        
+        if (userConfirmed) {
+            const toggleContractsPause = () => {
+                return api.put(`/trainers/me/toggle-contracts-paused`);
+            }
+        
+            const handleOnToggleSuccess = (data) => {
+                setTrainerInfo(prevTrainer => ({ ...prevTrainer, isContractsPaused: data.isPaused }));
+            };
+    
+            toggleContractsPauseReq(
+                toggleContractsPause, 
+                handleOnToggleSuccess, 
+                () => undefined, 
+                t(trainerInfo.isContractsPaused ? "loadingContractsUnpaused" : "loadingContractsPaused"), 
+                undefined, 
+                t(trainerInfo.isContractsPaused ? "errorContractsUnpaused" : "errorContractsPaused")
+            );
+        }
+    }, [confirm, t, trainerInfo.isContractsPaused, toggleContractsPauseReq]);
 
     const handleOnDeactivateProfile = useCallback(async (e) => {
         e.preventDefault();
@@ -458,12 +489,15 @@ function MyProfile() {
             setModifyTrainerError, 
             trainerInfo.newCrefNumber, 
             trainerInfo.description, 
-            trainerInfo.newCrefUF
+            trainerInfo.newCrefUF,
+            trainerInfo.maxActiveContracts
         )) return;
        
         const formData = new FormData();
 
         if (user.description !== trainerInfo.description) formData.append("description", trainerInfo.description);
+        
+        if (prevMaxActiveContracts !== trainerInfo.maxActiveContracts) formData.append("maxActiveContracts", trainerInfo.maxActiveContracts);
         
         if (trainerInfo.newCrefNumber && trainerInfo.newCrefUF) formData.append("crefNumber", `${trainerInfo.newCrefNumber}/${trainerInfo.newCrefUF}`);
 
@@ -472,14 +506,16 @@ function MyProfile() {
         }
     
         const handleOnPutTrainerSuccess = (data) => {
-            dispatch(updateUser(data));
+            dispatch(updateUser({ ...data, maxActiveContracts: undefined }));
 
             setTrainerInfo(prevInfo => ({
                 ...prevInfo,
-                crefNumber: data.crefNumber || prevInfo.crefNumber,
+                crefNumber: data.user.crefNumber || prevInfo.crefNumber,
                 newCrefNumber: "",
                 newCrefUF: ""
-            }))
+            }));
+
+            if (data.maxActiveContracts) setPrevMaxActiveContracts(data.maxActiveContracts)
         };
     
         const handleOnPutTrainerError = () => {
@@ -494,7 +530,7 @@ function MyProfile() {
             t("successModifyTrainer"), 
             t("errorModifyTrainer")
         );
-    }, [dispatch, modifyTrainerError, modifyTrainerReq, t, trainerInfo.description, trainerInfo.newCrefNumber, trainerInfo.newCrefUF, user.description]);
+    }, [dispatch, modifyTrainerError, modifyTrainerReq, prevMaxActiveContracts, t, trainerInfo.description, trainerInfo.maxActiveContracts, trainerInfo.newCrefNumber, trainerInfo.newCrefUF, user.description]);
 
     const handleOnConnectMP = useCallback(async () => {
         const getId = () => {
@@ -544,13 +580,14 @@ function MyProfile() {
         if (
             !trainerInfo.description !== !user.description ||
             trainerInfo.newCrefNumber || 
-            trainerInfo.newCrefUF
+            trainerInfo.newCrefUF ||
+            trainerInfo.maxActiveContracts !== prevMaxActiveContracts
         ) {
             return true;
         }
 
         return false
-    }, [trainerInfo.description, trainerInfo.newCrefNumber, trainerInfo.newCrefUF, user.description]);
+    }, [prevMaxActiveContracts, trainerInfo.description, trainerInfo.maxActiveContracts, trainerInfo.newCrefNumber, trainerInfo.newCrefUF, user.description]);
     
     useEffect(() => {
         document.title = t("personalProfile")
@@ -560,7 +597,9 @@ function MyProfile() {
         <main
             className={styles.my_profile_page}
         >
-            <BackButton/>
+            <BackButton
+                destiny="/"
+            />
 
             <Stack
                 gap="4em"
@@ -683,7 +722,7 @@ function MyProfile() {
                                         direction="row"
                                         justifyContent="start"
                                     >
-                                        <Alert/>
+                                        <Alert />
         
                                         {t("connectMPInstruction")}
                                     </Stack>
@@ -694,24 +733,54 @@ function MyProfile() {
                         </Stack>
                     )}
 
-                    <Stack>
-                        <form
-                            onSubmit={handleOnDeactivateProfile}
-                        >   
-                            <SubmitFormButton
-                                text={t("deactivateProfile")}
-                                varBgColor="--alert-color"
-                            />
-                        </form>
+                    <Stack
+                        gap="3em"
+                    >
+                        {!user.config.isClient && (
+                            <form
+                                onSubmit={handleOnToggleContractsPaused}
+                            >   
+                                <Stack>
+                                    <SubmitFormButton
+                                        text={t(trainerInfo.isContractsPaused ? "unpauseContracts" : "pauseContracts")}
+                                        varBgColor="--light-theme-color"
+                                    />
 
-                        <form
-                            onSubmit={handleOnDeleteAcount}
-                        >   
-                            <SubmitFormButton
-                                text={t("deleteProfile")}
-                                varBgColor="--alert-color"
-                            />
-                        </form>
+                                    {!trainerInfo.isContractsPaused && (
+                                        <Stack
+                                            direction="row"
+                                            justifyContent="start"
+                                        >
+                                            <Alert />
+            
+                                            {t("pauseContractsInstruction")}
+                                        </Stack>
+                                    )}
+                                </Stack>
+                            </form>
+
+                        )}
+
+                        <Stack>
+                            <form
+                                onSubmit={handleOnDeactivateProfile}
+                            >   
+                                <SubmitFormButton
+                                    text={t("deactivateProfile")}
+                                    varBgColor="--alert-color"
+                                />
+                            </form>
+
+                            <form
+                                onSubmit={handleOnDeleteAcount}
+                            >   
+                                <SubmitFormButton
+                                    text={t("deleteProfile")}
+                                    varBgColor="--alert-color"
+                                />
+                            </form>
+
+                        </Stack>
                     </Stack>
 
                     <NonBackgroundButton

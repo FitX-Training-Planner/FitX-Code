@@ -33,6 +33,7 @@ function ClientHome() {
     const { request: getTrainers, loading: trainersLoading } = useRequest();
     const { request: getClientTraining, loading: trainingLoading } = useRequest();
     const { request: cancelClientContract } = useRequest();
+    const { request: saveTrainerReq, loading: saveTrainerLoading } = useRequest();
             
     const user = useSelector(state => state.user);
 
@@ -197,6 +198,45 @@ function ClientHome() {
             );
         }
     }, [cancelClientContract, clientTrainingDefault, confirm, t]);
+    
+    const handleOnSaveTrainer = useCallback(ID => {
+        if (!saveTrainerLoading) {
+            setTrainers(prevTrainers => (
+                prevTrainers.map(trainer => (
+                    String(trainer.ID) === String(ID) 
+                    ? { ...trainer, hasSaved: !trainer.hasSaved } 
+                    : trainer
+                ))
+            ));
+        }
+
+        const saveTrainer = () => {
+            return api.post(`/trainers/${ID}/save`);
+        };
+
+        const handleOnSaveTrainerSuccess = () => {
+            cleanCacheData("savedTrainers");
+        };
+    
+        const handleOnSaveTrainerError = () => {
+            setTrainers(prevTrainers => (
+                prevTrainers.map(trainer => (
+                    String(trainer.ID) === String(ID) 
+                    ? { ...trainer, hasSaved: !trainer.hasSaved } 
+                    : trainer
+                ))
+            ));
+        };
+    
+        saveTrainerReq(
+            saveTrainer, 
+            handleOnSaveTrainerSuccess, 
+            handleOnSaveTrainerError, 
+            undefined, 
+            undefined, 
+            t("errorSaveTrainer")
+        );
+    }, [saveTrainerLoading, saveTrainerReq, t]);
 
     useEffect(() => {
         document.title = t("home");
@@ -302,6 +342,9 @@ function ClientHome() {
                                                         complaintsNumber={trainer.complaintsNumber} 
                                                         paymentPlans={trainer.paymentPlans} 
                                                         handleExpand={() => navigate(`/trainers/${trainer.ID}`)}
+                                                        canBeContracted={trainer.canBeContracted}
+                                                        handleSave={() => handleOnSaveTrainer(trainer.ID)}
+                                                        hasSaved={trainer.hasSaved}
                                                     />
                                                 </React.Fragment>
                                             ))

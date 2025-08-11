@@ -17,6 +17,7 @@ import RatingsContainer from "../layout/RatingsContainer";
 import ComplaintsContainer from "../layout/ComplaintsContainer";
 import PaymentPlansContainer from "../layout/PaymentPlansContainer";
 import BackButton from "../form/buttons/BackButton";
+import Alert from "../messages/Alert";
 
 function Trainer() {
     const { t } = useTranslation();
@@ -514,11 +515,24 @@ function Trainer() {
                         </Stack>
                     </Stack>
 
-                    <PaymentPlansContainer
-                        paymentPlans={trainer.paymentPlans}
-                        viewerIsClient
-                        handlePayPaymentPlan={handleOnPay}
-                    />
+                    <Stack>
+                        {!trainer.canBeContracted && (
+                            <Stack
+                                direction="row"
+                                justifyContent="center"
+                            >
+                                <Alert />
+
+                                {t("trainerCannotBeContracted")}
+                            </Stack>
+                        )}
+
+                        <PaymentPlansContainer
+                            paymentPlans={trainer.paymentPlans}
+                            viewerIsClient
+                            handlePayPaymentPlan={handleOnPay}
+                        />
+                    </Stack>
                 </Stack>
 
                 <RatingsContainer

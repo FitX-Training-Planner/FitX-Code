@@ -33,3 +33,7 @@
 .descriptioned_item > span:first-of-type {
     font-weight: bold;
 }
+
+.trainer_cannot_be_contracted {
+    color: var(--light-theme-color);
+}

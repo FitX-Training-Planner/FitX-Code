@@ -8,6 +8,7 @@ import { formatPriceToBR } from "../../../utils/formatters/payments/formatOnChan
 import React from "react";
 import { useTranslation } from "react-i18next";
 import TrainerCRCInfo from "../../layout/TrainerCRCInfo";
+import Alert from "../../messages/Alert";
 
 function SmallTrainerProfessionalCard({
     name,
@@ -17,7 +18,10 @@ function SmallTrainerProfessionalCard({
     contractsNumber,
     complaintsNumber,
     paymentPlans,
-    handleExpand
+    handleExpand,
+    handleSave,
+    canBeContracted,
+    hasSaved
 }) {
     const { t } = useTranslation();
 
@@ -29,8 +33,15 @@ function SmallTrainerProfessionalCard({
             className={styles.small_professional_card}
         >
             <Stack
-                alignItems="end"
+                direction="row"
             >
+                <ClickableIcon
+                    iconSrc={`/images/icons/${hasSaved ? "saved" : "save"}.png`}
+                    name={t("saveTrainer")}
+                    handleClick={handleSave}
+                    size="small"
+                />
+
                 <ClickableIcon
                     iconSrc="/images/icons/expand.png"
                     name={t("seeProfile")}
@@ -119,6 +130,26 @@ function SmallTrainerProfessionalCard({
                             </React.Fragment>
                         ))}
                     </FlexWrap>
+
+                    {!canBeContracted && (
+                        <Stack>
+                            <hr/>
+
+                            <Stack
+                                direction="row"
+                                justifyContent="center"
+                                className={styles.trainer_cannot_be_contracted}
+                            >
+                                <Alert
+                                    varColor="--light-theme-color"
+                                />
+
+                                {t("trainerCannotBeContracted")}
+                            </Stack>
+
+                            <hr/>
+                        </Stack>
+                    )}
                 </Stack>
             ) : (
                 <p>

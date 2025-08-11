@@ -90,6 +90,31 @@ function ClientNavBar({
             </li>
 
             <li
+                onClick={() => navigate("/me/saved-trainers")}
+                className={isActive("/me/saved-trainers") ? styles.selected : undefined}
+            >
+                <Stack
+                    justifyContent="start"
+                    direction="row"
+                    className={styles.nav_bar_item}
+                >
+                    <Stack
+                        alignItems="center"
+                        className={styles.nav_bar_item_icon}
+                    >
+                        <ClickableIcon
+                            iconSrc="/images/icons/save.png"
+                            name={t("savedTrainers")}
+                        />
+                    </Stack>
+
+                    <span>
+                        {t("savedTrainers")}
+                    </span>
+                </Stack>
+            </li>
+
+            <li
                 onClick={() => navigate("/questions-chatbot")}
                 className={isActive("/questions-chatbot") ? styles.selected : undefined}
             >

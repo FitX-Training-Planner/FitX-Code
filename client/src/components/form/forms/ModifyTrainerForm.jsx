@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
-import { formattCref, formattTrainerDescription } from "../../../utils/formatters/user/formatOnChange";
-import { isCREFValid, isTrainerDescriptionValid } from "../../../utils/validators/userValidator";
+import { formattCref, formattTrainerDescription, formattTrainerMaxActiveContracts } from "../../../utils/formatters/user/formatOnChange";
+import { isCREFValid, isMaxActiveContractsValid, isTrainerDescriptionValid } from "../../../utils/validators/userValidator";
 import Stack from "../../containers/Stack";
 import SubmitFormButton from "../buttons/SubmitFormButton";
 import { handleOnChangeSelect, handleOnChangeTextField } from "../../../utils/handlers/changeHandlers";
@@ -20,7 +20,8 @@ function ModifyTrainerForm({
 }) {
     const [errors, setErrors] = useState({
         description: false,
-        crefNumber: false
+        crefNumber: false,
+        maxActiveContracts: false
     });
 
     const { t } = useTranslation();
@@ -123,6 +124,17 @@ function ModifyTrainerForm({
                         alertMessage={t("alertTrainerDescription")}
                         error={errors.description}
                         maxLength={1200}
+                    />
+
+                    <TextInput
+                        name="maxActiveContracts"
+                        placeholder={t("maxActiveContractsPlaceholder")}
+                        labelText={t("maxActiveContracts")}
+                        value={changedTrainer.maxActiveContracts}
+                        handleChange={(e) => handleOnChangeTextField(e, formattTrainerMaxActiveContracts, isMaxActiveContractsValid, changedTrainer, setChangedTrainer, setModifyTrainerError, setErrors)}
+                        alertMessage={t("alertMaxActiveContracts")}
+                        error={errors.maxActiveContracts}
+                        maxLength={2}
                     />
                 </Stack>
 
