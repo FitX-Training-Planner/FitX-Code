@@ -85,31 +85,6 @@ function CommonNavBar({
                     </li>
 
                     {children}
-
-                    <li
-                        onClick={() => navigate("/app/data")}
-                        className={isActive("/app/data") ? styles.selected : undefined}
-                    >
-                        <Stack
-                            justifyContent="start"
-                            direction="row"
-                            className={styles.nav_bar_item}
-                        >
-                            <Stack
-                                alignItems="center"
-                                className={styles.nav_bar_item_icon}
-                            >
-                                <ClickableIcon
-                                    iconSrc="/images/icons/database.png"
-                                    name={t("exploreFitX")}
-                                />
-                            </Stack>
-
-                            <span>
-                                {t("exploreFitX")}
-                            </span>
-                        </Stack>
-                    </li>
                 </ul>
             </Stack>
 
