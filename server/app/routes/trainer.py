@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from ..services.user import insert_user, insert_photo
-from ..services.trainer import insert_trainer, insert_training_plan, get_trainer_plans, get_training_plan, modify_training_plan, remove_training_plan, insert_payment_plan, modify_payment_plan, remove_payment_plan, get_trainer_payment_plans, get_partial_trainer_contracts, get_partial_trainers, get_partial_trainer_complaints, get_partial_trainer_ratings, like_complaint, like_rating, get_trainer_profile, insert_trainer_rating, insert_trainer_complaint, remove_complaint, remove_rating, get_trainer_info, modify_trainer_data
+from ..services.trainer import insert_trainer, insert_training_plan, get_trainer_plans, get_training_plan, modify_training_plan, remove_training_plan, insert_payment_plan, modify_payment_plan, remove_payment_plan, get_trainer_payment_plans, get_partial_trainer_contracts, get_partial_trainers, get_partial_trainer_complaints, get_partial_trainer_ratings, like_complaint, like_rating, get_trainer_profile, insert_trainer_rating, insert_trainer_complaint, remove_complaint, remove_rating, get_trainer_info, modify_trainer_data, toggle_trainer_contracts_paused
 from ..database.context_manager import get_db
 from ..exceptions.api_error import ApiError
 from flask_jwt_extended import jwt_required
@@ -9,6 +9,7 @@ from ..utils.client_decorator import only_client
 from flask_jwt_extended import get_jwt_identity
 import json
 from ..utils.message_codes import MessageCodes
+from ..services.client import save_trainer
 
 trainer_bp = Blueprint("trainer", __name__, url_prefix="/trainers")
         
@@ -73,7 +74,9 @@ def get_trainers():
         try:        
             params = request.args
 
-            trainers = get_partial_trainers(db, params.get("offset"), params.get("limit"), params.get("sort"))
+            identity = get_jwt_identity()
+
+            trainers = get_partial_trainers(db, params.get("offset"), params.get("limit"), params.get("sort"), identity)
 
             return jsonify(trainers), 200
         
@@ -724,7 +727,8 @@ def modify_trainer():
                 db, 
                 identity,
                 data.get("crefNumber"),
-                data.get("description")
+                data.get("description"),
+                data.get("maxActiveContracts")
             )
 
             return jsonify(modified_data), 200
@@ -742,4 +746,62 @@ def modify_trainer():
             print(f"{error_message}: {e}")
 
             return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
+        
+@trainer_bp.route("/me/toggle-contracts-paused", methods=["PUT"])
+@jwt_required()
+@only_trainer
+def toggle_contracts_paused():
+    error_message = "Erro na rota de alternação da pausa de novas contratações do treinador"
 
+    with get_db() as db:
+        try:
+            identity = get_jwt_identity()
+
+            is_paused = toggle_trainer_contracts_paused(
+                db, 
+                identity
+            )
+
+            return jsonify({"isPaused": is_paused}), 200
+
+        except ApiError as e:
+            db.rollback()
+
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": str(e)}), e.status_code
+
+        except Exception as e:
+            db.rollback()
+
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
+
+@trainer_bp.route("/<int:trainer_id>/save", methods=["POST"])
+@jwt_required()
+@only_client
+def post_save_trainer(trainer_id):
+    error_message = "Erro na rota de salvamento do treinador"
+
+    with get_db() as db:
+        try:
+            identity = get_jwt_identity()
+
+            save_trainer(db, trainer_id, identity)
+        
+            return "", 201
+        
+        except ApiError as e:
+            db.rollback()
+
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": str(e)}), e.status_code
+
+        except Exception as e:
+            db.rollback()
+
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
