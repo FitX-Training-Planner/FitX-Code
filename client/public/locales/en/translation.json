@@ -53,7 +53,8 @@
         "TRAINER_CANNOT_BE_CONTRACTED": "This trainer cannot be contracted in this moment.",
         "ERROR_LIMIT_SAVED_TRAINERS": "You have reached the limit of 10 saved trainers profiles.",
         "ERROR_LIMIT_PAYMENT_PLANS": "You have reached the limit of 6 payment plans.",
-        "ERROR_LIMIT_TRAINING_PLANS": "You have reached the limit of 20 training plans."
+        "ERROR_LIMIT_TRAINING_PLANS": "You have reached the limit of 20 training plans.",
+        "ERROR_ALREADY_EXISTS_MP_USER_ID": "An FitX account connected to this Mercado Pago user already exists."
     },
     "loadingCheckData": "Checking data",
     "errorLogin": "Login failed!",

@@ -172,7 +172,7 @@ def get_client_saved_trainers(db, client_id):
         )
 
         for trainer in trainers:
-            trainer["can_be_contracted"] = check_trainer_can_be_contracted(db, trainer.ID, trainer)
+            trainer.can_be_contracted = check_trainer_can_be_contracted(db, trainer.ID, trainer)
 
         return [serialize_trainer_in_trainers(trainer, True) for trainer in trainers]
 

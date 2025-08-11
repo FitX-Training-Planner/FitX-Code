@@ -53,7 +53,8 @@
         "TRAINER_CANNOT_BE_CONTRACTED": "Esse treinador não pode ser contratado neste momento.",
         "ERROR_LIMIT_SAVED_TRAINERS": "Você atingiu o limite de 10 perfis de treinadores salvos.",
         "ERROR_LIMIT_PAYMENT_PLANS": "Você atingiu o limite de 6 planos de pagamento.",
-        "ERROR_LIMIT_TRAINING_PLANS": "Você atingiu o limite de 20 planos de treinamento."
+        "ERROR_LIMIT_TRAINING_PLANS": "Você atingiu o limite de 20 planos de treinamento.",
+        "ERROR_ALREADY_EXISTS_MP_USER_ID": "Já existe uma conta FitX conectada a esse usuário do Mercado Pago."
     },
     "loadingCheckData": "Checando dados",
     "errorLogin": "Falha ao logar!",

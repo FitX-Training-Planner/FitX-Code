@@ -30,6 +30,7 @@ import PaymentSuccess from "./components/pages/PaymentSuccess";
 import PaymentFailure from "./components/pages/PaymentFailure";
 import Loader from "./components/layout/Loader";
 import { getErrorMessageCodeError } from "./utils/requests/errorMessage";
+import SavedTrainers from "./components/pages/SavedTrainers";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -63,7 +64,11 @@ function App() {
       "/trainers/me/create-training-plan/modify-training-day/modify-training-step",
       "/trainers/me/create-training-plan/modify-training-day/modify-training-step/modify-exercise",
       "/trainers/me/create-training-plan/modify-training-day/modify-training-step/modify-exercise/modify-set",
-      "/questions-chatbot"
+      "/questions-chatbot",
+      "/payment/success",
+      "/payment/failure",
+      "/payment/pending",
+      "/me/saved-trainers"
     ];
 
     const shouldSkip = !validPaths.includes(location.pathname);
@@ -243,6 +248,11 @@ function App() {
             <Route 
               path="/payment/pending"
               element={<PaymentFailure />}
+            />
+
+            <Route 
+              path="/me/saved-trainers"
+              element={<SavedTrainers />}
             />
               
             <Route

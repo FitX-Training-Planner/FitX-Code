@@ -13,7 +13,7 @@ import { useSelector } from "react-redux";
 import Alert from "../messages/Alert";
 import { cleanCacheData, getCacheData, setCacheData } from "../../utils/cache/operations";
 
-function Page() {
+function SavedTrainers() {
     const { t } = useTranslation();
 
     const navigate = useNavigate();
@@ -184,4 +184,4 @@ function Page() {
     );
 }
 
-export default Page;
+export default SavedTrainers;

@@ -768,7 +768,7 @@ def get_partial_trainers(db, offset, limit, sort, viewer_id):
         trainers = query.offset(offset).limit(limit).all()
 
         for trainer in trainers:
-            trainer["can_be_contracted"] = check_trainer_can_be_contracted(db, trainer.ID, trainer)
+            trainer.can_be_contracted = check_trainer_can_be_contracted(db, trainer.ID, trainer)
 
         if viewer_id:
             trainer_ids = [trainer.ID for trainer in trainers]
@@ -1023,7 +1023,7 @@ def get_trainer_profile(db, trainer_id):
         if not trainer.user.is_active:
             raise ApiError(MessageCodes.TRAINER_DEACTIVATED, 404)
 
-        trainer["can_be_contracted"] = check_trainer_can_be_contracted(db, trainer.ID, trainer)
+        trainer.can_be_contracted = check_trainer_can_be_contracted(db, trainer.ID, trainer)
         
         data = serialize_trainer_in_trainers(trainer) 
 
@@ -1393,6 +1393,15 @@ def insert_mercadopago_trainer_info(db, mp_user_id, access_token, refresh_token,
         
         if trainer.mp_user_id:
             raise ApiError(MessageCodes.ERROR_ALREADY_CONNECT_MP, 409)
+        
+        trainer_with_mp_user_id = (
+            db.query(Trainer)
+            .filter(Trainer.mp_user_id == mp_user_id)
+            .first()
+        )
+
+        if trainer_with_mp_user_id:
+            raise ApiError(MessageCodes.ERROR_ALREADY_EXISTS_MP_USER_ID, 409)        
 
         trainer.mp_user_id = mp_user_id
         trainer.mp_access_token = encrypt_email(access_token)
