@@ -35,6 +35,7 @@ class Users(Base):
     trainer = relationship("Trainer", back_populates="user", uselist=False, passive_deletes=True)
     ratings = relationship("Rating", back_populates="user", passive_deletes=True)
     complaints = relationship("Complaint", back_populates="user", passive_deletes=True)
+    save_trainers = relationship("SaveTrainer", back_populates="user", passive_deletes=True)
     payment_transactions = relationship("PaymentTransaction", back_populates="user", passive_deletes=True)
     body_compositions = relationship("BodyComposition", back_populates="user", passive_deletes=True)
     chats = relationship("Chat", back_populates="user", passive_deletes=True)
@@ -53,6 +54,8 @@ class Trainer(Base):
     complaints_number = Column(INTEGER(unsigned=True), default=0, nullable=False) 
     best_price_plan = Column(DECIMAL(7, 2, unsigned=True), default=None, nullable=True) 
     best_value_ratio = Column(FLOAT(unsigned=True), default=None, nullable=True)
+    max_active_contracts = Column(TINYINT(unsigned=True), default=10, nullable=False)
+    is_contracts_paused = Column(Boolean, nullable=False, default=False)
     mp_user_id = Column(String(100), unique=True)
     mp_access_token = Column(VARBINARY(255), unique=True)
     mp_refresh_token = Column(VARBINARY(255), unique=True)
@@ -63,6 +66,7 @@ class Trainer(Base):
 
     ratings = relationship("Rating", back_populates="trainer", passive_deletes=True)
     complaints = relationship("Complaint", back_populates="trainer", passive_deletes=True)
+    save_trainers = relationship("SaveTrainer", back_populates="trainer", passive_deletes=True)
     training_plans = relationship("TrainingPlan", back_populates="trainer", passive_deletes=True)
     payment_plans = relationship("PaymentPlan", back_populates="trainer", passive_deletes=True)
     payment_transactions = relationship("PaymentTransaction", back_populates="trainer", passive_deletes=True)
@@ -126,6 +130,21 @@ class ComplaintLike(Base):
 
     __table_args__ = (
         UniqueConstraint("fk_user_ID", "fk_complaint_ID", name="uq_user_complaint_like"),
+    )
+
+class SaveTrainer(Base):
+    __tablename__ = "save_trainer"
+
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
+    create_date = Column(DATE, nullable=False, default=datetime.now)
+    fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="CASCADE"), index=True, nullable=False)
+    fk_trainer_ID = Column(INTEGER(unsigned=True), ForeignKey("trainer.ID", ondelete="CASCADE"), index=True, nullable=False)
+
+    user = relationship("Users", back_populates="save_trainers")
+    trainer = relationship("Trainer", back_populates="save_trainers")
+    
+    __table_args__ = (
+        UniqueConstraint("fk_user_ID", "fk_trainer_ID", name="uq_user_trainer_save"),
     )
 
 class MuscleGroup(Base):
@@ -412,7 +431,7 @@ class PlanContract(Base):
     start_date = Column(DATE, nullable=False, default=datetime.now)
     end_date = Column(DATE, nullable=False)
     fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="SET NULL"), index=True)
-    fk_trainer_ID = Column(INTEGER(unsigned=True), ForeignKey("trainer.ID", ondelete="CASCADE"), index=True, nullable=False)
+    fk_trainer_ID = Column(INTEGER(unsigned=True), ForeignKey("trainer.ID", ondelete="SET NULL"), index=True)
     fk_payment_plan_ID = Column(INTEGER(unsigned=True), ForeignKey("payment_plan.ID", ondelete="SET NULL"), index=True)
     fk_payment_transaction_ID = Column(INTEGER(unsigned=True), ForeignKey("payment_transaction.ID", ondelete="SET NULL"), index=True)
     fk_contract_status_ID = Column(INTEGER(unsigned=True), ForeignKey("contract_status.ID"), index=True, nullable=False)

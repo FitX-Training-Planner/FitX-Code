@@ -60,7 +60,7 @@ def create_app():
     register_routes(app)
 
     # from .database.database_connection import engine, Base
-    # from .database.models import Media, Users, Trainer, Rating, RatingLike, Complaint, ComplaintLike, MuscleGroup, Exercise, ExerciseMuscleGroup, BodyPosition, ExerciseEquipment, PulleyHeight, PulleyAttachment, GripType, GripWidth, Laterality, TrainingTechnique, TrainingPlan, TrainingDay, TrainingDayStep, StepExercise, SetType, ExerciseSet, CardioOption, CardioIntensity, CardioSession, PaymentPlan, PaymentTransaction, ContractStatus, PlanContract, PaymentPlanBenefit, BodyComposition, ExerciseSetLog, Chat, Message, BodyCompositionExam, BodyCompositionExamSend
+    # from .database.models import Media, Users, Trainer, Rating, RatingLike, Complaint, ComplaintLike, SaveTrainer, MuscleGroup, Exercise, ExerciseMuscleGroup, BodyPosition, ExerciseEquipment, PulleyHeight, PulleyAttachment, GripType, GripWidth, Laterality, TrainingTechnique, TrainingPlan, TrainingDay, TrainingDayStep, StepExercise, SetType, ExerciseSet, CardioOption, CardioIntensity, CardioSession, PaymentPlan, PaymentTransaction, ContractStatus, PlanContract, PaymentPlanBenefit, BodyComposition, ExerciseSetLog, Chat, Message, BodyCompositionExam, BodyCompositionExamSend
     
     # Base.metadata.drop_all(bind=engine)
     # Base.metadata.create_all(bind=engine)

@@ -28,8 +28,11 @@ DROP TABLE IF EXISTS body_position;
 DROP TABLE IF EXISTS exercise_muscle_group;
 DROP TABLE IF EXISTS exercise;
 DROP TABLE IF EXISTS muscle_group;
+DROP TABLE IF EXISTS complaint_like;
 DROP TABLE IF EXISTS complaint;
+DROP TABLE IF EXISTS rating_like;
 DROP TABLE IF EXISTS rating;
+DROP TABLE IF EXISTS save_trainer;
 DROP TABLE IF EXISTS trainer;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS training_plan;
@@ -72,6 +75,8 @@ CREATE TABLE IF NOT EXISTS trainer (
     complaints_number INT UNSIGNED NOT NULL DEFAULT 0, 
     best_price_plan DECIMAL(7,2) UNSIGNED,
     best_value_ratio FLOAT UNSIGNED,
+    max_active_contracts TINYINT UNSIGNED NOT NULL DEFAULT 10,
+    is_contracts_paused BOOLEAN NOT NULL DEFAULT 0,
     mp_user_id VARCHAR(100),
     mp_access_token VARBINARY(255),
     mp_refresh_token VARBINARY(255),
@@ -131,6 +136,18 @@ CREATE TABLE IF NOT EXISTS complaint_like (
     UNIQUE (fk_user_ID, fk_complaint_ID),
     INDEX idx_fk_user_ID (fk_user_ID),
     INDEX idx_fk_complaint_ID (fk_complaint_ID)
+);
+
+CREATE TABLE IF NOT EXISTS save_trainer (
+    ID INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    create_date DATE NOT NULL DEFAULT (CURRENT_DATE),
+    fk_user_ID INT UNSIGNED NOT NULL,
+    fk_trainer_ID INT UNSIGNED NOT NULL,
+    FOREIGN KEY (fk_user_ID) REFERENCES users(ID),
+    FOREIGN KEY (fk_trainer_ID) REFERENCES trainer(ID),
+    UNIQUE (fk_user_ID, fk_trainer_ID),
+    INDEX idx_fk_trainer_ID (fk_trainer_ID),
+    INDEX idx_fk_user_ID (fk_user_ID)
 );
 
 CREATE TABLE IF NOT EXISTS muscle_group (
@@ -364,7 +381,7 @@ CREATE TABLE IF NOT EXISTS plan_contract (
     start_date DATE NOT NULL DEFAULT (CURRENT_DATE),
     end_date DATE NOT NULL,
     fk_user_ID INT UNSIGNED,
-    fk_trainer_ID INT UNSIGNED NOT NULL,
+    fk_trainer_ID INT UNSIGNED,
     fk_payment_plan_ID INT UNSIGNED,
     fk_payment_transaction_ID INT UNSIGNED,
     fk_contract_status_ID INT UNSIGNED NOT NULL,
