@@ -224,7 +224,7 @@ def serialize_contract(contract):
         }
     }
 
-def serialize_trainer_in_trainers(trainer):
+def serialize_trainer_in_trainers(trainer, has_saved = None):
     return {
         "ID": trainer.ID,
         "name": trainer.user.name,
@@ -235,6 +235,8 @@ def serialize_trainer_in_trainers(trainer):
         "contractsNumber": serialize_field(trainer.contracts_number),
         "complaintsNumber": serialize_field(trainer.complaints_number),
         "description": serialize_field(trainer.description),
+        "canBeContracted": trainer.can_be_contracted,
+        "hasSaved": has_saved,
         "paymentPlans": [
             {
                 "fullPrice": serialize_field(plan.full_price),
@@ -309,12 +311,13 @@ def serialize_complaint(complaint, has_liked = None):
 
     return data
 
-# contracts, rating, complaints
-def serialize_CRC_info(trainer):
+def serialize_trainer_base_info(trainer):
     return {
         "rate": serialize_field(trainer.rate),
         "ratesNumber": serialize_field(trainer.rates_number),
         "contractsNumber": serialize_field(trainer.contracts_number),
         "complaintsNumber": serialize_field(trainer.complaints_number),
-        "hasConnectedMP": True if trainer.mp_user_id else False
+        "hasConnectedMP": True if trainer.mp_user_id else False,
+        "maxActiveContracts": serialize_field(trainer.max_active_contracts),
+        "isContractsPaused": trainer.is_contracts_paused
     }
