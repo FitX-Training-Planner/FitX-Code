@@ -6,7 +6,7 @@ from ..exceptions.api_error import ApiError
 from ..utils.serialize import serialize_user
 from ..utils.message_codes import MessageCodes
 from .client import check_client_active_contract
-from .trainer import check_trainer_active_contract
+from .trainer import count_trainer_active_contract
 
 def get_user_by_id(db, user_id, is_client):
     try:
@@ -46,7 +46,7 @@ def delete_user_account(db, user_id, is_client):
             if not trainer:
                 raise ApiError(MessageCodes.TRAINER_NOT_FOUND, 404)
             
-            if check_trainer_active_contract(db, user_id):
+            if count_trainer_active_contract(db, user_id) > 0:
                 raise ApiError(MessageCodes.TRAINER_HAS_ACTIVE_CONTRACT, 409)
             
             user_id = trainer.fk_user_ID
@@ -89,7 +89,7 @@ def toggle_activate_profile(db, user_id, is_client, is_active):
             if not trainer:
                 raise ApiError(MessageCodes.TRAINER_NOT_FOUND, 404)
             
-            if not is_active and check_trainer_active_contract(db, user_id):
+            if not is_active and count_trainer_active_contract(db, user_id) > 0:
                 raise ApiError(MessageCodes.TRAINER_HAS_ACTIVE_CONTRACT, 409)
             
             user_id = trainer.fk_user_ID

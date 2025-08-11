@@ -1,8 +1,8 @@
-from app.database.models import Trainer, TrainingPlan, TrainingDay, TrainingDayStep, StepExercise, ExerciseSet, CardioSession, PaymentPlan, PaymentPlanBenefit, PlanContract, Users, PaymentTransaction, Rating, Complaint, ComplaintLike, RatingLike, ContractStatus
+from app.database.models import Trainer, TrainingPlan, TrainingDay, TrainingDayStep, StepExercise, ExerciseSet, CardioSession, PaymentPlan, PaymentPlanBenefit, PlanContract, Users, PaymentTransaction, Rating, Complaint, ComplaintLike, RatingLike, ContractStatus, SaveTrainer
 from ..utils.trainer import is_cref_used
 from ..exceptions.api_error import ApiError
 from ..utils.formatters import safe_str, safe_int, safe_float, safe_bool, safe_time
-from ..utils.serialize import serialize_training_plan, serialize_payment_plan, serialize_contract, serialize_trainer_in_trainers, serialize_rating, serialize_complaint, serialize_CRC_info
+from ..utils.serialize import serialize_training_plan, serialize_payment_plan, serialize_contract, serialize_trainer_in_trainers, serialize_rating, serialize_complaint, serialize_trainer_base_info
 from sqlalchemy.orm import joinedload, subqueryload
 from sqlalchemy import asc, desc, func, case
 from ..utils.message_codes import MessageCodes
@@ -40,9 +40,9 @@ def insert_trainer(db, cref_number, decription, fk_user_ID):
 
         raise Exception(f"Erro ao criar o treinador: {e}")
     
-def modify_trainer_data(db, trainer_id, cref_number = None, description = None):
+def modify_trainer_data(db, trainer_id, cref_number = None, description = None, maxActiveContracts = None):
     try:
-        trainer = db.query(Trainer).filter(Trainer.ID== trainer_id).first()
+        trainer = db.query(Trainer).filter(Trainer.ID == trainer_id).first()
         
         if trainer is None:
             raise ApiError(MessageCodes.TRAINER_NOT_FOUND, 404)
@@ -65,6 +65,11 @@ def modify_trainer_data(db, trainer_id, cref_number = None, description = None):
             
             updated_fields["description"] = trainer.description
 
+        if maxActiveContracts is not None:
+            trainer.max_active_contracts = safe_int(maxActiveContracts)
+            
+            updated_fields["maxActiveContracts"] = trainer.max_active_contracts
+
         db.commit()
 
         return updated_fields
@@ -78,9 +83,41 @@ def modify_trainer_data(db, trainer_id, cref_number = None, description = None):
         print(f"Erro ao modificar treinador: {e}")
 
         raise Exception(f"Erro ao modificar o treinador: {e}")
+    
+def toggle_trainer_contracts_paused(db, trainer_id):
+    try:
+        trainer = db.query(Trainer).filter(Trainer.ID == trainer_id).first()
+        
+        if trainer is None:
+            raise ApiError(MessageCodes.TRAINER_NOT_FOUND, 404)
+
+        trainer.is_contracts_paused = not trainer.is_contracts_paused
+
+        db.commit()
+
+        return trainer.is_contracts_paused
+
+    except ApiError as e:
+        print(f"Erro ao alternar pausa nas contratações do treinador: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao alternar pausa nas contratações do treinador: {e}")
+
+        raise Exception(f"Erro ao alternar a pausa nas contratações do o treinador: {e}")
 
 def insert_training_plan(db, training_plan, trainer_id):
     try:
+        training_plans_count = (
+            db.query(TrainingPlan)
+            .filter(TrainingPlan.fk_trainer_ID == trainer_id)
+            .count()
+        )
+    
+        if training_plans_count >= 20:
+            raise ApiError(MessageCodes.ERROR_LIMIT_TRAINING_PLANS, 409)
+    
         new_plan = TrainingPlan(
             name=training_plan.get("name"), 
             note=safe_str(training_plan.get("note")),
@@ -427,6 +464,15 @@ def insert_payment_plan(db, name, full_price, duration_days, description, benefi
         if not check_trainer_mp_connection(db, trainer_id):
             raise ApiError(MessageCodes.ERROR_NOT_MP_CONNECT, 400)
         
+        payment_plans_count = (
+            db.query(PaymentPlan)
+            .filter(PaymentPlan.fk_trainer_ID == trainer_id)
+            .count()
+        )
+    
+        if payment_plans_count >= 6:
+            raise ApiError(MessageCodes.ERROR_LIMIT_PAYMENT_PLANS, 409)
+        
         new_plan = PaymentPlan(
             name=name, 
             full_price=safe_float(full_price),
@@ -555,29 +601,50 @@ def check_trainer_mp_connection(db, trainer_id):
 
         raise Exception(f"Erro ao verificar a conexão com o Mercado Pago e o treinador: {e}")
     
-def check_trainer_active_contract(db, trainer_id):
+def check_trainer_can_be_contracted(db, trainer_id, trainer = None):
     try:
-        contract = (
+        if trainer is None:
+            trainer = (
+                db.query(Trainer)
+                .filter(Trainer.ID == trainer_id)
+                .first()
+            )
+
+        return False if trainer.is_contracts_paused or count_trainer_active_contract(db, trainer_id) >= trainer.max_active_contracts else True
+
+    except ApiError as e:
+        print(f"Erro ao verificar se o treinador pode ser contratado: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao verificar se o treinador pode ser contratado: {e}")
+
+        raise Exception(f"Erro ao verificar se o treinador pode ser contratado: {e}")
+    
+def count_trainer_active_contract(db, trainer_id):
+    try:
+        active_contracts_count = (
             db.query(PlanContract)
             .join(ContractStatus)
             .filter(
                 PlanContract.fk_trainer_ID == trainer_id,
                 ContractStatus.name == "Ativo"
             )
-            .first()
+            .count()
         )
 
-        return contract is not None
+        return active_contracts_count
 
     except ApiError as e:
-        print(f"Erro ao verificar existência de contrato ativo do treinador: {e}")
+        print(f"Erro ao verificar quantidade de contratos ativos do treinador: {e}")
 
         raise
 
     except Exception as e:
-        print(f"Erro ao verificar existência de contrato ativo do treinador: {e}")
+        print(f"Erro ao verificar quantidade de contratos ativos do treinador: {e}")
 
-        raise Exception(f"Erro ao verificar a existência de contrato ativo do treinador: {e}")
+        raise Exception(f"Erro ao verificar a quantidade de contratos ativos do treinador: {e}")
 
 def get_trainer_payment_plans(db, trainer_id):
     try:
@@ -655,8 +722,10 @@ def get_partial_trainer_contracts(db, offset, limit, sort, trainer_id):
 
         raise Exception(f"Erro ao recuperar os contratos do treinador: {e}")
     
-def get_partial_trainers(db, offset, limit, sort):
+def get_partial_trainers(db, offset, limit, sort, viewer_id):
     try:
+        result = []
+
         query = (
             db.query(Trainer)
             .join(Trainer.user)
@@ -698,7 +767,30 @@ def get_partial_trainers(db, offset, limit, sort):
 
         trainers = query.offset(offset).limit(limit).all()
 
-        return [serialize_trainer_in_trainers(trainer) for trainer in trainers]
+        for trainer in trainers:
+            trainer["can_be_contracted"] = check_trainer_can_be_contracted(db, trainer.ID, trainer)
+
+        if viewer_id:
+            trainer_ids = [trainer.ID for trainer in trainers]
+
+            saved_trainer_ids = set(
+                row.fk_trainer_ID for row in db.query(SaveTrainer)
+                .filter(
+                    SaveTrainer.fk_user_ID == viewer_id,
+                    SaveTrainer.fk_trainer_ID.in_(trainer_ids)
+                )
+                .all()
+            )
+
+            for trainer in trainers:
+                has_saved = trainer.ID in saved_trainer_ids
+
+                result.append(serialize_trainer_in_trainers(trainer, has_saved))
+        
+        else:
+            result = [serialize_trainer_in_trainers(trainer) for trainer in trainers]
+
+        return result
 
     except ApiError as e:
         print(f"Erro ao recuperar treinadores: {e}")
@@ -930,6 +1022,8 @@ def get_trainer_profile(db, trainer_id):
 
         if not trainer.user.is_active:
             raise ApiError(MessageCodes.TRAINER_DEACTIVATED, 404)
+
+        trainer["can_be_contracted"] = check_trainer_can_be_contracted(db, trainer.ID, trainer)
         
         data = serialize_trainer_in_trainers(trainer) 
 
@@ -1245,7 +1339,7 @@ def get_trainer_info(db, trainer_id):
         if trainer is None:
             raise ApiError(MessageCodes.TRAINER_NOT_FOUND, 404)
 
-        data = serialize_CRC_info(trainer) 
+        data = serialize_trainer_base_info(trainer) 
 
         return data
 
