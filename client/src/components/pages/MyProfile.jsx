@@ -579,7 +579,7 @@ function MyProfile() {
 
     const trainerHasChanged = useMemo(() => {
         if (
-            (trainerInfo.description !== user.description) ||
+            ((trainerInfo.description ?? "") !== (user.description ?? "")) ||
             trainerInfo.newCrefNumber || 
             trainerInfo.newCrefUF ||
             (trainerInfo.maxActiveContracts !== prevMaxActiveContracts)
