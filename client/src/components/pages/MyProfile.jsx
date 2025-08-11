@@ -741,7 +741,9 @@ function MyProfile() {
                             <form
                                 onSubmit={handleOnToggleContractsPaused}
                             >   
-                                <Stack>
+                                <Stack
+                                    alignItems="start"
+                                >
                                     <SubmitFormButton
                                         text={t(trainerInfo.isContractsPaused ? "unpauseContracts" : "pauseContracts")}
                                         varBgColor="--light-theme-color"
