@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from ..exceptions.api_error import ApiError
-from ..services.client import get_client_training_contract, cancel_contract, create_payment
+from ..services.client import get_client_training_contract, cancel_contract, create_payment, get_client_saved_trainers
 from flask_jwt_extended import jwt_required
 from ..utils.client_decorator import only_client
 from ..utils.openai import get_chatbot_response
@@ -118,6 +118,30 @@ def payment():
         except Exception as e:
             db.rollback()
 
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
+
+@client_bp.route("/me/saved-trainers", methods=["GET"])
+@jwt_required()
+@only_client
+def get_saved_trainers():
+    error_message = "Erro na rota de recuperação dos perfis de treinadores salvos do cliente"
+
+    with get_db() as db:
+        try:        
+            identity = get_jwt_identity()
+
+            trainers = get_client_saved_trainers(db, identity)
+
+            return jsonify(trainers), 200
+        
+        except ApiError as e:
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": str(e)}), e.status_code
+
+        except Exception as e:
             print(f"{error_message}: {e}")
 
             return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
