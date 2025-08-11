@@ -1,11 +1,11 @@
-from app.database.models import Users, PlanContract, ContractStatus, PaymentPlan, PaymentTransaction
+from app.database.models import Users, PlanContract, ContractStatus, PaymentPlan, PaymentTransaction, Trainer, SaveTrainer
 from ..exceptions.api_error import ApiError
-from ..utils.serialize import serialize_training_contract
+from ..utils.serialize import serialize_training_contract, serialize_trainer_in_trainers
 from sqlalchemy.orm import joinedload, subqueryload
 from ..utils.message_codes import MessageCodes
 from ..utils.mercadopago import create_payment_preference
 from ..utils.user import decrypt_email
-from .trainer import get_valid_mp_token
+from .trainer import get_valid_mp_token, check_trainer_can_be_contracted
 from datetime import date
 
 def get_client_training_contract(db, client_id):
@@ -100,6 +100,9 @@ def create_payment(db, client_id, payment_plan_id):
         if not payment_plan:
             raise ApiError(MessageCodes.PAYMENT_PLAN_NOT_FOUND, 404)
         
+        if not check_trainer_can_be_contracted(db, payment_plan.fk_trainer_ID):
+            raise ApiError(MessageCodes.TRAINER_CANNOT_BE_CONTRACTED, 409)
+        
         client = (
             db.query(Users)
             .filter(Users.ID == client_id)
@@ -149,3 +152,78 @@ def create_payment(db, client_id, payment_plan_id):
         print(f"Erro ao criar preferência de pagamento: {e}")
 
         raise Exception(f"Erro ao criar a preferência de pagamento: {e}")
+
+def get_client_saved_trainers(db, client_id):
+    try:
+        trainers = (
+            db.query(Trainer)
+            .join(SaveTrainer, SaveTrainer.fk_trainer_ID == Trainer.ID)
+            .join(Trainer.user)
+            .join(PaymentPlan, isouter=True)
+            .options(
+                subqueryload(Trainer.user)
+                    .joinedload(Users.media)
+            )
+            .filter(
+                SaveTrainer.fk_user_ID == client_id,
+                Users.is_active == True
+            )
+            .all()
+        )
+
+        for trainer in trainers:
+            trainer["can_be_contracted"] = check_trainer_can_be_contracted(db, trainer.ID, trainer)
+
+        return [serialize_trainer_in_trainers(trainer, True) for trainer in trainers]
+
+    except ApiError as e:
+        print(f"Erro ao recuperar treinadores salvos do cliente: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao recuperar treinadores salvos do cliente: {e}")
+
+        raise Exception(f"Erro ao recuperar os treinadores salvos do cliente: {e}")
+
+def save_trainer(db, trainer_id, client_id):
+    try:
+        saved_trainers_count = (
+            db.query(SaveTrainer)
+            .filter(SaveTrainer.fk_user_ID == client_id)
+            .count()
+        )
+    
+        if saved_trainers_count >= 10:
+            raise ApiError(MessageCodes.ERROR_LIMIT_SAVED_TRAINERS, 409)
+        
+        has_saved = (
+            db.query(SaveTrainer)
+            .filter(SaveTrainer.fk_user_ID == client_id, SaveTrainer.fk_trainer_ID == trainer_id)
+            .first()
+        )
+
+        if has_saved is None:
+            save = SaveTrainer(
+                fk_user_ID=client_id, 
+                fk_trainer_ID=trainer_id
+            )
+
+            db.add(save)
+
+        else:
+            db.delete(has_saved)
+
+        db.commit()
+        
+        return True
+    
+    except ApiError as e:
+        print(f"Erro ao salvar treinador: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao salvar treinador: {e}")
+
+        raise Exception(f"Erro ao salvar o treinador: {e}")
