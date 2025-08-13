@@ -114,6 +114,8 @@ function CodeConfirmation() {
                 handleOnConfirmed();
             } else if (origin === "modifyEmail") {
                 handleOnConfirmed();
+            } else if (origin === "cancelContract") {
+                handleOnConfirmed();
             }
         }
 

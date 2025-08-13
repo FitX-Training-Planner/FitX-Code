@@ -607,26 +607,30 @@ function MyProfile() {
         const userConfirmed = await confirm(t("cancelContractConfirm"));
         
         if (userConfirmed) {
-            const cancelContract = () => {
-                return api.put(`/me/active-contract`);
-            }
-        
-            const handleOnCancelContractSuccess = () => {
-                setClientTraining(null);
+            navigate("/code-confirmation", { state: { localUser: { email: usedEmail }, origin: "cancelContract" } });
 
-                cleanCacheData(clientTrainingStorageKey);
-            };
+            setHandleOnConfirmed(() => () => {
+                const cancelContract = () => {
+                    return api.put(`/me/active-contract`);
+                }
+            
+                const handleOnCancelContractSuccess = () => {
+                    setClientTraining(null);
 
-            cancelClientContract(
-                cancelContract, 
-                handleOnCancelContractSuccess, 
-                () => undefined, 
-                t("loadingCancelContract"), 
-                t("successCancelContract"),
-                t("errorCancelContract")
-            );
+                    cleanCacheData(clientTrainingStorageKey);
+                };
+
+                cancelClientContract(
+                    cancelContract, 
+                    handleOnCancelContractSuccess, 
+                    () => undefined, 
+                    t("loadingCancelContract"), 
+                    t("successCancelContract"),
+                    t("errorCancelContract")
+                );
+            });
         }
-    }, [cancelClientContract, confirm, t]);
+    }, [cancelClientContract, confirm, navigate, setHandleOnConfirmed, t, usedEmail]);
 
     const userHasChanged = useMemo(() => {
         if (
