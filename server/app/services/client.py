@@ -168,6 +168,7 @@ def get_client_saved_trainers(db, client_id):
                 SaveTrainer.fk_user_ID == client_id,
                 Users.is_active == True
             )
+            .order_by(SaveTrainer.create_date.desc()) 
             .all()
         )
 

@@ -17,6 +17,9 @@ import os
 from sqlalchemy.orm import joinedload, subqueryload
 from datetime import datetime, timedelta, timezone, date
 import mercadopago
+from zoneinfo import ZoneInfo
+
+brazil_tz = ZoneInfo("America/Sao_Paulo")
 
 security_bp = Blueprint("security", __name__)
 
@@ -371,11 +374,11 @@ def mercadopago_webhook():
                 transaction.is_finished = True
                 transaction.mp_transaction_id = mp_transaction_id
                 transaction.receipt_url = receipt_url
-                transaction.create_date = datetime.now()
+                transaction.create_date =  datetime.now(brazil_tz)
 
                 new_contract = PlanContract(
-                    start_date = date.today(),
-                    end_date = date.today() + timedelta(days=transaction.payment_plan.duration_days),
+                    start_date = datetime.now(brazil_tz).date(),
+                    end_date =  datetime.now(brazil_tz).date() + timedelta(days=transaction.payment_plan.duration_days),
                     fk_user_ID = transaction.fk_user_ID,
                     fk_trainer_ID = transaction.fk_trainer_ID,
                     fk_payment_plan_ID = transaction.fk_payment_plan_ID,

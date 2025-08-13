@@ -3,6 +3,9 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.mysql import INTEGER
 from database.database_connection import Base
 from datetime import datetime
+from zoneinfo import ZoneInfo
+
+brazil_tz = ZoneInfo("America/Sao_Paulo")
 
 class Users(Base):
     __tablename__ = "users"
@@ -41,7 +44,7 @@ class PlanContract(Base):
     __tablename__ = "plan_contract"
 
     ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
-    start_date = Column(DATE, nullable=False, default=datetime.now)
+    start_date = Column(DATE, nullable=False, default=lambda: datetime.now(brazil_tz).date())
     end_date = Column(DATE, nullable=False)
     fk_contract_status_ID = Column(INTEGER(unsigned=True), ForeignKey("contract_status.ID"), index=True, nullable=False)
     fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="CASCADE"), index=True, nullable=False)

@@ -3,6 +3,9 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.mysql import TINYINT, SMALLINT, INTEGER, FLOAT, DECIMAL
 from .database_connection import Base
 from datetime import datetime
+from zoneinfo import ZoneInfo
+
+brazil_tz = ZoneInfo("America/Sao_Paulo")
 
 class Media(Base):
     __tablename__ = "media"
@@ -81,7 +84,7 @@ class Rating(Base):
     ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     rating = Column(TINYINT(unsigned=True), nullable=False)   
     comment = Column(String(255))
-    create_date = Column(DATE, nullable=False, default=datetime.now)
+    create_date = Column(DATE, nullable=False, default=lambda: datetime.now(brazil_tz).date())
     likes_number = Column(INTEGER(unsigned=True), default=0, nullable=False) 
     fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="SET NULL"), index=True)
     fk_trainer_ID = Column(INTEGER(unsigned=True), ForeignKey("trainer.ID", ondelete="CASCADE"), index=True, nullable=False)
@@ -109,7 +112,7 @@ class Complaint(Base):
 
     ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     reason = Column(String(255))
-    create_date = Column(DATE, nullable=False, default=datetime.now)
+    create_date = Column(DATE, nullable=False, default=lambda: datetime.now(brazil_tz).date())
     likes_number = Column(INTEGER(unsigned=True), default=0, nullable=False) 
     fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="SET NULL"), index=True)
     fk_trainer_ID = Column(INTEGER(unsigned=True), ForeignKey("trainer.ID", ondelete="CASCADE"), index=True, nullable=False)
@@ -136,7 +139,7 @@ class SaveTrainer(Base):
     __tablename__ = "save_trainer"
 
     ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
-    create_date = Column(DATE, nullable=False, default=datetime.now)
+    create_date = Column(DATE, nullable=False, default=lambda: datetime.now(brazil_tz).date())
     fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="CASCADE"), index=True, nullable=False)
     fk_trainer_ID = Column(INTEGER(unsigned=True), ForeignKey("trainer.ID", ondelete="CASCADE"), index=True, nullable=False)
 
@@ -404,7 +407,7 @@ class PaymentTransaction(Base):
 
     ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     amount = Column(DECIMAL(7, 2, unsigned=True), nullable=False)
-    create_date = Column(DATETIME, nullable=False, default=datetime.now)
+    create_date = Column(DATETIME, nullable=False, default=lambda: datetime.now(brazil_tz))
     is_finished = Column(Boolean, nullable=False, default=False)
     mp_preference_id = Column(String(100), unique=True)
     mp_transaction_id = Column(String(100), unique=True)
@@ -428,7 +431,7 @@ class PlanContract(Base):
     __tablename__ = "plan_contract"
 
     ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
-    start_date = Column(DATE, nullable=False, default=datetime.now)
+    start_date = Column(DATE, nullable=False, default=lambda: datetime.now(brazil_tz).date())
     end_date = Column(DATE, nullable=False)
     fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="SET NULL"), index=True)
     fk_trainer_ID = Column(INTEGER(unsigned=True), ForeignKey("trainer.ID", ondelete="SET NULL"), index=True)
@@ -493,7 +496,7 @@ class Chat(Base):
     __tablename__ = "chat"
 
     ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
-    update_date = Column(DATETIME, nullable=False, default=datetime.now, onupdate=func.now())
+    update_date = Column(DATETIME, nullable=False, default=lambda: datetime.now(brazil_tz), onupdate=func.now())
     fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="SET NULL"), index=True)
     fk_trainer_ID = Column(INTEGER(unsigned=True), ForeignKey("trainer.ID", ondelete="SET NULL"), index=True)
     
@@ -513,7 +516,7 @@ class Message(Base):
     content = Column(TEXT, nullable=False)
     is_from_trainer = Column(Boolean, nullable=False)
     is_viewed = Column(Boolean, nullable=False)
-    create_date = Column(DATETIME, nullable=False, default=datetime.now)
+    create_date = Column(DATETIME, nullable=False, default=lambda: datetime.now(brazil_tz))
     fk_chat_ID = Column(INTEGER(unsigned=True), ForeignKey("chat.ID", ondelete="CASCADE"), index=True, nullable=False)
     
     chat = relationship("Chat", back_populates="messages")
@@ -523,7 +526,7 @@ class BodyCompositionExam(Base):
 
     ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     url = Column(String(255), nullable=False, unique=True)
-    create_date = Column(DATETIME, nullable=False, default=datetime.now)
+    create_date = Column(DATETIME, nullable=False, default=lambda: datetime.now(brazil_tz))
     fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="CASCADE"), index=True, nullable=False)
     
     user = relationship("Users", back_populates="body_composition_exams")
@@ -534,7 +537,7 @@ class BodyCompositionExamSend(Base):
     __tablename__ = "body_composition_exam_send"
 
     ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
-    send_date = Column(DATETIME, nullable=False, default=datetime.now)
+    send_date = Column(DATETIME, nullable=False, default=lambda: datetime.now(brazil_tz))
     fk_body_composition_exam_ID = Column(INTEGER(unsigned=True), ForeignKey("body_composition_exam.ID", ondelete="CASCADE"), index=True, nullable=False)
     fk_trainer_ID = Column(INTEGER(unsigned=True), ForeignKey("trainer.ID", ondelete="CASCADE"), index=True, nullable=False)
     
