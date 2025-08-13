@@ -6,6 +6,8 @@ from ..exceptions.api_error import ApiError
 from flask_jwt_extended import get_jwt_identity, get_jwt
 from flask_jwt_extended import jwt_required
 from ..utils.message_codes import MessageCodes
+import json
+from ..chatbot.response import get_chatbot_response
 
 user_bp = Blueprint("user", __name__, url_prefix="/users")
 
@@ -253,3 +255,28 @@ def modify_photo():
 
             return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
 
+@user_bp.route("/chatbot", methods=["POST"])
+@jwt_required()
+def chatbot():
+    error_message = "Erro na rota do chatbot"
+
+    try:
+        data = request.form
+
+        history = json.loads(data.get("history"))
+
+        history.append({"role": "user", "content": data.get("message")})
+
+        response = get_chatbot_response(history, data.get("isEnglish") == "true")
+
+        return jsonify({"message": response}), 201
+            
+    except ApiError as e:
+        print(f"{error_message}: {e}")
+
+        return jsonify({"message": str(e)}), e.status_code
+
+    except Exception as e:
+        print(f"{error_message}: {e}")
+
+        return jsonify({"message": MessageCodes.ERROR_SERVER}), 500

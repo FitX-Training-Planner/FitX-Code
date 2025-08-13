@@ -41,6 +41,7 @@ function TrainerPayments() {
 
     const contractsFilters = useMemo(() => {
         return [
+            { value: "actives", text: t("actives") },
             { value: "newest", text: t("newests") },
             { value: "oldest", text: t("oldests") },
             { value: "highest_value", text: t("highestValue") },

@@ -673,6 +673,7 @@ def get_partial_trainer_contracts(db, offset, limit, sort, trainer_id):
             db.query(PlanContract)
             .join(PaymentTransaction, isouter=True)
             .join(PaymentPlan, isouter=True)
+            .join(ContractStatus)
             .options(
                 joinedload(PlanContract.payment_plan),
                 joinedload(PlanContract.payment_transaction),
@@ -683,7 +684,10 @@ def get_partial_trainer_contracts(db, offset, limit, sort, trainer_id):
             .filter(PlanContract.fk_trainer_ID == trainer_id)
         )
 
-        if sort == "newest":
+        if sort == "actives":
+            query = query.filter(ContractStatus.name == "Ativo").order_by(desc(PlanContract.start_date))
+
+        elif sort == "newest":
             query = query.order_by(desc(PlanContract.start_date))
 
         elif sort == "oldest":

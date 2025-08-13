@@ -3,42 +3,13 @@ from ..exceptions.api_error import ApiError
 from ..services.client import get_client_training_contract, cancel_contract, create_payment, get_client_saved_trainers
 from flask_jwt_extended import jwt_required
 from ..utils.client_decorator import only_client
-from ..utils.openai import get_chatbot_response
 from flask import request, jsonify
 from ..database.context_manager import get_db
 from ..exceptions.api_error import ApiError
 from flask_jwt_extended import get_jwt_identity
-import json
 from ..utils.message_codes import MessageCodes
 
 client_bp = Blueprint("client", __name__)
-
-@client_bp.route("/chatbot", methods=["POST"])
-@jwt_required()
-@only_client
-def chatbot():
-    error_message = "Erro na rota do chatbot"
-
-    try:
-        data = request.form
-
-        history = json.loads(data.get("history"))
-
-        history.append({"role": "user", "content": data.get("message")})
-
-        response = get_chatbot_response(history, data.get("isEnglish") == "true")
-
-        return jsonify({"message": response}), 201
-            
-    except ApiError as e:
-        print(f"{error_message}: {e}")
-
-        return jsonify({"message": str(e)}), e.status_code
-
-    except Exception as e:
-        print(f"{error_message}: {e}")
-
-        return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
 
 @client_bp.route("/me/training-contract", methods=["GET"])
 @jwt_required()

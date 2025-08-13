@@ -85,6 +85,31 @@ function CommonNavBar({
                     </li>
 
                     {children}
+
+                    <li
+                        onClick={() => navigate("/questions-chatbot")}
+                        className={isActive("/questions-chatbot") ? styles.selected : undefined}
+                    >
+                        <Stack
+                            justifyContent="start"
+                            direction="row"
+                            className={styles.nav_bar_item}
+                        >
+                            <Stack
+                                alignItems="center"
+                                className={styles.nav_bar_item_icon}
+                            >
+                                <ClickableIcon
+                                    iconSrc="/images/icons/chatbot.png"
+                                    name="Coachy Chatbot"
+                                />
+                            </Stack>
+        
+                            <span>
+                                {t("questionsWithCoachy")}
+                            </span>
+                        </Stack>
+                    </li>
                 </ul>
             </Stack>
 

@@ -1,27 +1,17 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import NavBarLayout from "../containers/NavBarLayout";
 import ChatLayout from "../layout/ChatLayout";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { verifyIsClient } from "../../utils/requests/verifyUserType";
 import api from "../../api/axios";
 import { validateMessage } from "../../utils/validators/formValidator";
 import useRequest from "../../hooks/useRequest";
-import { useSystemMessage } from "../../app/useSystemMessage";
 import { useTranslation } from "react-i18next";
 
 function ChatBot() {
     const { t } = useTranslation();
-
-    const navigate = useNavigate();
-    
-    const hasRun = useRef(false);
-
-    const { notify } = useSystemMessage();
     
     const user = useSelector(state => state.user);
 
-    const { request: isClient } = useRequest();
     const { request: postMessage, loading } = useRequest();
 
     const [chatFormContext, setChatFormContext] = useState({
@@ -39,20 +29,6 @@ function ChatBot() {
         ]
     });
     const [messageError, setMessageError] = useState(false);
-    
-    useEffect(() => {
-        if (hasRun.current) return;
-                
-        hasRun.current = true;
-
-        const verifyClient = async () => {
-            const success = await verifyIsClient(isClient, user, navigate, notify, t);
-
-            if (!success) return;
-        }
-
-        verifyClient();
-    }, [navigate, notify, isClient, user, t]);
 
     const handleOnSubmit = useCallback((e) => {
         e.preventDefault();
@@ -88,7 +64,7 @@ function ChatBot() {
         }));
 
         const postMsg = () => {
-            return api.post("/chatbot", formData);
+            return api.post("/users/chatbot", formData);
         };
         
         const handleOnPostMsgSuccess = (data) => {
