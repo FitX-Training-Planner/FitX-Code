@@ -10,6 +10,7 @@ from flask_mail import Mail
 import os
 from openai import OpenAI
 from .utils.message_codes import MessageCodes
+import json
 
 bcrypt = Bcrypt()
 
@@ -20,6 +21,21 @@ openai_client = OpenAI(api_key=OpenaiConfig.OPENAI_API_KEY)
 redis_client = redis.StrictRedis(**RedisConfig.settings)
 
 jwt = JWTManager()
+
+mail = Mail()
+
+def load_embeddings(path):
+    with open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    return data
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+PT_EMBEDDINGS_PATH = os.path.join(BASE_DIR, "chatbot", "data", "embeddings", "pt_embeddings.json")
+EN_EMBEDDINGS_PATH = os.path.join(BASE_DIR, "chatbot", "data", "embeddings", "en_embeddings.json")
+
+pt_embeddings = load_embeddings(PT_EMBEDDINGS_PATH)
+en_embeddings = load_embeddings(EN_EMBEDDINGS_PATH)
 
 @jwt.unauthorized_loader
 def custom_unauthorized_response(callback):
@@ -38,8 +54,6 @@ def custom_expired_token_response(jwt_header, jwt_payload):
     print("Erro: Token expirado.")
 
     return jsonify({"message": MessageCodes.INVALID_TOKEN}), 401
-
-mail = Mail()
 
 def create_app():
     app = Flask(__name__, template_folder=os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'templates'))
