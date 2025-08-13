@@ -9,7 +9,8 @@ function MessageInput({
     alertMessage,
     error,
     varTextColor = "--text-color", 
-    placeholder 
+    placeholder,
+    handleKeyDown
 }) {
     return (
         <Stack 
@@ -24,6 +25,7 @@ function MessageInput({
                 onChange={handleChange}
                 maxLength={maxLength}
                 style={{ color: `var(${varTextColor})` }}
+                onKeyDown={handleKeyDown}
             />
 
             {alertMessage &&

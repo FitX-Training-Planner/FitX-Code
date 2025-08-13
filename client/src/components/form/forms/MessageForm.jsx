@@ -30,6 +30,12 @@ function MessageForm({
                     maxLength={isChatBot ? 100 : 1000}
                     varTextColor="--white-color"
                     placeholder={t("messagePlaceholder")}
+                    handleKeyDown={(e) => {
+                        if (e.key === "Enter" && !e.shiftKey) {
+                            e.preventDefault();
+                            handleSubmit(e);
+                        }
+                    }}
                 />
 
                 <Stack
