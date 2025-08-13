@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import Stack from "../containers/Stack";
-import { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import NavBarLayout from "../containers/NavBarLayout";
 import Title from "../text/Title";
 import SmallTrainerProfessionalCard from "../cards/user/SmallTrainerProfessionalCard";
@@ -125,6 +125,7 @@ function SavedTrainers() {
             <main>
                 <Stack
                     gap="4em"
+                    extraStyles={{ padding: "1em" }}
                 >
                     <Stack>
                         <Title
@@ -140,8 +141,7 @@ function SavedTrainers() {
                     </Stack>
 
                     <Stack
-                        direction="row"
-                        justifyContent="center"
+                        extraStyles={{ textAlign: "center" }}
                     >
                         <Alert />
 

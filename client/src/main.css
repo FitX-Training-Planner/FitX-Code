@@ -108,6 +108,8 @@ form {
 input,
 textarea {
   outline: none;
+  font-family: var(--fonts-2);
+  font-variant-numeric: lining-nums;
 }
 
 ul {

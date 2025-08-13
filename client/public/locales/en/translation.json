@@ -108,7 +108,7 @@
     "darkThemeDescription": "Enable this to have a darker interface colors.",
     "english": "English",
     "englishDescription": "Enable this so the app text is in English.",
-    "signUpAsTrainer": "I want to sign up as a trainer.",
+    "signUpAsTrainer": "I want to sign up as a trainer",
     "photoAlert": "Select a JPG, JPEG, PNG, or WEBP photo of up to 2mb.",
     "trainerProfile": "Professional Registration",
     "crefDescription": "Add your CREF number to convey more credibility to your clients!",
@@ -554,6 +554,7 @@
     "errorSavedTrainers": "Failed to load saved trainers!",
     "noSavedTrainers": "No trainer was saved",
     "someDeactiveProfilesAlert": "Some profiles may not be displayed because they're deactive.",
+    "actives": "Actives",
     "databaseData": {
         "muscleGroups": {
             "1": {

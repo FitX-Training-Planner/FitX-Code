@@ -27,12 +27,11 @@ function ClientHome() {
     
     const hasRun = useRef(false);
     
-    const { notify, confirm } = useSystemMessage();
+    const { notify } = useSystemMessage();
     
     const { request: isClient } = useRequest();
     const { request: getTrainers, loading: trainersLoading } = useRequest();
     const { request: getClientTraining, loading: trainingLoading } = useRequest();
-    const { request: cancelClientContract } = useRequest();
     const { request: saveTrainerReq, loading: saveTrainerLoading } = useRequest();
             
     const user = useSelector(state => state.user);
@@ -48,26 +47,6 @@ function ClientHome() {
             { value: "best_value", text: t("bestValues") }
         ]
     }, [t]);  
-    const clientTrainingDefault = useMemo(() => {
-        return {
-            loaded: false,
-            trainer: {
-                ID: 1,
-                name: "Paulo Henrique",
-                photoUrl: "/images/icons/chatbot2.png",
-                crefNumber: "123456-P"
-            },
-            trainingPlan: {
-                ID: 1,
-                name: "Plano 1",
-            },
-            contract: {
-                ID: 1,
-                startDate: new Date("2025-05-04"),
-                endDate: new Date("2026-05-04")
-            }
-        }
-    }, []);
 
     const [clientTraining, setClientTraining] = useState(null);
     const [clientTrainingError, setClientTrainingError] = useState(false);
@@ -170,34 +149,7 @@ function ClientHome() {
         }
 
         fetchData();
-    }, [navigate, notify, user, trainersError, trainers, trainersOffset, isClient, loadTrainers, activeTrainerFilter.value, getClientTraining, t, clientTrainingDefault]);
-
-    const cancelContract = useCallback(async (e) => {
-        e.preventDefault();
-
-        const userConfirmed = await confirm(t("cancelContractConfirm"));
-        
-        if (userConfirmed) {
-            const cancelContract = () => {
-                return api.put(`/me/active-contract`);
-            }
-        
-            const handleOnCancelContractSuccess = () => {
-                setClientTraining(clientTrainingDefault);
-
-                cleanCacheData(clientTrainingStorageKey)
-            };
-
-            cancelClientContract(
-                cancelContract, 
-                handleOnCancelContractSuccess, 
-                () => undefined, 
-                t("loadingCancelContract"), 
-                t("successCancelContract"),
-                t("errorCancelContract")
-            );
-        }
-    }, [cancelClientContract, clientTrainingDefault, confirm, t]);
+    }, [navigate, notify, user, trainersError, trainers, trainersOffset, isClient, loadTrainers, activeTrainerFilter.value, getClientTraining, t]);
     
     const handleOnSaveTrainer = useCallback(ID => {
         if (!saveTrainerLoading) {
@@ -304,7 +256,6 @@ function ClientHome() {
                                     trainingPlanName={clientTraining.trainingPlan?.name} 
                                     contractStartDate={clientTraining.contract?.startDate} 
                                     contractEndDate={clientTraining.contract?.endDate} 
-                                    handleCancelContract={cancelContract}
                                 />
                             )}
                         </Stack>

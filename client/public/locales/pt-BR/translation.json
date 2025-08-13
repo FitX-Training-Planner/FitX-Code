@@ -553,5 +553,6 @@
     "loadingSavedTrainers": "Recuperando treinadores salvos",
     "errorSavedTrainers": "Falha ao recuperar treinadores salvos!",
     "noSavedTrainers": "Nenhum treinador foi salvo",
-    "someDeactiveProfilesAlert": "Alguns perfis podem não ser exibidos por estarem desativados."
+    "someDeactiveProfilesAlert": "Alguns perfis podem não ser exibidos por estarem desativados.",
+    "actives": "Ativos"
 }

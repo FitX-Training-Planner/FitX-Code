@@ -131,14 +131,16 @@ function ClientTrainingContractCard({
                                 </p>
                             </Stack>
 
-                            <form
-                                onSubmit={handleCancelContract}
-                            >
-                                <SubmitFormButton
-                                    text={t("cancelContract")}
-                                    varBgColor="--alert-color"
-                                />
-                            </form>
+                            {handleCancelContract && (
+                                <form
+                                    onSubmit={handleCancelContract}
+                                >
+                                    <SubmitFormButton
+                                        text={t("cancelContract")}
+                                        varBgColor="--alert-color"
+                                    />
+                                </form>
+                            )}
                         </Stack>
                     </Stack>
                 </Stack>

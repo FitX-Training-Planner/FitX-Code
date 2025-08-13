@@ -23,6 +23,9 @@ import PhotoInput from "../form/fields/PhotoInput";
 import BackButton from "../form/buttons/BackButton";
 import Alert from "../messages/Alert";
 import MercadopagoConnectButton from "../layout/MercadopagoConnectButton";
+import ClientTrainingContractCard from "../cards/user/ClientTrainingContractCard";
+import { cleanCacheData, getCacheData, setCacheData } from "../../utils/cache/operations";
+import { verifyIsClient, verifyIsTrainer } from "../../utils/requests/verifyUserType";
 
 function MyProfile() {
     const { t } = useTranslation();
@@ -41,6 +44,7 @@ function MyProfile() {
 
     const { request: getRatings, loading: ratingsLoading } = useRequest();
     const { request: getComplaints, loading: complaintsLoading } = useRequest();
+    const { request: cancelClientContract } = useRequest();
     const { request: getTrainerInfoReq } = useRequest();
     const { request: getUserEmailReq } = useRequest();
     const { request: deactivateProfileReq } = useRequest();
@@ -53,9 +57,13 @@ function MyProfile() {
     const { request: getIdReq } = useRequest();
     const { request: verifyEmailReq } = useRequest();
     const { request: toggleContractsPauseReq } = useRequest();
+    const { request: isClient } = useRequest();
+    const { request: isTrainer } = useRequest();
+    const { request: getClientTraining, loading: trainingLoading } = useRequest();
 
     const user = useSelector(state => state.user);
 
+    const clientTrainingStorageKey = "clientTraining";
     const ratingsLimit = 10;
     const complaintsLimit = 10;
 
@@ -91,6 +99,8 @@ function MyProfile() {
     const [complaintsOffset, setComplaintsOffset] = useState(0);
     const [modifyUserError, setModifyUserError] = useState(false);
     const [modifyTrainerError, setModifyTrainerError] = useState(false);
+    const [clientTraining, setClientTraining] = useState(null);
+    const [clientTrainingError, setClientTrainingError] = useState(false);
 
     const loadRatings = useCallback((hasError, updatedRatings, offset) => {
         if (hasError) return;
@@ -209,34 +219,73 @@ function MyProfile() {
                 );
             }
 
-            if (user.config.isClient) return;
+            if (user.config.isClient) {
+                const success = await verifyIsClient(isClient, user, navigate, notify, t);
 
-            const getTrainerInfo = () => {
-                return api.get(`/trainers/me/base-info`);
+                if (!success) return;
+
+                const cachedData = getCacheData(clientTrainingStorageKey);
+                
+                if (cachedData) {
+                    setClientTraining(cachedData);
+                    
+                    return;
+                }
+                
+                const getTraining = () => {
+                    return api.get(`/me/training-contract`);
+                }
+                
+                const handleOnGetClientTrainingSuccess = (data) => {
+                    setClientTraining(data);
+
+                    setCacheData(clientTrainingStorageKey, data);
+                };
+            
+                const handleOnGetClientTrainingError = () => {
+                    setClientTrainingError(true);
+                };
+
+                getClientTraining(
+                    getTraining, 
+                    handleOnGetClientTrainingSuccess, 
+                    handleOnGetClientTrainingError, 
+                    undefined, 
+                    undefined, 
+                    t("errorTrainingContract")
+                );
+            } else {
+                const success = await verifyIsTrainer(isTrainer, user, navigate, notify, t);
+
+                if (!success) return;
+
+                const getTrainerInfo = () => {
+                    return api.get(`/trainers/me/base-info`);
+                }
+            
+                const handleOnGetTrainerInfoSuccess = (data) => {
+                    setTrainerInfo(prevInfo => ({ ...prevInfo, ...data }));
+    
+                    setPrevMaxActiveContracts(data.maxActiveContracts);
+                };
+    
+                getTrainerInfoReq(
+                    getTrainerInfo, 
+                    handleOnGetTrainerInfoSuccess, 
+                    () => undefined, 
+                    t("loadingTrainer"), 
+                    undefined, 
+                    t("errorLoadingTrainer")
+                );
+    
+                loadRatings(ratingsError, ratings, ratingsOffset);
+    
+                loadComplaints(complaintsError, complaints, complaintsOffset);
             }
-        
-            const handleOnGetTrainerInfoSuccess = (data) => {
-                setTrainerInfo(prevInfo => ({ ...prevInfo, ...data }));
-
-                setPrevMaxActiveContracts(data.maxActiveContracts);
-            };
-
-            getTrainerInfoReq(
-                getTrainerInfo, 
-                handleOnGetTrainerInfoSuccess, 
-                () => undefined, 
-                t("loadingTrainer"), 
-                undefined, 
-                t("errorLoadingTrainer")
-            );
-
-            loadRatings(ratingsError, ratings, ratingsOffset);
-
-            loadComplaints(complaintsError, complaints, complaintsOffset);
         }
 
         fetchData();
-    }, [complaints, complaintsError, complaintsOffset, getTrainerInfoReq, getUserEmailReq, loadComplaints, loadRatings, location.state?.updatedEmail, navigate, ratings, ratingsError, ratingsOffset, t, user.config.isClient]);
+    }, [complaints, complaintsError, complaintsOffset, getClientTraining, getTrainerInfoReq, getUserEmailReq, isClient, isTrainer, loadComplaints, loadRatings, location.state?.updatedEmail, navigate, notify, ratings, ratingsError, ratingsOffset, t, user, user.config.isClient]);
 
     const handleOnToggleContractsPaused = useCallback(async (e) => {
         e.preventDefault();
@@ -552,6 +601,33 @@ function MyProfile() {
         );
     }, [getIdReq, t]);
 
+    const cancelContract = useCallback(async (e) => {
+        e.preventDefault();
+
+        const userConfirmed = await confirm(t("cancelContractConfirm"));
+        
+        if (userConfirmed) {
+            const cancelContract = () => {
+                return api.put(`/me/active-contract`);
+            }
+        
+            const handleOnCancelContractSuccess = () => {
+                setClientTraining(null);
+
+                cleanCacheData(clientTrainingStorageKey);
+            };
+
+            cancelClientContract(
+                cancelContract, 
+                handleOnCancelContractSuccess, 
+                () => undefined, 
+                t("loadingCancelContract"), 
+                t("successCancelContract"),
+                t("errorCancelContract")
+            );
+        }
+    }, [cancelClientContract, confirm, t]);
+
     const userHasChanged = useMemo(() => {
         if (
             usedEmail !== changedUser.email ||
@@ -737,7 +813,7 @@ function MyProfile() {
                     <Stack
                         gap="3em"
                     >
-                        {!user.config.isClient && (
+                        {!user.config.isClient ? (
                             <form
                                 onSubmit={handleOnToggleContractsPaused}
                             >   
@@ -761,7 +837,44 @@ function MyProfile() {
                                     )}
                                 </Stack>
                             </form>
+                        ) : (
+                            <Stack>
+                                <Title
+                                    headingNumber={2}
+                                    text={t("yourTraining")}
+                                />
 
+                                {trainingLoading || !clientTraining || clientTrainingError ? (
+                                    clientTrainingError ? (
+                                        <p>
+                                            {t("errorOcurredTrainingContract")}
+
+                                            <br/>
+                                            
+                                            {t("reloadOrTryLater")}
+                                        </p>
+                                    ) : (
+                                        <p>
+                                            {t("noContractActive")}
+
+                                            <br/>
+
+                                            {t("searchTrainersInstruction")}
+                                        </p>
+                                    )
+                                ) : (
+                                    <ClientTrainingContractCard
+                                        trainerName={clientTraining.trainer?.name} 
+                                        trainerPhotoUrl={clientTraining.trainer?.photoUrl} 
+                                        trainerCrefNumber={clientTraining.trainer?.crefNumber} 
+                                        trainingPlanID={clientTraining.trainingPlan?.ID}
+                                        trainingPlanName={clientTraining.trainingPlan?.name} 
+                                        contractStartDate={clientTraining.contract?.startDate} 
+                                        contractEndDate={clientTraining.contract?.endDate} 
+                                        handleCancelContract={cancelContract}
+                                    />
+                                )}
+                            </Stack>
                         )}
 
                         <Stack>
