@@ -18,7 +18,7 @@ function TrainingPlanInfo({
         <Stack>
             <Stack
                 gap="0.2em"
-                className={styles.item_title}
+                className={styles.training_plan_title}
                 extraStyles={{ backgroundColor: `var${bgTitleColor}` }}
             >          
                 <Title

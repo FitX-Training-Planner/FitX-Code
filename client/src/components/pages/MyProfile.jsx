@@ -73,7 +73,7 @@ function MyProfile() {
         crefNumber: user.crefNumber,
         newCrefNumber: "",
         newCrefUF: "",
-        description: user.description,
+        description: user.description || "",
         rate: "",
         ratesNumber: "",
         contractsNumber: "",
@@ -495,7 +495,7 @@ function MyProfile() {
        
         const formData = new FormData();
 
-        if (user.description !== trainerInfo.description) formData.append("description", trainerInfo.description);
+        if ((trainerInfo.description ?? "") !== (user.description ?? "")) formData.append("description", trainerInfo.description);
         
         if (prevMaxActiveContracts !== trainerInfo.maxActiveContracts) formData.append("maxActiveContracts", trainerInfo.maxActiveContracts);
         

@@ -40,3 +40,8 @@
 .descriptioned_item > span:first-child {
     font-weight: bold;
 }
+
+.training_plan_title {
+    background-color: var(--theme-color);
+    padding: 1em;
+}

@@ -51,7 +51,7 @@ function SmallTrainerProfessionalCard({
             </Stack>
 
             <Stack
-                gap="0.5em"
+                // gap="0.5em"
                 alignItems="start"
                 direction={width <= 640 ? "column" : "row"}
                 className={styles.professional_name_container}
@@ -75,7 +75,7 @@ function SmallTrainerProfessionalCard({
                 {crefNumber && (
                     <Stack
                         direction={width <= 440 ? "column" : "row"}
-                        justifyContent="start"
+                        justifyContent={width <= 640 ? "center" : "end"}
                         gap="0.5em"
                     >
                         CREF

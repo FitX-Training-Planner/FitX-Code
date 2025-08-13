@@ -69,6 +69,7 @@ function TrainingPlanExpandedCard({
 
                                                     <Stack
                                                         gap="2em"
+                                                        className={styles.steps}
                                                     >
                                                         {[...trainingDay.trainingSteps]
                                                             .sort((a, b) => a.orderInDay - b.orderInDay)
