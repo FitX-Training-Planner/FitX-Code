@@ -41,12 +41,6 @@
     position: relative;
 }
 
-.messages > .message.from_trainer {
-    border-radius: 10px 10px 0 10px;
-    margin-right: 0;
-    margin-left: auto;
-}
-
 .messages > .message::after {
     position: absolute;
     content: "";
@@ -59,7 +53,13 @@
     width: 10px;
 }
 
-.messages > .message.from_trainer::after {
+.messages > .message.from_me {
+    border-radius: 10px 10px 0 10px;
+    margin-right: 0;
+    margin-left: auto;
+}
+
+.messages > .message.from_me::after {
     left: 100%;
     right: unset;
     border-radius: 0 0 0 100px;

@@ -96,7 +96,7 @@ function ChatLayout({
                             key={index}
                         >
                             <Stack
-                                className={`${styles.message} ${message.isFromTrainer ? styles.from_trainer : undefined}`}
+                                className={`${styles.message} ${message.isFromMe ? styles.from_me : undefined}`}
                                 extraStyles={{ maxWidth: width <= 440 ? "90%" : "60%" }}
                                 direction="row"
                                 alignItems="start"
@@ -118,7 +118,7 @@ function ChatLayout({
                                         </span>
 
                                         <span>
-                                            {message.isFromTrainer ? (isChatBot ? "Coachy" : chat.contact?.name) : t("you")}
+                                            {!message.isFromMe ? (isChatBot ? "Coachy" : chat.contact?.name) : t("you")}
                                         </span>
                                     </Stack>
                                 </Stack>

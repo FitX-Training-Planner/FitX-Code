@@ -24,7 +24,7 @@ function ChatBot() {
                     ${t("hi")}, ${user.name}! ${t("chatbotDescription")} : )
                 `,
                 createDate: new Date(),
-                isFromTrainer: true
+                isFromMe: false
             }
         ]
     });
@@ -39,8 +39,8 @@ function ChatBot() {
 
         formData.append("message", chatFormContext.message);
         formData.append("history", JSON.stringify(
-            chat.messages.map(message => ({
-                role: message.isFromTrainer ? "assistant" : "user",
+            chat.messages.slice(-9).map(message => ({
+                role: message.isFromMe ? "user" : "assistant",
                 content: message.content.trim()
             }))
         ));
@@ -53,7 +53,7 @@ function ChatBot() {
                 {
                     content: chatFormContext.message,
                     createDate: new Date(),
-                    isFromTrainer: false
+                    isFromMe: true
                 }
             ]
         }));
@@ -75,7 +75,7 @@ function ChatBot() {
                     {
                         content: data.message,
                         createDate: new Date(),
-                        isFromTrainer: true
+                        isFromMe: false
                     }
                 ]
             }));

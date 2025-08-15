@@ -267,6 +267,8 @@ def chatbot():
 
         history.append({"role": "user", "content": data.get("message")})
 
+        history = history[-10:]
+
         response = get_chatbot_response(history, data.get("isEnglish") == "true")
 
         return jsonify({"message": response}), 201
