@@ -3,7 +3,6 @@
     padding: 0.5em;
     border-radius: 10px;
     transition: var(--fast-transition);
-    color: var(--text-color);
 }
 
 .submit_form_button:hover {

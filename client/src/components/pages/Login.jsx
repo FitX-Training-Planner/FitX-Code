@@ -182,7 +182,7 @@ function Login() {
                             <Title
                                 headingNumber={2}
                                 text={t("welcome")}
-                                varColor="--dark-color"
+                                varColor="--white-color"
                                 textAlign="start"
                             />
 

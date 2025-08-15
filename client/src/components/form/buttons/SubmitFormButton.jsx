@@ -2,7 +2,8 @@ import styles from "./SubmitFormButton.module.css";
 
 function SubmitFormButton({ 
     text, 
-    varBgColor = "--theme-color" 
+    varBgColor = "--theme-color",
+    varColor = "--white-color"
 }) {
     return (
         <button
@@ -11,7 +12,7 @@ function SubmitFormButton({
                 ${styles.submit_form_button} 
                 ${varBgColor !== "--theme-color" || varBgColor !== "--dark-theme-color" ? styles.transitioned : undefined}
             `}
-            style={{ backgroundColor: `var(${varBgColor})` }}
+            style={{ backgroundColor: `var(${varBgColor})`, color: `var(${varColor})` }}
         >
             {text}
         </button>

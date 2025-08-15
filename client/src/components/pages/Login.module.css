@@ -21,7 +21,7 @@
 
 .welcome_title {
     text-shadow: 1px 1px 2px var(--dark-theme-color);
-    color: black;
+    color: var(--white-color);
 }
 
 .welcome_title > p {
