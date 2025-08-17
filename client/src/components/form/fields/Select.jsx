@@ -12,7 +12,8 @@ function Select({
     value = "",
     handleChange,
     icon,
-    options = []
+    options = [],
+    className
 }) {
     const { t } = useTranslation();
 
@@ -65,21 +66,25 @@ function Select({
                 gap="0.2em"
                 alignItems="start"
             >
-                <label htmlFor={name}>
-                    {icon && 
-                        <img 
-                            src={icon} 
-                            alt=""
-                        />
-                    }
+                {labelText && (
+                    <label 
+                        htmlFor={name}
+                    >
+                        {icon && 
+                            <img 
+                                src={icon} 
+                                alt=""
+                            />
+                        }
 
-                    <p>
-                        {labelText}
-                    </p>
-                </label>
+                        <p>
+                            {labelText}
+                        </p>
+                    </label>
+                )}
 
                 <div 
-                    className={styles.select}
+                    className={`${styles.select} ${className}`}
                 >
                     <div
                         onClick={() => setIsOpen(prevIsOpen => !prevIsOpen)}

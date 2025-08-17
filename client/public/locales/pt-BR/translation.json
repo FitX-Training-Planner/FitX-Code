@@ -54,7 +54,8 @@
         "ERROR_LIMIT_SAVED_TRAINERS": "Você atingiu o limite de 10 perfis de treinadores salvos.",
         "ERROR_LIMIT_PAYMENT_PLANS": "Você atingiu o limite de 6 planos de pagamento.",
         "ERROR_LIMIT_TRAINING_PLANS": "Você atingiu o limite de 20 planos de treinamento.",
-        "ERROR_ALREADY_EXISTS_MP_USER_ID": "Já existe uma conta FitX conectada a esse usuário do Mercado Pago."
+        "ERROR_ALREADY_EXISTS_MP_USER_ID": "Já existe uma conta FitX conectada a esse usuário do Mercado Pago.",
+        "INVALID_DATE_FORMAT": "A data está em um formato inválido."
     },
     "loadingCheckData": "Checando dados",
     "errorLogin": "Falha ao logar!",
@@ -554,5 +555,19 @@
     "errorSavedTrainers": "Falha ao recuperar treinadores salvos!",
     "noSavedTrainers": "Nenhum treinador foi salvo",
     "someDeactiveProfilesAlert": "Alguns perfis podem não ser exibidos por estarem desativados.",
-    "actives": "Ativos"
+    "actives": "Ativos",
+    "january": "Janeiro",
+    "february": "Fevereiro",
+    "march": "Março",
+    "april": "Abril",
+    "may": "Maio",
+    "june": "Junho",
+    "july": "Julho",
+    "august": "Agosto",
+    "september": "Setembro",
+    "october": "Outubro",
+    "november": "Novembro",
+    "december": "Dezembro",
+    "searchDateError": "Os campos de mês e ano precisam ter um valor se o campo de dia for preechido.",
+    "reload": "Recarregar"
 }

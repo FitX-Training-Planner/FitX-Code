@@ -1,0 +1,55 @@
+.date_input {
+    --border: 2px solid var(--theme-color);
+    --border-radius: 15px;
+    --gap: 0.2em;
+    --day-width: 3em;
+    --month-width: 7em;
+    --year-width: 10em;
+    width: calc(var(--day-width) + var(--month-width) + var(--year-width) + var(--gap) * 2);
+}
+
+.inputs_container {
+    width: min-content;   
+    gap: var(--gap) !important;
+}
+
+.inputs_container .input {
+    padding: 0.6em;
+    font-size: var(--text-size);
+    outline: none;
+    border: var(--border);
+    background-color: transparent;
+    text-align: center;
+}
+
+.input.day {
+    width: var(--day-width);
+    border-radius: var(--border-radius) 0 0 var(--border-radius);
+}
+
+.year_container {
+    width: max-content;
+}
+
+.input.year {
+    width: var(--month-width);
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+}
+
+.month {
+    width: var(--year-width);
+    border: var(--border);
+    text-align: center;
+}
+
+.date_input > p {
+    visibility: hidden;
+    font-size: var(--small-text-size);
+    width: 100%;
+}
+
+.visible,
+.date_input > p.visible {
+    color: var(--alert-color);
+    visibility: visible;
+}
