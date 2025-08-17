@@ -569,7 +569,8 @@
     "november": "November",
     "december": "December",
     "searchDateError": "The month and year fields must have a value if the day field is populated.",  
-    "reload": "Reload",  
+    "reload": "Reload",
+    "clear": "Clear",  
     "databaseData": {
         "muscleGroups": {
             "1": {

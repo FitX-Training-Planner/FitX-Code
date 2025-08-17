@@ -6,6 +6,7 @@ import Select from "./Select";
 import { handleOnChangeSelect, handleOnChangeTextField } from "../../../utils/handlers/changeHandlers";
 import { formattSecondsMinutesAndReps } from "../../../utils/formatters/training/formatOnChange";
 import SubmitFormButton from "../buttons/SubmitFormButton";
+import NonBackgroundButton from "../buttons/NonBackgroundButton";
 
 function DateInput({
     labelText,
@@ -128,16 +129,32 @@ function DateInput({
                     className={styles.inputs_container}
                     alignItems="start"
                 >
-                    <input
-                        className={`${styles.input} ${styles.day}`}
-                        type="text"
-                        name="day"
-                        id="day"
-                        placeholder={t("day")}
-                        value={dateValuesObject.day}
-                        onChange={(e) => handleOnChangeTextField(e, formattDay, undefined, dateValuesObject, setDateValuesObject, setError)}
-                        maxLength={2}
-                    />
+                    <Stack
+                        gap="0.2em"
+                        alignItems="center"
+                        className={styles.year_container}
+                    >
+                        <input
+                            className={`${styles.input} ${styles.day}`}
+                            type="text"
+                            name="day"
+                            id="day"
+                            placeholder={t("day")}
+                            value={dateValuesObject.day}
+                            onChange={(e) => handleOnChangeTextField(e, formattDay, undefined, dateValuesObject, setDateValuesObject, setError)}
+                            maxLength={2}
+                        />
+
+                        <NonBackgroundButton
+                            text={t("clear")}
+                            handleClick={() => setDateValuesObject({
+                                day: "",
+                                month: null,
+                                year: ""
+                            })}
+                            varColor="--light-theme-color"
+                        />
+                    </Stack>
 
                     <Select
                         name="month"

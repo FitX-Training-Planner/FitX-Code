@@ -569,5 +569,6 @@
     "november": "Novembro",
     "december": "Dezembro",
     "searchDateError": "Os campos de mês e ano precisam ter um valor se o campo de dia for preechido.",
-    "reload": "Recarregar"
+    "reload": "Recarregar",
+    "clear": "Limpar"
 }
