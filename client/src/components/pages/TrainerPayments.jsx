@@ -17,6 +17,7 @@ import FilterItemsLayout from "../containers/FilterItemsLayout";
 import SearchInput from "../form/fields/SearchInput";
 import { useTranslation } from "react-i18next";
 import PaymentPlansContainer from "../layout/PaymentPlansContainer";
+import DateInput from "../form/fields/dateInput";
 
 function TrainerPayments() {
     const { t } = useTranslation();
@@ -56,7 +57,13 @@ function TrainerPayments() {
     const [contractsError, setContractsError] = useState(false);
     const [contractsOffset, setContractsOffset] = useState(0);
     const [activeContractFilter, setActiveContractFilter] = useState(contractsFilters[0]);
-    const [contractsSearchText, setContractsSearchText] = useState("");
+    const [searchDate, setSearchDate] = useState({
+        day: "",
+        month: null,
+        year: "",
+        fullDate: ""
+    });
+    const [searchDateError, setSearchDateError] = useState(false);
     const [paymentPlans, setPaymentPlans] = useState([]);
     const [paymentPlansError, setPaymentPlansError] = useState(false);
 
@@ -74,7 +81,10 @@ function TrainerPayments() {
                 params: { 
                     offset: offset, 
                     limit: contractsLimit, 
-                    sort: filter
+                    sort: filter,
+                    fullDate: searchDate.fullDate,
+                    month: searchDate.month?.value,
+                    year: searchDate.year
                 }
             });
         }
@@ -102,7 +112,7 @@ function TrainerPayments() {
             !isFirstLoading ? t("successContracts") : undefined, 
             t("errorContracts")
         );
-    }, [getTrainerContracts, notify, t]);
+    }, [getTrainerContracts, notify, searchDate.fullDate, searchDate.month?.value, searchDate.year, t]);
     
     const handleOnChangeFilter = useCallback((filter) => {
         setContracts([]);
@@ -251,6 +261,14 @@ function TrainerPayments() {
                                 setActiveFilter={setActiveContractFilter}
                                 handleChange={handleOnChangeFilter}
                             >
+                                <DateInput
+                                    dateValuesObject={searchDate}
+                                    setDateValuesObject={setSearchDate}
+                                    error={searchDateError}
+                                    setError={setSearchDateError}
+                                    handleReload={handleOnChangeFilter}
+                                />
+                                
                                 {!contractsError && contracts.length === 0 ? (
                                     !contractsLoading && (
                                         <p>
@@ -259,55 +277,42 @@ function TrainerPayments() {
                                     )
                                 ) : (
                                     <Stack
-                                        gap="3em"
+                                        gap="2em"
                                     >
-                                        <SearchInput
-                                            placeholder={`${t("filterByStatus")}...`}
-                                            searchText={contractsSearchText}
-                                            setSearchText={setContractsSearchText}
-                                            items={contracts}
-                                            setShowedItems={setShowedContracts}
-                                            searchKey="status"
-                                        />
-
-                                        <Stack
-                                            gap="2em"
-                                        >
-                                            {showedContracts.length !== 0 ? (
-                                                showedContracts.map((contract, index) => (
-                                                    <React.Fragment
-                                                        key={index}
-                                                    >
-                                                        <ContractCard
-                                                            clientName={contract.client?.name} 
-                                                            clientPhoto={contract.client?.photoUrl} 
-                                                            startDate={contract.startDate} 
-                                                            endDate={contract.endDate} 
-                                                            status={
-                                                                contract.status?.ID
-                                                                ? (
-                                                                    user.config.isEnglish 
-                                                                    ? t(`databaseData.contractStatus.${contract.status.ID}.name`) 
-                                                                    : contract.status.name
-                                                                )
-                                                                : undefined
-                                                            } 
-                                                            durationDays={contract.paymentPlan?.durationDays} 
-                                                            paymentPlanName={contract.paymentPlan?.name} 
-                                                            paymentPlanID={contract.paymentPlan?.ID}
-                                                            paymentAmount={contract.paymentTransaction?.amount} 
-                                                            paymentTransactionDate={contract.paymentTransaction?.createDate} 
-                                                            mercadoPagoTransactionId={contract.paymentTransaction?.mercadopagoTransactionID} 
-                                                            paymentReceiptUrl={contract.paymentTransaction?.receiptUrl} 
-                                                        />
-                                                    </React.Fragment>
-                                                ))
-                                            ) : (
-                                                <p>
-                                                    {t("noResult")}
-                                                </p>
-                                            )}
-                                        </Stack>
+                                        {showedContracts.length !== 0 ? (
+                                            showedContracts.map((contract, index) => (
+                                                <React.Fragment
+                                                    key={index}
+                                                >
+                                                    <ContractCard
+                                                        clientName={contract.client?.name} 
+                                                        clientPhoto={contract.client?.photoUrl} 
+                                                        startDate={contract.startDate} 
+                                                        endDate={contract.endDate} 
+                                                        status={
+                                                            contract.status?.ID
+                                                            ? (
+                                                                user.config.isEnglish 
+                                                                ? t(`databaseData.contractStatus.${contract.status.ID}.name`) 
+                                                                : contract.status.name
+                                                            )
+                                                            : undefined
+                                                        } 
+                                                        durationDays={contract.paymentPlan?.durationDays} 
+                                                        paymentPlanName={contract.paymentPlan?.name} 
+                                                        paymentPlanID={contract.paymentPlan?.ID}
+                                                        paymentAmount={contract.paymentTransaction?.amount} 
+                                                        paymentTransactionDate={contract.paymentTransaction?.createDate} 
+                                                        mercadoPagoTransactionId={contract.paymentTransaction?.mercadopagoTransactionID} 
+                                                        paymentReceiptUrl={contract.paymentTransaction?.receiptUrl} 
+                                                    />
+                                                </React.Fragment>
+                                            ))
+                                        ) : (
+                                            <p>
+                                                {t("noResult")}
+                                            </p>
+                                        )}
                                     </Stack>
                                 )}
                             </FilterItemsLayout>

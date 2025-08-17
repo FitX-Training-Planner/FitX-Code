@@ -374,7 +374,16 @@ def get_trainer_contracts():
 
             identity = get_jwt_identity()
 
-            contracts = get_partial_trainer_contracts(db, params.get("offset"), params.get("limit"), params.get("sort"), identity)
+            contracts = get_partial_trainer_contracts(
+                db, 
+                params.get("offset"), 
+                params.get("limit"), 
+                params.get("sort"), 
+                params.get("fullDate"),
+                params.get("month"),
+                params.get("year"),
+                identity
+            )
 
             return jsonify(contracts), 200
         

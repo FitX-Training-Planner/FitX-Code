@@ -4,7 +4,7 @@ from ..exceptions.api_error import ApiError
 from ..utils.formatters import safe_str, safe_int, safe_float, safe_bool, safe_time
 from ..utils.serialize import serialize_training_plan, serialize_payment_plan, serialize_contract, serialize_trainer_in_trainers, serialize_rating, serialize_complaint, serialize_trainer_base_info
 from sqlalchemy.orm import joinedload, subqueryload
-from sqlalchemy import asc, desc, func, case
+from sqlalchemy import asc, desc, func, case, extract
 from ..utils.message_codes import MessageCodes
 from datetime import datetime, timezone, timedelta
 import requests
@@ -667,7 +667,7 @@ def get_trainer_payment_plans(db, trainer_id):
 
         raise Exception(f"Erro ao recuperar os planos de pagamento do treinador: {e}")
 
-def get_partial_trainer_contracts(db, offset, limit, sort, trainer_id):
+def get_partial_trainer_contracts(db, offset, limit, sort, full_date, month, year, trainer_id):
     try:
         query = (
             db.query(PlanContract)
@@ -683,6 +683,27 @@ def get_partial_trainer_contracts(db, offset, limit, sort, trainer_id):
             )
             .filter(PlanContract.fk_trainer_ID == trainer_id)
         )
+
+        if full_date:
+            try:
+                parsed_date = datetime.strptime(full_date, "%Y-%m-%d").date()
+
+                query = query.filter(PlanContract.start_date == parsed_date)
+
+            except ValueError:
+                raise ApiError("INVALID_DATE_FORMAT", 400)
+
+        elif month and year:
+            query = query.filter(
+                extract("month", PlanContract.start_date) == month,
+                extract("year", PlanContract.start_date) == year
+            )
+
+        elif month:
+            query = query.filter(extract("month", PlanContract.start_date) == month)
+
+        elif year:
+            query = query.filter(extract("year", PlanContract.start_date) == year)
 
         if sort == "actives":
             query = query.filter(ContractStatus.name == "Ativo").order_by(desc(PlanContract.start_date))
