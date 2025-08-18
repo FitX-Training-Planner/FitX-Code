@@ -571,6 +571,9 @@
     "searchDateError": "The month and year fields must have a value if the day field is populated.",  
     "reload": "Reload",
     "clear": "Clear",  
+    "checkThe": "Check the",
+    "UseTermsAndConditions": "Terms and Conditions of Use",
+    "forMoreInfo": "for more information",
     "databaseData": {
         "muscleGroups": {
             "1": {

@@ -1,0 +1,41 @@
+.accept_terms > span {
+    min-width: 1.3em;
+    min-height: 1.3em;
+    cursor: pointer;
+    border: 1px solid var(--theme-color);
+    position: relative;
+    transition: var(--fast-transition); 
+}
+
+.accept_terms > span.accepted {
+    background-color: var(--theme-color);
+}
+
+.accept_terms > span.accepted::before {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--white-color);
+    content: "✓";
+}
+
+.accept_terms > .term_description > p {
+    cursor: pointer;
+    font-size: var(--small-text-size);
+}
+
+.terms_link,
+.terms_link:link,
+.terms_link:visited,
+.terms_link:hover,
+.terms_link:active {
+    color: var(--light-theme-color);
+    text-decoration: none; 
+    transition: var(--fast-transition); 
+}
+
+.terms_link:hover {
+    text-decoration: underline;
+    color: var(--dark-theme-color);
+}

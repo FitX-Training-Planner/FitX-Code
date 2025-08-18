@@ -570,5 +570,8 @@
     "december": "Dezembro",
     "searchDateError": "Os campos de mês e ano precisam ter um valor se o campo de dia for preechido.",
     "reload": "Recarregar",
-    "clear": "Limpar"
+    "clear": "Limpar",
+    "checkThe": "Confira os",
+    "UseTermsAndConditions": "Termos e Condições de Uso",
+    "forMoreInfo": "para mais informações"
 }

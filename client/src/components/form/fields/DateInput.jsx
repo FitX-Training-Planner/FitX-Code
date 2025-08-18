@@ -124,15 +124,13 @@ function DateInput({
                     </label>
                 )}
 
-                <Stack 
-                    direction="row"
-                    className={styles.inputs_container}
-                    alignItems="start"
+                <Stack
+                    gap="0.2em"
                 >
-                    <Stack
-                        gap="0.2em"
-                        alignItems="center"
-                        className={styles.year_container}
+                    <Stack 
+                        direction="row"
+                        className={styles.inputs_container}
+                        alignItems="start"
                     >
                         <input
                             className={`${styles.input} ${styles.day}`}
@@ -145,31 +143,15 @@ function DateInput({
                             maxLength={2}
                         />
 
-                        <NonBackgroundButton
-                            text={t("clear")}
-                            handleClick={() => setDateValuesObject({
-                                day: "",
-                                month: null,
-                                year: ""
-                            })}
-                            varColor="--light-theme-color"
+                        <Select
+                            name="month"
+                            placeholder={t("month")}
+                            value={dateValuesObject.month?.label}
+                            handleChange={(e) => handleOnChangeSelect(e, months, "label", dateValuesObject, setDateValuesObject, setError)}
+                            options={months.map(m => m.label)}
+                            className={styles.month}
                         />
-                    </Stack>
-
-                    <Select
-                        name="month"
-                        placeholder={t("month")}
-                        value={dateValuesObject.month?.label}
-                        handleChange={(e) => handleOnChangeSelect(e, months, "label", dateValuesObject, setDateValuesObject, setError)}
-                        options={months.map(m => m.label)}
-                        className={styles.month}
-                    />
-
-                    <Stack
-                        gap="0.2em"
-                        alignItems="center"
-                        className={styles.year_container}
-                    >
+                        
                         <input
                             className={`${styles.input} ${styles.year}`}
                             type="text"
@@ -179,6 +161,24 @@ function DateInput({
                             value={dateValuesObject.year}
                             onChange={(e) => handleOnChangeTextField(e, formattYear, undefined, dateValuesObject, setDateValuesObject, setError)}
                             maxLength={4}
+                        />
+                    </Stack>
+
+                    <Stack
+                        direction="row"    
+                        className={styles.actions}                    
+                    >
+                        <NonBackgroundButton
+                            text={t("clear")}
+                            handleClick={() => {
+                                setDateValuesObject({
+                                    day: "",
+                                    month: null,
+                                    year: ""
+                                });
+                                setError(false);
+                            }}
+                            varColor="--light-theme-color"
                         />
 
                         <span

@@ -42,6 +42,11 @@
     text-align: center;
 }
 
+.actions {
+    padding: 0 var(--border-radius);
+    font-size: var(--small-text-size);
+}
+
 .date_input > p {
     visibility: hidden;
     font-size: var(--small-text-size);
