@@ -41,6 +41,7 @@ function CreatePaymentPlan() {
         benefits: []
     });
     const [error, setError] = useState(false);
+    const [acceptTerms, setAcceptTerms] = useState(false);
     
     useEffect(() => {
         if (hasRun.current) return;
@@ -92,6 +93,8 @@ function CreatePaymentPlan() {
 
     const handleOnSubmit = useCallback((e) => {
         e.preventDefault();
+
+        if (!acceptTerms) return;
 
         if (!validatePaymentPlan(
             error,
@@ -154,7 +157,7 @@ function CreatePaymentPlan() {
             successMessage, 
             errorMessage
         );
-    }, [error, navigate, postOrPutPlanRequest, paymentPlan, t]);
+    }, [error, navigate, postOrPutPlanRequest, paymentPlan, acceptTerms, t]);
 
     useEffect(() => {
         document.title = t("createPaymentPlan");
@@ -199,6 +202,8 @@ function CreatePaymentPlan() {
                     handleSubmit={handleOnSubmit} 
                     handleAddBenefit={addBenefit} 
                     handleRemoveBenefit={removeBenefit}
+                    acceptTerms={acceptTerms}
+                    setAcceptedTerms={setAcceptTerms}
                 />
             </Stack>
         </main>

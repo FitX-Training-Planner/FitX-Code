@@ -11,12 +11,15 @@ import Select from "../fields/Select";
 import { handleOnChangeSelect, handleOnChangeTextField } from "../../../utils/handlers/changeHandlers";
 import Alert from "../../messages/Alert";
 import { useTranslation } from "react-i18next";
+import AcceptTerms from "../fields/AcceptTerms";
 
 function TrainerForm({
     trainer,
     setTrainer,
     setTrainerError,
-    handleSubmit 
+    handleSubmit,
+    acceptTerms,
+    setAcceptedTerms
 }) {
     const { t } = useTranslation();
     
@@ -110,17 +113,27 @@ function TrainerForm({
                             />
                         </Stack>
 
-                        <TextArea
-                            name="description"
-                            placeholder={t("trainerDescriptionPlaceholder")}
-                            labelText={t("trainerDescription")}
-                            value={trainer.description}
-                            handleChange={(e) => handleOnChangeTextField(e, formattTrainerDescription, isTrainerDescriptionValid, trainer, setTrainer, setTrainerError, setErrors)}
-                            icon="/images/icons/description.png"
-                            alertMessage={t("alertTrainerDescription")}
-                            error={errors.description}
-                            maxLength={1200}
-                        />
+                        <Stack
+                            gap="0.5em"
+                        >
+                            <TextArea
+                                name="description"
+                                placeholder={t("trainerDescriptionPlaceholder")}
+                                labelText={t("trainerDescription")}
+                                value={trainer.description}
+                                handleChange={(e) => handleOnChangeTextField(e, formattTrainerDescription, isTrainerDescriptionValid, trainer, setTrainer, setTrainerError, setErrors)}
+                                icon="/images/icons/description.png"
+                                alertMessage={t("alertTrainerDescription")}
+                                error={errors.description}
+                                maxLength={1200}
+                            />
+
+                            <AcceptTerms
+                                isAccepted={acceptTerms}
+                                setIsAccepted={setAcceptedTerms}
+                                description={t("createTrainerTerms")}
+                            />
+                        </Stack>
                     </Stack>
 
                     <SubmitFormButton

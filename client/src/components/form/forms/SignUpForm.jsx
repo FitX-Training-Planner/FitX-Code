@@ -9,13 +9,16 @@ import NonBackgroundButton from "../buttons/NonBackgroundButton";
 import Title from "../../text/Title";
 import { handleOnChangeTextField } from "../../../utils/handlers/changeHandlers";
 import { useTranslation } from "react-i18next";
+import AcceptTerms from "../fields/AcceptTerms";
 
 function SignUpForm({
     user,
     setUser,
     setSignUpError,
     handleChangeFormType,
-    handleSubmit 
+    handleSubmit,
+    acceptTerms,
+    setAcceptedTerms
 }) {
     const [errors, setErrors] = useState({
         name: false,
@@ -93,6 +96,12 @@ function SignUpForm({
                             alertMessage={t("alertPassword")}
                             error={errors.password}
                             maxLength={20}
+                        />
+
+                        <AcceptTerms
+                            isAccepted={acceptTerms}
+                            setIsAccepted={setAcceptedTerms}
+                            description={t("createAccountTerms")}
                         />
                     </Stack>
 

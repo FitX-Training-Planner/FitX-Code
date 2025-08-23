@@ -45,14 +45,13 @@ function CreateTrainer() {
             photoBlobUrl: null
         }
     });
-
     const [trainer, setTrainer] = useState({
         description: "",
         cref_number: "",
         crefUF: "",
     });
-
     const [error, setError] = useState(false);
+    const [acceptTerms, setAcceptTerms] = useState(false);
 
     useEffect(() => {
         if (hasRun.current) return;
@@ -74,6 +73,8 @@ function CreateTrainer() {
 
     const handleOnSubmit = useCallback((e) => {
         e.preventDefault();
+
+        if (!acceptTerms) return;
 
         if (!validateTrainerPostRequestData(error, setError, trainer.cref_number, trainer.description, trainer.crefUF, 10)) return;
 
@@ -111,7 +112,7 @@ function CreateTrainer() {
             undefined, 
             t("errorCreateUser")
         );
-    }, [authRequest, dispatch, error, localUser.config.email_notification_permission, localUser.config.is_complainter_anonymous, localUser.config.is_dark_theme, localUser.config.is_english, localUser.config.is_rater_anonymous, localUser.config.photoFile, localUser.email, localUser.name, localUser.password, navigate, postTrainerRequest, t, trainer.crefUF, trainer.cref_number, trainer.description]);
+    }, [acceptTerms, authRequest, dispatch, error, localUser.config.email_notification_permission, localUser.config.is_complainter_anonymous, localUser.config.is_dark_theme, localUser.config.is_english, localUser.config.is_rater_anonymous, localUser.config.photoFile, localUser.email, localUser.name, localUser.password, navigate, postTrainerRequest, t, trainer.crefUF, trainer.cref_number, trainer.description]);
 
     useEffect(() => {
         document.title = t("trainerProfile");
@@ -144,6 +145,8 @@ function CreateTrainer() {
                         setTrainer={setTrainer}
                         setTrainerError={setError}
                         handleSubmit={handleOnSubmit}
+                        acceptTerms={acceptTerms}
+                        setAcceptedTerms={setAcceptTerms}
                     />
                 </Stack>
             </Stack>

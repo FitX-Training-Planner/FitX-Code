@@ -38,6 +38,7 @@ function Login() {
     const [isLogin, setIsLogin] = useState(true);
     const [signUpError, setSignUpError] = useState(false);
     const [loginError, setLoginError] = useState(false);
+    const [acceptTerms, setAcceptTerms] = useState(false);
 
     const handleOnChangeFormType = useCallback(() => {
         setLocalUser(defaultUser);
@@ -87,6 +88,8 @@ function Login() {
 
     const handleOnSignUpSubmit = useCallback((e) => {
         e.preventDefault();
+
+        if (!acceptTerms) return;
     
         if (!validateSignUpRequestData(signUpError, setSignUpError, localUser.name, localUser.email, localUser.password)) return;
     
@@ -118,7 +121,7 @@ function Login() {
             undefined, 
             t("errorSignUp")
         );
-    }, [localUser, navigate, setHandleOnConfirmed, signUpError, signUpRequest, t]);
+    }, [localUser, navigate, setHandleOnConfirmed, signUpError, signUpRequest, acceptTerms, t]);
 
     useEffect(() => {
         document.title = t("login");
@@ -164,6 +167,8 @@ function Login() {
                                         navigate={navigate}
                                         handleChangeFormType={handleOnChangeFormType}
                                         handleSubmit={handleOnSignUpSubmit}
+                                        acceptTerms={acceptTerms}
+                                        setAcceptedTerms={setAcceptTerms}
                                     />
                                 }
                             </Stack>    

@@ -13,6 +13,7 @@ import { formatPrice } from "../../../utils/formatters/payments/formatOnChange";
 import Benefit from "../fields/PaymentPlanBenefitInput";
 import { useTranslation } from "react-i18next";
 import Alert from "../../messages/Alert";
+import AcceptTerms from "../fields/AcceptTerms";
 
 function PaymentPlanForm({
     paymentPlan,
@@ -20,7 +21,9 @@ function PaymentPlanForm({
     setPaymentPlanError,
     handleSubmit,
     handleAddBenefit,
-    handleRemoveBenefit
+    handleRemoveBenefit,
+    acceptTerms,
+    setAcceptedTerms
 }) { 
     const { t } = useTranslation();
 
@@ -66,6 +69,17 @@ function PaymentPlanForm({
 
                             <p>
                                 {t("mpFeeAlert")}
+                            </p>
+                        </Stack>
+                        
+                        <Stack
+                            direction="row"
+                            justifyContent="start"
+                        >
+                            <Alert />   
+
+                            <p>
+                                {t("planPriceFeeClient")}
                             </p>
                         </Stack>
 
@@ -139,16 +153,26 @@ function PaymentPlanForm({
                         </Stack>
                     </Stack>
 
-                    <TextArea
-                        name="description"
-                        placeholder={t("paymentPlanDescriptionPlaceholder")}
-                        labelText={t("description")}
-                        value={paymentPlan.description}
-                        handleChange={(e) => handleOnChangeTextField(e, formattNameAndNote, isNoteValid, paymentPlan, setPaymentPlan, setPaymentPlanError, setErrors)}
-                        alertMessage={t("alertPaymentPlanDescription")}
-                        error={errors.description}
-                        maxLength={500}
-                    />
+                    <Stack
+                        gap="0.5em"
+                    >
+                        <TextArea
+                            name="description"
+                            placeholder={t("paymentPlanDescriptionPlaceholder")}
+                            labelText={t("description")}
+                            value={paymentPlan.description}
+                            handleChange={(e) => handleOnChangeTextField(e, formattNameAndNote, isNoteValid, paymentPlan, setPaymentPlan, setPaymentPlanError, setErrors)}
+                            alertMessage={t("alertPaymentPlanDescription")}
+                            error={errors.description}
+                            maxLength={500}
+                        />
+
+                        <AcceptTerms
+                            isAccepted={acceptTerms}
+                            setIsAccepted={setAcceptedTerms}
+                            description={t("createPaymentPlanTerms")}
+                        />
+                    </Stack>
                 </Stack>
 
                 <SubmitFormButton
