@@ -9,6 +9,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from ..utils.trainer_decorator import only_trainer
 from ..utils.client_decorator import only_client
 from ..utils.message_codes import MessageCodes
+from ..utils.trainer import release_trainer_lock
 from ..config import MercadopagoConfig
 from ..services.trainer import insert_mercadopago_trainer_info
 from ..services.client import get_valid_mp_token
@@ -399,7 +400,16 @@ def mercadopago_webhook():
 
                 db.add(new_contract)
 
-                db.commit()                
+                db.commit() 
+
+                release_trainer_lock(transaction.fk_trainer_ID) 
+
+            elif status == "rejected" or status == "cancelled" or status == "refunded" or status == "charged_back":
+                release_trainer_lock(transaction.fk_trainer_ID)
+
+                db.delete(transaction)
+
+                db.commit()
 
             return "", 201
         

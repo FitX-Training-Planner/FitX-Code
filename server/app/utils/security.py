@@ -3,7 +3,7 @@ from ..utils.user import hash_email, check_password
 import random
 import string
 from ..utils.user import hash_email
-from ..__init__ import redis_client
+from .redis import redis_delete, redis_get, redis_setex
 from flask_jwt_extended import create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies, unset_access_cookies, unset_refresh_cookies
 from datetime import timedelta
 from sqlalchemy.orm import joinedload
@@ -28,14 +28,14 @@ def generate_code(email):
 
     email_hash = hash_email(email)
 
-    redis_client.setex(f"verify_code:{email_hash}", 120, code)
+    redis_setex(f"verify_code:{email_hash}", 120, code)
 
     return code 
 
 def verify_code(email, code):
     email_hash = hash_email(email)
 
-    saved_code = redis_client.get(f"verify_code:{email_hash}")
+    saved_code = redis_get(f"verify_code:{email_hash}")
 
     if saved_code is None:
         raise ApiError(MessageCodes.EXPIRED_CODE, 400)
@@ -43,7 +43,7 @@ def verify_code(email, code):
     if not saved_code == code.upper():
         raise ApiError(MessageCodes.INVALID_CODE, 400)
 
-    redis_client.delete(f"verify_code:{email_hash}")
+    redis_delete(f"verify_code:{email_hash}")
 
     return True
 
