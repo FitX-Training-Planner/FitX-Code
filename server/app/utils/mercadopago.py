@@ -7,6 +7,8 @@ def create_payment_preference(trainer_access_token, item_id, title, description,
     frontend_base_url = os.getenv("FRONT_END_URL")
     api_url = os.getenv("API_URL")
 
+    app_fee = calculate_app_fee_in_payment_plan(price)
+
     preference_data = {
         "items": [
             {
@@ -15,7 +17,7 @@ def create_payment_preference(trainer_access_token, item_id, title, description,
                 "description": description,
                 "quantity": 1,
                 "currency_id": "BRL",
-                "unit_price": float(price),
+                "unit_price": price
             }
         ],
         "payer": {
@@ -30,6 +32,7 @@ def create_payment_preference(trainer_access_token, item_id, title, description,
         "external_reference": str(transaction_id),
         "binary_mode": True,
         "purpose": "wallet_purchase",
+        "application_fee": app_fee,
         "payment_methods": {
             "excluded_payment_types": [
                 { "id": "ticket" },
@@ -42,3 +45,18 @@ def create_payment_preference(trainer_access_token, item_id, title, description,
     preference_response = sdk.preference().create(preference_data)
 
     return preference_response["response"]
+
+def calculate_app_fee_in_payment_plan(full_price):
+    if full_price <= 300:
+        fee = full_price * 0.05
+    
+    elif full_price <= 600:
+        fee = full_price * 0.04
+    
+    elif full_price <= 800:
+        fee = full_price * 0.03
+    
+    else:
+        fee = full_price * 0.02
+
+    return round(fee, 2)

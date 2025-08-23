@@ -459,7 +459,7 @@ def get_trainer_plans(db, trainer_id):
 
         raise Exception(f"Erro ao recuperar os planos de treino do treinador: {e}")
 
-def insert_payment_plan(db, name, full_price, duration_days, description, benefits, trainer_id):
+def insert_payment_plan(db, name, full_price, duration_days, description, benefits, app_fee, trainer_id):
     try:
         if not check_trainer_mp_connection(db, trainer_id):
             raise ApiError(MessageCodes.ERROR_NOT_MP_CONNECT, 400)
@@ -476,6 +476,7 @@ def insert_payment_plan(db, name, full_price, duration_days, description, benefi
         new_plan = PaymentPlan(
             name=name, 
             full_price=safe_float(full_price),
+            app_fee=safe_float(app_fee),
             duration_days=safe_int(duration_days),
             description=safe_str(description),
             fk_trainer_ID=trainer_id
@@ -508,7 +509,7 @@ def insert_payment_plan(db, name, full_price, duration_days, description, benefi
 
         raise Exception(f"Erro ao criar o plano de pagamento: {e}")
     
-def modify_payment_plan(db, name, full_price, duration_days, description, benefits, payment_plan_id, trainer_id):
+def modify_payment_plan(db, name, full_price, duration_days, description, benefits, app_fee, payment_plan_id, trainer_id):
     try:
         modified_payment_plan = db.query(PaymentPlan).filter(PaymentPlan.ID == payment_plan_id).first()
 
@@ -520,6 +521,7 @@ def modify_payment_plan(db, name, full_price, duration_days, description, benefi
 
         modified_payment_plan.name = name
         modified_payment_plan.full_price = safe_float(full_price),
+        modified_payment_plan.app_fee = safe_float(app_fee),
         modified_payment_plan.duration_days = safe_int(duration_days),
         modified_payment_plan.description = safe_str(description),
 
@@ -735,7 +737,7 @@ def get_partial_trainer_contracts(db, offset, limit, sort, full_date, month, yea
 
         contracts = query.offset(offset).limit(limit).all()
 
-        return [serialize_contract(contract) for contract in contracts]
+        return [serialize_contract(contract, False) for contract in contracts]
 
     except ApiError as e:
         print(f"Erro ao recuperar contratos do treinador: {e}")

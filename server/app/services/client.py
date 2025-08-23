@@ -113,7 +113,8 @@ def create_payment(db, client_id, payment_plan_id):
             raise ApiError(MessageCodes.USER_NOT_FOUND, 404)
 
         transaction = PaymentTransaction(
-            amount=payment_plan.full_price,
+            amount=payment_plan.full_price + payment_plan.app_fee,
+            app_fee=payment_plan.app_fee,
             fk_payment_plan_ID=payment_plan.ID,
             fk_user_ID=client_id,
             fk_trainer_ID=payment_plan.fk_trainer_ID

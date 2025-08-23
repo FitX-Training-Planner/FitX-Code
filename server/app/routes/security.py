@@ -369,12 +369,17 @@ def mercadopago_webhook():
             status = payment_info["status"]
             mp_transaction_id = str(payment_info["id"])
             receipt_url = payment_info.get("receipt_url")
+            payment_method = payment_info.get("payment_type_id")
+            mp_fee =  payment_info.get("transaction_details", {}).get("fee_amount", 0)
 
             if status == "approved":
                 transaction.is_finished = True
                 transaction.mp_transaction_id = mp_transaction_id
                 transaction.receipt_url = receipt_url
                 transaction.create_date =  datetime.now(brazil_tz)
+                transaction.payment_method = payment_method
+                transaction.mp_fee = mp_fee
+                transaction.trainer_received = transaction.amount - transaction.app_fee - transaction.mp_fee
 
                 new_contract = PlanContract(
                     start_date = datetime.now(brazil_tz).date(),

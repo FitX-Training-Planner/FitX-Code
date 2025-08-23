@@ -185,6 +185,7 @@ def serialize_payment_plan(plan):
         "trainerID": plan.fk_trainer_ID,
         "name": plan.name,
         "fullPrice": serialize_field(plan.full_price),
+        "appFee": serialize_field(plan.app_fee),
         "durationDays": serialize_field(plan.duration_days),
         "description": serialize_field(plan.description),
         "benefits": [
@@ -195,8 +196,8 @@ def serialize_payment_plan(plan):
         ]
     }
 
-def serialize_contract(contract):
-    return {
+def serialize_contract(contract, is_client):
+    data = {
         "ID": contract.ID,
         "startDate": contract.start_date,        
         "endDate": contract.end_date,
@@ -204,25 +205,38 @@ def serialize_contract(contract):
             "ID": contract.contract_status.ID,
             "name": contract.contract_status.name
         },      
-        "trainerID": contract.fk_trainer_ID,
+        "trainer": {
+            "ID": contract.trainer.user.ID,
+            "name": contract.trainer.user.name,
+            "photoUrl": contract.trainer.user.media.url if contract.trainer.user.fk_media_ID and contract.trainer.user.media else None
+        } if is_client else None,
         "client": {
             "ID": contract.user.ID,
             "name": contract.user.name,
             "photoUrl": contract.user.media.url if contract.user.fk_media_ID and contract.user.media else None
-        },
+        } if not is_client else None,
         "paymentPlan": {
             "ID": contract.payment_plan.ID,
-            "durationDays": serialize_field(contract.payment_plan.duration_days),
             "name": contract.payment_plan.name
         },
         "paymentTransaction": {
             "ID": contract.payment_transaction.ID,
             "amount": serialize_field(contract.payment_transaction.amount),
+            "appFee": serialize_field(contract.payment_transaction.app_fee),
+            "paymentMethod": contract.payment_transaction.payment_method,
             "createDate": contract.payment_transaction.create_date,
             "mercadopagoTransactionID": serialize_field(contract.payment_transaction.mp_transaction_id),
             "receiptUrl": contract.payment_transaction.receipt_url
         }
     }
+
+    if not is_client:
+        data["paymentTransaction"].update({
+            "mpFee": serialize_field(contract.payment_transaction.mp_fee),
+            "trainerReceived": serialize_field(contract.payment_transaction.trainer_received)
+        })
+
+    return data
 
 def serialize_trainer_in_trainers(trainer, has_saved = None):
     return {
@@ -239,7 +253,7 @@ def serialize_trainer_in_trainers(trainer, has_saved = None):
         "hasSaved": has_saved,
         "paymentPlans": [
             {
-                "fullPrice": serialize_field(plan.full_price),
+                "fullPrice": serialize_field(plan.full_price + plan.app_fee),
                 "durationDays": serialize_field(plan.duration_days)
             } for plan in trainer.payment_plans
         ]

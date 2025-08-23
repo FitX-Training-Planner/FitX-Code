@@ -6,6 +6,8 @@ from ..exceptions.api_error import ApiError
 from flask_jwt_extended import jwt_required
 from ..utils.trainer_decorator import only_trainer
 from ..utils.client_decorator import only_client
+from ..utils.mercadopago import calculate_app_fee_in_payment_plan
+from ..utils.formatters import safe_float  
 from flask_jwt_extended import get_jwt_identity
 import json
 from ..utils.message_codes import MessageCodes
@@ -243,6 +245,10 @@ def post_payment_plan():
 
             identity = get_jwt_identity()
 
+            full_price = safe_float(data.get("fullPrice"))
+
+            fee = calculate_app_fee_in_payment_plan(full_price)
+
             insert_payment_plan(
                 db, 
                 data.get("name"), 
@@ -250,6 +256,7 @@ def post_payment_plan():
                 data.get("durationDays"), 
                 data.get("description"), 
                 benefits, 
+                fee,
                 identity
             )
         
@@ -307,6 +314,10 @@ def modify_trainer_payment_plan(plan_id):
 
             identity = get_jwt_identity()
 
+            full_price = safe_float(data.get("fullPrice"))
+
+            fee = calculate_app_fee_in_payment_plan(full_price)
+
             modify_payment_plan(
                 db, 
                 data.get("name"), 
@@ -314,6 +325,7 @@ def modify_trainer_payment_plan(plan_id):
                 data.get("durationDays"), 
                 data.get("description"), 
                 benefits, 
+                fee,
                 plan_id, 
                 identity
             )
