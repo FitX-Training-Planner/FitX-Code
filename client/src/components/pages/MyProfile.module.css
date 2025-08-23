@@ -5,3 +5,7 @@
 .mercadopago_img_container > img {
     height: 5em;
 }
+
+.client_training > p {
+    text-align: center;
+}

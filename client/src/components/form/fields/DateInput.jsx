@@ -7,6 +7,7 @@ import { handleOnChangeSelect, handleOnChangeTextField } from "../../../utils/ha
 import { formattSecondsMinutesAndReps } from "../../../utils/formatters/training/formatOnChange";
 import SubmitFormButton from "../buttons/SubmitFormButton";
 import NonBackgroundButton from "../buttons/NonBackgroundButton";
+import useWindowSize from "../../../hooks/useWindowSize";
 
 function DateInput({
     labelText,
@@ -18,6 +19,8 @@ function DateInput({
     minYear = 2025
 }) {
     const { t } = useTranslation();
+
+    const { width } = useWindowSize();
 
     const maxYear = useMemo(() => {
         return new Date().getFullYear();
@@ -102,11 +105,12 @@ function DateInput({
 
     return (
         <Stack
-            direction="row"
-            alignItems="start"
+            direction={width <= 440 ? "column" : "row"}
+            alignItems={width <= 440 ? "end" : "start"}
         >
             <form
                 onSubmit={handleReload}
+                style={{ width: width <= 440 ? "max-content" : "100%" }}
             >
                 <SubmitFormButton
                     text={t("reload")}
@@ -159,7 +163,10 @@ function DateInput({
                             id="year"
                             placeholder={t("year")}
                             value={dateValuesObject.year}
-                            onChange={(e) => handleOnChangeTextField(e, formattYear, undefined, dateValuesObject, setDateValuesObject, setError)}
+                            onChange={(e) => {
+                                handleOnChangeTextField(e, formattYear, undefined, dateValuesObject, setDateValuesObject, setError);
+                                setDateValuesObject(prevValues => ({ ...prevValues, validYear: validateYear(formattYear(e.target.value)) ? formattYear(e.target.value) : "" }));
+                            }}
                             maxLength={4}
                         />
                     </Stack>
@@ -174,7 +181,8 @@ function DateInput({
                                 setDateValuesObject({
                                     day: "",
                                     month: null,
-                                    year: ""
+                                    year: "",
+                                    validYear: ""
                                 });
                                 setError(false);
                             }}

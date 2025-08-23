@@ -31,6 +31,7 @@ import PaymentFailure from "./components/pages/PaymentFailure";
 import Loader from "./components/layout/Loader";
 import { getErrorMessageCodeError } from "./utils/requests/errorMessage";
 import SavedTrainers from "./components/pages/SavedTrainers";
+import PaymentPage from "./components/pages/PaymentPage";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -68,7 +69,8 @@ function App() {
       "/payment/success",
       "/payment/failure",
       "/payment/pending",
-      "/me/saved-trainers"
+      "/me/saved-trainers",
+      "/checkout/:planId"
     ];
 
     const shouldSkip = !validPaths.includes(location.pathname);
@@ -253,6 +255,11 @@ function App() {
             <Route 
               path="/me/saved-trainers"
               element={<SavedTrainers />}
+            />
+
+            <Route 
+              path="/checkout/:planId"
+              element={<PaymentPage />}
             />
               
             <Route

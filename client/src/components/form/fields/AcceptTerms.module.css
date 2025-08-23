@@ -23,6 +23,7 @@
 .accept_terms > .term_description > p {
     cursor: pointer;
     font-size: var(--small-text-size);
+    line-height: 1.3em;
 }
 
 .terms_link,

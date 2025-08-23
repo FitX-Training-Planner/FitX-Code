@@ -842,7 +842,9 @@ function MyProfile() {
                                 </Stack>
                             </form>
                         ) : (
-                            <Stack>
+                            <Stack
+                                className={styles.client_training}
+                            >
                                 <Title
                                     headingNumber={2}
                                     text={t("yourTraining")}

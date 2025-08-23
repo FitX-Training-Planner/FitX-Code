@@ -37,7 +37,7 @@ function ClientHome() {
     const user = useSelector(state => state.user);
 
     const clientTrainingStorageKey = "clientTraining";
-    const trainersLimit = 20;
+    const trainersLimit = 8;
 
     const trainersFilters = useMemo(() => {
         return [
