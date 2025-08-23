@@ -388,6 +388,7 @@ class PaymentPlan(Base):
     ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     name = Column(String(50), nullable=False)
     full_price = Column(DECIMAL(7, 2, unsigned=True), nullable=False)
+    app_fee = Column(DECIMAL(6, 2, unsigned=True), nullable=False)
     duration_days = Column(SMALLINT(unsigned=True), nullable=False)
     description = Column(TEXT)
     fk_trainer_ID = Column(INTEGER(unsigned=True), ForeignKey("trainer.ID", ondelete="CASCADE"), index=True, nullable=False)
@@ -406,7 +407,11 @@ class PaymentTransaction(Base):
     __tablename__ = "payment_transaction"
 
     ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
-    amount = Column(DECIMAL(7, 2, unsigned=True), nullable=False)
+    amount = Column(DECIMAL(7, 2, unsigned=True), nullable=False)  
+    app_fee = Column(DECIMAL(6, 2, unsigned=True), nullable=False)  
+    payment_method = Column(String(50)) 
+    mp_fee = Column(DECIMAL(6, 2, unsigned=True)) 
+    trainer_received = Column(DECIMAL(7, 2, unsigned=True)) 
     create_date = Column(DATETIME, nullable=False, default=lambda: datetime.now(brazil_tz))
     is_finished = Column(Boolean, nullable=False, default=False)
     mp_preference_id = Column(String(100), unique=True)

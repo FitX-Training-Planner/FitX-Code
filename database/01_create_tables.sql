@@ -344,6 +344,7 @@ CREATE TABLE IF NOT EXISTS payment_plan (
     ID INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL,
     full_price DECIMAL(7,2) UNSIGNED NOT NULL,
+    app_fee DECIMAL(6,2) UNSIGNED NOT NULL,
     duration_days SMALLINT UNSIGNED NOT NULL,
     description TEXT,
     fk_trainer_ID INT UNSIGNED NOT NULL,
@@ -355,6 +356,10 @@ CREATE TABLE IF NOT EXISTS payment_plan (
 CREATE TABLE IF NOT EXISTS payment_transaction (
     ID INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     amount DECIMAL(7,2) UNSIGNED NOT NULL,
+    app_fee = DECIMAL(6,2) UNSIGNED NOT NULL,
+    payment_method = VARCHAR(50),
+    mp_fee = DECIMAL(6,2) UNSIGNED,
+    trainer_received = DECIMAL(7,2) UNSIGNED,
     create_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     is_finished BOOLEAN NOT NULL DEFAULT 0
     mp_preference_id VARCHAR(100) UNIQUE,
