@@ -36,21 +36,27 @@ function ComplaintCard({
                     gap="0.5em"
                     className={styles.complainter}
                 >
-                    {complainterName ? (
-                        <>
-                            <PhotoInput
-                                blobUrl={complainterPhotoUrl}
-                                size="tiny"
-                                disabled
-                            />
-
-                            <span>
-                                {complainterName}
-                            </span>
-                        </>
+                    {complainterID ? (
+                        complainterName ? (
+                            <>
+                                <PhotoInput
+                                    blobUrl={complainterPhotoUrl}
+                                    size="tiny"
+                                    disabled
+                                />
+    
+                                <span>
+                                    {complainterName}
+                                </span>
+                            </>
+                        ) : (
+                            <p>
+                                {t("anonymousComplaint")}
+                            </p>
+                        )
                     ) : (
-                        <p>
-                            {t("anonymousComplaint")}
+                         <p>
+                            {t("deletedUser")}
                         </p>
                     )}
                 </Stack>

@@ -38,21 +38,27 @@ function RatingCard({
                     gap="0.5em"
                     className={styles.rater}
                 >
-                    {raterName ? (
-                        <>
-                            <PhotoInput
-                                blobUrl={raterPhotoUrl}
-                                size="tiny"
-                                disabled
-                            />
-
-                            <span>
-                                {raterName}
-                            </span>
-                        </>     
+                    {raterID ? (
+                        raterName ? (
+                            <>
+                                <PhotoInput
+                                    blobUrl={raterPhotoUrl}
+                                    size="tiny"
+                                    disabled
+                                />
+    
+                                <span>
+                                    {raterName}
+                                </span>
+                            </>     
+                        ) : (
+                            <p>
+                                {t("anonymousRating")}
+                            </p>
+                        )
                     ) : (
-                        <p>
-                            {t("anonymousRating")}
+                         <p>
+                            {t("deletedUser")}
                         </p>
                     )}
                 </Stack>

@@ -202,23 +202,23 @@ def serialize_contract(contract, is_client):
         "startDate": contract.start_date,        
         "endDate": contract.end_date,
         "status": {
-            "ID": contract.contract_status.ID,
+            "ID": contract.fk_contract_status_ID,
             "name": contract.contract_status.name
         },      
         "trainer": {
-            "ID": contract.trainer.user.ID,
+            "ID": contract.fk_trainer_ID,
             "name": contract.trainer.user.name,
             "photoUrl": contract.trainer.user.media.url if contract.trainer.user.fk_media_ID and contract.trainer.user.media else None
-        } if is_client else None,
+        } if is_client and contract.fk_trainer_ID else None,
         "client": {
-            "ID": contract.user.ID,
+            "ID": contract.fk_user_ID,
             "name": contract.user.name,
             "photoUrl": contract.user.media.url if contract.user.fk_media_ID and contract.user.media else None
-        } if not is_client else None,
+        } if not is_client and contract.fk_user_ID else None,
         "paymentPlan": {
-            "ID": contract.payment_plan.ID,
+            "ID": contract.fk_payment_plan_ID,
             "name": contract.payment_plan.name
-        },
+        } if contract.fk_payment_plan_ID else None,
         "paymentTransaction": {
             "ID": contract.payment_transaction.ID,
             "amount": serialize_field(contract.payment_transaction.amount),
@@ -262,18 +262,18 @@ def serialize_trainer_in_trainers(trainer, has_saved = None):
 def serialize_training_contract(training_contract):
     return {
         "trainer": {
-            "ID": training_contract.trainer.ID,
+            "ID": training_contract.fk_trainer_ID,
             "name": training_contract.trainer.user.name,
             "photoUrl": 
                 training_contract.trainer.user.media.url 
                 if training_contract.trainer.user.fk_media_ID and training_contract.trainer.user.media 
                 else None,
             "crefNumber": training_contract.trainer.cref_number if training_contract.trainer.cref_number else None,
-        } if training_contract.trainer else None,
+        },
         "trainingPlan": {
-            "ID": training_contract.user.training_plan.ID,
+            "ID": training_contract.user.fk_training_plan_ID,
             "name": training_contract.user.training_plan.name,
-        } if training_contract.user.training_plan else None,
+        } if training_contract.user.fk_training_plan_ID else None,
         "contract": {
             "ID": training_contract.ID,
             "startDate": training_contract.start_date,
@@ -284,7 +284,7 @@ def serialize_training_contract(training_contract):
 def serialize_rating(rating, has_liked = None):
     data = {
         "ID": rating.ID,
-        "raterID": rating.user.ID,
+        "raterID": rating.fk_user_ID,
         "rating": serialize_field(rating.rating),
         "comment": serialize_field(rating.comment),
         "createDate": rating.create_date,
@@ -292,7 +292,7 @@ def serialize_rating(rating, has_liked = None):
         "hasLiked": has_liked
     }
 
-    if not rating.user.is_rater_anonymous:
+    if rating.fk_user_ID and not rating.user.is_rater_anonymous:
         data["rater"] = {
             "name": rating.user.name,
             "photoUrl": 
@@ -306,14 +306,14 @@ def serialize_rating(rating, has_liked = None):
 def serialize_complaint(complaint, has_liked = None):
     data = {
         "ID": complaint.ID,
-        "complainterID": complaint.user.ID,
+        "complainterID": complaint.fk_user_ID,
         "reason": serialize_field(complaint.reason),
         "createDate": complaint.create_date,
         "likesNumber": serialize_field(complaint.likes_number),
         "hasLiked": has_liked
     }
 
-    if not complaint.user.is_complainter_anonymous:
+    if complaint.fk_user_ID and not complaint.user.is_complainter_anonymous:
         data["complainter"] = {
             "name": complaint.user.name,
             "photoUrl": (

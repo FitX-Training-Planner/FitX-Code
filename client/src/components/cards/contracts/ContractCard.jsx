@@ -126,7 +126,7 @@ function ContractCard({
                                         </>
                                     ) : (
                                         <p>
-                                            {t("deletedUserAlert")}
+                                            {t("deletedUser")}
                                         </p>
                                     )}
                                 </Stack>

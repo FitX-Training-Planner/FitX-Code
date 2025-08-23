@@ -611,7 +611,7 @@
     "fees": "Fees",
     "received": "Received",
     "contracted": "Contracted",
-    "deletedUserAlert": "This user deleted their account.",
+    "deletedUser": "Deleted user",
     "deletedPaymentPlanAlert": "The plan linked to this contract has been deleted.",
     "databaseData": {
         "muscleGroups": {

@@ -611,6 +611,6 @@
     "fees": "Taxas",
     "received": "Recebido",
     "contracted": "Contratado",
-    "deletedUserAlert": "Esse usuário excluiu sua conta.",
+    "deletedUser": "Usuário excluído",
     "deletedPaymentPlanAlert": "O plano vinculado a esse contrato foi excluído."
 }
