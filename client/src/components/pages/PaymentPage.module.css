@@ -1,0 +1,48 @@
+.payment_page_title {
+    padding: 1.5em;
+    background-color: var(--theme-color);
+}
+
+.about_payment_plan,
+.about_fitx_client,
+.about_refund_policy,
+.fitx_client_alert {
+    border: 5px solid var(--light-theme-color);
+    border-radius: 3em;
+    padding: 1em;
+}
+
+[data-theme="light"] :where(.about_payment_plan, .about_fitx_client, .about_refund_policy, .fitx_client_alert) {
+    box-shadow: -10px 10px 20px var(--gray-color);
+}
+
+[data-theme="light"] .payment_page_title {
+    box-shadow: 0 10px 10px var(--gray-color);
+}
+
+:where(.about_payment_plan, .about_fitx_client, .about_refund_policy) img {
+    height: 3em;
+}
+
+:where(.about_payment_plan, .about_fitx_client, .about_refund_policy) p {
+    text-align: justify;
+    line-height: 1.3em;
+    letter-spacing: 1px;
+    padding: 0.5em;
+}
+
+.benefit > p {
+    text-align: left;
+}
+
+.plan_name {
+    font-size: var(--large-text-size);
+    font-weight: bold;
+}
+
+.plan_price {
+    font-size: var(--large-title-size);
+    font-weight: bold;
+    color: var(--light-theme-color);
+    margin-right: auto;
+}
