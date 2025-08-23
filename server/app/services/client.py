@@ -5,8 +5,8 @@ from sqlalchemy.orm import joinedload, subqueryload
 from ..utils.message_codes import MessageCodes
 from ..utils.mercadopago import create_payment_preference
 from ..utils.user import decrypt_email
+from ..utils.trainer import acquire_trainer_lock
 from .trainer import get_valid_mp_token, check_trainer_can_be_contracted
-from datetime import date
 
 def get_client_training_contract(db, client_id):
     try:
@@ -102,6 +102,11 @@ def create_payment(db, client_id, payment_plan_id):
         
         if not check_trainer_can_be_contracted(db, payment_plan.fk_trainer_ID):
             raise ApiError(MessageCodes.TRAINER_CANNOT_BE_CONTRACTED, 409)
+
+        preference_expiration_seconds = 300 
+
+        if not acquire_trainer_lock(payment_plan.fk_trainer_ID, preference_expiration_seconds):
+            raise ApiError(MessageCodes.TRAINER_IS_IN_HIRING, 409)
         
         client = (
             db.query(Users)
@@ -133,7 +138,8 @@ def create_payment(db, client_id, payment_plan_id):
             description,
             payment_plan.full_price,
             decrypt_email(client.email_encrypted),
-            transaction.ID
+            transaction.ID,
+            preference_expiration_seconds
         )
 
         transaction.mp_preference_id = preference["id"]
