@@ -13,6 +13,7 @@ function PaymentPlanCard({
     durationDays,
     description,
     benefits,
+    appFee,
     handleModifyPaymentPlan,
     handleRemovePaymentPlan,
     handlePayPaymentPlan
@@ -60,11 +61,18 @@ function PaymentPlanCard({
 
             <Stack
                 gap="0.2em"
-                className={styles.payment_value}
-                extraStyles={{ fontSize: width <= 440 ? "var(--small-title-size)" : "var(--large-title-size)" }}
             >
+                <Stack
+                    className={styles.payment_value}
+                    extraStyles={{ fontSize: width <= 440 ? "var(--small-title-size)" : "var(--large-title-size)" }}
+                >
+                    <span>
+                        {formatPriceToBR(String(Number(fullPrice) + Number(appFee)) || "0,00")}
+                    </span>
+                </Stack>
+
                 <span>
-                    {formatPriceToBR(fullPrice || "0,00")}
+                    {`${t("feeOf")} `} {formatPriceToBR(appFee || "0,00")}
                 </span>
             </Stack>
 
@@ -167,6 +175,19 @@ function PaymentPlanCard({
                             </p>
                         </Stack>
                     )}
+                    
+                    <hr/>
+
+                    <Stack
+                        direction="row"
+                        justifyContent="start"
+                    >
+                        <Alert />
+
+                        <p>
+                            {t("feeInPlanAlert")}
+                        </p>
+                    </Stack>
                 </Stack>
             </Stack>
         </Stack>

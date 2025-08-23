@@ -1,5 +1,4 @@
 import { useState } from "react";
-import convertDays from "../../../utils/formatters/text/convertDays";
 import Stack from "../../containers/Stack";
 import ClickableIcon from "../../form/buttons/ClickableIcon";
 import PhotoInput from "../../form/fields/PhotoInput";
@@ -8,20 +7,24 @@ import PaymentCard from "./PaymentCard";
 import { formatDateToExtend } from "../../../utils/formatters/text/formatDate";
 import useWindowSize from "../../../hooks/useWindowSize";
 import { useTranslation } from "react-i18next";
+import { formatPriceToBR } from "../../../utils/formatters/payments/formatOnChange";
 
 function ContractCard({
-    clientName,
-    clientPhoto,
+    userName,
+    userPhoto,
     startDate,
     endDate,
     status,
-    durationDays,
     paymentPlanName,
-    paymentPlanID,
-    paymentAmount, 
-    paymentTransactionDate, 
+    transactionAmount, 
+    transactionAppFee, 
+    transactionMpFee, 
+    transactionTrainerReceived, 
+    paymentMethod, 
+    transactionDate, 
     mercadoPagoTransactionId, 
-    paymentReceiptUrl
+    transactionReceiptUrl,
+    forClient
 }) {
     const { t, i18n } = useTranslation();
 
@@ -62,20 +65,33 @@ function ContractCard({
                             className={styles.descriptioned_item}
                         >
                             <span>
+                                {t("value")}:
+                            </span>
+
+                            <span>
+                                {formatPriceToBR(transactionAmount)}
+                            </span>
+                        </Stack>
+
+                        <Stack
+                            gap="0.5em"
+                            className={styles.descriptioned_item}
+                            extraStyles={{ textAlign: "center" }}
+                        >
+                            <span>
                                 {t("paymentPlan")}:
                             </span>
 
-                            <Stack
-                                gap="0.2em"
-                            >
+                            {paymentPlanName ? (
                                 <span>
                                     {paymentPlanName}
                                 </span>
-                             
-                                <span>
-                                    ID: {paymentPlanID}
-                                </span>
-                            </Stack>
+                            ) : (
+                                <p>
+                                    {t("deletedPaymentPlanAlert")}
+                                </p>
+                            )}
+
                         </Stack>
 
                         <Stack
@@ -87,23 +103,32 @@ function ContractCard({
                                 alignItems={width <= 640 ? "center" : "start"}
                             >
                                 <span>
-                                    {t("contractor")}:
+                                    {forClient ? t("contracted") : t("contractor")}:
                                 </span>
 
                                 <Stack
                                     direction={width <= 440 ? "column" : "row"}
                                     className={styles.descriptioned_item}
                                     justifyContent={width <= 640 ? "center" : "start"}
+                                    extraStyles={{ textAlign: "center" }}
                                 >
-                                    <PhotoInput
-                                        blobUrl={clientPhoto}
-                                        disabled
-                                        size={width <= 440 ? "small" : "medium"}
-                                    />
+                                    {userName ? (
+                                        <>
+                                            <PhotoInput
+                                                blobUrl={userPhoto}
+                                                disabled
+                                                size={width <= 440 ? "small" : "medium"}
+                                            />
 
-                                    <span>
-                                        {clientName}
-                                    </span>
+                                            <span>
+                                                {userName}
+                                            </span>
+                                        </>
+                                    ) : (
+                                        <p>
+                                            {t("deletedUserAlert")}
+                                        </p>
+                                    )}
                                 </Stack>
                             </Stack>
 
@@ -113,22 +138,7 @@ function ContractCard({
                                 <Stack
                                     alignItems={width <= 640 ? "start" : "end"}
                                     extraStyles={{ textAlign: width <= 640 ? "start" : "end" }}
-                                    gap="0.2em"
-                                    className={styles.descriptioned_item}
-                                >
-                                    <span>
-                                        {t("contractDuration")}:
-                                    </span>
-
-                                    <span>
-                                        {durationDays} {t("days")} - {convertDays(durationDays, "day", t)}
-                                    </span>
-                                </Stack>
-
-                                <Stack
-                                    alignItems={width <= 640 ? "start" : "end"}
-                                    extraStyles={{ textAlign: width <= 640 ? "start" : "end" }}
-                                    gap="0.2em"
+                                    gap="0.5em"
                                     className={styles.descriptioned_item}
                                 >
                                     <span>
@@ -154,10 +164,14 @@ function ContractCard({
                 </Stack>
             ) : (
                 <PaymentCard
-                    amount={paymentAmount} 
-                    transactionDate={paymentTransactionDate} 
+                    amount={transactionAmount} 
+                    transactionDate={transactionDate} 
                     mercadoPagoTransactionId={mercadoPagoTransactionId} 
-                    receiptUrl={paymentReceiptUrl} 
+                    receiptUrl={transactionReceiptUrl} 
+                    appFee={transactionAppFee}
+                    mpFee={transactionMpFee}
+                    paymentMethod={paymentMethod}
+                    trainerReceived={transactionTrainerReceived}
                 />
             )}
         </Stack>

@@ -49,9 +49,10 @@ function PaymentPlansContainer({
                                 durationDays={plan.durationDays} 
                                 description={plan.description} 
                                 benefits={plan.benefits}
+                                appFee={plan.appFee}
                                 handleModifyPaymentPlan={!viewerIsClient ? () => handleModifyPaymentPlan(plan) : undefined}
                                 handleRemovePaymentPlan={!viewerIsClient ? () => handleRemovePaymentPlan(plan.ID) : undefined}
-                                handlePayPaymentPlan={viewerIsClient ? () => handlePayPaymentPlan(plan.ID) : undefined}
+                                handlePayPaymentPlan={viewerIsClient && handlePayPaymentPlan ? () => handlePayPaymentPlan(plan) : undefined}
                             />
                         </React.Fragment>
                     ))}

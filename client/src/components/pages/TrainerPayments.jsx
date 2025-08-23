@@ -14,7 +14,6 @@ import ContractCard from "../cards/contracts/ContractCard";
 import styles from "./TrainerPayments.module.css";
 import LoadMoreButton from "../form/buttons/LoadMoreButton";
 import FilterItemsLayout from "../containers/FilterItemsLayout";
-import SearchInput from "../form/fields/SearchInput";
 import { useTranslation } from "react-i18next";
 import PaymentPlansContainer from "../layout/PaymentPlansContainer";
 import DateInput from "../form/fields/dateInput";
@@ -38,7 +37,7 @@ function TrainerPayments() {
     const user = useSelector(state => state.user);
 
     const paymentPlansStorageKey = "paymentPlans";
-    const contractsLimit = 15;
+    const contractsLimit = 8;
 
     const contractsFilters = useMemo(() => {
         return [
@@ -61,6 +60,7 @@ function TrainerPayments() {
         day: "",
         month: null,
         year: "",
+        validYear: "",
         fullDate: ""
     });
     const [searchDateError, setSearchDateError] = useState(false);
@@ -82,9 +82,9 @@ function TrainerPayments() {
                     offset: offset, 
                     limit: contractsLimit, 
                     sort: filter,
-                    fullDate: searchDate.fullDate,
+                    fullDate: searchDate.fullDate || undefined,
                     month: searchDate.month?.value,
-                    year: searchDate.year
+                    year: searchDate.validYear || undefined
                 }
             });
         }
@@ -112,9 +112,11 @@ function TrainerPayments() {
             !isFirstLoading ? t("successContracts") : undefined, 
             t("errorContracts")
         );
-    }, [getTrainerContracts, notify, searchDate.fullDate, searchDate.month?.value, searchDate.year, t]);
+    }, [getTrainerContracts, notify, searchDate.fullDate, searchDate.month?.value, searchDate.validYear, t]);
     
-    const handleOnChangeFilter = useCallback((filter) => {
+    const handleOnChangeFilter = useCallback((filter, e) => {
+        if (e) e.preventDefault();
+
         setContracts([]);
         setShowedContracts([]);
         setContractsOffset(0);
@@ -266,7 +268,7 @@ function TrainerPayments() {
                                     setDateValuesObject={setSearchDate}
                                     error={searchDateError}
                                     setError={setSearchDateError}
-                                    handleReload={handleOnChangeFilter}
+                                    handleReload={(e) => handleOnChangeFilter(activeContractFilter.value, e)}
                                 />
                                 
                                 {!contractsError && contracts.length === 0 ? (
@@ -285,8 +287,8 @@ function TrainerPayments() {
                                                     key={index}
                                                 >
                                                     <ContractCard
-                                                        clientName={contract.client?.name} 
-                                                        clientPhoto={contract.client?.photoUrl} 
+                                                        userName={contract.client?.name} 
+                                                        userPhoto={contract.client?.photoUrl} 
                                                         startDate={contract.startDate} 
                                                         endDate={contract.endDate} 
                                                         status={
@@ -298,13 +300,16 @@ function TrainerPayments() {
                                                             )
                                                             : undefined
                                                         } 
-                                                        durationDays={contract.paymentPlan?.durationDays} 
                                                         paymentPlanName={contract.paymentPlan?.name} 
-                                                        paymentPlanID={contract.paymentPlan?.ID}
-                                                        paymentAmount={contract.paymentTransaction?.amount} 
-                                                        paymentTransactionDate={contract.paymentTransaction?.createDate} 
+                                                        transactionAmount={contract.paymentTransaction?.amount} 
+                                                        transactionAppFee={contract.paymentTransaction?.appFee}
+                                                        paymentMethod={contract.paymentTransaction?.paymentMethod}
+                                                        transactionDate={contract.paymentTransaction?.createDate} 
+                                                        transactionMpFee={contract.paymentTransaction?.mpFee}
+                                                        transactionTrainerReceived={contract.paymentTransaction?.trainerReceived}
                                                         mercadoPagoTransactionId={contract.paymentTransaction?.mercadopagoTransactionID} 
-                                                        paymentReceiptUrl={contract.paymentTransaction?.receiptUrl} 
+                                                        transactionReceiptUrl={contract.paymentTransaction?.receiptUrl} 
+                                                        forClient={false}
                                                     />
                                                 </React.Fragment>
                                             ))

@@ -8,9 +8,13 @@ import styles from "./ContractCard.module.css";
 
 function PaymentCard({
     amount,
+    trainerReceived,
     transactionDate,
     mercadoPagoTransactionId,
-    receiptUrl
+    receiptUrl,
+    appFee,
+    mpFee,
+    paymentMethod,
 }) {
     const { t, i18n } = useTranslation();
     
@@ -29,7 +33,7 @@ function PaymentCard({
                     </span>
 
                     <Stack
-                        gap="0.5em"
+                        gap="0.8em"
                     >
                         <span>
                             {formatDateToExtend(transactionDate, i18n.language)}
@@ -52,17 +56,78 @@ function PaymentCard({
 
                 <Stack>
                     <Stack
-                        gap="0.2em"
+                        alignItems="start"
+                    >
+                        <Stack
+                            gap="0.5em"
+                            alignItems="start"
+                            className={styles.descriptioned_item}
+                        >
+                            <span>
+                                {t("total")}:
+                            </span>
+
+                            <span>
+                                {formatPriceToBR(amount)}
+                            </span>
+                        </Stack>
+
+                        <Stack
+                            gap="0.5em"
+                            alignItems="start"
+                            className={styles.descriptioned_item}
+                        >
+                            <span>
+                                {t("received")}:
+                            </span>
+
+                            {trainerReceived && (
+                                <span>
+                                    {formatPriceToBR(trainerReceived)}
+                                </span>
+                            )}
+                        </Stack>
+                        
+                        <Stack
+                            gap="0.5em"
+                            alignItems="start"
+                            className={styles.descriptioned_item}
+                        >
+                            <span>
+                                {t("fees")}:
+                            </span>
+
+                            <Stack
+                                alignItems="start"
+                                gap="0.2em"
+                            >
+                                {mpFee && (
+                                    <span>
+                                        Mercado Pago - {formatPriceToBR(mpFee)}
+                                    </span>
+                                )}
+                                
+                                <span>
+                                    FitX - {formatPriceToBR(appFee)}
+                                </span>
+                            </Stack>
+                        </Stack>
+                    </Stack>
+                    
+                    <Stack
+                        gap="0.5em"
                         alignItems="start"
                         className={styles.descriptioned_item}
                     >
                         <span>
-                            {t("value")}:
+                            {t("paymentMethod")}:
                         </span>
 
-                        <span>
-                            {formatPriceToBR(amount)}
-                        </span>
+                        <Stack
+                            alignItems="start"
+                        >
+                            {paymentMethod}
+                        </Stack>
                     </Stack>
                 </Stack>
             </Stack>
