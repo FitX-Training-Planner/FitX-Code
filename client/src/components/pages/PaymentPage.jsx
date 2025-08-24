@@ -49,23 +49,7 @@ function PaymentPage() {
         ]
     }, [t]);
 
-    const [paymentPlan, setPaymentPlan] = useState({
-        name: "Barato",
-        fullPrice: "99.99",
-        durationDays: "30",
-        description: "Esse plano é para quem quer ter o shape esse fim de ano!",
-        benefits: [
-            {
-                description: "Acompanhamento diário"
-            },
-            {
-                description: "Treinos altamente personalizados"
-            },
-            {
-                description: "Acompanhamento de evolução"
-            }
-        ]
-    });
+    const [paymentPlan, setPaymentPlan] = useState();
     const [acceptTerms, setAcceptedTerms] = useState(false);
 
     useEffect(() => {
@@ -373,17 +357,6 @@ function PaymentPage() {
                                         {formatPriceToBR(paymentPlan.fullPrice)}
                                     </span>
 
-                                    <Stack
-                                        direction="row"
-                                        justifyContent="start"
-                                    >
-                                        <Alert />
-
-                                        <p>
-                                            {t("mpRedirect")}
-                                        </p>
-                                    </Stack>
-                                    
                                     <Stack
                                         direction="row"
                                         justifyContent="start"

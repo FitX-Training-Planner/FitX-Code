@@ -24,19 +24,5 @@
     cursor: pointer;
     font-size: var(--small-text-size);
     line-height: 1.3em;
-}
-
-.terms_link,
-.terms_link:link,
-.terms_link:visited,
-.terms_link:hover,
-.terms_link:active {
-    color: var(--light-theme-color);
-    text-decoration: none; 
-    transition: var(--fast-transition); 
-}
-
-.terms_link:hover {
-    text-decoration: underline;
-    color: var(--dark-theme-color);
+    hyphens: none;
 }

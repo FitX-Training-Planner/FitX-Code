@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import Stack from "../../containers/Stack";
 import styles from "./AcceptTerms.module.css";
+import TermsLink from "../../text/TermsLink";
 
 function AcceptTerms({ 
     isAccepted, 
@@ -34,14 +35,7 @@ function AcceptTerms({
                 <p>
                     {`${t("checkThe")} `}
 
-                    <a 
-                        href="/terms-and-conditions" 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                        className={styles.terms_link}
-                    >
-                        {t("UseTermsAndConditions")}
-                    </a>
+                    <TermsLink />
 
                     {` ${t("forMoreInfo")}`}.
                 </p>
