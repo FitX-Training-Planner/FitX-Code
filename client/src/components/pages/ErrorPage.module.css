@@ -1,6 +1,6 @@
 .error_page_container {
     --banners-width: 10%;
-    height: 100dvh;
+    min-height: 100dvh;
     position: relative;
     padding: 2em calc(var(--banners-width) + 1em);
 }
@@ -8,7 +8,6 @@
 .error_page_container > img {
     height: calc(var(--large-title-size) * 3);
     max-width: 100%;
-    filter: drop-shadow(2px 5px 5px black);
 }
 
 .error_container > span {
@@ -17,10 +16,20 @@
     text-align: center;
 }
 
-.error_container > p {
+:where(.text_container, .error_container, .failure_reason) > p {
     font-size: var(--large-text-size);
     text-align: center;
     hyphens: none;
+}
+
+.failure_reason > p,
+.terms_alert {
+    text-align: left;
+    font-size: var(--text-size);
+}
+
+.failure_reason {
+    padding: 0 2em;
 }
 
 .error_page_container::before {

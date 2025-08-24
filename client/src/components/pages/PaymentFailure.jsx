@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import Stack from "../containers/Stack";
 import { useNavigate } from "react-router-dom";
 import styles from "./ErrorPage.module.css";
 import NonBackgroundButton from "../form/buttons/NonBackgroundButton";
 import Title from "../text/Title";
+import TermsLink from "../text/TermsLink";
 
 function PaymentFailure({ 
     hasFailed =  false
@@ -13,9 +14,23 @@ function PaymentFailure({
 
     const navigate = useNavigate();
 
-    useEffect(() => {
-        document.title = t("paymentFailure");
+    const failureReasons = useMemo(() => {
+        return [
+            t("failureReason1"),
+            t("failureReason2"),
+            t("failureReason3"),
+            t("failureReason4"),
+            t("failureReason5"),
+            t("failureReason6"),
+            t("failureReason7"),
+            t("failureReason8"),
+            t("failureReason9")
+        ]
     }, [t]);
+
+    useEffect(() => {
+        document.title = hasFailed ? t("paymentFailure") : t("paymentPending");
+    }, [t, hasFailed]);
 
     return (
         <main>
@@ -40,9 +55,39 @@ function PaymentFailure({
                             headingNumber={1}
                         />
 
-                        <p>
-                            {t("paymentFailureAlert")}
-                        </p>
+                        <Stack
+                            className={styles.text_container}
+                            gap="2em"
+                        >
+                            <p>
+                                {hasFailed ? t("paymentFailureAlert") : t("paymentPendingAlert")}
+                            </p>
+
+                            {hasFailed && (
+                                <Stack
+                                    gap="0.5em"
+                                >
+                                    {failureReasons.map((reason, index) => (
+                                        <React.Fragment
+                                            key={index}
+                                        >
+                                            <Stack
+                                                direction="row"
+                                                alignItems="start"
+                                                justifyContent="start"
+                                                className={styles.failure_reason}
+                                            >
+                                                - 
+    
+                                                <p>
+                                                    {reason}
+                                                </p>
+                                            </Stack>
+                                        </React.Fragment>
+                                    ))}
+                                </Stack>
+                            )}
+                        </Stack>
                     </Stack>
 
                     <NonBackgroundButton

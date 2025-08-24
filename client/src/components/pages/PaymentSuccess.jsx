@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import styles from "./ErrorPage.module.css";
 import NonBackgroundButton from "../form/buttons/NonBackgroundButton";
 import Title from "../text/Title";
+import TermsLink from "../text/TermsLink";
 
 function PaymentSuccess() {
     const { t } = useTranslation();
@@ -38,9 +39,24 @@ function PaymentSuccess() {
                             headingNumber={1}
                         />
 
-                        <p>
-                            {t("paymentSuccessAlert")}
-                        </p>
+                        <Stack
+                            className={styles.text_container}
+                            gap="2em"
+                        >
+                            <p>
+                                {t("paymentSuccessAlert")}
+                            </p>
+
+                            <p
+                                className={styles.terms_alert}
+                            >
+                                {`${t("checkThe")} `}
+
+                                <TermsLink />
+
+                                {` ${t("forMoreContractInfo")}`}
+                            </p>
+                        </Stack>
                     </Stack>
 
                     <NonBackgroundButton
