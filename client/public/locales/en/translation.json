@@ -55,7 +55,8 @@
         "ERROR_LIMIT_PAYMENT_PLANS": "You have reached the limit of 6 payment plans.",
         "ERROR_LIMIT_TRAINING_PLANS": "You have reached the limit of 20 training plans.",
         "ERROR_ALREADY_EXISTS_MP_USER_ID": "An FitX account connected to this Mercado Pago user already exists.",
-        "INVALID_DATE_FORMAT": "The date is in an invalid format."
+        "INVALID_DATE_FORMAT": "The date is in an invalid format.",
+        "TRAINER_IS_IN_HIRING": "Another client is already in the process of hiring with this trainer. Please try again in a few minutes."
     },
     "loadingCheckData": "Checking data",
     "errorLogin": "Login failed!",
@@ -590,8 +591,7 @@
     "clientContractFeature4": "All contracted benefits and services are the sole responsibility of the trainer. FitX doesn't guarantee the delivery of these services, but offers support and refund mechanisms if the client is not satisfied.",
     "clientContractFeature5": "During the contract period, communication between the client and trainer is conducted exclusively through the FitX platform, ensuring greater security and organization.",
     "clientContractFeature6": "The client can request a refund at any time, and the refund may be in full or as defined by the trainer in the payment plan. If the trainer chooses to cancel the contract on their own initiative, the amount paid will be refunded in full.",
-    "clientContractFeature7": "Hiring a trainer is subject to the available slot limit set by the trainer. When a client initiates the payment process, the slot is reserved for up to 5 minutes. If the payment takes longer than this period and another client completes the contract beforehand, the limit may be reached. In this situation, the payment made will be fully refunded to the client, without any penalty.",
-    "clientContractFeature8": "If the client chooses to deactivate their profile while the contract is active, the contract will remain in effect until the end of the contracted period. During this time, the trainer will not be able to send messages or provide any services to the client, as the account will be inactive. To resume communication and receipt of contracted services, the client must reactivate their profile on FitX.",
+    "clientContractFeature7": "If the client chooses to deactivate their profile while the contract is active, the contract will remain in effect until the end of the contracted period. During this time, the trainer will not be able to send messages or provide any services to the client, as the account will be inactive. To resume communication and receipt of contracted services, the client must reactivate their profile on FitX.",
     "refundTerm1": "FitX guarantees the client the right to cancel a contract and request a refund at any time, in accordance with Brazilian law and the Código de Defesa do Consumidor.",
     "refundTerm2": "Within the first 7 days after contract, the client is entitled to a full refund of the amount paid, regardless of the use of the services. After this period, the refund will follow the rules established by the trainer in the chosen payment plan.",
     "refundTerm3": "After the legal 7-day cooling-off period, all refund requests will be subject to a 10% administrative fee on the amount paid. This fee is intended solely to cover financial and operational processing costs of the FitX platform and does not represent additional profit. This fee does not apply to cancellations made within the 7-day period guaranteed by the Código de Defesa do Consumidor, which always results in a full refund.",

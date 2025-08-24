@@ -28,7 +28,7 @@ def run():
                     joinedload(PlanContract.user)
                 )
                 .filter(
-                    PlanContract.end_date < datetime.now(brazil_tz).date(),
+                    PlanContract.end_date == datetime.now(brazil_tz).date(),
                     PlanContract.fk_contract_status_ID == active_status.ID
                 )
                 .all()

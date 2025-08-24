@@ -883,25 +883,56 @@ function MyProfile() {
                             </Stack>
                         )}
 
-                        <Stack>
-                            <form
-                                onSubmit={handleOnDeactivateProfile}
-                            >   
-                                <SubmitFormButton
-                                    text={t("deactivateProfile")}
-                                    varBgColor="--alert-color"
-                                />
-                            </form>
+                        <Stack
+                            gap="1.5em"
+                        >
+                            <Stack
+                                gap="0.5em"
+                            >
+                                <form
+                                    onSubmit={handleOnDeactivateProfile}
+                                >   
+                                    <SubmitFormButton
+                                        text={t("deactivateProfile")}
+                                        varBgColor="--alert-color"
+                                    />
+                                </form>
 
-                            <form
-                                onSubmit={handleOnDeleteAcount}
-                            >   
-                                <SubmitFormButton
-                                    text={t("deleteProfile")}
-                                    varBgColor="--alert-color"
-                                />
-                            </form>
+                                {(user.config.isClient && !trainingLoading && clientTraining) && (
+                                    <Stack
+                                        direction="row"
+                                        justifyContent="start"
+                                    >
+                                        <Alert />
+        
+                                        {t("clientContractFeature8")}
+                                    </Stack>
+                                )}
+                            </Stack>
 
+                            <Stack
+                                gap="0.5em"
+                            >
+                                <form
+                                    onSubmit={handleOnDeleteAcount}
+                                >   
+                                    <SubmitFormButton
+                                        text={t("deleteProfile")}
+                                        varBgColor="--alert-color"
+                                    />
+                                </form>
+
+                                {(user.config.isClient && !trainingLoading && clientTraining) && (
+                                    <Stack
+                                        direction="row"
+                                        justifyContent="start"
+                                    >
+                                        <Alert />
+        
+                                        {t("refundTerm7")}
+                                    </Stack>
+                                )}
+                            </Stack>
                         </Stack>
                     </Stack>
 

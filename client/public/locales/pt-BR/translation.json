@@ -55,7 +55,8 @@
         "ERROR_LIMIT_PAYMENT_PLANS": "Você atingiu o limite de 6 planos de pagamento.",
         "ERROR_LIMIT_TRAINING_PLANS": "Você atingiu o limite de 20 planos de treinamento.",
         "ERROR_ALREADY_EXISTS_MP_USER_ID": "Já existe uma conta FitX conectada a esse usuário do Mercado Pago.",
-        "INVALID_DATE_FORMAT": "A data está em um formato inválido."
+        "INVALID_DATE_FORMAT": "A data está em um formato inválido.",
+        "TRAINER_IS_IN_HIRING": "Algum outro cliente já está em processo de contratação com esse treinador. Tente novamente após alguns minutos."
     },
     "loadingCheckData": "Checando dados",
     "errorLogin": "Falha ao logar!",
@@ -590,8 +591,7 @@
     "clientContractFeature4": "Todos os benefícios e serviços contratados são de responsabilidade exclusiva do treinador. A FitX não garante a entrega desses serviços, mas oferece mecanismos de suporte e reembolso caso o cliente não esteja satisfeito.",
     "clientContractFeature5": "Durante o período de vigência do contrato, a comunicação entre cliente e treinador é feita exclusivamente pela plataforma FitX, garantindo maior segurança e organização.",
     "clientContractFeature6": "O cliente pode solicitar reembolso a qualquer momento, sendo que o valor devolvido pode ser integral ou conforme definido pelo treinador no plano de pagamento. Caso o treinador opte por cancelar o contrato por iniciativa própria, o valor pago será devolvido integralmente ao cliente.",
-    "clientContractFeature7": "A contratação de um treinador está sujeita ao limite de vagas disponíveis definido por ele. Quando um cliente inicia o processo de pagamento, a vaga é reservada por até 5 minutos. Caso o pagamento demore mais que esse período e outro cliente finalize a contratação antes, pode ocorrer de o limite ser atingido. Nessa situação, o pagamento realizado será integralmente reembolsado ao cliente, sem qualquer prejuízo.",
-    "clientContractFeature8": "Caso o cliente opte por desativar o perfil enquanto houver um contrato ativo, o contrato permanecerá em andamento até o fim do período contratado. Durante esse tempo, o treinador não poderá enviar mensagens ou prestar qualquer serviço ao cliente, já que a conta ficará inativa. Para retomar a comunicação e o recebimento dos serviços contratados, o cliente deverá reativar o perfil no FitX.",
+    "clientContractFeature7": "Caso o cliente opte por desativar o perfil enquanto houver um contrato ativo, o contrato permanecerá em andamento até o fim do período contratado. Durante esse tempo, o treinador não poderá enviar mensagens ou prestar qualquer serviço ao cliente, já que a conta ficará inativa. Para retomar a comunicação e o recebimento dos serviços contratados, o cliente deverá reativar o perfil no FitX.",
     "refundTerm1": "A FitX garante ao cliente o direito de solicitar o cancelamento de um contrato e pedir reembolso a qualquer momento, de acordo com a legislação brasileira e o Código de Defesa do Consumidor.",
     "refundTerm2": "Nos primeiros 7 dias após a contratação, o cliente tem direito ao reembolso integral do valor pago, independentemente do uso dos serviços. Após esse período, o reembolso seguirá as regras estabelecidas pelo treinador no plano de pagamento escolhido.",
     "refundTerm3": "Após o prazo legal de 7 dias de arrependimento, todo reembolso solicitado estará sujeito a uma taxa administrativa de 10% sobre o valor pago. Essa taxa tem a finalidade exclusiva de cobrir custos de processamento financeiro e operacionais da plataforma FitX, não representando lucro adicional. A aplicação dessa taxa não se aplica a cancelamentos realizados dentro dos 7 dias garantidos pelo Código de Defesa do Consumidor, cujo reembolso é sempre integral.",

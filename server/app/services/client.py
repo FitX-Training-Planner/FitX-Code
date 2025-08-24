@@ -93,9 +93,16 @@ def create_payment(db, client_id, payment_plan_id):
         
         payment_plan = (
             db.query(PaymentPlan)
+            .options(
+                subqueryload(PaymentPlan.trainer)
+                    .joinedload(Trainer.user)
+            )
             .filter(PaymentPlan.ID == payment_plan_id)
             .first()
         )
+
+        if not payment_plan.trainer.user.is_active:
+            raise ApiError(MessageCodes.TRAINER_DEACTIVATED, 404)
 
         if not payment_plan:
             raise ApiError(MessageCodes.PAYMENT_PLAN_NOT_FOUND, 404)

@@ -31,8 +31,7 @@ function PaymentPage() {
             t("clientContractFeature4"),
             t("clientContractFeature5"),
             t("clientContractFeature6"),
-            t("clientContractFeature7"),
-            t("clientContractFeature8")
+            t("clientContractFeature7")
         ]
     }, [t]);
 
@@ -73,7 +72,7 @@ function PaymentPage() {
         const locationPaymentPlan = location.state?.paymentPlan;
 
         if (!locationPaymentPlan) {
-            // navigate("/");
+            navigate("/");
         } else {
             setPaymentPlan(locationPaymentPlan);
         }
