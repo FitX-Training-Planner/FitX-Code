@@ -6,7 +6,7 @@ export function isPaymentPlanDurationValid(days) {
 export function isPaymentPlanPriceValid(price) {
     const validNumber = price.replace(",", ".");
 
-    return Number(validNumber) >= 9.99 && Number(validNumber) <= 99999.99;
+    return Number(validNumber) >= 9.99 && Number(validNumber) <= 50000.00;
 }
 
 export function isPaymentPlanBenefitDescriptionValid(description) {

@@ -58,15 +58,15 @@ def create_payment_preference(trainer_access_token, item_id, title, description,
 
 def calculate_app_fee_in_payment_plan(full_price):
     if full_price <= 300:
-        fee = full_price * 0.05
+        fee = full_price * 0.08
     
     elif full_price <= 600:
-        fee = full_price * 0.04
+        fee = full_price * 0.07
     
     elif full_price <= 800:
-        fee = full_price * 0.03
+        fee = full_price * 0.06
     
     else:
-        fee = full_price * 0.02
+        fee = full_price * 0.05
 
     return round(fee, 2)

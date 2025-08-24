@@ -406,7 +406,7 @@ def mercadopago_webhook():
 
                 db.commit() 
 
-            elif status == "rejected" or status == "cancelled" or status == "refunded" or status == "charged_back":
+            elif status == "rejected" or status == "cancelled" or status == "refunded" or status == "charged_back" or status == "expired":
                 release_trainer_lock(transaction.fk_trainer_ID)
                 release_client_lock(transaction.fk_user_ID)
 

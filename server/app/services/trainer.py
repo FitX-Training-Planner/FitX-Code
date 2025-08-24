@@ -472,12 +472,18 @@ def insert_payment_plan(db, name, full_price, duration_days, description, benefi
     
         if payment_plans_count >= 6:
             raise ApiError(MessageCodes.ERROR_LIMIT_PAYMENT_PLANS, 409)
+
+        full_price == safe_float(full_price)
+        duration_days == safe_int(duration_days)
+
+        if full_price > 50000 or duration_days > 730:
+            raise ApiError(MessageCodes.INVALID_PAYMENT_PLAN_DATA, 422)
         
         new_plan = PaymentPlan(
             name=name, 
-            full_price=safe_float(full_price),
+            full_price=full_price,
             app_fee=safe_float(app_fee),
-            duration_days=safe_int(duration_days),
+            duration_days= duration_days,
             description=safe_str(description),
             fk_trainer_ID=trainer_id
         )
