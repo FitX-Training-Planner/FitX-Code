@@ -56,7 +56,8 @@
         "ERROR_LIMIT_TRAINING_PLANS": "You have reached the limit of 20 training plans.",
         "ERROR_ALREADY_EXISTS_MP_USER_ID": "An FitX account connected to this Mercado Pago user already exists.",
         "INVALID_DATE_FORMAT": "The date is in an invalid format.",
-        "TRAINER_IS_IN_HIRING": "Another client is already in the process of hiring with this trainer. Please try again in a few minutes."
+        "TRAINER_IS_IN_HIRING": "Another client is already in the process of hiring with this trainer. Please try again in a few minutes.",
+        "CLIENT_IS_IN_HIRING": "You are in the process of hiring a trainer. Please wait for payment to be processed."
     },
     "loadingCheckData": "Checking data",
     "errorLogin": "Login failed!",

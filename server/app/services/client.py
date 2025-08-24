@@ -5,7 +5,8 @@ from sqlalchemy.orm import joinedload, subqueryload
 from ..utils.message_codes import MessageCodes
 from ..utils.mercadopago import create_payment_preference
 from ..utils.user import decrypt_email
-from ..utils.trainer import acquire_trainer_lock
+from ..utils.trainer import acquire_trainer_lock, release_trainer_lock
+from ..utils.client import acquire_client_lock, release_client_lock
 from .trainer import get_valid_mp_token, check_trainer_can_be_contracted
 
 def get_client_training_contract(db, client_id):
@@ -110,11 +111,6 @@ def create_payment(db, client_id, payment_plan_id):
         if not check_trainer_can_be_contracted(db, payment_plan.fk_trainer_ID):
             raise ApiError(MessageCodes.TRAINER_CANNOT_BE_CONTRACTED, 409)
 
-        preference_expiration_seconds = 300 
-
-        if not acquire_trainer_lock(payment_plan.fk_trainer_ID, preference_expiration_seconds):
-            raise ApiError(MessageCodes.TRAINER_IS_IN_HIRING, 409)
-        
         client = (
             db.query(Users)
             .filter(Users.ID == client_id)
@@ -136,18 +132,31 @@ def create_payment(db, client_id, payment_plan_id):
 
         db.flush()
         
-        description = f"Plano '{payment_plan.name}' de {payment_plan.duration_days} dias do FitX"
+        if not acquire_trainer_lock(payment_plan.fk_trainer_ID, None):
+            raise ApiError(MessageCodes.TRAINER_IS_IN_HIRING, 409)
+        
+        if not acquire_client_lock(client_id, None):
+            raise ApiError(MessageCodes.CLIENT_IS_IN_HIRING, 409)
+        
+        try:
+            description = f"Plano '{payment_plan.name}' de {payment_plan.duration_days} dias do FitX"
 
-        preference = create_payment_preference(
-            get_valid_mp_token(db, payment_plan.fk_trainer_ID),
-            payment_plan.ID,
-            payment_plan.name,
-            description,
-            payment_plan.full_price,
-            decrypt_email(client.email_encrypted),
-            transaction.ID,
-            preference_expiration_seconds
-        )
+            preference = create_payment_preference(
+                get_valid_mp_token(db, payment_plan.fk_trainer_ID),
+                payment_plan.ID,
+                payment_plan.name,
+                description,
+                payment_plan.full_price,
+                decrypt_email(client.email_encrypted),
+                transaction.ID,
+                300
+            )
+
+        except Exception as e:
+            release_trainer_lock(payment_plan.fk_trainer_ID)
+            release_client_lock(client_id)
+
+            raise
 
         transaction.mp_preference_id = preference["id"]
 

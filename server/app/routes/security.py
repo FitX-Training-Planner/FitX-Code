@@ -10,6 +10,7 @@ from ..utils.trainer_decorator import only_trainer
 from ..utils.client_decorator import only_client
 from ..utils.message_codes import MessageCodes
 from ..utils.trainer import release_trainer_lock
+from ..utils.client import release_client_lock
 from ..config import MercadopagoConfig
 from ..services.trainer import insert_mercadopago_trainer_info
 from ..services.client import get_valid_mp_token
@@ -374,6 +375,9 @@ def mercadopago_webhook():
             mp_fee =  payment_info.get("transaction_details", {}).get("fee_amount", 0)
 
             if status == "approved":
+                release_trainer_lock(transaction.fk_trainer_ID) 
+                release_client_lock(transaction.fk_user_ID)
+
                 transaction.is_finished = True
                 transaction.mp_transaction_id = mp_transaction_id
                 transaction.receipt_url = receipt_url
@@ -402,10 +406,9 @@ def mercadopago_webhook():
 
                 db.commit() 
 
-                release_trainer_lock(transaction.fk_trainer_ID) 
-
             elif status == "rejected" or status == "cancelled" or status == "refunded" or status == "charged_back":
                 release_trainer_lock(transaction.fk_trainer_ID)
+                release_client_lock(transaction.fk_user_ID)
 
                 db.delete(transaction)
 
