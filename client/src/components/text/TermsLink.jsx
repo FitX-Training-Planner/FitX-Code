@@ -6,7 +6,7 @@ function TermsLink() {
 
     return (
         <a 
-            href="/terms-and-conditions" 
+            href="/app/terms-and-conditions" 
             target="_blank" 
             rel="noopener noreferrer" 
             className={styles.terms_link}

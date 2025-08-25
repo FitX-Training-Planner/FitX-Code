@@ -15,6 +15,7 @@ import styles from "./TrainingPlans.module.css";
 import { getCacheData, removeItemFromCacheList, setCacheData } from "../../utils/cache/operations";
 import SearchInput from "../form/fields/SearchInput";
 import { useTranslation } from "react-i18next";
+import FooterLayout from "../containers/FooterLayout";
 
 function TrainingPlans() {    
     const { t } = useTranslation();
@@ -141,80 +142,82 @@ function TrainingPlans() {
         <NavBarLayout
             isClient={false}
         >
-            <main
-                className={styles.training_plans_page}
-            >
-                <Stack
-                    gap="4em"
+            <FooterLayout>
+                <main
+                    className={styles.training_plans_page}
                 >
                     <Stack
-                        className={styles.training_plans_title}
+                        gap="4em"
                     >
-                        <Title
-                            headingNumber={1}
-                            text={t("trainingPlans")}
-                        />
-
-                        <p>
-                            {t("trainingPlansDescription")}
-                        </p>
-                    </Stack>
-
-                    <Stack
-                        gap="3em"
-                    >
-                        {trainingPlans.length !== 0 && (
-                            <SearchInput
-                                searchText={searchText}
-                                setSearchText={setSearchText}
-                                items={trainingPlans}
-                                setShowedItems={setShowedTrainingPlans}
-                                searchKey="name"
-                                placeholder={t("searchByName")}
-                            />
-                        )}
-
                         <Stack
-                            gap="2em"
+                            className={styles.training_plans_title}
                         >
-                            {trainingPlans.length === 0 ? (
-                                <p>
-                                    {t("createTrainingInstruction")}
-                                </p>
-                            ) : (
-                                showedTrainingPlans.length !== 0 ? (
-                                    showedTrainingPlans.map((trainingPlan, index) => (
-                                        <React.Fragment
-                                            key={index}
-                                        >
-                                            <TrainingPlanCompactedCard
-                                                headingNumber={2}
-                                                planID={trainingPlan.ID}
-                                                name={trainingPlan.name}
-                                                trainingDays={trainingPlan.trainingDays}
-                                                handleModifyPlan={() => modifyTrainingPlan(trainingPlan)}
-                                                handleRemovePlan={() => removePlan(trainingPlan.ID)}
-                                                handleExpandPlan={() => expandPlan(trainingPlan.ID)}
-                                                width={width}
-                                            />
-                                        </React.Fragment>
-                                    ))
-                                ) : (
-                                    <p>
-                                        {t("noResult")}
-                                    </p>
-                                )
-                            )}
+                            <Title
+                                headingNumber={1}
+                                text={t("trainingPlans")}
+                            />
+
+                            <p>
+                                {t("trainingPlansDescription")}
+                            </p>
                         </Stack>
 
-                        <ClickableIcon
-                            iconSrc="/images/icons/add.png"
-                            name={t("addTrainingPlan")}
-                            handleClick={addTrainingPlan}
-                        />
+                        <Stack
+                            gap="3em"
+                        >
+                            {trainingPlans.length !== 0 && (
+                                <SearchInput
+                                    searchText={searchText}
+                                    setSearchText={setSearchText}
+                                    items={trainingPlans}
+                                    setShowedItems={setShowedTrainingPlans}
+                                    searchKey="name"
+                                    placeholder={t("searchByName")}
+                                />
+                            )}
+
+                            <Stack
+                                gap="2em"
+                            >
+                                {trainingPlans.length === 0 ? (
+                                    <p>
+                                        {t("createTrainingInstruction")}
+                                    </p>
+                                ) : (
+                                    showedTrainingPlans.length !== 0 ? (
+                                        showedTrainingPlans.map((trainingPlan, index) => (
+                                            <React.Fragment
+                                                key={index}
+                                            >
+                                                <TrainingPlanCompactedCard
+                                                    headingNumber={2}
+                                                    planID={trainingPlan.ID}
+                                                    name={trainingPlan.name}
+                                                    trainingDays={trainingPlan.trainingDays}
+                                                    handleModifyPlan={() => modifyTrainingPlan(trainingPlan)}
+                                                    handleRemovePlan={() => removePlan(trainingPlan.ID)}
+                                                    handleExpandPlan={() => expandPlan(trainingPlan.ID)}
+                                                    width={width}
+                                                />
+                                            </React.Fragment>
+                                        ))
+                                    ) : (
+                                        <p>
+                                            {t("noResult")}
+                                        </p>
+                                    )
+                                )}
+                            </Stack>
+
+                            <ClickableIcon
+                                iconSrc="/images/icons/add.png"
+                                name={t("addTrainingPlan")}
+                                handleClick={addTrainingPlan}
+                            />
+                        </Stack>
                     </Stack>
-                </Stack>
-            </main>
+                </main>
+            </FooterLayout>
         </NavBarLayout>
     );
 }

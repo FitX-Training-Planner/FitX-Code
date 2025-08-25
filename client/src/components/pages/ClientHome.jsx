@@ -17,6 +17,7 @@ import LoadMoreButton from "../form/buttons/LoadMoreButton";
 import ClientTrainingContractCard from "../cards/user/ClientTrainingContractCard";
 import SmallTrainerProfessionalCard from "../cards/user/SmallTrainerProfessionalCard";
 import { useTranslation } from "react-i18next";
+import FooterLayout from "../containers/FooterLayout";
 
 function ClientHome() {
     const { t } = useTranslation();
@@ -196,138 +197,140 @@ function ClientHome() {
 
     return (
         <NavBarLayout>
-            <main
-                className={styles.client_home}
-                style={{ padding: width <= 440 ? "2em 1em" : "1em" }}
-            >
-                <Stack
-                    gap="3em"
+            <FooterLayout>
+                <main
+                    className={styles.client_home}
+                    style={{ padding: width <= 440 ? "2em 1em" : "1em" }}
                 >
-                    <Stack
-                        direction={width <= 440 ? "column" : "row"}
-                        justifyContent="center"
-                        gap={width <= 440 ? "0" : "1em"}
-                    >
-                        <ClickableIcon
-                            iconSrc="/logo180.png"
-                            size="large"
-                            hasTheme={false}
-                        />
-
-                        <Title
-                            headingNumber={1}
-                            text={t("training")}
-                        />
-                    </Stack>
-
                     <Stack
                         gap="3em"
                     >
-                        <Stack>
-                            <Title
-                                headingNumber={2}
-                                text={t("yourTraining")}
+                        <Stack
+                            direction={width <= 440 ? "column" : "row"}
+                            justifyContent="center"
+                            gap={width <= 440 ? "0" : "1em"}
+                        >
+                            <ClickableIcon
+                                iconSrc="/logo180.png"
+                                size="large"
+                                hasTheme={false}
                             />
 
-                            {trainingLoading || !clientTraining || clientTrainingError ? (
-                                clientTrainingError ? (
-                                    <p>
-                                        {t("errorOcurredTrainingContract")}
-
-                                        <br/>
-                                        
-                                        {t("reloadOrTryLater")}
-                                    </p>
-                                ) : (
-                                    <p>
-                                        {t("noContractActive")}
-
-                                        <br/>
-
-                                        {t("searchTrainersInstruction")}
-                                    </p>
-                                )
-                            ) : (
-                                <ClientTrainingContractCard
-                                    trainerName={clientTraining.trainer?.name} 
-                                    trainerPhotoUrl={clientTraining.trainer?.photoUrl} 
-                                    trainerCrefNumber={clientTraining.trainer?.crefNumber} 
-                                    trainingPlanID={clientTraining.trainingPlan?.ID}
-                                    trainingPlanName={clientTraining.trainingPlan?.name} 
-                                    contractStartDate={clientTraining.contract?.startDate} 
-                                    contractEndDate={clientTraining.contract?.endDate} 
-                                />
-                            )}
+                            <Title
+                                headingNumber={1}
+                                text={t("training")}
+                            />
                         </Stack>
 
-                        <Stack>
-                            <Title
-                                headingNumber={2}
-                                text={t("otherTrainers")}
-                            />
+                        <Stack
+                            gap="3em"
+                        >
+                            <Stack>
+                                <Title
+                                    headingNumber={2}
+                                    text={t("yourTraining")}
+                                />
 
-                            <Stack
-                                className={styles.contracts}
-                                gap="2em"
-                            >
-                                <FilterItemsLayout
-                                    filters={trainersFilters}
-                                    activeFilter={activeTrainerFilter}
-                                    setActiveFilter={setActiveTrainerFilter}
-                                    handleChange={handleOnChangeFilter}
-                                >
-                                    <Stack
-                                        gap="2em"
-                                    >
-                                        {trainers.length !== 0 ? (
-                                            trainers.map((trainer, index) => (
-                                                <React.Fragment
-                                                    key={index}
-                                                >
-                                                    <SmallTrainerProfessionalCard
-                                                        name={trainer.name} 
-                                                        photoUrl={trainer.photoUrl} 
-                                                        crefNumber={trainer.crefNumber} 
-                                                        rate={trainer.rate} 
-                                                        contractsNumber={trainer.contractsNumber} 
-                                                        complaintsNumber={trainer.complaintsNumber} 
-                                                        paymentPlans={trainer.paymentPlans} 
-                                                        handleExpand={() => navigate(`/trainers/${trainer.ID}`)}
-                                                        canBeContracted={trainer.canBeContracted}
-                                                        handleSave={() => handleOnSaveTrainer(trainer.ID)}
-                                                        hasSaved={trainer.hasSaved}
-                                                    />
-                                                </React.Fragment>
-                                            ))
-                                        ) : (
-                                            <p>
-                                                {t("noTrainersFinded")}
-                                            </p>
-                                        )}
-                                    </Stack>
-                                </FilterItemsLayout>
-
-                                {trainersError ? (
-                                    <p>
-                                        <>
-                                            {t("errorOcurredTrainers")}
+                                {trainingLoading || !clientTraining || clientTrainingError ? (
+                                    clientTrainingError ? (
+                                        <p>
+                                            {t("errorOcurredTrainingContract")}
 
                                             <br/>
                                             
                                             {t("reloadOrTryLater")}
-                                        </>
-                                    </p>
+                                        </p>
+                                    ) : (
+                                        <p>
+                                            {t("noContractActive")}
+
+                                            <br/>
+
+                                            {t("searchTrainersInstruction")}
+                                        </p>
+                                    )
                                 ) : (
-                                    <LoadMoreButton
-                                        handleLoad={() => loadTrainers(trainersError, trainers, trainersOffset, activeTrainerFilter.value)}
-                                        loading={trainersLoading}
+                                    <ClientTrainingContractCard
+                                        trainerName={clientTraining.trainer?.name} 
+                                        trainerPhotoUrl={clientTraining.trainer?.photoUrl} 
+                                        trainerCrefNumber={clientTraining.trainer?.crefNumber} 
+                                        trainingPlanID={clientTraining.trainingPlan?.ID}
+                                        trainingPlanName={clientTraining.trainingPlan?.name} 
+                                        contractStartDate={clientTraining.contract?.startDate} 
+                                        contractEndDate={clientTraining.contract?.endDate} 
                                     />
                                 )}
                             </Stack>
+
+                            <Stack>
+                                <Title
+                                    headingNumber={2}
+                                    text={t("otherTrainers")}
+                                />
+
+                                <Stack
+                                    className={styles.contracts}
+                                    gap="2em"
+                                >
+                                    <FilterItemsLayout
+                                        filters={trainersFilters}
+                                        activeFilter={activeTrainerFilter}
+                                        setActiveFilter={setActiveTrainerFilter}
+                                        handleChange={handleOnChangeFilter}
+                                    >
+                                        <Stack
+                                            gap="2em"
+                                        >
+                                            {trainers.length !== 0 ? (
+                                                trainers.map((trainer, index) => (
+                                                    <React.Fragment
+                                                        key={index}
+                                                    >
+                                                        <SmallTrainerProfessionalCard
+                                                            name={trainer.name} 
+                                                            photoUrl={trainer.photoUrl} 
+                                                            crefNumber={trainer.crefNumber} 
+                                                            rate={trainer.rate} 
+                                                            contractsNumber={trainer.contractsNumber} 
+                                                            complaintsNumber={trainer.complaintsNumber} 
+                                                            paymentPlans={trainer.paymentPlans} 
+                                                            handleExpand={() => navigate(`/trainers/${trainer.ID}`)}
+                                                            canBeContracted={trainer.canBeContracted}
+                                                            handleSave={() => handleOnSaveTrainer(trainer.ID)}
+                                                            hasSaved={trainer.hasSaved}
+                                                        />
+                                                    </React.Fragment>
+                                                ))
+                                            ) : (
+                                                <p>
+                                                    {t("noTrainersFinded")}
+                                                </p>
+                                            )}
+                                        </Stack>
+                                    </FilterItemsLayout>
+
+                                    {trainersError ? (
+                                        <p>
+                                            <>
+                                                {t("errorOcurredTrainers")}
+
+                                                <br/>
+                                                
+                                                {t("reloadOrTryLater")}
+                                            </>
+                                        </p>
+                                    ) : (
+                                        <LoadMoreButton
+                                            handleLoad={() => loadTrainers(trainersError, trainers, trainersOffset, activeTrainerFilter.value)}
+                                            loading={trainersLoading}
+                                        />
+                                    )}
+                                </Stack>
+                            </Stack>
                         </Stack>
                     </Stack>
-                </Stack>
-            </main>
+                </main>
+            </FooterLayout>
         </NavBarLayout>
     );
 }

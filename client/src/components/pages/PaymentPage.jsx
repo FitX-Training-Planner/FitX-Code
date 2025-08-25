@@ -11,6 +11,8 @@ import SubmitFormButton from "../form/buttons/SubmitFormButton";
 import AcceptTerms from "../form/fields/AcceptTerms";
 import useWindowSize from "../../hooks/useWindowSize";
 import Alert from "../messages/Alert";
+import FooterLayout from "../containers/FooterLayout";
+import BackButton from "../form/buttons/BackButton";
 
 function PaymentPage() {
     const { t } = useTranslation();
@@ -98,291 +100,295 @@ function PaymentPage() {
     }, [t]);
 
     return (
-        <main>
-            <Stack>
-                <Stack
-                    className={styles.payment_page_title}
-                >
-                    <Title
-                        headingNumber={1}
-                        text={t("checkout")}
-                        varColor="--white-color"
-                    />
-                </Stack>
+        <FooterLayout>
+            <main>
+                <BackButton/>
 
-                <Stack
-                    extraStyles={{ padding: width <= 440 ? "2em 1em" : "2em" }}
-                    gap="3em"
-                >
+                <Stack>
                     <Stack
-                        className={styles.about_payment_plan}
+                        className={styles.payment_page_title}
+                    >
+                        <Title
+                            headingNumber={1}
+                            text={t("checkout")}
+                            varColor="--white-color"
+                        />
+                    </Stack>
+
+                    <Stack
+                        extraStyles={{ padding: width <= 440 ? "2em 1em" : "2em" }}
+                        gap="3em"
                     >
                         <Stack
-                            direction={width <= 440 ? "column" : "row"}
+                            className={styles.about_payment_plan}
                         >
-                            <img
-                                alt=""
-                                src="/images/icons/payment_plan.png"
-                            />
-
-                            <Title
-                                headingNumber={2}
-                                text={t("paymentPlan")}
-                            />
-
-                            {width > 440 && (
+                            <Stack
+                                direction={width <= 440 ? "column" : "row"}
+                            >
                                 <img
                                     alt=""
                                     src="/images/icons/payment_plan.png"
                                 />
-                            )}
-                        </Stack>
-
-                        <hr/>
-
-                        <Stack
-                            direction={width <= 440 ? "column" : "row"}
-                            alignItems="start"
-                        >
-                            <Stack
-                                className={styles.plan_main_info}
-                                alignItems="start"
-                                gap={width <= 440 ? "2em" : "5em"}
-                            >
-                                <span
-                                    className={styles.plan_name}
-                                >
-                                    {t("plan")} {paymentPlan.name}
-                                </span>
-
-                                <Stack
-                                    alignItems="start"
-                                    gap="0"
-                                >
-                                    <span
-                                        className={styles.plan_price}
-                                    >
-                                        {formatPriceToBR(paymentPlan.fullPrice)}
-                                    </span>
-                                    
-                                    <span
-                                        className={styles.plan_duration}
-                                    >
-                                        {paymentPlan.durationDays} {t("day")}{paymentPlan.durationDays === 1 ? "" : "s"}
-                                    </span>
-                                </Stack>
-                            </Stack>
-
-                            {width <= 440 && (
-                                <hr/>
-                            )}
-                            
-
-                            {(paymentPlan.benefits.length !== 0 || paymentPlan.description) && (
-                                <Stack
-                                    gap="2em"
-                                >
-                                    {paymentPlan.benefits.length !== 0 && (
-                                        <Stack>
-                                            <Title
-                                                headingNumber={3}
-                                                text={t("benefits")}
-                                                varColor="--light-theme-color"
-                                            />
-
-                                            <Stack>
-                                                {paymentPlan.benefits.map((benefit, index) => (
-                                                    <React.Fragment
-                                                        key={index}
-                                                    >
-                                                        <Stack
-                                                            direction="row"
-                                                            alignItems="start"
-                                                            justifyContent="start"
-                                                            className={styles.benefit}
-                                                        >
-                                                            - 
-                
-                                                            <p>
-                                                                {benefit.description}
-                                                            </p>
-                                                        </Stack>
-                                                    </React.Fragment>
-                                                ))}
-                                            </Stack>
-                                        </Stack>
-                                    )}
-
-                                    {paymentPlan.description && (
-                                        <Stack>
-                                            <Title
-                                                headingNumber={3}
-                                                text={t("description")}
-                                                varColor="--light-theme-color"
-                                            />
-
-                                            <p>
-                                                {paymentPlan.description}
-                                            </p>
-                                        </Stack>
-                                    )}
-                                </Stack>
-                            )}
-                        </Stack>
-                    </Stack>
-
-                    <Stack
-                        gap="3em"
-                        className={styles.about_fitx_client_container}
-                    >
-                        <Stack
-                            className={styles.about_fitx_client}
-                        >
-                            <Stack
-                                direction={width <= 440 ? "column" : "row"}
-                            >
-                                <img
-                                    alt=""
-                                    src="/images/icons/contracts.png"
-                                />
 
                                 <Title
                                     headingNumber={2}
-                                    text={t("aboutTheFitXClient")}
+                                    text={t("paymentPlan")}
                                 />
 
                                 {width > 440 && (
+                                    <img
+                                        alt=""
+                                        src="/images/icons/payment_plan.png"
+                                    />
+                                )}
+                            </Stack>
+
+                            <hr/>
+
+                            <Stack
+                                direction={width <= 440 ? "column" : "row"}
+                                alignItems="start"
+                            >
+                                <Stack
+                                    className={styles.plan_main_info}
+                                    alignItems="start"
+                                    gap={width <= 440 ? "2em" : "5em"}
+                                >
+                                    <span
+                                        className={styles.plan_name}
+                                    >
+                                        {t("plan")} {paymentPlan.name}
+                                    </span>
+
+                                    <Stack
+                                        alignItems="start"
+                                        gap="0"
+                                    >
+                                        <span
+                                            className={styles.plan_price}
+                                        >
+                                            {formatPriceToBR(paymentPlan.fullPrice)}
+                                        </span>
+                                        
+                                        <span
+                                            className={styles.plan_duration}
+                                        >
+                                            {paymentPlan.durationDays} {t("day")}{paymentPlan.durationDays === 1 ? "" : "s"}
+                                        </span>
+                                    </Stack>
+                                </Stack>
+
+                                {width <= 440 && (
+                                    <hr/>
+                                )}
+                                
+
+                                {(paymentPlan.benefits.length !== 0 || paymentPlan.description) && (
+                                    <Stack
+                                        gap="2em"
+                                    >
+                                        {paymentPlan.benefits.length !== 0 && (
+                                            <Stack>
+                                                <Title
+                                                    headingNumber={3}
+                                                    text={t("benefits")}
+                                                    varColor="--light-theme-color"
+                                                />
+
+                                                <Stack>
+                                                    {paymentPlan.benefits.map((benefit, index) => (
+                                                        <React.Fragment
+                                                            key={index}
+                                                        >
+                                                            <Stack
+                                                                direction="row"
+                                                                alignItems="start"
+                                                                justifyContent="start"
+                                                                className={styles.benefit}
+                                                            >
+                                                                - 
+                    
+                                                                <p>
+                                                                    {benefit.description}
+                                                                </p>
+                                                            </Stack>
+                                                        </React.Fragment>
+                                                    ))}
+                                                </Stack>
+                                            </Stack>
+                                        )}
+
+                                        {paymentPlan.description && (
+                                            <Stack>
+                                                <Title
+                                                    headingNumber={3}
+                                                    text={t("description")}
+                                                    varColor="--light-theme-color"
+                                                />
+
+                                                <p>
+                                                    {paymentPlan.description}
+                                                </p>
+                                            </Stack>
+                                        )}
+                                    </Stack>
+                                )}
+                            </Stack>
+                        </Stack>
+
+                        <Stack
+                            gap="3em"
+                            className={styles.about_fitx_client_container}
+                        >
+                            <Stack
+                                className={styles.about_fitx_client}
+                            >
+                                <Stack
+                                    direction={width <= 440 ? "column" : "row"}
+                                >
                                     <img
                                         alt=""
                                         src="/images/icons/contracts.png"
                                     />
-                                )}
-                            </Stack>
 
-                            <hr/>
+                                    <Title
+                                        headingNumber={2}
+                                        text={t("aboutTheFitXClient")}
+                                    />
 
-                            <Stack
-                                alignItems="start"
-                            >
-                                {clientContractFeatures.map((feature, index) => (
-                                    <p
-                                        key={index}
-                                    >                                       
-                                        {feature}
+                                    {width > 440 && (
+                                        <img
+                                            alt=""
+                                            src="/images/icons/contracts.png"
+                                        />
+                                    )}
+                                </Stack>
+
+                                <hr/>
+
+                                <Stack
+                                    alignItems="start"
+                                >
+                                    {clientContractFeatures.map((feature, index) => (
+                                        <p
+                                            key={index}
+                                        >                                       
+                                            {feature}
+                                        </p>
+                                    ))}
+                                        
+                                    <p>
+                                        {t("moreRefundInfo")}
                                     </p>
-                                ))}
-                                    
-                                <p>
-                                    {t("moreRefundInfo")}
-                                </p>
+                                </Stack>
                             </Stack>
-                        </Stack>
 
-                        <Stack
-                            className={styles.about_refund_policy}
-                        >
                             <Stack
-                                direction={width <= 440 ? "column" : "row"}
+                                className={styles.about_refund_policy}
                             >
-                                <img
-                                    alt=""
-                                    src="/images/icons/refund.png"
-                                />
-
-                                <Title
-                                    headingNumber={2}
-                                    text={t("refundPolicy")}
-                                />
-
-                                {width > 440 && (
+                                <Stack
+                                    direction={width <= 440 ? "column" : "row"}
+                                >
                                     <img
                                         alt=""
                                         src="/images/icons/refund.png"
                                     />
-                                )}
-                            </Stack>
 
-                            <hr/>
+                                    <Title
+                                        headingNumber={2}
+                                        text={t("refundPolicy")}
+                                    />
 
-                            <Stack
-                                alignItems="start"
-                            >
-                                {refundTerms.map((term, index) => (
-                                    <p
-                                        key={index}
-                                    >
-                                        {term}
-                                    </p>
-                                ))}
-                            </Stack>
-                        </Stack>
-
-                        <Stack
-                            className={styles.fitx_client_alert}
-                            direction="row"
-                            justifyContent="start"
-                        >
-                            <Alert 
-                                varColor="--theme-color"
-                            />
-
-                            <p>
-                                {t("aboutTheFitXClientAlert")}
-                            </p>
-                        </Stack>
-                    </Stack>
-
-                    <AcceptTerms
-                        isAccepted={acceptTerms}
-                        setIsAccepted={setAcceptedTerms}
-                        description={t("payPlanTerms")}
-                    />
-
-                    {acceptTerms && (
-                        <Stack
-                            gap="4em"
-                        >
-                            <Title
-                                headingNumber={2}
-                                text={t("payment")}
-                            />
-
-                            <Stack
-                                gap="3em"
-                            >
-                                <Stack>
-                                    <span
-                                        className={styles.plan_price}
-                                    >
-                                        {formatPriceToBR(paymentPlan.fullPrice)}
-                                    </span>
-
-                                    <Stack
-                                        direction="row"
-                                        justifyContent="start"
-                                    >
-                                        <Alert />
-
-                                        <p>
-                                            {t("mpRedirect")}
-                                        </p>
-                                    </Stack>
+                                    {width > 440 && (
+                                        <img
+                                            alt=""
+                                            src="/images/icons/refund.png"
+                                        />
+                                    )}
                                 </Stack>
 
-                                <form
-                                    onSubmit={handleOnPay}
-                                    style={{ width: "max-content" }}
+                                <hr/>
+
+                                <Stack
+                                    alignItems="start"
                                 >
-                                    <SubmitFormButton
-                                        text={t("pay")}
-                                    />
-                                </form>
+                                    {refundTerms.map((term, index) => (
+                                        <p
+                                            key={index}
+                                        >
+                                            {term}
+                                        </p>
+                                    ))}
+                                </Stack>
+                            </Stack>
+
+                            <Stack
+                                className={styles.fitx_client_alert}
+                                direction="row"
+                                justifyContent="start"
+                            >
+                                <Alert 
+                                    varColor="--theme-color"
+                                />
+
+                                <p>
+                                    {t("aboutTheFitXClientAlert")}
+                                </p>
                             </Stack>
                         </Stack>
-                    )}
+
+                        <AcceptTerms
+                            isAccepted={acceptTerms}
+                            setIsAccepted={setAcceptedTerms}
+                            description={t("payPlanTerms")}
+                        />
+
+                        {acceptTerms && (
+                            <Stack
+                                gap="4em"
+                            >
+                                <Title
+                                    headingNumber={2}
+                                    text={t("payment")}
+                                />
+
+                                <Stack
+                                    gap="3em"
+                                >
+                                    <Stack>
+                                        <span
+                                            className={styles.plan_price}
+                                        >
+                                            {formatPriceToBR(paymentPlan.fullPrice)}
+                                        </span>
+
+                                        <Stack
+                                            direction="row"
+                                            justifyContent="start"
+                                        >
+                                            <Alert />
+
+                                            <p>
+                                                {t("mpRedirect")}
+                                            </p>
+                                        </Stack>
+                                    </Stack>
+
+                                    <form
+                                        onSubmit={handleOnPay}
+                                        style={{ width: "max-content" }}
+                                    >
+                                        <SubmitFormButton
+                                            text={t("pay")}
+                                        />
+                                    </form>
+                                </Stack>
+                            </Stack>
+                        )}
+                    </Stack>
                 </Stack>
-            </Stack>
-        </main>
+            </main>
+        </FooterLayout>
     );
 }
 

@@ -12,6 +12,7 @@ import { useSystemMessage } from "../../app/useSystemMessage";
 import { useSelector } from "react-redux";
 import Alert from "../messages/Alert";
 import { cleanCacheData, getCacheData, setCacheData } from "../../utils/cache/operations";
+import FooterLayout from "../containers/FooterLayout";
 
 function SavedTrainers() {
     const { t } = useTranslation();
@@ -122,64 +123,65 @@ function SavedTrainers() {
 
     return (
         <NavBarLayout>
-            <main>
-                <Stack
-                    gap="4em"
-                    extraStyles={{ padding: "1em" }}
-                >
-                    <Stack>
-                        <Title
-                            headingNumber={1}
-                            text={t("savedTrainers")}
-                        />
-
-                        <p
-                            style={{ textAlign: "center" }}
-                        >
-                            {t("savedTrainersInstruction")}
-                        </p>
-                    </Stack>
-
+            <FooterLayout>
+                <main>
                     <Stack
-                        extraStyles={{ textAlign: "center" }}
+                        gap="4em"
+                        extraStyles={{ padding: "1em" }}
                     >
-                        <Alert />
+                        <Stack>
+                            <Title
+                                headingNumber={1}
+                                text={t("savedTrainers")}
+                            />
 
-                        {t("someDeactiveProfilesAlert")}
-                    </Stack>
-
-                    <Stack
-                        gap="2em"
-                    >
-                        {trainers.length !== 0 ? (
-                            trainers.map((trainer, index) => (
-                                <React.Fragment
-                                    key={index}
-                                >
-                                    <SmallTrainerProfessionalCard
-                                        name={trainer.name} 
-                                        photoUrl={trainer.photoUrl} 
-                                        crefNumber={trainer.crefNumber} 
-                                        rate={trainer.rate} 
-                                        contractsNumber={trainer.contractsNumber} 
-                                        complaintsNumber={trainer.complaintsNumber} 
-                                        paymentPlans={trainer.paymentPlans} 
-                                        handleExpand={() => navigate(`/trainers/${trainer.ID}`)}
-                                        canBeContracted={trainer.canBeContracted}
-                                        handleSave={() => handleOnSaveTrainer(trainer.ID)}
-                                        hasSaved={trainer.hasSaved}
-                                    />
-                                </React.Fragment>
-                            ))
-                        ) : (
-                            <p>
-                                {t("noSavedTrainers")}
+                            <p
+                                style={{ textAlign: "center" }}
+                            >
+                                {t("savedTrainersInstruction")}
                             </p>
-                        )}
-                    </Stack>
-                </Stack>
-            </main>
+                        </Stack>
 
+                        <Stack
+                            extraStyles={{ textAlign: "center" }}
+                        >
+                            <Alert />
+
+                            {t("someDeactiveProfilesAlert")}
+                        </Stack>
+
+                        <Stack
+                            gap="2em"
+                        >
+                            {trainers.length !== 0 ? (
+                                trainers.map((trainer, index) => (
+                                    <React.Fragment
+                                        key={index}
+                                    >
+                                        <SmallTrainerProfessionalCard
+                                            name={trainer.name} 
+                                            photoUrl={trainer.photoUrl} 
+                                            crefNumber={trainer.crefNumber} 
+                                            rate={trainer.rate} 
+                                            contractsNumber={trainer.contractsNumber} 
+                                            complaintsNumber={trainer.complaintsNumber} 
+                                            paymentPlans={trainer.paymentPlans} 
+                                            handleExpand={() => navigate(`/trainers/${trainer.ID}`)}
+                                            canBeContracted={trainer.canBeContracted}
+                                            handleSave={() => handleOnSaveTrainer(trainer.ID)}
+                                            hasSaved={trainer.hasSaved}
+                                        />
+                                    </React.Fragment>
+                                ))
+                            ) : (
+                                <p>
+                                    {t("noSavedTrainers")}
+                                </p>
+                            )}
+                        </Stack>
+                    </Stack>
+                </main>
+            </FooterLayout>
         </NavBarLayout>
     );
 }

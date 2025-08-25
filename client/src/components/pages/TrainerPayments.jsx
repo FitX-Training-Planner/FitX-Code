@@ -17,6 +17,7 @@ import FilterItemsLayout from "../containers/FilterItemsLayout";
 import { useTranslation } from "react-i18next";
 import PaymentPlansContainer from "../layout/PaymentPlansContainer";
 import DateInput from "../form/fields/dateInput";
+import FooterLayout from "../containers/FooterLayout";
 
 function TrainerPayments() {
     const { t } = useTranslation();
@@ -219,129 +220,131 @@ function TrainerPayments() {
         <NavBarLayout
             isClient={false}
         >
-            <main
-                className={styles.trainer_payments_page}
-                style={{ padding: width <= 440 ? "1em 0" : "2em 0" }}
-            >
-                <Stack
-                    gap="2em"
+            <FooterLayout>
+                <main
+                    className={styles.trainer_payments_page}
+                    style={{ padding: width <= 440 ? "1em 0" : "2em 0" }}
                 >
                     <Stack
-                        className={styles.title_container}
+                        gap="2em"
                     >
-                        <Title
-                            headingNumber={1}
-                            text={t("paymentsAndContracts")}
-                        />
-                    </Stack>
+                        <Stack
+                            className={styles.title_container}
+                        >
+                            <Title
+                                headingNumber={1}
+                                text={t("paymentsAndContracts")}
+                            />
+                        </Stack>
 
-                    <PaymentPlansContainer
-                        paymentPlans={paymentPlans}
-                        paymentPlansError={paymentPlansError}
-                        handleAddPaymentPlan={addPaymentPlan}
-                        handleModifyPaymentPlan={modifyPaymentPlan}
-                        handleRemovePaymentPlan={removePlan}
-                    />
-
-                    <Stack
-                        className={styles.contracts_container}
-                        gap="3em"
-                    >
-                        <Title
-                            headingNumber={2}
-                            text={t("contracts")}
-                            varColor="--theme-color"
+                        <PaymentPlansContainer
+                            paymentPlans={paymentPlans}
+                            paymentPlansError={paymentPlansError}
+                            handleAddPaymentPlan={addPaymentPlan}
+                            handleModifyPaymentPlan={modifyPaymentPlan}
+                            handleRemovePaymentPlan={removePlan}
                         />
 
                         <Stack
-                            className={styles.contracts}
-                            gap="2em"
+                            className={styles.contracts_container}
+                            gap="3em"
                         >
-                            <FilterItemsLayout
-                                filters={contractsFilters}
-                                activeFilter={activeContractFilter}
-                                setActiveFilter={setActiveContractFilter}
-                                handleChange={handleOnChangeFilter}
+                            <Title
+                                headingNumber={2}
+                                text={t("contracts")}
+                                varColor="--theme-color"
+                            />
+
+                            <Stack
+                                className={styles.contracts}
+                                gap="2em"
                             >
-                                <DateInput
-                                    dateValuesObject={searchDate}
-                                    setDateValuesObject={setSearchDate}
-                                    error={searchDateError}
-                                    setError={setSearchDateError}
-                                    handleReload={(e) => handleOnChangeFilter(activeContractFilter.value, e)}
-                                />
-                                
-                                {!contractsError && contracts.length === 0 ? (
-                                    !contractsLoading && (
-                                        <p>
-                                            {t("noContracts")}
-                                        </p>
-                                    )
-                                ) : (
-                                    <Stack
-                                        gap="2em"
-                                    >
-                                        {showedContracts.length !== 0 ? (
-                                            showedContracts.map((contract, index) => (
-                                                <React.Fragment
-                                                    key={index}
-                                                >
-                                                    <ContractCard
-                                                        userName={contract.client?.name} 
-                                                        userPhoto={contract.client?.photoUrl} 
-                                                        startDate={contract.startDate} 
-                                                        endDate={contract.endDate} 
-                                                        status={
-                                                            contract.status?.ID
-                                                            ? (
-                                                                user.config.isEnglish 
-                                                                ? t(`databaseData.contractStatus.${contract.status.ID}.name`) 
-                                                                : contract.status.name
-                                                            )
-                                                            : undefined
-                                                        } 
-                                                        paymentPlanName={contract.paymentPlan?.name} 
-                                                        transactionAmount={contract.paymentTransaction?.amount} 
-                                                        transactionAppFee={contract.paymentTransaction?.appFee}
-                                                        paymentMethod={contract.paymentTransaction?.paymentMethod}
-                                                        transactionDate={contract.paymentTransaction?.createDate} 
-                                                        transactionMpFee={contract.paymentTransaction?.mpFee}
-                                                        transactionTrainerReceived={contract.paymentTransaction?.trainerReceived}
-                                                        mercadoPagoTransactionId={contract.paymentTransaction?.mercadopagoTransactionID} 
-                                                        transactionReceiptUrl={contract.paymentTransaction?.receiptUrl} 
-                                                        forClient={false}
-                                                    />
-                                                </React.Fragment>
-                                            ))
-                                        ) : (
+                                <FilterItemsLayout
+                                    filters={contractsFilters}
+                                    activeFilter={activeContractFilter}
+                                    setActiveFilter={setActiveContractFilter}
+                                    handleChange={handleOnChangeFilter}
+                                >
+                                    <DateInput
+                                        dateValuesObject={searchDate}
+                                        setDateValuesObject={setSearchDate}
+                                        error={searchDateError}
+                                        setError={setSearchDateError}
+                                        handleReload={(e) => handleOnChangeFilter(activeContractFilter.value, e)}
+                                    />
+                                    
+                                    {!contractsError && contracts.length === 0 ? (
+                                        !contractsLoading && (
                                             <p>
-                                                {t("noResult")}
+                                                {t("noContracts")}
                                             </p>
-                                        )}
-                                    </Stack>
+                                        )
+                                    ) : (
+                                        <Stack
+                                            gap="2em"
+                                        >
+                                            {showedContracts.length !== 0 ? (
+                                                showedContracts.map((contract, index) => (
+                                                    <React.Fragment
+                                                        key={index}
+                                                    >
+                                                        <ContractCard
+                                                            userName={contract.client?.name} 
+                                                            userPhoto={contract.client?.photoUrl} 
+                                                            startDate={contract.startDate} 
+                                                            endDate={contract.endDate} 
+                                                            status={
+                                                                contract.status?.ID
+                                                                ? (
+                                                                    user.config.isEnglish 
+                                                                    ? t(`databaseData.contractStatus.${contract.status.ID}.name`) 
+                                                                    : contract.status.name
+                                                                )
+                                                                : undefined
+                                                            } 
+                                                            paymentPlanName={contract.paymentPlan?.name} 
+                                                            transactionAmount={contract.paymentTransaction?.amount} 
+                                                            transactionAppFee={contract.paymentTransaction?.appFee}
+                                                            paymentMethod={contract.paymentTransaction?.paymentMethod}
+                                                            transactionDate={contract.paymentTransaction?.createDate} 
+                                                            transactionMpFee={contract.paymentTransaction?.mpFee}
+                                                            transactionTrainerReceived={contract.paymentTransaction?.trainerReceived}
+                                                            mercadoPagoTransactionId={contract.paymentTransaction?.mercadopagoTransactionID} 
+                                                            transactionReceiptUrl={contract.paymentTransaction?.receiptUrl} 
+                                                            forClient={false}
+                                                        />
+                                                    </React.Fragment>
+                                                ))
+                                            ) : (
+                                                <p>
+                                                    {t("noResult")}
+                                                </p>
+                                            )}
+                                        </Stack>
+                                    )}
+                                </FilterItemsLayout>
+
+                                {contractsError ? (
+                                    <p>
+                                        <>
+                                            {t("errorOcurredContracts")}
+
+                                            <br/>
+                                            
+                                            {t("reloadOrTryLater")}
+                                        </>
+                                    </p>
+                                ) : (
+                                    <LoadMoreButton
+                                        handleLoad={() => loadContracts(contractsError, contracts, contractsOffset, activeContractFilter.value)}
+                                        loading={contractsLoading}
+                                    />
                                 )}
-                            </FilterItemsLayout>
-
-                            {contractsError ? (
-                                <p>
-                                    <>
-                                        {t("errorOcurredContracts")}
-
-                                        <br/>
-                                        
-                                        {t("reloadOrTryLater")}
-                                    </>
-                                </p>
-                            ) : (
-                                <LoadMoreButton
-                                    handleLoad={() => loadContracts(contractsError, contracts, contractsOffset, activeContractFilter.value)}
-                                    loading={contractsLoading}
-                                />
-                            )}
+                            </Stack>
                         </Stack>
                     </Stack>
-                </Stack>
-            </main>
+                </main>
+            </FooterLayout>
         </NavBarLayout>
     );
 }

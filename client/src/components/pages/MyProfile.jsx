@@ -26,6 +26,7 @@ import MercadopagoConnectButton from "../layout/MercadopagoConnectButton";
 import ClientTrainingContractCard from "../cards/user/ClientTrainingContractCard";
 import { cleanCacheData, getCacheData, setCacheData } from "../../utils/cache/operations";
 import { verifyIsClient, verifyIsTrainer } from "../../utils/requests/verifyUserType";
+import FooterLayout from "../containers/FooterLayout";
 
 function MyProfile() {
     const { t } = useTranslation();
@@ -675,275 +676,277 @@ function MyProfile() {
     }, [t]);
 
     return (
-        <main
-            className={styles.my_profile_page}
-        >
-            <BackButton
-                destiny="/"
-            />
-
-            <Stack
-                gap="4em"
+        <FooterLayout>
+            <main
+                className={styles.my_profile_page}
             >
-                <Stack>
-                    <Title
-                        headingNumber={1}
-                        text={t("personalProfile")}
-                        varColor="--theme-color"
-                    />
-                </Stack>
+                <BackButton
+                    destiny="/"
+                />
 
                 <Stack
-                    gap="5em"
+                    gap="4em"
                 >
-                    <Stack
-                        gap="4em"
-                    >
-                        <PhotoInput
-                            name="photoFile"
-                            size="large"
-                            blobUrl={user.config.photoUrl}
-                            handleChange={handleOnModifyPhoto}
-                        />
-                        
-                        <ModifyUserForm
-                            changedUser={changedUser}
-                            setChangedUser={setChangedUser}
-                            setModifyUserError={setModifyUserError}
-                            handleSubmit={handleOnModifyUser}
-                            hasChanged={userHasChanged}
-                        />
-
-                        {!user.config.isClient && (
-                            <Stack
-                                gap="2em"
-                            >
-                                <TrainerCRCInfo
-                                    rate={trainerInfo.rate}
-                                    complaintsNumber={trainerInfo.complaintsNumber}
-                                    contractsNumber={trainerInfo.contractsNumber}
-                                />
-                                
-                                <ModifyTrainerForm
-                                    changedTrainer={trainerInfo}
-                                    setChangedTrainer={setTrainerInfo}
-                                    setModifyTrainerError={setModifyTrainerError}
-                                    handleSubmit={handleOnModifyTrainer}
-                                    hasChanged={trainerHasChanged}
-                                />
-                            </Stack>
-                        )}
-
-                        <ModifyConfigForm
-                            changedConfig={changedUser}
-                            setChangedConfig={setChangedUser}
-                            handleSubmit={handleOnModifyConfig}
-                            hasChanged={configHasChanged}
+                    <Stack>
+                        <Title
+                            headingNumber={1}
+                            text={t("personalProfile")}
+                            varColor="--theme-color"
                         />
                     </Stack>
 
-                    {!user.config.isClient && (
+                    <Stack
+                        gap="5em"
+                    >
                         <Stack
-                            gap="5em"
+                            gap="4em"
                         >
-                            <RatingsContainer
-                                ratings={ratings}
-                                ratingsError={ratingsError}
-                                ratingsOffset={ratingsOffset}
-                                ratingsLoading={ratingsLoading}
-                                handleLoadRatings={loadRatings}
-                                trainerRate={trainerInfo.rate}
-                                trainerRatesNumber={trainerInfo.ratesNumber}
+                            <PhotoInput
+                                name="photoFile"
+                                size="large"
+                                blobUrl={user.config.photoUrl}
+                                handleChange={handleOnModifyPhoto}
                             />
-        
-                            <ComplaintsContainer
-                                complaints={complaints}
-                                complaintsError={complaintsError}
-                                complaintsOffset={complaintsOffset}
-                                complaintsLoading={complaintsLoading}
-                                handleLoadComplaints={loadComplaints}
-                                trainerComplaintsNumber={trainerInfo.complaintsNumber}
+                            
+                            <ModifyUserForm
+                                changedUser={changedUser}
+                                setChangedUser={setChangedUser}
+                                setModifyUserError={setModifyUserError}
+                                handleSubmit={handleOnModifyUser}
+                                hasChanged={userHasChanged}
                             />
-                        </Stack>
-                    )}
-                </Stack>
 
-                <Stack
-                    gap="3em"
-                    alignItems="end"
-                >
-                    {!user.config.isClient && (
-                        <Stack
-                            alignItems="start"
-                        >
-                            <hr/>
-
-                            {trainerInfo.hasConnectedMP ? (
+                            {!user.config.isClient && (
                                 <Stack
-                                    className={styles.mercadopago_img_container}
-                                    direction="row"
-                                    justifyContent="start"
+                                    gap="2em"
                                 >
-                                    <img
-                                        src="/images/icons/mercadopago.png"
-                                        alt=""
+                                    <TrainerCRCInfo
+                                        rate={trainerInfo.rate}
+                                        complaintsNumber={trainerInfo.complaintsNumber}
+                                        contractsNumber={trainerInfo.contractsNumber}
                                     />
-
-                                    <p>
-                                        {t("alreadyMPConnected")}
-                                    </p>
+                                    
+                                    <ModifyTrainerForm
+                                        changedTrainer={trainerInfo}
+                                        setChangedTrainer={setTrainerInfo}
+                                        setModifyTrainerError={setModifyTrainerError}
+                                        handleSubmit={handleOnModifyTrainer}
+                                        hasChanged={trainerHasChanged}
+                                    />
                                 </Stack>
-                            ) : (
-                                <>
-                                    <MercadopagoConnectButton
-                                        handleConnect={handleOnConnectMP}
-                                    />
-
-                                    <Stack
-                                        direction="row"
-                                        justifyContent="start"
-                                    >
-                                        <Alert />
-        
-                                        {t("connectMPInstruction")}
-                                    </Stack>
-                                </>
                             )}
 
-                            <hr/>
+                            <ModifyConfigForm
+                                changedConfig={changedUser}
+                                setChangedConfig={setChangedUser}
+                                handleSubmit={handleOnModifyConfig}
+                                hasChanged={configHasChanged}
+                            />
                         </Stack>
-                    )}
+
+                        {!user.config.isClient && (
+                            <Stack
+                                gap="5em"
+                            >
+                                <RatingsContainer
+                                    ratings={ratings}
+                                    ratingsError={ratingsError}
+                                    ratingsOffset={ratingsOffset}
+                                    ratingsLoading={ratingsLoading}
+                                    handleLoadRatings={loadRatings}
+                                    trainerRate={trainerInfo.rate}
+                                    trainerRatesNumber={trainerInfo.ratesNumber}
+                                />
+            
+                                <ComplaintsContainer
+                                    complaints={complaints}
+                                    complaintsError={complaintsError}
+                                    complaintsOffset={complaintsOffset}
+                                    complaintsLoading={complaintsLoading}
+                                    handleLoadComplaints={loadComplaints}
+                                    trainerComplaintsNumber={trainerInfo.complaintsNumber}
+                                />
+                            </Stack>
+                        )}
+                    </Stack>
 
                     <Stack
                         gap="3em"
+                        alignItems="end"
                     >
-                        {!user.config.isClient ? (
-                            <form
-                                onSubmit={handleOnToggleContractsPaused}
-                            >   
-                                <Stack
-                                    alignItems="start"
-                                >
-                                    <SubmitFormButton
-                                        text={t(trainerInfo.isContractsPaused ? "unpauseContracts" : "pauseContracts")}
-                                        varBgColor="--light-theme-color"
-                                    />
+                        {!user.config.isClient && (
+                            <Stack
+                                alignItems="start"
+                            >
+                                <hr/>
 
-                                    {!trainerInfo.isContractsPaused && (
+                                {trainerInfo.hasConnectedMP ? (
+                                    <Stack
+                                        className={styles.mercadopago_img_container}
+                                        direction="row"
+                                        justifyContent="start"
+                                    >
+                                        <img
+                                            src="/images/icons/mercadopago.png"
+                                            alt=""
+                                        />
+
+                                        <p>
+                                            {t("alreadyMPConnected")}
+                                        </p>
+                                    </Stack>
+                                ) : (
+                                    <>
+                                        <MercadopagoConnectButton
+                                            handleConnect={handleOnConnectMP}
+                                        />
+
                                         <Stack
                                             direction="row"
                                             justifyContent="start"
                                         >
                                             <Alert />
             
-                                            {t("pauseContractsInstruction")}
+                                            {t("connectMPInstruction")}
                                         </Stack>
-                                    )}
-                                </Stack>
-                            </form>
-                        ) : (
-                            <Stack
-                                className={styles.client_training}
-                            >
-                                <Title
-                                    headingNumber={2}
-                                    text={t("yourTraining")}
-                                />
-
-                                {trainingLoading || !clientTraining || clientTrainingError ? (
-                                    clientTrainingError ? (
-                                        <p>
-                                            {t("errorOcurredTrainingContract")}
-
-                                            <br/>
-                                            
-                                            {t("reloadOrTryLater")}
-                                        </p>
-                                    ) : (
-                                        <p>
-                                            {t("noContractActive")}
-
-                                            <br/>
-
-                                            {t("searchTrainersInstruction")}
-                                        </p>
-                                    )
-                                ) : (
-                                    <ClientTrainingContractCard
-                                        trainerName={clientTraining.trainer?.name} 
-                                        trainerPhotoUrl={clientTraining.trainer?.photoUrl} 
-                                        trainerCrefNumber={clientTraining.trainer?.crefNumber} 
-                                        trainingPlanID={clientTraining.trainingPlan?.ID}
-                                        trainingPlanName={clientTraining.trainingPlan?.name} 
-                                        contractStartDate={clientTraining.contract?.startDate} 
-                                        contractEndDate={clientTraining.contract?.endDate} 
-                                        handleCancelContract={cancelContract}
-                                    />
+                                    </>
                                 )}
+
+                                <hr/>
                             </Stack>
                         )}
 
                         <Stack
-                            gap="1.5em"
+                            gap="3em"
                         >
-                            <Stack
-                                gap="0.5em"
-                            >
+                            {!user.config.isClient ? (
                                 <form
-                                    onSubmit={handleOnDeactivateProfile}
+                                    onSubmit={handleOnToggleContractsPaused}
                                 >   
-                                    <SubmitFormButton
-                                        text={t("deactivateProfile")}
-                                        varBgColor="--alert-color"
-                                    />
-                                </form>
-
-                                {(user.config.isClient && !trainingLoading && clientTraining) && (
                                     <Stack
-                                        direction="row"
-                                        justifyContent="start"
+                                        alignItems="start"
                                     >
-                                        <Alert />
-        
-                                        {t("clientContractFeature8")}
+                                        <SubmitFormButton
+                                            text={t(trainerInfo.isContractsPaused ? "unpauseContracts" : "pauseContracts")}
+                                            varBgColor="--light-theme-color"
+                                        />
+
+                                        {!trainerInfo.isContractsPaused && (
+                                            <Stack
+                                                direction="row"
+                                                justifyContent="start"
+                                            >
+                                                <Alert />
+                
+                                                {t("pauseContractsInstruction")}
+                                            </Stack>
+                                        )}
                                     </Stack>
-                                )}
-                            </Stack>
+                                </form>
+                            ) : (
+                                <Stack
+                                    className={styles.client_training}
+                                >
+                                    <Title
+                                        headingNumber={2}
+                                        text={t("yourTraining")}
+                                    />
+
+                                    {trainingLoading || !clientTraining || clientTrainingError ? (
+                                        clientTrainingError ? (
+                                            <p>
+                                                {t("errorOcurredTrainingContract")}
+
+                                                <br/>
+                                                
+                                                {t("reloadOrTryLater")}
+                                            </p>
+                                        ) : (
+                                            <p>
+                                                {t("noContractActive")}
+
+                                                <br/>
+
+                                                {t("searchTrainersInstruction")}
+                                            </p>
+                                        )
+                                    ) : (
+                                        <ClientTrainingContractCard
+                                            trainerName={clientTraining.trainer?.name} 
+                                            trainerPhotoUrl={clientTraining.trainer?.photoUrl} 
+                                            trainerCrefNumber={clientTraining.trainer?.crefNumber} 
+                                            trainingPlanID={clientTraining.trainingPlan?.ID}
+                                            trainingPlanName={clientTraining.trainingPlan?.name} 
+                                            contractStartDate={clientTraining.contract?.startDate} 
+                                            contractEndDate={clientTraining.contract?.endDate} 
+                                            handleCancelContract={cancelContract}
+                                        />
+                                    )}
+                                </Stack>
+                            )}
 
                             <Stack
-                                gap="0.5em"
+                                gap="1.5em"
                             >
-                                <form
-                                    onSubmit={handleOnDeleteAcount}
-                                >   
-                                    <SubmitFormButton
-                                        text={t("deleteProfile")}
-                                        varBgColor="--alert-color"
-                                    />
-                                </form>
+                                <Stack
+                                    gap="0.5em"
+                                >
+                                    <form
+                                        onSubmit={handleOnDeactivateProfile}
+                                    >   
+                                        <SubmitFormButton
+                                            text={t("deactivateProfile")}
+                                            varBgColor="--alert-color"
+                                        />
+                                    </form>
 
-                                {(user.config.isClient && !trainingLoading && clientTraining) && (
-                                    <Stack
-                                        direction="row"
-                                        justifyContent="start"
-                                    >
-                                        <Alert />
-        
-                                        {t("refundTerm7")}
-                                    </Stack>
-                                )}
+                                    {(user.config.isClient && !trainingLoading && clientTraining) && (
+                                        <Stack
+                                            direction="row"
+                                            justifyContent="start"
+                                        >
+                                            <Alert />
+            
+                                            {t("clientContractFeature8")}
+                                        </Stack>
+                                    )}
+                                </Stack>
+
+                                <Stack
+                                    gap="0.5em"
+                                >
+                                    <form
+                                        onSubmit={handleOnDeleteAcount}
+                                    >   
+                                        <SubmitFormButton
+                                            text={t("deleteProfile")}
+                                            varBgColor="--alert-color"
+                                        />
+                                    </form>
+
+                                    {(user.config.isClient && !trainingLoading && clientTraining) && (
+                                        <Stack
+                                            direction="row"
+                                            justifyContent="start"
+                                        >
+                                            <Alert />
+            
+                                            {t("refundTerm7")}
+                                        </Stack>
+                                    )}
+                                </Stack>
                             </Stack>
                         </Stack>
-                    </Stack>
 
-                    <NonBackgroundButton
-                        text={t("logout")}
-                        handleClick={handleOnLogout}
-                        varColor="--theme-color"
-                    />
+                        <NonBackgroundButton
+                            text={t("logout")}
+                            handleClick={handleOnLogout}
+                            varColor="--theme-color"
+                        />
+                    </Stack>
                 </Stack>
-            </Stack>
-        </main>
+            </main>
+        </FooterLayout>
     );
 }
 

@@ -1,0 +1,40 @@
+.footer {
+    --shadow: -3px 2px 5px black;
+    background-color: var(--dark-theme-color);
+}
+
+.logo_footer {
+    height: 5em;
+    filter: drop-shadow(var(--shadow));
+}
+
+.contact > span {
+    color: var(--gray-color);
+}
+
+.contact > button {
+    background: none;
+    border: none;
+    color: var(--white-color);
+    font-weight: normal;
+}
+
+.footer_section > span {
+    font-weight: bold;
+    letter-spacing: 1px;
+    color: var(--light-theme-color);
+    text-shadow: var(--shadow);
+    text-align: center;
+}
+
+.footer_section button {
+    font-weight: normal;
+    hyphens: none;
+    font-size: var(--small-text-size);
+}
+
+.footer_section.small button {
+    font-size: var(--text-size);
+    text-align: start;
+}
+

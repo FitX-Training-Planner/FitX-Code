@@ -626,6 +626,22 @@
     "failureReason7": "Payment not made within the deadline.",
     "failureReason8": "Payment refunded by the trainer.",
     "failureReason9": "Amount returned by the bank.",
+    "contactUs": "Contact us",
+    "allRightsReserved": "All rights reserved.",
+    "aboutUs": "About Us",
+    "authors": "Authors",
+    "partnerships": "Partners",
+    "sponsors": "Sponsors",
+    "termsAndPolicies": "Terms & Policies",
+    "privacyPolicy": "Privacy Policy",
+    "refundAndCancellationPolicy": "Refund and Cancellation Policy",
+    "cookiePolicy": "Cookies Policy",
+    "contentPolicy": "Content Policy",
+    "stayUpdated": "Stay Updated",
+    "news": "News",
+    "feedback": "Feedback",
+    "futureUpdates": "Future Updated",
+    "myFeedbackIs": "My feedback is",
     "databaseData": {
         "muscleGroups": {
             "1": {

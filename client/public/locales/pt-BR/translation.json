@@ -625,5 +625,21 @@
     "failureReason6": "Pagamento cancelado.",
     "failureReason7": "Pagamento não realizado dentro do prazo.",
     "failureReason8": "Pagamento devolvido pelo treinador.",
-    "failureReason9": "Valor estornado pelo banco."
+    "failureReason9": "Valor estornado pelo banco.",
+    "contactUs": "Mande uma mensagem",
+    "allRightsReserved": "Todos os direitos reservados.",
+    "aboutUs": "Sobre Nós",
+    "authors": "Autores",
+    "partnerships": "Parcerias",
+    "sponsors": "Patrocinadores",
+    "termsAndPolicies": "Termos & Políticas",
+    "privacyPolicy": "Política de Privacidade",
+    "refundAndCancellationPolicy": "Política de Reembolso e Cancelamento",
+    "cookiePolicy": "Política de Cookies",
+    "contentPolicy": "Política de Conteúdo",
+    "stayUpdated": "Fique por Dentro",
+    "news": "Novidades",
+    "feedback": "Sugestão",
+    "futureUpdates": "Atualizações Futuras",
+    "myFeedbackIs": "Minha sugestão é"
 }
