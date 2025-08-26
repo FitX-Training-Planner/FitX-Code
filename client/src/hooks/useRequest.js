@@ -70,9 +70,14 @@ export default function useRequest() {
             toast.dismiss(requestId);
 
             if (!err.response) {
-                notify(t("errorConnection"), "error", "network");
+                const noResponseError  = {
+                    response: {
+                        status: 0
+                    },
+                    message: "systemMessages.NO_RESPONSE"
+                }
 
-                setLoading(false);
+                handleError ? handleError(noResponseError) : navigate("/error", { state: { errorStatus: noResponseError.response.status, errorMessage: t(noResponseError.message) } });
                 
                 return;
             }

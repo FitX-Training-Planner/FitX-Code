@@ -32,6 +32,7 @@ import Loader from "./components/layout/Loader";
 import { getErrorMessageCodeError } from "./utils/requests/errorMessage";
 import SavedTrainers from "./components/pages/SavedTrainers";
 import PaymentPage from "./components/pages/PaymentPage";
+import WelcomePage from "./components/pages/WelcomePage";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -51,6 +52,8 @@ function App() {
   const [canRender, setCanRender] = useState(false);
   
   useEffect(() => {    
+    setCanRender(false);
+
     const validPaths = [
       "/",
       "/me",
@@ -78,25 +81,25 @@ function App() {
     if (shouldSkip) setCanRender(true);
     
     if (!shouldSkip && !hasRun.current) {
-      setCanRender(false);
-
       hasRun.current = true;
-      
+
       const getUser = () => {
         return api.get("/users/me");
       };
-
+      
       const handleOnGetUserSuccess = (data) => {
         dispatch(setUser(data));
 
         setCanRender(true);
       };
-
+      
       const handleOnGetUserError = (err) => {
+        hasRun.current = false;
+
         if (err?.response?.status === 404) {
           navigate("/login");
         } else {
-          navigate("/error", { state: { status: err?.response?.status, message: t(getErrorMessageCodeError(err)) } });
+          navigate("/error", { state: { errorStatus: err?.response?.status, errorMessage: t(getErrorMessageCodeError(err)) } });
         }
       };
 
@@ -143,6 +146,11 @@ function App() {
               ) : (
                 <TrainerHome />
               )}
+            />
+
+            <Route
+              path="/introduction"
+              element={<WelcomePage />}
             />
 
             <Route

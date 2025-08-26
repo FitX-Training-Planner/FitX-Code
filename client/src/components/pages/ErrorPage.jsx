@@ -18,7 +18,7 @@ function ErrorPage({ pageNotFound = false }) {
     });
 
     useEffect(() => {
-        const status = location.state?.errorStatus;
+        const status = String(location.state?.errorStatus);
         const message = location.state?.errorMessage;
 
         if (pageNotFound) {
