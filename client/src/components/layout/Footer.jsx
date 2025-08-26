@@ -234,6 +234,7 @@ function Footer({
                 </Stack>
 
                 <p
+                    className={styles.copyright}
                     style={{ fontSize: width <= 440 ? "var(--small-text-size)" : "var(--text-size)" }}
                 >
                     &copy; 2025 FitX. {t("allRightsReserved")}
