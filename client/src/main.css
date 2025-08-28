@@ -38,7 +38,6 @@
   hyphens: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--theme-color) transparent;
-  /* border: 1px solid red; */
 }
 
 html,

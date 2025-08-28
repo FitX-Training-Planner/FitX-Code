@@ -1,0 +1,30 @@
+.animated_item {
+  transition: all 0.7s ease;
+  opacity: 0;
+  transform: translateY(50px);
+  filter: brightness(0.5);
+}
+
+.is_visible {
+  opacity: 1;
+  transform: translateY(0);
+  filter: brightness(1);
+}
+
+.is_up {
+  opacity: 0.5;
+  transform: translateY(-50px);
+  filter: brightness(0.7);
+}
+
+.is_down {
+  opacity: 0.5;
+  transform: translateY(50px);
+  filter: brightness(0.7);
+}
+
+.is_hidden {
+  opacity: 0;
+  transform: translateY(50px);
+  filter: brightness(0.5);
+}
