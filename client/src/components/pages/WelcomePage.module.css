@@ -1,0 +1,96 @@
+.welcome_page {
+    --hpadding: 5em;
+    padding-block: var(--hpadding);
+    background: radial-gradient(circle, var(--dark-theme-color), black);
+    background-attachment: fixed;
+}
+
+.welcome_page :where(p, button) {
+    text-align: center;
+    font-size: var(--large-text-size);
+    hyphens: none;
+    max-width: 30em;
+}
+
+.welcome_page p {
+    color: var(--white-color);
+}
+
+.main_welcome {
+    height: calc(100dvh - var(--hpadding));
+}
+
+.illustration {
+    border: 3px solid var(--theme-color);
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+}
+
+.illustration.large {
+    height: 60dvh;
+}
+
+.illustration > img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    transition: var(--fast-transition);
+}
+
+:where(.illustration, .illustration_with_title):hover img {
+    transform: scale(1.1);
+}
+
+.illustration_with_title {
+    min-width: 40dvw;
+    max-height: 65dvh;
+}
+
+.illustration_with_title,
+.illustration {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.illustration_with_title > h4 {
+    z-index: 1;
+    position: absolute;
+    top: 0.5em;
+    left: 0.5em;
+    font-size: var(--title-size);
+    text-shadow: 0 0 6px var(--white-color);
+}
+
+:where(.illustration_with_title, .illustration)::before {
+    content: "";
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    z-index: 1;
+    transition: var(--fast-transition);
+}
+
+:where(.illustration_with_title, .illustration):hover::before {
+    box-shadow: inset 0 0 1000px black;
+}
+
+.logo > img {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+}
+
+@media (max-width: 840px) {
+    .illustration_with_title > h4 {
+        font-size: var(--small-title-size);
+    }
+}
+
+@media (max-width: 640px) {
+    .welcome_page :where(p, button) {
+        font-size: var(--text-size);
+        hyphens: none;
+    }
+}

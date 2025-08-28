@@ -6,11 +6,15 @@ import NonBackgroundButton from "../form/buttons/NonBackgroundButton";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useMemo } from "react";
 import Title from "../text/Title";
+import useWindowSize from "../../hooks/useWindowSize";
+import AnimatedInViewItem from "../containers/AnimatedInViewItem";
 
 function WelcomePage() {
     const { t } = useTranslation();
 
     const navigate = useNavigate();
+
+    const { width } = useWindowSize();
 
     const welcomeDescriptions = useMemo(() => {
         return [
@@ -75,524 +79,806 @@ function WelcomePage() {
         <FooterLayout>
             <main
                 className={styles.welcome_page}
+                style={{ paddingInline: width <= 640 ? "2em" : "5em" }}
             >
                 <Stack
-                    gap="5em"
+                    gap="10em"
                 >
-                    <Stack
-                        gap="4em"
-                    >
+                    <Stack>
                         <Stack
-                            direction="row"
-                            gap="3em"
+                            direction={width <= 840 ? "column" : "row"}
+                            className={styles.main_welcome}
+                            justifyContent="center"
+                            gap="5em"
                         >
-                            <Stack>
-                                <img
-                                    src="/images/logo/logo_v1_no_bg.png"
-                                    alt=""
-                                />
+                            <AnimatedInViewItem>
+                                <Stack
+                                    gap="3em"
+                                >
+                                    <Stack
+                                        justifyContent="center"
+                                        className={styles.logo}
+                                    >
+                                        <img
+                                            src="/images/logo/logo_v1_no_bg.png"
+                                            alt=""
+                                        />
+                                    </Stack>
 
-                                <Stack>
-                                    <p>
-                                        {t("signUpOrLoginInstruction")}
-                                    </p>
+                                    <Stack>
+                                        <p>
+                                            {t("signUpOrLoginInstruction")}
+                                        </p>
 
-                                    <NonBackgroundButton
-                                        text={`${t("login")} ${t("or")} ${t("signUp")}`}
-                                        handleClick={() => navigate("/login")}
+                                        <NonBackgroundButton
+                                            text={`${t("login")} ${t("or")} ${t("signUp")}`}
+                                            handleClick={() => navigate("/login")}
+                                            varColor="--light-theme-color"
+                                        />
+                                    </Stack>
+                                </Stack>
+                            </AnimatedInViewItem>
+
+                            <AnimatedInViewItem>
+                                <Stack
+                                    gap="3em"
+                                >
+                                    <Title
+                                        headingNumber={1}
+                                        text={t("welcome")}
                                         varColor="--theme-color"
                                     />
-                                </Stack>
-                            </Stack>
 
-                            <Stack>
+                                    <Stack
+                                        gap="2em"
+                                    >
+                                        <Stack
+                                            className={styles.descriptions}
+                                            gap="2em"
+                                        >
+                                            {welcomeDescriptions.map((description, index) => (
+                                                <p
+                                                    key={index}
+                                                >
+                                                    {description}
+                                                </p>
+                                            ))}
+                                        </Stack>
+
+                                        <NonBackgroundButton
+                                            text={t("goToFitX")}
+                                            handleClick={() => navigate("/")}
+                                            varColor="--light-theme-color"
+                                        />
+                                    </Stack>
+                                </Stack>
+                            </AnimatedInViewItem>
+                        </Stack>
+
+                        <Stack
+                            gap="15em"
+                        >
+                            <Stack
+                                gap="8em"
+                            >
                                 <Title
-                                    headingNumber={1}
-                                    text={t("welcome")}
+                                    headingNumber={2}
+                                    varColor="--light-theme-color"
+                                    text={t("FitXApp")}
                                 />
 
-                                <Stack>
-                                    <Stack>
-                                        {welcomeDescriptions.map((description, index) => (
-                                            <p
-                                                key={index}
-                                            >
-                                                {description}
-                                            </p>
-                                        ))}
-                                    </Stack>
-
-                                    <NonBackgroundButton
-                                        text={t("goToFitX")}
-                                        handleClick={() => navigate("/")}
-                                        varColor="--theme-color"
-                                    />
-                                </Stack>
-                            </Stack>
-                        </Stack>
-
-                        <Stack
-                            gap="3em"
-                        >
-                            <Title
-                                headingNumber={2}
-                                text={t("FitXApp")}
-                            />
-
-                            <Stack>
-                                <Stack>
-                                    <Stack>
-                                        <Title
-                                            headingNumber={3}
-                                            text={t("accessibility")}
-                                        />
-
-                                        <Stack>
-                                            <img
-                                                src="/images/background/accessibility_illustration.png"
-                                                alt=""
-                                            />
-
+                                <Stack
+                                    gap="6em"
+                                >
+                                    <Stack
+                                        gap="6em"
+                                    >
+                                        <AnimatedInViewItem>
                                             <Stack
-                                                direction="row"
+                                                gap="3em"
                                             >
-                                                {accessibilityDescriptions.map((description, index) => (
-                                                    <p
-                                                        key={index}
+                                                <Title
+                                                    headingNumber={3}
+                                                    varColor="--white-color"
+                                                    text={t("accessibility")}
+                                                />
+
+                                                <Stack
+                                                    justifyContent="center"
+                                                >
+                                                    <Stack
+                                                        justifyContent="center"
+                                                        className={`${styles.illustration} ${styles.large}`}
                                                     >
-                                                        {description}
-                                                    </p>
-                                                ))}
+                                                        <img
+                                                            src="https://res.cloudinary.com/ddg7swr5r/image/upload/v1756409333/accessibility_illustration_s1hhqj.jpg"
+                                                            alt=""
+                                                        />
+                                                    </Stack>
+
+                                                    <Stack
+                                                        className={styles.descriptions}
+                                                        gap="2em"
+                                                        direction="row"
+                                                    >
+                                                        {accessibilityDescriptions.map((description, index) => (
+                                                            <p
+                                                                key={index}
+                                                            >
+                                                                {description}
+                                                            </p>
+                                                        ))}
+                                                    </Stack>
+                                                </Stack>
                                             </Stack>
-                                        </Stack>
-                                    </Stack>
-                                    
-                                    <Stack>
-                                        <Title
-                                            headingNumber={3}
-                                            text={t("securityAndPrivacy")}
-                                        />
-
-                                        <Stack>
-                                            <img
-                                                src="/images/background/security_illustration.png"
-                                                alt=""
-                                            />
-
+                                        </AnimatedInViewItem>
+                                        
+                                        <AnimatedInViewItem>
                                             <Stack
-                                                direction="row"
+                                                gap="3em"
                                             >
-                                                {securityDescriptions.map((description, index) => (
-                                                    <p
-                                                        key={index}
-                                                    >
-                                                        {description}
-                                                    </p>
-                                                ))}
-                                            </Stack>
-                                        </Stack>
-                                    </Stack>
-                                    
-                                    <Stack>
-                                        <Title
-                                            headingNumber={3}
-                                            text={t("effectivenessAndSpeed")}
-                                        />
+                                                <Title
+                                                    headingNumber={3}
+                                                    varColor="--white-color"
+                                                    text={t("securityAndPrivacy")}
+                                                />
 
-                                        <Stack>
-                                            <img
-                                                src="/images/background/effectiveness_illustration.png"
-                                                alt=""
-                                            />
-
-                                            <Stack
-                                                direction="row"
-                                            >
-                                                {effectivenessDescriptions.map((description, index) => (
-                                                    <p
-                                                        key={index}
-                                                    >
-                                                        {description}
-                                                    </p>
-                                                ))}
-                                            </Stack>
-                                        </Stack>
-                                    </Stack>
-
-                                    <Stack>
-                                        <Title
-                                            headingNumber={3}
-                                            text={t("questionsWithCoachy")}
-                                        />
-
-                                        <Stack>
-                                            <img
-                                                src="/images/background/chatbot_illustration.png"
-                                                alt=""
-                                            />
-
-                                            <Stack>
                                                 <Stack
                                                     direction="row"
+                                                    justifyContent="center"
                                                 >
-                                                    {chatbotDescriptions.map((description, index) => (
-                                                        <p
-                                                            key={index}
+                                                    <Stack
+                                                        className={styles.descriptions}
+                                                        gap="2em"
+                                                    >
+                                                        {securityDescriptions.map((description, index) => (
+                                                            <p
+                                                                key={index}
+                                                                >
+                                                                {description}
+                                                            </p>
+                                                        ))}
+                                                    </Stack>
+
+                                                    <Stack
+                                                        justifyContent="center"
+                                                        className={`${styles.illustration} ${styles.large}`}
+                                                    >
+                                                        <img
+                                                            src="https://res.cloudinary.com/ddg7swr5r/image/upload/v1756409335/security_illustration_y4jhzw.jpg"
+                                                            alt=""
+                                                        />
+                                                    </Stack>
+                                                </Stack>
+                                            </Stack>
+                                        </AnimatedInViewItem>
+                                        
+                                        <AnimatedInViewItem>
+                                            <Stack
+                                                gap="3em"
+                                            >
+                                                <Title
+                                                    headingNumber={3}
+                                                    varColor="--white-color"
+                                                    text={t("effectivenessAndSpeed")}
+                                                />
+
+                                                <Stack
+                                                    justifyContent="center"
+                                                >
+                                                    <Stack
+                                                        justifyContent="center"
+                                                        className={`${styles.illustration} ${styles.large}`}
+                                                    >
+                                                        <img
+                                                            src="https://res.cloudinary.com/ddg7swr5r/image/upload/v1756409334/effectiveness_illustration_iqux21.jpg"
+                                                            alt=""
+                                                        />
+                                                    </Stack>
+
+                                                    <Stack
+                                                        className={styles.descriptions}
+                                                        gap="2em"
+                                                        direction="row"
+                                                    >
+                                                        {effectivenessDescriptions.map((description, index) => (
+                                                            <p
+                                                                key={index}
+                                                            >
+                                                                {description}
+                                                            </p>
+                                                        ))}
+                                                    </Stack>
+                                                </Stack>
+                                            </Stack>
+                                        </AnimatedInViewItem>
+
+                                        <AnimatedInViewItem>
+                                            <Stack
+                                                gap="3em"
+                                            >
+                                                <Title
+                                                    headingNumber={3}
+                                                    varColor="--white-color"
+                                                    text={t("questionsWithCoachy")}
+                                                />
+
+                                                <Stack>
+                                                    <Stack
+                                                        justifyContent="center"
+                                                        className={`${styles.illustration} ${styles.large}`}
+                                                    >
+                                                        <img
+                                                            src="https://res.cloudinary.com/ddg7swr5r/image/upload/v1756409333/chatbot_illustration_a7uj3o.jpg"
+                                                            alt=""
+                                                        />
+                                                    </Stack>
+
+                                                    <Stack
+                                                        gap="3em"
+                                                    >
+                                                        <Stack
+                                                            direction="row"
+                                                            className={styles.descriptions}
+                                                            gap="2em"
+                                                            justifyContent="center"
+                                                            alignItems="start"
                                                         >
-                                                            {description}
+                                                            {chatbotDescriptions.map((description, index) => (
+                                                                <p
+                                                                    key={index}
+                                                                >
+                                                                    {description}
+                                                                </p>
+                                                            ))}
+                                                        </Stack>
+
+                                                        <p>
+                                                            {`${t("didYouLike")} `}
+
+                                                            <NonBackgroundButton
+                                                                text={t("chatWithCoachy")}
+                                                                handleClick={() => navigate("/questions-chatbot")}
+                                                                varColor="--light-theme-color"
+                                                            />
                                                         </p>
-                                                    ))}
+                                                    </Stack>
                                                 </Stack>
-
-                                                <p>
-                                                    {`${t("didYouLike")} `}
-
-                                                    <NonBackgroundButton
-                                                        text={t("chatWithCoachy")}
-                                                        handleClick={() => navigate("/questions-chatbot")}
-                                                        varColor="--theme-color"
-                                                    />
-                                                </p>
                                             </Stack>
-                                        </Stack>
+                                        </AnimatedInViewItem>
                                     </Stack>
+
+                                    <AnimatedInViewItem>
+                                        <p>
+                                            {t("bePartOFitXDescription")}
+                                        </p>
+                                    </AnimatedInViewItem>
                                 </Stack>
-
-                                <p>
-                                    {t("bePartOFitXDescription")}
-                                </p>
                             </Stack>
-                        </Stack>
 
-                        <Stack
-                            gap="3em"
-                        >
-                            <Title
-                                headingNumber={2}
-                                text={t("FitXClient")}
-                            />
+                            <Stack
+                                gap="8em"
+                            >
+                                <Title
+                                    headingNumber={2}
+                                    varColor="--light-theme-color"
+                                    text={t("FitXClient")}
+                                />
 
-                            <Stack>
-                                <Stack>
-                                    <Stack>
-                                        <Title
-                                            headingNumber={3}
-                                            text={t("trainerConnection")}
-                                        />
+                                <Stack
+                                    gap="6em"
+                                >
+                                    <Stack
+                                        gap="6em"
+                                    >
+                                        <AnimatedInViewItem>
+                                            <Stack
+                                                gap="3em"
+                                            >
+                                                <Title
+                                                    headingNumber={3}
+                                                    varColor="--white-color"
+                                                    text={t("progressMonitoring")}
+                                                />
 
-                                        <Stack>
-                                            <Stack>
                                                 <Stack
                                                     direction="row"
+                                                    justifyContent="center"
                                                 >
-                                                    <Stack>
-                                                        <Title
-                                                            headingNumber={4}
-                                                            text={t("contractATrainer")}
-                                                        />
-
+                                                    <Stack
+                                                        justifyContent="center"
+                                                        className={`${styles.illustration} ${styles.large}`}
+                                                    >
                                                         <img
-                                                            src="/images/background/contract_trainer_illustration.png"
+                                                            src="https://res.cloudinary.com/ddg7swr5r/image/upload/v1756409334/progress_monitoring_illustration_zhal5l.jpg"
                                                             alt=""
                                                         />
                                                     </Stack>
 
-                                                    <p>
-                                                        {t("contractTrainerDescription")}
-                                                    </p>
-                                                </Stack>
-
-                                                <Stack
-                                                    direction="row"
-                                                >
-                                                    <p>
-                                                        {t("chatTrainerDescription")}
-                                                    </p>
-        
-                                                    <Stack>
-                                                        <Title
-                                                            headingNumber={4}
-                                                            text={t("chatWithTrainer")}
-                                                        />
-
-                                                        <img
-                                                            src="/images/background/chat_trainer_illustration.png"
-                                                            alt=""
-                                                        />
-                                                    </Stack>
-                                                </Stack>
-                                                
-                                                <Stack
-                                                    direction="row"
-                                                >
-                                                    <Stack>
-                                                        <Title
-                                                            headingNumber={4}
-                                                            text={t("individualizedTraining")}
-                                                        />
-
-                                                        <img
-                                                            src="/images/background/individualized_training_illustration.png"
-                                                            alt=""
-                                                        />
-                                                    </Stack>
-        
-                                                    <p>
-                                                        {t("individualizedTrainingDescription")}
-                                                    </p>
-                                                </Stack>
-                                                
-                                                <Stack
-                                                    direction="row"
-                                                >
-                                                    <p>
-                                                        {t("progressSharingDescription")}
-                                                    </p>
-        
-                                                    <Stack>
-                                                        <Title
-                                                            headingNumber={4}
-                                                            text={t("progressSharing")}
-                                                        />
-
-                                                        <img
-                                                            src="/images/background/progress_sharing_illustration.png"
-                                                            alt=""
-                                                        />
+                                                    <Stack
+                                                        className={styles.descriptions}
+                                                        gap="2em"
+                                                    >
+                                                        {progressMonitoringDescriptions.map((description, index) => (
+                                                            <p
+                                                                key={index}
+                                                            >
+                                                                {description}
+                                                            </p>
+                                                        ))}
                                                     </Stack>
                                                 </Stack>
                                             </Stack>
+                                        </AnimatedInViewItem>
 
-                                            <p>
-                                                {t("thisAndMuchMoreInFitX")}
-                                            </p>
-                                        </Stack>
-                                    </Stack>
-
-                                    <Stack>
-                                        <Title
-                                            headingNumber={3}
-                                            text={t("progressMonitoring")}
-                                        />
-
-                                        <Stack>
-                                            <img
-                                                src="/images/background/progress_monitoring_illustration.png"
-                                                alt=""
-                                            />
+                                        <Stack
+                                            gap="3em"
+                                        >
+                                            <AnimatedInViewItem>
+                                                <Title
+                                                    headingNumber={3}
+                                                    varColor="--white-color"
+                                                    text={t("trainerConnection")}
+                                                />
+                                            </AnimatedInViewItem>
 
                                             <Stack
-                                                direction="row"
+                                                gap="4em"
                                             >
-                                                {progressMonitoringDescriptions.map((description, index) => (
-                                                    <p
-                                                        key={index}
-                                                    >
-                                                        {description}
+                                                <Stack
+                                                    gap="3em"
+                                                >
+                                                    <AnimatedInViewItem>
+                                                        <Stack
+                                                            direction="row"
+                                                            justifyContent="start"
+                                                        >
+                                                            <Stack
+                                                                className={styles.illustration_with_title}
+                                                            >
+                                                                <Title
+                                                                    headingNumber={4}
+                                                                    varColor="--dark-color"
+                                                                    textAlign="left"
+                                                                    text={t("contractATrainer")}
+                                                                />
+
+                                                                <Stack
+                                                                    justifyContent="center"
+                                                                    className={styles.illustration}
+                                                                >
+                                                                    <img
+                                                                        src="https://res.cloudinary.com/ddg7swr5r/image/upload/v1756409333/contract_trainer_illustration_gvinai.jpg"
+                                                                        alt=""
+                                                                    />
+                                                                </Stack>
+                                                            </Stack>
+
+                                                            <p>
+                                                                {t("contractTrainerDescription")}
+                                                            </p>
+                                                        </Stack>
+                                                    </AnimatedInViewItem>
+
+                                                    <AnimatedInViewItem>
+                                                        <Stack
+                                                            direction="row"
+                                                            justifyContent="end"
+                                                        >
+                                                            <p>
+                                                                {t("chatTrainerDescription")}
+                                                            </p>
+                
+                                                            <Stack
+                                                                className={styles.illustration_with_title}
+                                                            >
+                                                                <Title
+                                                                    headingNumber={4}
+                                                                    varColor="--dark-color"
+                                                                    textAlign="left"
+                                                                    text={t("chatWithTrainer")}
+                                                                />
+
+                                                                <Stack
+                                                                    justifyContent="center"
+                                                                    className={styles.illustration}
+                                                                >
+                                                                    <img
+                                                                        src="https://res.cloudinary.com/ddg7swr5r/image/upload/v1756409332/chat_trainer_illustration_ku1qai.jpg"
+                                                                        alt=""
+                                                                    />
+                                                                </Stack>
+                                                            </Stack>
+                                                        </Stack>
+                                                    </AnimatedInViewItem>
+
+                                                    <AnimatedInViewItem>
+                                                        <Stack
+                                                            direction="row"
+                                                            justifyContent="start"
+                                                        >
+                                                            <Stack
+                                                                className={styles.illustration_with_title}
+                                                            >
+                                                                <Title
+                                                                    headingNumber={4}
+                                                                    varColor="--dark-color"
+                                                                    textAlign="left"
+                                                                    text={t("individualizedTraining")}
+                                                                />
+
+                                                                <Stack
+                                                                    justifyContent="center"
+                                                                    className={styles.illustration}
+                                                                >
+                                                                    <img
+                                                                        src="https://res.cloudinary.com/ddg7swr5r/image/upload/v1756409335/individualized_training_illustration_oeoj3x.jpg"
+                                                                        alt=""
+                                                                    />
+                                                                </Stack>
+                                                            </Stack>
+                
+                                                            <p>
+                                                                {t("individualizedTrainingDescription")}
+                                                            </p>
+                                                        </Stack>
+                                                    </AnimatedInViewItem>
+
+                                                    <AnimatedInViewItem>
+                                                        <Stack
+                                                            direction="row"
+                                                            justifyContent="end" 
+                                                        >
+                                                            <p>
+                                                                {t("progressSharingDescription")}
+                                                            </p>
+                
+                                                            <Stack
+                                                                className={styles.illustration_with_title}
+                                                            >
+                                                                <Title
+                                                                    headingNumber={4}
+                                                                    varColor="--dark-color"
+                                                                    textAlign="left"
+                                                                    text={t("progressSharing")}
+                                                                />
+
+                                                                <Stack
+                                                                    justifyContent="center"
+                                                                    className={styles.illustration}
+                                                                >
+                                                                    <img
+                                                                        src="https://res.cloudinary.com/ddg7swr5r/image/upload/v1756409334/progress_sharing_illustration_voyia5.jpg"
+                                                                        alt=""
+                                                                    />
+                                                                </Stack>
+                                                            </Stack>
+                                                        </Stack>
+                                                    </AnimatedInViewItem>
+                                                </Stack>
+
+                                                <AnimatedInViewItem>
+                                                    <p>
+                                                        {t("thisAndMuchMoreInFitX")}
                                                     </p>
-                                                ))}
+                                                </AnimatedInViewItem>
                                             </Stack>
                                         </Stack>
                                     </Stack>
+
+                                    <AnimatedInViewItem>
+                                        <p>
+                                            {t("beAFitXClientDescription")}
+                                        </p>
+                                    </AnimatedInViewItem>
                                 </Stack>
-
-                                <p>
-                                    {t("beAFitXClientDescription")}
-                                </p>
                             </Stack>
-                        </Stack>
 
-                        <Stack
-                            gap="3em"
-                        >
-                            <Title
-                                headingNumber={2}
-                                text={t("FitXTrainer")}
-                            />
+                            <Stack
+                                gap="8em"
+                            >
+                                <Title
+                                    headingNumber={2}
+                                    varColor="--light-theme-color"
+                                    text={t("FitXTrainer")}
+                                />
 
-                            <Stack>
-                                <Stack>
-                                    <Stack>
-                                        <Title
-                                            headingNumber={3}
-                                            text={t("customizableTraining")}
-                                        />
-
-                                        <Stack>
-                                            <img
-                                                src="/images/background/customizable_training_illustration.png"
-                                                alt=""
-                                            />
-
+                                <Stack
+                                    gap="6em"
+                                >
+                                    <Stack
+                                        gap="6em"
+                                    >
+                                        <AnimatedInViewItem>
                                             <Stack
-                                                direction="row"
+                                                gap="3em"
                                             >
-                                                {trainingDescriptions.map((description, index) => (
-                                                    <p
-                                                        key={index}
-                                                    >
-                                                        {description}
-                                                    </p>
-                                                ))}
-                                            </Stack>
-                                        </Stack>
-                                    </Stack>
-
-                                    <Stack>
-                                        <Title
-                                            headingNumber={3}
-                                            text={t("workControl")}
-                                        />
-
-                                        <Stack>
-                                            <Stack>
-                                                <Stack
-                                                    direction="row"
-                                                >
-                                                    <Stack>
-                                                        <Title
-                                                            headingNumber={4}
-                                                            text={t("paymentPlans")}
-                                                        />
-
-                                                        <img
-                                                            src="/images/background/payment_plans_illustration.png"
-                                                            alt=""
-                                                        />
-                                                    </Stack>
-
-                                                    <p>
-                                                        {t("paymentPlanDescription")}
-                                                    </p>
-                                                </Stack>
-
-                                                <Stack
-                                                    direction="row"
-                                                >
-                                                    <p>
-                                                        {t("serviceControlDescription")}
-                                                    </p>
-        
-                                                    <Stack>
-                                                        <Title
-                                                            headingNumber={4}
-                                                            text={t("serviceControl")}
-                                                        />
-
-                                                        <img
-                                                            src="/images/background/service_control_illustration.png"
-                                                            alt=""
-                                                        />
-                                                    </Stack>
-                                                </Stack>
-                                                
-                                                <Stack
-                                                    direction="row"
-                                                >
-                                                    <p>
-                                                        {t("contractsManagementDescription")}
-                                                    </p>
-        
-                                                    <Stack>
-                                                        <Title
-                                                            headingNumber={4}
-                                                            text={t("contractsManagement")}
-                                                        />
-
-                                                        <img
-                                                            src="/images/background/contracts_management_illustration.png"
-                                                            alt=""
-                                                        />
-                                                    </Stack>
-                                                </Stack>
-                                                
-                                                <Stack
-                                                    direction="row"
-                                                >
-                                                    <Stack>
-                                                        <Title
-                                                            headingNumber={4}
-                                                            text={t("clientsManagement")}
-                                                        />
-
-                                                        <img
-                                                            src="/images/background/clients_management_illustration.png"
-                                                            alt=""
-                                                        />
-                                                    </Stack>
-        
-                                                    <p>
-                                                        {t("clientsManagementDescription")}
-                                                    </p>
-                                                </Stack>
-                                            </Stack>
-
-                                            <p>
-                                                {t("thisAndMuchMoreInFitX")}
-                                            </p>
-                                        </Stack>
-                                    </Stack>
-
-                                    <Stack>
-                                        <Title
-                                            headingNumber={3}
-                                            text={t("visibility")}
-                                        />
-
-                                        <Stack>
-                                            <Stack
-                                                direction="row"
-                                            >
-                                                <Stack>
-                                                    <Title
-                                                        headingNumber={4}
-                                                        text={t("ratingsAndContracts")}
-                                                    />
-
-                                                    <img
-                                                        src="/images/background/ratings_illustration.png"
-                                                        alt=""
-                                                    />
-                                                </Stack>
-
-                                                <p>
-                                                    {t("ratingsAndContractsDescription")}
-                                                </p>
-                                            </Stack>
-
-                                            <Stack
-                                                direction="row"
-                                            >
-                                                <p>
-                                                    {t("serviceCostDescription")}
-                                                </p>
+                                                <Title
+                                                    headingNumber={3}
+                                                    varColor="--white-color"
+                                                    text={t("customizableTraining")}
+                                                />
 
                                                 <Stack>
-                                                    <Title
-                                                        headingNumber={4}
-                                                        text={t("serviceCost")}
-                                                    />
+                                                    <Stack
+                                                        justifyContent="center"
+                                                        className={`${styles.illustration} ${styles.large}`}
+                                                    >
+                                                        <img
+                                                            src="https://res.cloudinary.com/ddg7swr5r/image/upload/v1756409333/customizable_training_illustration_oqgznw.jpg"
+                                                            alt=""
+                                                        />
+                                                    </Stack>
 
-                                                    <img
-                                                        src="/images/background/service_cost_illustration.png"
-                                                        alt=""
-                                                    />
+                                                    <Stack
+                                                        direction="row"
+                                                        justifyContent="center"
+                                                        alignItems="start"
+                                                        className={styles.descriptions}
+                                                        gap="2em"
+                                                    >
+                                                        {trainingDescriptions.map((description, index) => (
+                                                            <p
+                                                                key={index}
+                                                            >
+                                                                {description}
+                                                            </p>
+                                                        ))}
+                                                    </Stack>
                                                 </Stack>
+                                            </Stack>
+                                        </AnimatedInViewItem>
+
+                                        <Stack
+                                            gap="3em"
+                                        >
+                                            <AnimatedInViewItem>
+                                                <Title
+                                                    headingNumber={3}
+                                                    varColor="--white-color"
+                                                    text={t("workControl")}
+                                                />
+                                            </AnimatedInViewItem>
+
+                                            <Stack
+                                                gap="4em"
+                                            >
+                                                <Stack
+                                                    gap="3em"
+                                                >
+                                                    <AnimatedInViewItem>
+                                                        <Stack
+                                                            direction="row"
+                                                            justifyContent="start"
+                                                        >
+                                                            <Stack
+                                                                className={styles.illustration_with_title}
+                                                            >
+                                                                <Title
+                                                                    headingNumber={4}
+                                                                    varColor="--dark-color"
+                                                                    textAlign="left"
+                                                                    text={t("paymentPlans")}
+                                                                />
+
+                                                                <Stack
+                                                                    justifyContent="center"
+                                                                    className={styles.illustration}
+                                                                >
+                                                                    <img
+                                                                        src="https://res.cloudinary.com/ddg7swr5r/image/upload/v1756409334/payment_plans_illustration_apvlnl.jpg"
+                                                                        alt=""
+                                                                    />
+                                                                </Stack>
+                                                            </Stack>
+
+                                                            <p>
+                                                                {t("paymentPlanDescription")}
+                                                            </p>
+                                                        </Stack>
+                                                    </AnimatedInViewItem>
+
+                                                    <AnimatedInViewItem>
+                                                        <Stack
+                                                            direction="row"
+                                                            justifyContent="end"
+                                                        >
+                                                            <p>
+                                                                {t("serviceControlDescription")}
+                                                            </p>
+                
+                                                            <Stack
+                                                                className={styles.illustration_with_title}
+                                                            >
+                                                                <Title
+                                                                    headingNumber={4}
+                                                                    varColor="--dark-color"
+                                                                    textAlign="left"
+                                                                    text={t("serviceControl")}
+                                                                />
+
+                                                                <Stack
+                                                                    justifyContent="center"
+                                                                    className={styles.illustration}
+                                                                >
+                                                                    <img
+                                                                        src="https://res.cloudinary.com/ddg7swr5r/image/upload/v1756409335/service_control_illustration_bjqkkk.jpg"
+                                                                        alt=""
+                                                                    />
+                                                                </Stack>
+                                                            </Stack>
+                                                        </Stack>
+                                                    </AnimatedInViewItem>
+                                                    
+                                                    <AnimatedInViewItem>
+                                                        <Stack
+                                                            direction="row"
+                                                            justifyContent="end"
+                                                        >
+                                                            <p>
+                                                                {t("contractsManagementDescription")}
+                                                            </p>
+                
+                                                            <Stack
+                                                                className={styles.illustration_with_title}
+                                                            >
+                                                                <Title
+                                                                    headingNumber={4}
+                                                                    varColor="--dark-color"
+                                                                    textAlign="left"
+                                                                    text={t("contractsManagement")}
+                                                                />
+
+                                                                <Stack
+                                                                    justifyContent="center"
+                                                                    className={styles.illustration}
+                                                                >
+                                                                    <img
+                                                                        src="https://res.cloudinary.com/ddg7swr5r/image/upload/v1756409333/contracts_management_illustration_jfdtfq.jpg"
+                                                                        alt=""
+                                                                    />
+                                                                </Stack>
+                                                            </Stack>
+                                                        </Stack>
+                                                    </AnimatedInViewItem>
+                                                    
+                                                    <AnimatedInViewItem>
+                                                        <Stack
+                                                            direction="row"
+                                                            justifyContent="start"
+                                                        >
+                                                            <Stack
+                                                                className={styles.illustration_with_title}
+                                                            >
+                                                                <Title
+                                                                    headingNumber={4}
+                                                                    varColor="--dark-color"
+                                                                    textAlign="left"
+                                                                    text={t("clientsManagement")}
+                                                                />
+
+                                                                <Stack
+                                                                    justifyContent="center"
+                                                                    className={styles.illustration}
+                                                                >
+                                                                    <img
+                                                                        src="https://res.cloudinary.com/ddg7swr5r/image/upload/v1756409333/clients_management_illustration_gtyedl.jpg"
+                                                                        alt=""
+                                                                    />
+                                                                </Stack>
+                                                            </Stack>
+                
+                                                            <p>
+                                                                {t("clientsManagementDescription")}
+                                                            </p>
+                                                        </Stack>
+                                                    </AnimatedInViewItem>
+                                                </Stack>
+
+                                                <AnimatedInViewItem>
+                                                    <p>
+                                                        {t("thisAndMuchMoreInFitX")}
+                                                    </p>
+                                                </AnimatedInViewItem>
+                                            </Stack>
+                                        </Stack>
+
+                                        <Stack
+                                            gap="3em"
+                                        >
+                                            <AnimatedInViewItem>
+                                                <Title
+                                                    headingNumber={3}
+                                                    varColor="--white-color"
+                                                    text={t("visibility")}
+                                                />
+                                            </AnimatedInViewItem>
+
+                                            <Stack
+                                                gap="3em"
+                                            >
+                                                <AnimatedInViewItem>
+                                                    <Stack
+                                                        direction="row"
+                                                        justifyContent="end"
+                                                    >
+                                                        <p>
+                                                            {t("ratingsAndContractsDescription")}
+                                                        </p>
+
+                                                        <Stack
+                                                            className={styles.illustration_with_title}
+                                                        >
+                                                            <Title
+                                                                headingNumber={4}
+                                                                varColor="--dark-color"
+                                                                textAlign="left"
+                                                                text={t("ratingsAndContracts")}
+                                                            />
+
+                                                            <Stack
+                                                                justifyContent="center"
+                                                                className={styles.illustration}
+                                                            >
+                                                                <img
+                                                                    src="https://res.cloudinary.com/ddg7swr5r/image/upload/v1756409335/ratings_illustration_fgjmgv.jpg"
+                                                                    alt=""
+                                                                />
+                                                            </Stack>
+                                                        </Stack>
+                                                    </Stack>
+                                                </AnimatedInViewItem>
+
+                                                <AnimatedInViewItem>
+                                                    <Stack
+                                                        direction="row"
+                                                        justifyContent="start"
+                                                    >
+                                                        <Stack
+                                                            className={styles.illustration_with_title}
+                                                        >
+                                                            <Title
+                                                                headingNumber={4}
+                                                                varColor="--dark-color"
+                                                                textAlign="left"
+                                                                text={t("serviceCost")}
+                                                            />
+
+                                                            <Stack
+                                                                justifyContent="center"
+                                                                className={styles.illustration}
+                                                            >
+                                                                <img
+                                                                    src="https://res.cloudinary.com/ddg7swr5r/image/upload/v1756409335/service_cost_illustration_nizmkz.jpg"
+                                                                    alt=""
+                                                                    />
+                                                            </Stack>
+                                                        </Stack>
+
+                                                        <p>
+                                                            {t("serviceCostDescription")}
+                                                        </p>
+                                                    </Stack>
+                                                </AnimatedInViewItem>
                                             </Stack>
                                         </Stack>
                                     </Stack>
-                                </Stack>
 
-                                <p>
-                                    {t("beAFitXTrainerDescription")}
-                                </p>
+                                    <AnimatedInViewItem>
+                                        <p>
+                                            {t("beAFitXTrainerDescription")}
+                                        </p>
+                                    </AnimatedInViewItem>
+                                </Stack>
                             </Stack>
                         </Stack>
                     </Stack>
 
-                    <p>
-                        {t("bePartOfFitxInstruction")}
-                    </p>
+                    <AnimatedInViewItem>
+                        <p>
+                            {t("bePartOfFitxInstruction")}
+                        </p>
+                    </AnimatedInViewItem>
                 </Stack>
             </main>
         </FooterLayout>
