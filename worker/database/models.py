@@ -46,6 +46,8 @@ class PlanContract(Base):
     ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     start_date = Column(DATE, nullable=False, default=lambda: datetime.now(brazil_tz).date())
     end_date = Column(DATE, nullable=False)
+    last_day_full_refund = Column(DATE, nullable=False)
+    last_day_allowed_refund = Column(DATE, nullable=False)
     fk_contract_status_ID = Column(INTEGER(unsigned=True), ForeignKey("contract_status.ID"), index=True, nullable=False)
     fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="CASCADE"), index=True, nullable=False)
 
