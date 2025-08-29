@@ -701,5 +701,6 @@
     "serviceCostDescription": "O preço dos seus planos, assim como o seu custo-benefício podem afetar a sua visibilidade dentro da plataforma, mas o FitX oferece um ótimo controle sobre isso.",
     "serviceCost": "Custo do Serviço",
     "beAFitXTrainerDescription": "Para usar todos as ferramentas do FitX para treinadores, escolha criar uma conta de treinador na página de criação de configuração após ter seus dados checados na página de registro.",
-    "bePartOfFitxInstruction": "Você pode usar todas essas ferramentas criando uma conta agora mesmo! Vá até a primeira seção dessa página e clique no botão 'Entrar ou Criar Conta'. Preencha os formulários de registro e seja um cliente ou treinador FitX!"
+    "bePartOfFitxInstruction": "Você pode usar todas essas ferramentas criando uma conta agora mesmo! Vá até a primeira seção dessa página e clique no botão 'Entrar ou Criar Conta'. Preencha os formulários de registro e seja um cliente ou treinador FitX!",
+    "appDatesAlert": "Todas as datas e horários do FitX, incluindo as relacionadas aos contratos, seguem o horário de Brasília (GMT-3)."
 }

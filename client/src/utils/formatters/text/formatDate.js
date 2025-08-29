@@ -1,21 +1,20 @@
+import { utcToZonedTime, format } from "date-fns-tz";
+
 export function formatDate(date, t) {
-    const newDate = new Date(date);
-    const today = new Date();
-    const yesterday = new Date();
+    const timeZone = "America/Sao_Paulo";
+
+    const today = utcToZonedTime(new Date(), timeZone);
+    const yesterday = new Date(today);
 
     yesterday.setDate(today.getDate() - 1);
 
-    const isToday = newDate.toDateString() === today.toDateString();
-    const isYesterday = newDate.toDateString() === yesterday.toDateString();
+    const isToday = format(date, "yyyy-MM-dd") === format(today, "yyyy-MM-dd");
+    const isYesterday = format(date, "yyyy-MM-dd") === format(yesterday, "yyyy-MM-dd");
 
     if (isToday) return t("today");
     if (isYesterday) return t("yesterday");
 
-    const day = String(newDate.getDate()).padStart(2, "0");
-    const month = String(newDate.getMonth() + 1).padStart(2, "0");
-    const year = String(newDate.getFullYear());
-
-    return `${day}/${month}/${year}`;
+    return format(date, "dd/MM/yyyy", { timeZone });
 }
 
 export function formatDateToExtend(date, locale) {

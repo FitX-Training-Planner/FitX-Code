@@ -324,18 +324,34 @@ function PaymentPage() {
                                 </Stack>
                             </Stack>
 
-                            <Stack
-                                className={styles.fitx_client_alert}
-                                direction="row"
-                                justifyContent="start"
-                            >
-                                <Alert 
-                                    varColor="--theme-color"
-                                />
+                            <Stack>
+                                <Stack
+                                    className={styles.fitx_client_alert}
+                                    direction="row"
+                                    justifyContent="start"
+                                >
+                                    <Alert 
+                                        varColor="--theme-color"
+                                    />
 
-                                <p>
-                                    {t("aboutTheFitXClientAlert")}
-                                </p>
+                                    <p>
+                                        {t("aboutTheFitXClientAlert")}
+                                    </p>
+                                </Stack>
+
+                                <Stack
+                                    className={styles.fitx_client_alert}
+                                    direction="row"
+                                    justifyContent="start"
+                                >
+                                    <Alert 
+                                        varColor="--theme-color"
+                                    />
+
+                                    <p>
+                                        {t("appDatesAlert")}
+                                    </p>
+                                </Stack>
                             </Stack>
                         </Stack>
 
