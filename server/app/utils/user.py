@@ -3,7 +3,7 @@ import hashlib
 from ..database.models import Users
 from ..exceptions.api_error import ApiError
 from flask_mail import Message
-from email.header import Header
+from flask import render_template
 import os
 
 def hash_email(email):
@@ -30,18 +30,12 @@ def check_password(password, hashed):
 
 def send_email(email, template_path, subject, **template_vars):
     try:
-        with open(template_path, 'r', encoding='utf-8') as f:
-            template_content = f.read()
-
-        if template_vars:
-            template_content = template_content.format(**template_vars)
-
-        subject_utf8 = Header(subject, 'utf-8')
+        template = render_template(f"templates/{template_path}", **template_vars)
 
         message = Message(
-            subject=subject_utf8,
+            subject=subject,
             recipients=[email],
-            html=template_content
+            html=template
         )
         message.charset = 'utf-8'
 

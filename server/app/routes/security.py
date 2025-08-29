@@ -116,7 +116,7 @@ def identity_confirmation():
 
             send_email(
                 email,
-                "templates/code_verification.html",
+                "code_verification.html",
                 "Código de Verificação",
                 code=generated_code
             )
