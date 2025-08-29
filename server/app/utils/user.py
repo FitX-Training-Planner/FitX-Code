@@ -3,6 +3,7 @@ import hashlib
 from ..database.models import Users
 from ..exceptions.api_error import ApiError
 from flask_mail import Message
+from email.header import Header
 import os
 
 def hash_email(email):
@@ -27,14 +28,23 @@ def hash_password(password):
 def check_password(password, hashed):
     return bcrypt.check_password_hash(hashed, password)
 
-def send_email(email, template, subject):
+def send_email(email, template_path, subject, **template_vars):
     try:
+        with open(template_path, 'r', encoding='utf-8') as f:
+            template_content = f.read()
+
+        if template_vars:
+            template_content = template_content.format(**template_vars)
+
+        subject_utf8 = Header(subject, 'utf-8')
+
         message = Message(
-            subject=subject, 
-            recipients=[email], 
-            html=template
+            subject=subject_utf8,
+            recipients=[email],
+            html=template_content
         )
-    
+        message.charset = 'utf-8'
+
         mail.send(message)
 
     except Exception as e:

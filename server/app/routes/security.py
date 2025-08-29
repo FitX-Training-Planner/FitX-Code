@@ -114,9 +114,12 @@ def identity_confirmation():
         else:
             generated_code = generate_code(email)
 
-            template = render_template("code_verification.html", code=generated_code)
-
-            send_email(email, template, "Código de Verificação")
+            send_email(
+                email,
+                "templates/code_verification.html",
+                "Código de Verificação",
+                code=generated_code
+            )
 
         return "", 204 
         
@@ -386,9 +389,14 @@ def mercadopago_webhook():
                 transaction.mp_fee = mp_fee
                 transaction.trainer_received = transaction.amount - transaction.app_fee - transaction.mp_fee
 
+                start_date = datetime.now(brazil_tz).date()
+                end_date = start_date + timedelta(days=transaction.payment_plan.duration_days)
+
                 new_contract = PlanContract(
-                    start_date = datetime.now(brazil_tz).date(),
-                    end_date =  datetime.now(brazil_tz).date() + timedelta(days=transaction.payment_plan.duration_days),
+                    start_date = start_date,
+                    end_date = end_date,
+                    last_day_full_refund = start_date + timedelta(days=7),
+                    last_day_allowed_refund = end_date - timedelta(days=10),
                     fk_user_ID = transaction.fk_user_ID,
                     fk_trainer_ID = transaction.fk_trainer_ID,
                     fk_payment_plan_ID = transaction.fk_payment_plan_ID,

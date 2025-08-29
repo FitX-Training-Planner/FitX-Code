@@ -99,6 +99,9 @@ def toggle_activate_profile(db, user_id, is_client, is_active):
         if not user:
             raise ApiError(MessageCodes.USER_NOT_FOUND, 404)
         
+        if user.is_active == is_active:
+            return
+        
         user.is_active = is_active
 
         db.commit()

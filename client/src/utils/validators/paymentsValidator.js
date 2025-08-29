@@ -1,6 +1,6 @@
 
 export function isPaymentPlanDurationValid(days) {
-    return Number(days) >= 1 && Number(days) <= 365 * 2;
+    return Number(days) >= 20 && Number(days) <= 365 * 2;
 }
 
 export function isPaymentPlanPriceValid(price) {
