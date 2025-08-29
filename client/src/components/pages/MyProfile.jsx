@@ -65,6 +65,7 @@ function MyProfile() {
     const user = useSelector(state => state.user);
 
     const clientTrainingStorageKey = "clientTraining";
+    const emailStorageKey = "fitxEmail";
     const ratingsLimit = 10;
     const complaintsLimit = 10;
 
@@ -196,28 +197,38 @@ function MyProfile() {
 
                 setChangedUser(prevUser => ({ ...prevUser, email: updatedEmail }));
             } else {
-                const getEmail = () => {
-                    return api.get(`/users/me/email`);
+                const cachedEmailData = getCacheData(emailStorageKey);
+
+                if (cachedEmailData) {
+                    setUsedEmail(cachedEmailData);
+
+                    setChangedUser(prevUser => ({ ...prevUser, email: cachedEmailData }));
+                } else {
+                    const getEmail = () => {
+                        return api.get(`/users/me/email`);
+                    }
+                
+                    const handleOnGetEmailSuccess = (data) => {
+                        setUsedEmail(data.email);
+        
+                        setChangedUser(prevUser => ({ ...prevUser, email: data.email }));
+    
+                        setCacheData(emailStorageKey, data.email);
+                    };
+        
+                    const handleOnGetEmailError = () => {
+                        navigate("/");
+                    };
+        
+                    getUserEmailReq(
+                        getEmail, 
+                        handleOnGetEmailSuccess, 
+                        handleOnGetEmailError, 
+                        t("loadingUserInfo"), 
+                        undefined, 
+                        t("errorLoadingUserInfo")
+                    );
                 }
-            
-                const handleOnGetEmailSuccess = (data) => {
-                    setUsedEmail(data.email);
-    
-                    setChangedUser(prevUser => ({ ...prevUser, email: data.email }));
-                };
-    
-                const handleOnGetEmailError = () => {
-                    navigate("/");
-                };
-    
-                getUserEmailReq(
-                    getEmail, 
-                    handleOnGetEmailSuccess, 
-                    handleOnGetEmailError, 
-                    t("loadingUserInfo"), 
-                    undefined, 
-                    t("errorLoadingUserInfo")
-                );
             }
 
             if (user.config.isClient) {
@@ -225,10 +236,10 @@ function MyProfile() {
 
                 if (!success) return;
 
-                const cachedData = getCacheData(clientTrainingStorageKey);
+                const cachedContractData = getCacheData(clientTrainingStorageKey);
                 
-                if (cachedData) {
-                    setClientTraining(cachedData);
+                if (cachedContractData) {
+                    setClientTraining(cachedContractData);
                     
                     return;
                 }
@@ -445,7 +456,11 @@ function MyProfile() {
             const handleOnPutUserSuccess = (data) => {
                 dispatch(updateUser(data.user));
 
-                if (data.email) navigate("/me", { state: { updatedEmail: data.email } });
+                if (data.email) {
+                    navigate("/me", { state: { updatedEmail: data.email } });
+
+                    setCacheData(emailStorageKey, data.email);
+                }
             };
         
             const handleOnPutUserError = () => {
