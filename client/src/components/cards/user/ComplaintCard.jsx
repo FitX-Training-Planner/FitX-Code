@@ -18,7 +18,7 @@ function ComplaintCard({
     hasLiked,
     handleRemoveComplaint
 }) {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
 
     const user = useSelector(state => state.user);
     
@@ -62,7 +62,7 @@ function ComplaintCard({
                 </Stack>
 
                 <span>
-                    {formatDateToExtend(createDate)}
+                    {formatDateToExtend(createDate, i18n.language)}
                 </span>
             </Stack>
 

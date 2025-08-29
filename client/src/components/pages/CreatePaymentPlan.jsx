@@ -32,7 +32,14 @@ function CreatePaymentPlan() {
         
     const user = useSelector(state => state.user);
     
-    const [paymentPlan, setPaymentPlan] = useState({});
+    const [paymentPlan, setPaymentPlan] = useState({
+        ID: null,
+        name: "",
+        fullPrice: "",
+        durationDays: "",
+        description: "",
+        benefits: []
+    });
     const [error, setError] = useState(false);
     const [acceptTerms, setAcceptTerms] = useState(false);
     

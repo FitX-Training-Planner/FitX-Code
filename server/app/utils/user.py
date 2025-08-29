@@ -30,7 +30,7 @@ def check_password(password, hashed):
 
 def send_email(email, template_path, subject, **template_vars):
     try:
-        template = render_template(f"templates/{template_path}", **template_vars)
+        template = render_template(template_path, **template_vars)
 
         message = Message(
             subject=subject,

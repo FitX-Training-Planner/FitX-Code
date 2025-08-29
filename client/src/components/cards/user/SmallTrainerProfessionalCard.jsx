@@ -40,6 +40,7 @@ function SmallTrainerProfessionalCard({
                     name={t("saveTrainer")}
                     handleClick={handleSave}
                     size="small"
+                    hasTheme={hasSaved ? false : true}
                 />
 
                 <ClickableIcon

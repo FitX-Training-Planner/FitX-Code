@@ -45,7 +45,7 @@ function App() {
 
   const location = useLocation();
   
-  const { request: getUserRequest } = useRequest();
+  const { request: getUserRequest, loading: loadingUser } = useRequest();
 
   const hasRun = useRef(false);
 
@@ -79,7 +79,9 @@ function App() {
     const shouldSkip = !validPaths.includes(location.pathname);
 
     if (shouldSkip) setCanRender(true);
-    
+
+    if (!shouldSkip && hasRun.current) setCanRender(true);
+
     if (!shouldSkip && !hasRun.current) {
       hasRun.current = true;
 
@@ -98,7 +100,7 @@ function App() {
 
         if (err?.response?.status === 404) {
           navigate("/introduction");
-        } else {
+        } else {  
           navigate("/error", { state: { errorStatus: err?.response?.status, errorMessage: t(getErrorMessageCodeError(err)) } });
         }
       };
@@ -135,8 +137,8 @@ function App() {
           path="/error"
           element={<ErrorPage />}
         />
-        
-        {canRender && (
+
+        {canRender && !loadingUser && (
           <>
             <Route
               exact

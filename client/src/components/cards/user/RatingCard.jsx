@@ -20,7 +20,7 @@ function RatingCard({
     hasLiked,
     handleRemoveRating
 }) {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
 
     const user = useSelector(state => state.user);
     
@@ -64,7 +64,7 @@ function RatingCard({
                 </Stack>
 
                 <span>
-                    {formatDateToExtend(createDate)}
+                    {formatDateToExtend(createDate, i18n.language)}
                 </span>
             </Stack>
 

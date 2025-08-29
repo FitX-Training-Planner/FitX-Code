@@ -1,6 +1,8 @@
 .payment_plan_card {
-    border: 3px solid var(--dark-theme-color);
-    border-radius: 20px;
+    --border: 3px solid var(--dark-theme-color);
+    --border-radius: 20px;
+    border: var(--border);
+    border-radius: var(--border-radius);
     overflow: hidden;
     padding: 1em;
     background-color: var(--bg-color);
@@ -9,8 +11,8 @@
 .payment_value {
     background-color: var(--theme-color);
     font-family: var(--fonts-1);
-    border: inherit;
-    border-radius: inherit;
+    border: var(--border);
+    border-radius: var(--border-radius);
     font-weight: bold;
 }
 

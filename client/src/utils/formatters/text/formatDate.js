@@ -1,10 +1,10 @@
 import { utcToZonedTime, format } from "date-fns-tz";
 
-export function formatDate(date, t) {
-    const timeZone = "America/Sao_Paulo";
+const timeZone = "America/Sao_Paulo";
 
+export function formatDate(date, t) {
     const today = utcToZonedTime(new Date(), timeZone);
-    const yesterday = new Date(today);
+    const yesterday = utcToZonedTime(today);
 
     yesterday.setDate(today.getDate() - 1);
 
@@ -18,17 +18,18 @@ export function formatDate(date, t) {
 }
 
 export function formatDateToExtend(date, locale) {
-    const newDate = new Date(date);
+    const parsedDate = typeof date === "string" ? utcToZonedTime(new Date(date)) : date;
 
     return new Intl.DateTimeFormat(locale, {
         day: "numeric",
         month: "long",
         year: "numeric"
-    }).format(newDate);
+    }).format(parsedDate);
 }
 
+
 export function formatDateTime(dateTime, t) {
-    const date = new Date(dateTime);
+    const date = utcToZonedTime(new Date(dateTime));
 
     const formattedDate = formatDate(dateTime, t);
 

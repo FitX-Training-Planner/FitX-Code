@@ -6,6 +6,7 @@ import ClickableIcon from "../../form/buttons/ClickableIcon";
 import styles from "./PaymentPlanCard.module.css";
 import useWindowSize from "../../../hooks/useWindowSize";
 import { useTranslation } from "react-i18next";
+import Alert from "../../messages/Alert";
 
 function PaymentPlanCard({
     name,
@@ -60,7 +61,7 @@ function PaymentPlanCard({
             )}
 
             <Stack
-                gap="0.2em"
+                gap="0.3em"
             >
                 <Stack
                     className={styles.payment_value}
