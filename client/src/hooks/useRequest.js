@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { getErrorMessageCodeError } from "../utils/requests/errorMessage";
 import { useSystemMessage } from "../app/useSystemMessage";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -14,6 +14,8 @@ export default function useRequest() {
     const location = useLocation();
 
     const { notify } = useSystemMessage();
+
+    const activeRequests = useRef(new Map());
 
     const [loading, setLoading] = useState(false);
 
@@ -50,8 +52,12 @@ export default function useRequest() {
             return;
         }
 
-        const requestId = `request-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+        const requestId = JSON.stringify([requestFn.name, loadingMessage, successMessage, errorMessage]);
 
+        if (activeRequests.current.has(requestId)) return;
+
+        activeRequests.current.set(requestId, true);
+        
         setLoading(true);
 
         if (loadingMessage) notify(loadingMessage, "loading", requestId);
@@ -126,6 +132,8 @@ export default function useRequest() {
             
             handleError(err);
         } finally {
+            activeRequests.current.delete(requestId);
+            
             setLoading(false);
         }
     }

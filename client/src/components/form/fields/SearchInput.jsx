@@ -58,6 +58,12 @@ export default function SearchInput({
                     placeholder={placeholder || `${t("search")}...`}
                     value={searchText}
                     onChange={(e) => setSearchText(formattNameAndNote(e.target.value))}
+                    onKeyDown={(e) => {
+                        if (handleSubmit && e.key === "Enter" && !e.shiftKey) {
+                            e.preventDefault();
+                            handleSubmit(e);
+                        }
+                    }}
                 />
             </Stack>
         </Tag>
