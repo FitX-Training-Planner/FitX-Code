@@ -78,7 +78,7 @@ def get_trainers():
 
             identity = get_jwt_identity()
 
-            trainers = get_partial_trainers(db, params.get("offset"), params.get("limit"), params.get("sort"), identity)
+            trainers = get_partial_trainers(db, params.get("offset"), params.get("limit"), params.get("sort"), params.get("search"), identity)
 
             return jsonify(trainers), 200
         

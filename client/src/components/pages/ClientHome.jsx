@@ -18,6 +18,7 @@ import ClientTrainingContractCard from "../cards/user/ClientTrainingContractCard
 import SmallTrainerProfessionalCard from "../cards/user/SmallTrainerProfessionalCard";
 import { useTranslation } from "react-i18next";
 import FooterLayout from "../containers/FooterLayout";
+import SearchInput from "../form/fields/SearchInput";
 
 function ClientHome() {
     const { t } = useTranslation();
@@ -55,6 +56,7 @@ function ClientHome() {
     const [trainersError, setTrainersError] = useState(false);
     const [trainersOffset, setTrainersOffset] = useState(0);
     const [activeTrainerFilter, setActiveTrainerFilter] = useState(trainersFilters[0]);
+    const [searchText, setSearchText] = useState("");
 
     const loadTrainers = useCallback((hasError, updatedTrainers, offset, filter) => {
         if (hasError) return;
@@ -70,7 +72,8 @@ function ClientHome() {
                 params: { 
                     offset: offset, 
                     limit: trainersLimit, 
-                    sort: filter
+                    sort: filter,
+                    search: searchText || undefined
                 }
             });
         }
@@ -200,7 +203,6 @@ function ClientHome() {
             <FooterLayout>
                 <main
                     className={styles.client_home}
-                    style={{ padding: width <= 440 ? "2em 1em" : "1em" }}
                 >
                     <Stack
                         gap="3em"
@@ -272,42 +274,53 @@ function ClientHome() {
                                     className={styles.contracts}
                                     gap="2em"
                                 >
-                                    <FilterItemsLayout
-                                        filters={trainersFilters}
-                                        activeFilter={activeTrainerFilter}
-                                        setActiveFilter={setActiveTrainerFilter}
-                                        handleChange={handleOnChangeFilter}
-                                    >
-                                        <Stack
-                                            gap="2em"
+                                    <Stack>
+                                        <SearchInput
+                                            searchText={searchText}
+                                            setSearchText={setSearchText}
+                                            placeholder={t("searchTrainer")}
+                                            handleSubmit={() => handleOnChangeFilter(activeTrainerFilter.value)}
+                                        />
+
+                                        <FilterItemsLayout
+                                            filters={trainersFilters}
+                                            activeFilter={activeTrainerFilter}
+                                            setActiveFilter={setActiveTrainerFilter}
+                                            handleChange={handleOnChangeFilter}
                                         >
-                                            {trainers.length !== 0 ? (
-                                                trainers.map((trainer, index) => (
-                                                    <React.Fragment
-                                                        key={index}
-                                                    >
-                                                        <SmallTrainerProfessionalCard
-                                                            name={trainer.name} 
-                                                            photoUrl={trainer.photoUrl} 
-                                                            crefNumber={trainer.crefNumber} 
-                                                            rate={trainer.rate} 
-                                                            contractsNumber={trainer.contractsNumber} 
-                                                            complaintsNumber={trainer.complaintsNumber} 
-                                                            paymentPlans={trainer.paymentPlans} 
-                                                            handleExpand={() => navigate(`/trainers/${trainer.ID}`)}
-                                                            canBeContracted={trainer.canBeContracted}
-                                                            handleSave={() => handleOnSaveTrainer(trainer.ID)}
-                                                            hasSaved={trainer.hasSaved}
-                                                        />
-                                                    </React.Fragment>
-                                                ))
-                                            ) : (
-                                                <p>
-                                                    {t("noTrainersFinded")}
-                                                </p>
-                                            )}
-                                        </Stack>
-                                    </FilterItemsLayout>
+                                            <Stack
+                                                gap="2em"
+                                            >
+                                                {trainers.length !== 0 ? (
+                                                    trainers.map((trainer, index) => (
+                                                        <React.Fragment
+                                                            key={index}
+                                                        >
+                                                            <SmallTrainerProfessionalCard
+                                                                name={trainer.name} 
+                                                                photoUrl={trainer.photoUrl} 
+                                                                crefNumber={trainer.crefNumber} 
+                                                                rate={trainer.rate} 
+                                                                contractsNumber={trainer.contractsNumber} 
+                                                                complaintsNumber={trainer.complaintsNumber} 
+                                                                paymentPlans={trainer.paymentPlans} 
+                                                                handleExpand={() => navigate(`/trainers/${trainer.ID}`)}
+                                                                canBeContracted={trainer.canBeContracted}
+                                                                handleSave={() => handleOnSaveTrainer(trainer.ID)}
+                                                                hasSaved={trainer.hasSaved}
+                                                            />
+                                                        </React.Fragment>
+                                                    ))
+                                                ) : (
+                                                    !trainersLoading && (
+                                                        <p>
+                                                            {t("noTrainersFinded")}
+                                                        </p>
+                                                    )
+                                                )}
+                                            </Stack>
+                                        </FilterItemsLayout>
+                                    </Stack>
 
                                     {trainersError ? (
                                         <p>

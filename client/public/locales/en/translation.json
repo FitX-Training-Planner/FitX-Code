@@ -703,6 +703,7 @@
     "beAFitXTrainerDescription": "To use all of FitX's tools for trainers, choose to create a trainer account on the settings page after verifying your data on the registration page.",
     "bePartOfFitxInstruction": "You can use all of these tools by creating an account right now! Go to the first section of this page and click the 'Login or Sign Up' button. Fill out the registration forms and become a FitX client or trainer!",
     "appDatesAlert": "All FitX dates and times, including those related to contracts, follow Brasilia time (GMT-3).",
+    "searchTrainer": "Search trainer",
     "databaseData": {
         "muscleGroups": {
             "1": {

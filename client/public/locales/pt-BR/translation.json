@@ -702,5 +702,6 @@
     "serviceCost": "Custo do Serviço",
     "beAFitXTrainerDescription": "Para usar todos as ferramentas do FitX para treinadores, escolha criar uma conta de treinador na página de criação de configuração após ter seus dados checados na página de registro.",
     "bePartOfFitxInstruction": "Você pode usar todas essas ferramentas criando uma conta agora mesmo! Vá até a primeira seção dessa página e clique no botão 'Entrar ou Criar Conta'. Preencha os formulários de registro e seja um cliente ou treinador FitX!",
-    "appDatesAlert": "Todas as datas e horários do FitX, incluindo as relacionadas aos contratos, seguem o horário de Brasília (GMT-3)."
+    "appDatesAlert": "Todas as datas e horários do FitX, incluindo as relacionadas aos contratos, seguem o horário de Brasília (GMT-3).",
+    "searchTrainer": "Buscar treinador"
 }

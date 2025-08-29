@@ -469,12 +469,11 @@ def insert_payment_plan(db, name, full_price, duration_days, description, benefi
             .filter(PaymentPlan.fk_trainer_ID == trainer_id)
             .count()
         )
-    
         if payment_plans_count >= 6:
             raise ApiError(MessageCodes.ERROR_LIMIT_PAYMENT_PLANS, 409)
 
-        full_price == safe_float(full_price)
-        duration_days == safe_int(duration_days)
+        full_price = safe_float(full_price)
+        duration_days = safe_int(duration_days)
 
         if full_price > 50000 or full_price < 9.99 or duration_days > 730 or duration_days < 20:
             raise ApiError(MessageCodes.INVALID_PAYMENT_PLAN_DATA, 422)
@@ -483,7 +482,7 @@ def insert_payment_plan(db, name, full_price, duration_days, description, benefi
             name=name, 
             full_price=full_price,
             app_fee=safe_float(app_fee),
-            duration_days= duration_days,
+            duration_days=duration_days,
             description=safe_str(description),
             fk_trainer_ID=trainer_id
         )
@@ -755,7 +754,7 @@ def get_partial_trainer_contracts(db, offset, limit, sort, full_date, month, yea
 
         raise Exception(f"Erro ao recuperar os contratos do treinador: {e}")
     
-def get_partial_trainers(db, offset, limit, sort, viewer_id):
+def get_partial_trainers(db, offset, limit, sort, search, viewer_id):
     try:
         result = []
 
@@ -769,6 +768,13 @@ def get_partial_trainers(db, offset, limit, sort, viewer_id):
             )
             .filter(Users.is_active == True)
         )
+
+        if search:
+            search_term = f"%{search}%"
+            
+            query = query.filter(
+                Users.name.ilike(search_term)
+            )
 
         if sort == "most_popular":
             query = query.order_by(desc(Trainer.contracts_number))
