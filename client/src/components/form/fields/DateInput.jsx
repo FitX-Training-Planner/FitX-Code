@@ -5,9 +5,7 @@ import styles from "./DateInput.module.css";
 import Select from "./Select";
 import { handleOnChangeSelect, handleOnChangeTextField } from "../../../utils/handlers/changeHandlers";
 import { formattSecondsMinutesAndReps } from "../../../utils/formatters/training/formatOnChange";
-import SubmitFormButton from "../buttons/SubmitFormButton";
 import NonBackgroundButton from "../buttons/NonBackgroundButton";
-import useWindowSize from "../../../hooks/useWindowSize";
 
 function DateInput({
     labelText,
@@ -15,12 +13,9 @@ function DateInput({
     setDateValuesObject,
     error,
     setError,
-    handleReload,
     minYear = 2025
 }) {
     const { t } = useTranslation();
-
-    const { width } = useWindowSize();
 
     const maxYear = useMemo(() => {
         return new Date().getFullYear();
@@ -104,105 +99,91 @@ function DateInput({
     }, [getMonthValue, dateValuesObject.month?.label, dateValuesObject.day, dateValuesObject.year, setDateValuesObject, setError, validateYear, formattDay]);
 
     return (
-        <Stack
-            direction={width <= 440 ? "column" : "row"}
-            alignItems={width <= 440 ? "end" : "start"}
+        <Stack 
+            className={styles.date_input} 
+            gap="0.5em" 
+            alignItems="start"
         >
-            <form
-                onSubmit={handleReload}
-                style={{ width: width <= 440 ? "max-content" : "100%" }}
-            >
-                <SubmitFormButton
-                    text={t("reload")}
-                />
-            </form>
+            {labelText && (
+                <label>
+                    {labelText}
+                </label>
+            )}
 
-            <Stack 
-                className={styles.date_input} 
-                gap="0.5em" 
-                alignItems="start"
+            <Stack
+                gap="0.2em"
             >
-                {labelText && (
-                    <label>
-                        {labelText}
-                    </label>
-                )}
-
-                <Stack
-                    gap="0.2em"
+                <Stack 
+                    direction="row"
+                    className={styles.inputs_container}
+                    alignItems="start"
                 >
-                    <Stack 
-                        direction="row"
-                        className={styles.inputs_container}
-                        alignItems="start"
-                    >
-                        <input
-                            className={`${styles.input} ${styles.day}`}
-                            type="text"
-                            name="day"
-                            id="day"
-                            placeholder={t("day")}
-                            value={dateValuesObject.day}
-                            onChange={(e) => handleOnChangeTextField(e, formattDay, undefined, dateValuesObject, setDateValuesObject, setError)}
-                            maxLength={2}
-                        />
+                    <input
+                        className={`${styles.input} ${styles.day}`}
+                        type="text"
+                        name="day"
+                        id="day"
+                        placeholder={t("day")}
+                        value={dateValuesObject.day}
+                        onChange={(e) => handleOnChangeTextField(e, formattDay, undefined, dateValuesObject, setDateValuesObject, setError)}
+                        maxLength={2}
+                    />
 
-                        <Select
-                            name="month"
-                            placeholder={t("month")}
-                            value={dateValuesObject.month?.label}
-                            handleChange={(e) => handleOnChangeSelect(e, months, "label", dateValuesObject, setDateValuesObject, setError)}
-                            options={months.map(m => m.label)}
-                            className={styles.month}
-                        />
-                        
-                        <input
-                            className={`${styles.input} ${styles.year}`}
-                            type="text"
-                            name="year"
-                            id="year"
-                            placeholder={t("year")}
-                            value={dateValuesObject.year}
-                            onChange={(e) => {
-                                handleOnChangeTextField(e, formattYear, undefined, dateValuesObject, setDateValuesObject, setError);
-                                setDateValuesObject(prevValues => ({ ...prevValues, validYear: validateYear(formattYear(e.target.value)) ? formattYear(e.target.value) : "" }));
-                            }}
-                            maxLength={4}
-                        />
-                    </Stack>
-
-                    <Stack
-                        direction="row"    
-                        className={styles.actions}                    
-                    >
-                        <NonBackgroundButton
-                            text={t("clear")}
-                            handleClick={() => {
-                                setDateValuesObject({
-                                    day: "",
-                                    month: null,
-                                    year: "",
-                                    validYear: ""
-                                });
-                                setError(false);
-                            }}
-                            varColor="--light-theme-color"
-                        />
-
-                        <span
-                            className={!validateYear(dateValuesObject.year) ? styles.visible : undefined}
-                        >
-                            {minYear} - {maxYear}
-                        </span>
-                    </Stack>
+                    <Select
+                        name="month"
+                        placeholder={t("month")}
+                        value={dateValuesObject.month?.label}
+                        handleChange={(e) => handleOnChangeSelect(e, months, "label", dateValuesObject, setDateValuesObject, setError)}
+                        options={months.map(m => m.label)}
+                        className={styles.month}
+                    />
+                    
+                    <input
+                        className={`${styles.input} ${styles.year}`}
+                        type="text"
+                        name="year"
+                        id="year"
+                        placeholder={t("year")}
+                        value={dateValuesObject.year}
+                        onChange={(e) => {
+                            handleOnChangeTextField(e, formattYear, undefined, dateValuesObject, setDateValuesObject, setError);
+                            setDateValuesObject(prevValues => ({ ...prevValues, validYear: validateYear(formattYear(e.target.value)) ? formattYear(e.target.value) : "" }));
+                        }}
+                        maxLength={4}
+                    />
                 </Stack>
 
-                <p 
-                    className={error ? styles.visible : undefined} 
+                <Stack
+                    direction="row"    
+                    className={styles.actions}                    
                 >
-                    {t("searchDateError")}
-                </p>
+                    <NonBackgroundButton
+                        text={t("clear")}
+                        handleClick={() => {
+                            setDateValuesObject({
+                                day: "",
+                                month: null,
+                                year: "",
+                                validYear: ""
+                            });
+                            setError(false);
+                        }}
+                        varColor="--light-theme-color"
+                    />
+
+                    <span
+                        className={!validateYear(dateValuesObject.year) ? styles.visible : undefined}
+                    >
+                        {minYear} - {maxYear}
+                    </span>
+                </Stack>
             </Stack>
+
+            <p 
+                className={error ? styles.visible : undefined} 
+            >
+                {t("searchDateError")}
+            </p>
         </Stack>
     );
 }

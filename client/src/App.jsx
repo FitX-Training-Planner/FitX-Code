@@ -97,7 +97,7 @@ function App() {
         hasRun.current = false;
 
         if (err?.response?.status === 404) {
-          navigate("/login");
+          navigate("/introduction");
         } else {
           navigate("/error", { state: { errorStatus: err?.response?.status, errorMessage: t(getErrorMessageCodeError(err)) } });
         }

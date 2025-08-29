@@ -33,7 +33,8 @@ function PaymentPage() {
             t("clientContractFeature4"),
             t("clientContractFeature5"),
             t("clientContractFeature6"),
-            t("clientContractFeature7")
+            t("clientContractFeature7"),
+            t("clientContractFeature8")
         ]
     }, [t]);
 
@@ -48,6 +49,7 @@ function PaymentPage() {
             t("refundTerm7"),
             t("refundTerm8"),
             t("refundTerm9"),
+            t("refundTerm10")
         ]
     }, [t]);
 
@@ -71,7 +73,7 @@ function PaymentPage() {
 
         const formData = new FormData();
 
-        formData.append("paymentPlanId", paymentPlan.ID)
+        formData.append("paymentPlanId", paymentPlan?.ID)
 
         const pay = () => {
             return api.post(`/payment`, formData);
@@ -93,7 +95,7 @@ function PaymentPage() {
             undefined, 
             t("errorCreatePay")
         );
-    }, [acceptTerms, navigate, payReq, paymentPlan.ID, t]);
+    }, [acceptTerms, navigate, payReq, paymentPlan?.ID, t]);
 
     useEffect(() => {
         document.title = t("checkout");
@@ -157,7 +159,7 @@ function PaymentPage() {
                                     <span
                                         className={styles.plan_name}
                                     >
-                                        {t("plan")} {paymentPlan.name}
+                                        {t("plan")} {paymentPlan?.name}
                                     </span>
 
                                     <Stack
@@ -167,13 +169,13 @@ function PaymentPage() {
                                         <span
                                             className={styles.plan_price}
                                         >
-                                            {formatPriceToBR(paymentPlan.fullPrice)}
+                                            {formatPriceToBR(String(Number(paymentPlan?.fullPrice) + Number(paymentPlan?.fullPrice)))}
                                         </span>
                                         
                                         <span
                                             className={styles.plan_duration}
                                         >
-                                            {paymentPlan.durationDays} {t("day")}{paymentPlan.durationDays === 1 ? "" : "s"}
+                                            {paymentPlan?.durationDays} {t("day")}{paymentPlan?.durationDays === 1 ? "" : "s"}
                                         </span>
                                     </Stack>
                                 </Stack>
@@ -183,11 +185,11 @@ function PaymentPage() {
                                 )}
                                 
 
-                                {(paymentPlan.benefits.length !== 0 || paymentPlan.description) && (
+                                {(paymentPlan?.benefits.length !== 0 || paymentPlan?.description) && (
                                     <Stack
                                         gap="2em"
                                     >
-                                        {paymentPlan.benefits.length !== 0 && (
+                                        {paymentPlan?.benefits.length !== 0 && (
                                             <Stack>
                                                 <Title
                                                     headingNumber={3}
@@ -196,7 +198,7 @@ function PaymentPage() {
                                                 />
 
                                                 <Stack>
-                                                    {paymentPlan.benefits.map((benefit, index) => (
+                                                    {paymentPlan?.benefits.map((benefit, index) => (
                                                         <React.Fragment
                                                             key={index}
                                                         >
@@ -218,7 +220,7 @@ function PaymentPage() {
                                             </Stack>
                                         )}
 
-                                        {paymentPlan.description && (
+                                        {paymentPlan?.description && (
                                             <Stack>
                                                 <Title
                                                     headingNumber={3}
@@ -356,11 +358,19 @@ function PaymentPage() {
                                     gap="3em"
                                 >
                                     <Stack>
-                                        <span
-                                            className={styles.plan_price}
+                                        <Stack
+                                            alignItems="start"
                                         >
-                                            {formatPriceToBR(paymentPlan.fullPrice)}
-                                        </span>
+                                            <span
+                                                className={styles.plan_price}
+                                            >
+                                                {formatPriceToBR(String(Number(paymentPlan?.fullPrice) + Number(paymentPlan?.fullPrice)))}
+                                            </span>
+
+                                            <span>
+                                                {formatPriceToBR(paymentPlan?.appFee)}
+                                            </span>
+                                        </Stack>
 
                                         <Stack
                                             direction="row"

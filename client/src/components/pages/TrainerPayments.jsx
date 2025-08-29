@@ -265,13 +265,24 @@ function TrainerPayments() {
                                     setActiveFilter={setActiveContractFilter}
                                     handleChange={handleOnChangeFilter}
                                 >
-                                    <DateInput
-                                        dateValuesObject={searchDate}
-                                        setDateValuesObject={setSearchDate}
-                                        error={searchDateError}
-                                        setError={setSearchDateError}
-                                        handleReload={(e) => handleOnChangeFilter(activeContractFilter.value, e)}
-                                    />
+                                    <Stack
+                                        direction={width <= 440 ? "column" : "row"}
+                                        alignItems={width <= 440 ? "end" : "start"}
+                                    >
+                                        <LoadMoreButton
+                                            handleLoad={(e) => handleOnChangeFilter(activeContractFilter.value, e)}
+                                            text={t("reload")}
+                                            loading={contractsLoading}
+                                        />
+
+                                        <DateInput
+                                            dateValuesObject={searchDate}
+                                            setDateValuesObject={setSearchDate}
+                                            error={searchDateError}
+                                            setError={setSearchDateError}
+                                        />
+
+                                    </Stack>
                                     
                                     {!contractsError && contracts.length === 0 ? (
                                         !contractsLoading && (
