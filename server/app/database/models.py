@@ -84,6 +84,10 @@ class Specialty(Base):
 
     ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     name = Column(String(50), nullable=False, unique=True)
+    fk_media_ID = Column(INTEGER(unsigned=True), ForeignKey("media.ID"), index=True, nullable=False, unique=True)
+    
+    media = relationship("Media")
+
 
 class TrainerSpecialty(Base):
     __tablename__ = "trainer_specialty"

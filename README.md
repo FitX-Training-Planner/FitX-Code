@@ -51,3 +51,25 @@ Este repositório contém o código e documentos relacionados ao projeto FitX, u
 <a href="https://www.flaticon.com/br/icones-gratis/custo" title="custo ícones">Custo ícones criados por Prosymbols Premium - Flaticon</a>
 <a href="https://www.flaticon.com/br/icones-gratis/reembolso" title="reembolso ícones">Reembolso ícones criados por juicy_fish - Flaticon</a>
 <a href="https://www.flaticon.com/br/icones-gratis/cartao-de-credito" title="cartao-de-credito ícones">Cartao-de-credito ícones criados por Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/forca" title="forca icons">Força icons created by juicy_fish - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/levantamento-terra" title="levantamento-terra icons">Levantamento Terra icons created by Slamlabs - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/resistencia" title="resistência ícones">Resistência ícones criados por Paul J. - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/exercicios-cardio" title="exercícios cardio ícones">Exercícios cardio ícones criados por Iconjam - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/crossfit" title="crossfit ícones">Crossfit ícones criados por IYIKON - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/pull-ups" title="pull ups ícones">Pull ups ícones criados por gravisio - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/academia" title="academia ícones">Academia ícones criados por dDara - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/saude" title="saúde ícones">Saúde ícones criados por Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/reabilitacao" title="reabilitação ícones">Reabilitação ícones criados por Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/avo" title="avó ícones">Avó ícones criados por Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/dieta" title="dieta ícones">Dieta ícones criados por Eucalyp - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/corredor" title="corredor ícones">Corredor ícones criados por lapiyee - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/perfil" title="perfil ícones">Perfil ícones criados por Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/bicicleta" title="bicicleta ícones">Bicicleta ícones criados por monkik - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/natacao" title="natação ícones">Natação ícones criados por Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/luvas-de-boxe" title="luvas de boxe ícones">Luvas de boxe ícones criados por Dreamcreateicons - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/ginastica" title="ginástica ícones">Ginástica ícones criados por Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/zumba" title="zumba ícones">Zumba ícones criados por Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/gordo" title="gordo ícones">Gordo ícones criados por Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/forca" title="força ícones">Força ícones criados por Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/gravida" title="gravida ícones">Gravida ícones criados por agus raharjo - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/deficiencia" title="deficiência ícones">Deficiência ícones criados por Freepik - Flaticon</a>

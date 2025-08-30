@@ -79,9 +79,9 @@ CREATE TABLE IF NOT EXISTS trainer (
     best_value_ratio FLOAT UNSIGNED,
     max_active_contracts TINYINT UNSIGNED NOT NULL DEFAULT 10,
     is_contracts_paused BOOLEAN NOT NULL DEFAULT 0,
-    mp_user_id VARCHAR(100),
-    mp_access_token VARBINARY(255),
-    mp_refresh_token VARBINARY(255),
+    mp_user_id VARCHAR(100) UNIQUE,
+    mp_access_token VARBINARY(255) UNIQUE,
+    mp_refresh_token VARBINARY(255) UNIQUE,
     mp_token_expiration DATETIME,
     fk_user_ID INT UNSIGNED NOT NULL UNIQUE,
     FOREIGN KEY (fk_user_ID) REFERENCES users(ID),
@@ -90,7 +90,10 @@ CREATE TABLE IF NOT EXISTS trainer (
 
 CREATE TABLE IF NOT EXISTS specialty (
     ID INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(50) NOT NULL UNIQUE
+    name VARCHAR(50) NOT NULL UNIQUE,
+    fk_media_ID INT UNSIGNED NOT NULL UNIQUE,
+    FOREIGN KEY (fk_media_ID) REFERENCES media(ID),
+    INDEX idx_fk_media_ID (fk_media_ID)
 );
 
 CREATE TABLE IF NOT EXISTS trainer_specialty (
