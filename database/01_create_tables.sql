@@ -32,6 +32,8 @@ DROP TABLE IF EXISTS complaint_like;
 DROP TABLE IF EXISTS complaint;
 DROP TABLE IF EXISTS rating_like;
 DROP TABLE IF EXISTS rating;
+DROP TABLE IF EXISTS trainer_specialty;
+DROP TABLE IF EXISTS specialty;
 DROP TABLE IF EXISTS save_trainer;
 DROP TABLE IF EXISTS trainer;
 DROP TABLE IF EXISTS users;
@@ -84,6 +86,22 @@ CREATE TABLE IF NOT EXISTS trainer (
     fk_user_ID INT UNSIGNED NOT NULL UNIQUE,
     FOREIGN KEY (fk_user_ID) REFERENCES users(ID),
     INDEX idx_fk_user_ID (fk_user_ID)
+);
+
+CREATE TABLE IF NOT EXISTS specialty (
+    ID INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS trainer_specialty (
+    ID INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    fk_trainer_ID INT NOT NULL UNSIGNED,
+    fk_specialty_ID INT NOT NULL UNSIGNED,
+    FOREIGN KEY (fk_trainer_ID) REFERENCES trainer(ID),
+    FOREIGN KEY (fk_specialty_ID) REFERENCES specialty(ID),
+    UNIQUE (fk_trainer_ID, fk_specialty_ID),
+    INDEX idx_fk_trainer_ID (fk_trainer_ID),
+    INDEX idx_fk_specialty_ID (fk_specialty_ID)
 );
 
 CREATE TABLE IF NOT EXISTS rating (

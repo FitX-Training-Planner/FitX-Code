@@ -403,3 +403,27 @@ INSERT INTO contract_status (name) VALUES
 ('Vencido'),
 ('Cancelado'),
 ('Rescindido');
+
+INSERT INTO specialty (name) VALUES
+('Ganho de Força'),
+('Resistência Muscular'),
+('Condicionamento Físico'),
+('CrossFit'),
+('Calistenia'),
+('Treinamento Funcional'),
+('Saúde e Bem-Estar'),
+('Reabilitação'),
+('Treinamento para Idosos'),
+('Treinamento para Iniciantes'),
+('Esportes de Corrida'),
+('Atletismo'),
+('Ciclismo'),
+('Natação'),
+('Esportes de Luta'),
+('Ginástica'),
+('Dança'),
+('Emagrecimento'),
+('Ganho de Músculo'),
+('Fisiculturismo'),
+('Treinamento para Gestantes'),
+('Treinamento Adaptado')

@@ -1394,6 +1394,74 @@
             "4": {
                 "name": "Rescinded"
             }
+        },
+        "specialties": {
+            "1": {
+                "name": "Strength Gain"
+            },
+            "2": {
+                "name": "Muscular Endurance"
+            },
+            "3": {
+                "name": "Physical Conditioning"
+            },
+            "4": {
+                "name": "CrossFit"
+            },
+            "5": {
+                "name": "Calisthenics"
+            },
+            "6": {
+                "name": "Functional Training"
+            },
+            "7": {
+                "name": "Health and Wellness"
+            },
+            "8": {
+                "name": "Rehabilitation"
+            },
+            "9": {
+                "name": "Training for Seniors"
+            },
+            "10": {
+                "name": "Training for Beginners"
+            },
+            "11": {
+                "name": "Running Sports"
+            },
+            "12": {
+                "name": "Athletics"
+            },
+            "13": {
+                "name": "Cycling"
+            },
+            "14": {
+                "name": "Swimming"
+            },
+            "15": {
+                "name": "Combat Sports"
+            },
+            "16": {
+                "name": "Gymnastics"
+            },
+            "17": {
+                "name": "Dance"
+            },
+            "18": {
+                "name": "Weight Loss"
+            },
+            "19": {
+                "name": "Muscle Gain"
+            },
+            "20": {
+                "name": "Bodybuilding"
+            },
+            "21": {
+                "name": "Training for Pregnants"
+            },
+            "22": {
+                "name": "Adapted Training"
+            }
         }
     }
 }

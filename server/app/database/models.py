@@ -67,6 +67,7 @@ class Trainer(Base):
 
     user = relationship("Users", back_populates="trainer")
 
+    specialties = relationship("TrainerSpecialty", back_populates="trainer", passive_deletes=True)
     ratings = relationship("Rating", back_populates="trainer", passive_deletes=True)
     complaints = relationship("Complaint", back_populates="trainer", passive_deletes=True)
     save_trainers = relationship("SaveTrainer", back_populates="trainer", passive_deletes=True)
@@ -77,6 +78,26 @@ class Trainer(Base):
     chats = relationship("Chat", back_populates="trainer", passive_deletes=True)
     body_composition_exam_sends = relationship("BodyCompositionExamSend", back_populates="trainer", passive_deletes=True)
     plan_contracts = relationship("PlanContract", back_populates="trainer", passive_deletes=True)
+
+class Specialty(Base):
+    __tablename__ = "specialty"
+
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
+    name = Column(String(50), nullable=False, unique=True)
+
+class TrainerSpecialty(Base):
+    __tablename__ = "trainer_specialty"
+
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
+    fk_trainer_ID = Column(INTEGER(unsigned=True), ForeignKey("trainer.ID", ondelete="CASCADE"), index=True, nullable=False)
+    fk_specialty_ID = Column(INTEGER(unsigned=True), ForeignKey("specialty.ID", ondelete="CASCADE"), index=True, nullable=False)
+
+    trainer = relationship("Trainer", back_populates="specialties")
+    specialty = relationship("Specialty")
+
+    __table_args__ = (
+        UniqueConstraint("fk_trainer_ID", "fk_specialty_ID", name="uq_trainer_specialty"),
+    )
 
 class Rating(Base):
     __tablename__ = "rating"
