@@ -238,7 +238,7 @@ def serialize_contract(contract, is_client):
 
     return data
 
-def serialize_trainer_in_trainers(trainer, has_saved = None):
+def serialize_trainer_in_trainers(trainer, has_saved = None, top3_specialties = None, extra_specialties_count = None):
     return {
         "ID": trainer.ID,
         "name": trainer.user.name,
@@ -256,7 +256,13 @@ def serialize_trainer_in_trainers(trainer, has_saved = None):
                 "fullPrice": serialize_field(plan.full_price + plan.app_fee),
                 "durationDays": serialize_field(plan.duration_days)
             } for plan in trainer.payment_plans
-        ]
+        ],
+        "top3Specialties": [
+            serialize_specialty(s) for s in top3_specialties
+        ] if top3_specialties else None,
+        "extraSpecialtiesCount": (
+            extra_specialties_count if extra_specialties_count and extra_specialties_count > 0 else None
+        )
     }
 
 def serialize_training_contract(training_contract):
@@ -334,4 +340,15 @@ def serialize_trainer_base_info(trainer):
         "hasConnectedMP": True if trainer.mp_user_id else False,
         "maxActiveContracts": serialize_field(trainer.max_active_contracts),
         "isContractsPaused": trainer.is_contracts_paused
+    }
+
+def serialize_specialty(specialty, is_selected = False, isMain = False):
+    return {
+        "ID": specialty.ID,
+        "name": specialty.name,
+        "media": {
+            "url": specialty.media.url
+        } if specialty.media else None,
+        "isSelected": is_selected,
+        "isMain": isMain
     }

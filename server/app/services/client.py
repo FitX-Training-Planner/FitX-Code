@@ -7,7 +7,7 @@ from ..utils.mercadopago import create_payment_preference
 from ..utils.user import decrypt_email
 from ..utils.trainer import acquire_trainer_lock, release_trainer_lock
 from ..utils.client import acquire_client_lock, release_client_lock
-from .trainer import get_valid_mp_token, check_trainer_can_be_contracted
+from .trainer import get_top3_specialties_data, get_valid_mp_token, check_trainer_can_be_contracted
 
 def get_client_training_contract(db, client_id):
     try:
@@ -195,10 +195,18 @@ def get_client_saved_trainers(db, client_id):
             .all()
         )
 
+        result = []
+
+        specialties_map = get_top3_specialties_data(db, [trainer.ID for trainer in trainers])
+
         for trainer in trainers:
             trainer.can_be_contracted = check_trainer_can_be_contracted(db, trainer.ID, trainer)
+            
+            trainer_data = specialties_map.get(trainer.ID, {"specialties": [], "extra_count": 0})
 
-        return [serialize_trainer_in_trainers(trainer, True) for trainer in trainers]
+            result.append(serialize_trainer_in_trainers(trainer, True, trainer_data["specialties"], trainer_data["extra_count"]))
+
+        return result
 
     except ApiError as e:
         print(f"Erro ao recuperar treinadores salvos do cliente: {e}")
