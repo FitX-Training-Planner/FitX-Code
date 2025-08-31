@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from ..services.user import insert_user, insert_photo
-from ..services.trainer import insert_trainer, insert_training_plan, get_trainer_plans, get_training_plan, modify_training_plan, remove_training_plan, insert_payment_plan, modify_payment_plan, remove_payment_plan, get_trainer_payment_plans, get_partial_trainer_contracts, get_partial_trainers, get_partial_trainer_complaints, get_partial_trainer_ratings, like_complaint, like_rating, get_trainer_profile, insert_trainer_rating, insert_trainer_complaint, remove_complaint, remove_rating, get_trainer_info, modify_trainer_data, toggle_trainer_contracts_paused
+from ..services.trainer import insert_trainer, insert_training_plan, get_trainer_plans, get_training_plan, modify_training_plan, remove_training_plan, insert_payment_plan, modify_payment_plan, remove_payment_plan, get_trainer_payment_plans, get_partial_trainer_contracts, get_partial_trainers, get_partial_trainer_complaints, get_partial_trainer_ratings, like_complaint, like_rating, get_trainer_profile, insert_trainer_rating, insert_trainer_complaint, remove_complaint, remove_rating, get_trainer_info, modify_trainer_data, toggle_trainer_contracts_paused, get_all_specialties, get_trainer_specialties, modify_trainer_specialties
 from ..database.context_manager import get_db
 from ..exceptions.api_error import ApiError
 from flask_jwt_extended import jwt_required
@@ -48,6 +48,8 @@ def post_trainer():
                 db, 
                 data.get("crefNumber"),
                 data.get("description"),
+                data.getlist("mainSpecialties[]"),
+                data.getlist("secondarySpecialties[]"),
                 user_id
             )
 
@@ -68,6 +70,7 @@ def post_trainer():
             return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
 
 @trainer_bp.route("", methods=["GET"])
+@only_client
 @jwt_required()
 def get_trainers():
     error_message = "Erro na rota de recuperação de treinadores"
@@ -812,6 +815,107 @@ def post_save_trainer(trainer_id):
             save_trainer(db, trainer_id, identity)
         
             return "", 201
+        
+        except ApiError as e:
+            db.rollback()
+
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": str(e)}), e.status_code
+
+        except Exception as e:
+            db.rollback()
+
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
+
+@trainer_bp.route("/specialties", methods=["GET"])
+def get_specialties():
+    error_message = "Erro na rota de recuperação de especialidades"
+
+    with get_db() as db:
+        try:
+            specialties = get_all_specialties(db)
+
+            return jsonify(specialties), 200
+
+        except ApiError as e:
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": str(e)}), e.status_code
+
+        except Exception as e:    
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
+
+@trainer_bp.route("/me/specialties", methods=["GET"])
+@jwt_required()
+@only_trainer
+def get_self_specialties():
+    error_message = "Erro na rota de recuperação de especialidades do treinador"
+
+    with get_db() as db:
+        try:        
+            identity = get_jwt_identity()
+
+            specialties = get_trainer_specialties(db, identity)
+
+            return jsonify(specialties), 200
+        
+        except ApiError as e:
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": str(e)}), e.status_code
+
+        except Exception as e:
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
+
+@trainer_bp.route("/<int:trainer_id>/specialties", methods=["GET"])
+@jwt_required()
+@only_client
+def get_trainer_specialties_route(trainer_id):
+    error_message = "Erro na rota de recuperação de especialidades do treinador"
+
+    with get_db() as db:
+        try:        
+            specialties = get_trainer_specialties(db, trainer_id)
+
+            return jsonify(specialties), 200
+        
+        except ApiError as e:
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": str(e)}), e.status_code
+
+        except Exception as e:
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
+
+@trainer_bp.route("/me/specialties", methods=["PUT"])
+@jwt_required()
+@only_trainer
+def put_self_specialties():
+    error_message = "Erro na rota de modificação de especialidades do treinador"
+
+    with get_db() as db:
+        try:      
+            data = request.form
+
+            identity = get_jwt_identity()
+
+            modify_trainer_specialties(
+                db, 
+                data.getlist("mainSpecialties[]"),
+                data.getlist("secondarySpecialties[]"),
+                identity
+            )
+        
+            return "", 204
         
         except ApiError as e:
             db.rollback()

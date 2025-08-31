@@ -1,8 +1,8 @@
-from app.database.models import Trainer, TrainingPlan, TrainingDay, TrainingDayStep, StepExercise, ExerciseSet, CardioSession, PaymentPlan, PaymentPlanBenefit, PlanContract, Users, PaymentTransaction, Rating, Complaint, ComplaintLike, RatingLike, ContractStatus, SaveTrainer
+from app.database.models import Trainer, TrainerSpecialty, TrainingPlan, TrainingDay, TrainingDayStep, StepExercise, ExerciseSet, CardioSession, PaymentPlan, PaymentPlanBenefit, PlanContract, Users, PaymentTransaction, Rating, Complaint, ComplaintLike, RatingLike, ContractStatus, SaveTrainer, Specialty
 from ..utils.trainer import is_cref_used
 from ..exceptions.api_error import ApiError
 from ..utils.formatters import safe_str, safe_int, safe_float, safe_bool, safe_time
-from ..utils.serialize import serialize_training_plan, serialize_payment_plan, serialize_contract, serialize_trainer_in_trainers, serialize_rating, serialize_complaint, serialize_trainer_base_info
+from ..utils.serialize import serialize_specialty, serialize_training_plan, serialize_payment_plan, serialize_contract, serialize_trainer_in_trainers, serialize_rating, serialize_complaint, serialize_trainer_base_info
 from sqlalchemy.orm import joinedload, subqueryload
 from sqlalchemy import asc, desc, func, case, extract
 from ..utils.message_codes import MessageCodes
@@ -11,7 +11,7 @@ import requests
 from ..config import MercadopagoConfig
 from ..utils.user import encrypt_email, decrypt_email
 
-def insert_trainer(db, cref_number, decription, fk_user_ID):
+def insert_trainer(db, cref_number, decription, main_specialties, secondary_specialties, fk_user_ID):
     try:
         if is_cref_used(db, cref_number):
             raise ApiError(MessageCodes.ERROR_CREF_USED, 409)
@@ -21,6 +21,23 @@ def insert_trainer(db, cref_number, decription, fk_user_ID):
             description=safe_str(decription),
             fk_user_ID=fk_user_ID
         )
+
+        if main_specialties:
+            for specialty_id in main_specialties:
+                new_trainer.specialties.append(
+                    TrainerSpecialty(
+                        fk_specialty_ID=specialty_id,
+                        is_main=True
+                    )
+                )
+
+        if secondary_specialties:
+            for specialty_id in secondary_specialties:
+                new_trainer.specialties.append(
+                    TrainerSpecialty(
+                        fk_specialty_ID=specialty_id
+                    )
+                )
 
         db.add(new_trainer)
 
@@ -809,9 +826,11 @@ def get_partial_trainers(db, offset, limit, sort, search, viewer_id):
         for trainer in trainers:
             trainer.can_be_contracted = check_trainer_can_be_contracted(db, trainer.ID, trainer)
 
-        if viewer_id:
-            trainer_ids = [trainer.ID for trainer in trainers]
+        trainer_ids = [trainer.ID for trainer in trainers]
 
+        specialties_map = get_top3_specialties_data(db, trainer_ids)
+
+        if viewer_id:
             saved_trainer_ids = set(
                 row.fk_trainer_ID for row in db.query(SaveTrainer)
                 .filter(
@@ -823,9 +842,11 @@ def get_partial_trainers(db, offset, limit, sort, search, viewer_id):
 
             for trainer in trainers:
                 has_saved = trainer.ID in saved_trainer_ids
+                
+                trainer_data = specialties_map.get(trainer.ID, {"specialties": [], "extra_count": 0})
+                
+                result.append(serialize_trainer_in_trainers(trainer, has_saved, trainer_data["specialties"], trainer_data["extra_count"]))
 
-                result.append(serialize_trainer_in_trainers(trainer, has_saved))
-        
         else:
             result = [serialize_trainer_in_trainers(trainer) for trainer in trainers]
 
@@ -840,6 +861,42 @@ def get_partial_trainers(db, offset, limit, sort, search, viewer_id):
         print(f"Erro ao recuperar treinadores: {e}")
 
         raise Exception(f"Erro ao recuperar os treinadores: {e}")
+    
+def get_top3_specialties_data(db, trainer_ids):
+    specialties_map = {}
+
+    if trainer_ids:
+        specialties_rows = (
+            db.query(
+                TrainerSpecialty.fk_trainer_ID,
+                Specialty,
+            )
+            .join(Specialty, TrainerSpecialty.fk_specialty_ID == Specialty.ID)
+            .filter(TrainerSpecialty.fk_trainer_ID.in_(trainer_ids))
+            .order_by(
+                TrainerSpecialty.fk_trainer_ID,
+                TrainerSpecialty.is_main.desc(),
+                TrainerSpecialty.ID.asc()
+            )
+            .all()
+        )
+
+        for trainer_id, specialty in specialties_rows:
+            if trainer_id not in specialties_map:
+                specialties_map[trainer_id] = {
+                    "specialties": [],
+                    "extra_count": 0
+                }
+
+            trainer_data = specialties_map[trainer_id]
+
+            if len(trainer_data["specialties"]) < 3:
+                trainer_data["specialties"].append(specialty)
+
+            else:
+                trainer_data["extra_count"] += 1
+    
+    return specialties_map
 
 def update_trainer_price_info(db, trainer_id):
     try:
@@ -1517,3 +1574,101 @@ def refresh_mp_token(db, trainer_id, mp_refresh_token):
     update_mercadopago_trainer_token(db, new_access_token, new_refresh_token, new_expiration, trainer_id)
 
     return new_access_token
+
+def get_all_specialties(db):
+    try:
+        specialties = db.query(Specialty).options(joinedload(Specialty.media)).all()
+
+        if specialties is None:
+            print("Erro ao recuperar especialidades.")
+
+            raise ApiError(MessageCodes.ERROR_LOADING_SPECIALTIES, 500)
+
+        return [
+            serialize_specialty(specialty) for specialty in specialties
+        ]
+
+    except Exception as e:
+        print("Erro ao recuperar especialidades.")
+
+        raise Exception(f"Erro ao recuperar as especialidades: {e}")
+
+def get_trainer_specialties(db, trainer_id):
+    try:
+        specialties = (
+            db.query(Specialty, TrainerSpecialty.is_main)
+            .join(TrainerSpecialty, Specialty.ID == TrainerSpecialty.fk_specialty_ID)
+            .filter(TrainerSpecialty.fk_trainer_ID == trainer_id)
+            .all()
+        )
+
+        main_specialties = []
+        secondary_specialties = []
+
+        for specialty, is_main in specialties:
+            serialized = serialize_specialty(specialty, True, is_main)
+
+            if is_main:
+                main_specialties.append(serialized)
+            
+            else:
+                secondary_specialties.append(serialized)
+
+        return {
+            "mainSpecialties": main_specialties,
+            "secondarySpecialties": secondary_specialties
+        }
+    
+    except ApiError as e:
+        print(f"Erro ao recuperar especialidades do treinador: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao recuperar especialidades do treinador: {e}")
+
+        raise Exception(f"Erro ao recuperar as especialidades do treinador: {e}")
+
+def modify_trainer_specialties(db, main_specialties, secondary_specialties, trainer_id):
+    try:
+        trainer = db.query(Trainer).filter(Trainer.ID == trainer_id).first()
+
+        if not trainer:
+            raise ApiError(MessageCodes.TRAINER_NOT_FOUND, 404)
+        
+        db.query(TrainerSpecialty).filter(
+            TrainerSpecialty.fk_trainer_ID == trainer_id
+        ).delete(synchronize_session=False)
+
+        db.flush()
+
+        if main_specialties:
+            for specialty_id in main_specialties:
+                trainer.specialties.append(
+                    TrainerSpecialty(
+                        fk_specialty_ID=specialty_id,
+                        is_main=True
+                    )
+                )
+
+        if secondary_specialties:
+            for specialty_id in secondary_specialties:
+                trainer.specialties.append(
+                    TrainerSpecialty(
+                        fk_specialty_ID=specialty_id
+                    )
+                )
+
+        db.commit()
+
+        return True
+
+    except ApiError as e:
+        print(f"Erro ao modificar especialidades do treinador: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao modificar especialidades do treinador: {e}")
+        
+        raise Exception(f"Erro ao modificar as especialidades do treinador: {e}")
