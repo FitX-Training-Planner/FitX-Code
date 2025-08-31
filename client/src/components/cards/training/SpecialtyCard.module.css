@@ -1,0 +1,41 @@
+.specialty_card {
+    border: 2px solid var(--dark-color);
+    background-color: var(--bg-color);
+    transition: var(--fast-transition);
+    overflow: hidden;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 20px;
+}
+
+.specialty_card:hover {
+    transform: scale(1.05);
+    box-shadow: -3px 3px 5px var(--dark-color);
+}
+
+.specialty_icon {
+    background-color: var(--light-theme-color);
+    padding: 0.5em;
+}
+
+.specialty_icon > img {
+    height: 5em;
+    filter: drop-shadow(-2px 2px 2px var(--dark-color));
+}
+
+.specialty_info > span {
+    padding: 1em;
+    font-size: var(--large-text-size);
+    hyphens: none;
+    font-weight: bold;
+    color: var(--light-theme-color);
+}
+
+.specialty_card.selected {
+    background-color: var(--gray-color);
+}
+
+.specialty_card.selected.main {
+    filter: none;
+    background-color: var(--dark-theme-color);
+}

@@ -33,6 +33,7 @@ import { getErrorMessageCodeError } from "./utils/requests/errorMessage";
 import SavedTrainers from "./components/pages/SavedTrainers";
 import PaymentPage from "./components/pages/PaymentPage";
 import WelcomePage from "./components/pages/WelcomePage";
+import TrainerSpecialties from "./components/pages/TrainerSpecialties";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -168,6 +169,11 @@ function App() {
             <Route
               path="/create-trainer"
               element={<CreateTrainer />}
+            />
+
+            <Route
+              path="/trainer-specialties"
+              element={<TrainerSpecialties />}
             />
 
             <Route

@@ -1,0 +1,17 @@
+.specialties_page {
+    padding: 3em 2em;
+    background: url(../../../public/images/backgrounds/waves_bg.png) center/cover no-repeat;
+    background-attachment: fixed;
+    backdrop-filter: blur(10px);
+}
+
+.specialties_page p {
+    text-align: center;
+    font-size: var(--large-text-size);
+    hyphens: none;
+}
+
+.specialties_page form {
+    display: flex;
+    justify-content: center;
+}
