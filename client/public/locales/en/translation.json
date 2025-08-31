@@ -725,6 +725,7 @@
     "noSpecialties": "The trainer has no specialties yet.",
     "portuguese": "Português",
     "lightTheme": "Light Theme",
+    "toggleVisibility": "Toggle Visibility",
     "databaseData": {
         "muscleGroups": {
             "1": {

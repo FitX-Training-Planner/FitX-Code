@@ -123,14 +123,12 @@ function App() {
   }, [dispatch, getUserRequest, location.pathname, navigate, user.config.isDarkTheme, t]);
 
   useEffect(() => {
-    const isEnglish = user.ID ? user.config.isEnglish : navigator.language?.toLowerCase().startsWith("en");
-
-    const lang = isEnglish ? "en" : "pt-BR";
+    const lang = user.config.isEnglish ? "en" : "pt-BR";
 
     if (i18n.language !== lang) i18n.changeLanguage(lang);
 
     document.documentElement.setAttribute("lang", lang);
-  }, [user.config.isEnglish, user.ID, i18n]);
+  }, [user.config.isEnglish, i18n]);
 
   return (
     <>

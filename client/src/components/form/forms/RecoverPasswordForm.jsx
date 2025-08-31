@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { isEmailValid, isPasswordValid } from "../../../utils/validators/userValidator";
 import { useState } from "react";
 import styles from "./CodeConfirmationForm.module.css";
+import PasswordInput from "../fields/PasswordInput";
 
 function RecoverPasswordForm({
     account,
@@ -53,17 +54,14 @@ function RecoverPasswordForm({
                             maxLength={254}
                         />
 
-                        <TextInput
-                            type="password"
+                        <PasswordInput
                             name="newPassword"
-                            placeholder={t("newPasswordPlaceholder")}
-                            labelText={t("newPassword")}
-                            value={account.newPassword}
-                            handleChange={(e) => handleOnChangeTextField(e, formattEmailAndPassword, isPasswordValid, account, setAccount, setRecoverPasswordError, setErrors)}
-                            icon="/images/icons/password.png"
-                            alertMessage={t("alertPassword")}
-                            error={errors.newPassword}
-                            maxLength={20}
+                            object={account}
+                            setObject={setAccount}
+                            setHasError={setRecoverPasswordError}
+                            setErrors={setErrors}
+                            errors={errors}
+                            alertError={t("alertPassword")}  
                         />
                     </Stack>
                 </Stack>

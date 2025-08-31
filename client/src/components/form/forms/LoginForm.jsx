@@ -7,6 +7,7 @@ import SubmitFormButton from "../buttons/SubmitFormButton";
 import TextInput from "../fields/TextInput";
 import { handleOnChangeTextField } from "../../../utils/handlers/changeHandlers";
 import { useTranslation } from "react-i18next";
+import PasswordInput from "../fields/PasswordInput";
 
 function LoginForm({
     user,
@@ -56,17 +57,12 @@ function LoginForm({
                             maxLength={254}
                         />
 
-                        <TextInput
-                            type="password"
-                            name="password"
-                            placeholder={t("passwordPlaceholder")}
-                            labelText={t("password")}
-                            value={user.password}
-                            handleChange={(e) => handleOnChangeTextField(e, formattEmailAndPassword, undefined, user, setUser, setLoginError)}
-                            icon="/images/icons/password.png"
-                            alertMessage={t("alertLogin")}
-                            error={loginError}
-                            maxLength={20}
+                        <PasswordInput
+                            object={user}
+                            setObject={setUser}
+                            setHasError={setLoginError}
+                            errors={{ password: loginError }}
+                            alertError={t("alertLogin")}
                         />
                     </Stack>
 

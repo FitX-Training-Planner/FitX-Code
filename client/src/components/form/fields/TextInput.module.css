@@ -21,7 +21,8 @@
     width: var(--size);
 }
 
-.text_input.dark_theme > label > img {
+.text_input.dark_theme > label > img,
+.password_input.dark_theme > img{
     filter: invert(1);
 }
 
@@ -58,4 +59,14 @@
 
 .text_input > p.visible {
     visibility: visible;
+}
+
+.password_input {
+    position: relative;
+}
+
+.password_input > button {
+    position: absolute;
+    top: 2.7em;
+    right: 1em;
 }

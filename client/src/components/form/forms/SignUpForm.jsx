@@ -10,6 +10,7 @@ import Title from "../../text/Title";
 import { handleOnChangeTextField } from "../../../utils/handlers/changeHandlers";
 import { useTranslation } from "react-i18next";
 import AcceptTerms from "../fields/AcceptTerms";
+import PasswordInput from "../fields/PasswordInput";
 
 function SignUpForm({
     user,
@@ -85,19 +86,15 @@ function SignUpForm({
                             maxLength={254}
                         />
 
-                        <TextInput
-                            type="password"
-                            name="password"
-                            placeholder={t("passwordPlaceholder")}
-                            labelText={t("password")}
-                            value={user.password}
-                            handleChange={(e) => handleOnChangeTextField(e, formattEmailAndPassword, isPasswordValid, user, setUser, setSignUpError, setErrors)}
-                            icon="/images/icons/password.png"
-                            alertMessage={t("alertPassword")}
-                            error={errors.password}
-                            maxLength={20}
+                        <PasswordInput
+                            object={user}
+                            setObject={setUser}
+                            setHasError={setSignUpError}
+                            setErrors={setErrors}
+                            errors={errors}
+                            alertError={t("alertPassword")}  
                         />
-
+                    
                         <AcceptTerms
                             isAccepted={acceptTerms}
                             setIsAccepted={setAcceptedTerms}
