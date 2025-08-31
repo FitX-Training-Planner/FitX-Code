@@ -59,7 +59,8 @@
         "TRAINER_IS_IN_HIRING": "Another client is already in the process of hiring with this trainer. Please try again in a few minutes.",
         "CLIENT_IS_IN_HIRING": "You are in the process of hiring a trainer. Please wait for payment to be processed.",
         "INVALID_PAYMENT_PLAN_DATA": "The price or duration of the plan exceeded the allowed limit.",
-        "NO_RESPONSE": "Our server is unavailable now. Try again later."
+        "NO_RESPONSE": "Our server is unavailable now. Try again later.",
+        "ERROR_LOADING_SPECIALTIES": "Unable to load specialties."
     },
     "loadingCheckData": "Checking data",
     "errorLogin": "Login failed!",
@@ -704,6 +705,24 @@
     "bePartOfFitxInstruction": "You can use all of these tools by creating an account right now! Go to the first section of this page and click the 'Login or Sign Up' button. Fill out the registration forms and become a FitX client or trainer!",
     "appDatesAlert": "All FitX dates and times, including those related to contracts, follow Brasilia time (GMT-3).",
     "searchTrainer": "Search trainer",
+    "invalidTrainerData": "Invalid trainer data!",
+    "errorCreateTrainer": "Failed to create trainer!",
+    "loadingCreateTrainer": "Creating trainer",
+    "trainerSpecialties": "Trainer Specialties",
+    "errorSpecialties": "Failed to load specialties!",
+    "trainerSpecialtiesDescription": "Select the specialties that describe your skills as a trainer!",
+    "trainerSpecialtiesInstruction": "Click once on a specialty to select it, twice to indicate that it is one of your main specialties, and three times to remove it.",
+    "mainSpecialty": "Main Specialty",
+    "checkData": "Check Data",
+    "mainSpecialtiesDescription": "Main specialties are those that best represent your skills as a trainer. You can choose up to 3 main specialties, which will be highlighted on your professional card and profile.",
+    "mainSpecialtiesAlert": "You can choose up to 3 main specialties!",
+    "errorLoadingSpecialties": "Failed to load specialties!",
+    "errorOcurredSpecialties": "An error occurred while loading trainer specialties!",
+    "editSpecialties": "Edit Specialties",
+    "loadingModifySpecialties": "Modifying specialties",
+    "successModifySpecialties": "Specialties modified successfully!",
+    "errorModifySpecialties": "Failed to modify specialties!",
+    "noSpecialties": "The trainer has no specialties yet.",
     "databaseData": {
         "muscleGroups": {
             "1": {

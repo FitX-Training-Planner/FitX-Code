@@ -93,6 +93,7 @@ class TrainerSpecialty(Base):
     __tablename__ = "trainer_specialty"
 
     ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
+    is_main = Column(Boolean, default=False, nullable=False)
     fk_trainer_ID = Column(INTEGER(unsigned=True), ForeignKey("trainer.ID", ondelete="CASCADE"), index=True, nullable=False)
     fk_specialty_ID = Column(INTEGER(unsigned=True), ForeignKey("specialty.ID", ondelete="CASCADE"), index=True, nullable=False)
 

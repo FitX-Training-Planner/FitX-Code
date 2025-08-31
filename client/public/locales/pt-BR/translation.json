@@ -59,7 +59,8 @@
         "TRAINER_IS_IN_HIRING": "Algum outro cliente já está em processo de contratação com esse treinador. Tente novamente após alguns minutos.",
         "CLIENT_IS_IN_HIRING": "Você está em processo de contratação com um treinador. Aguarde até que o pagamento seja processado.",
         "INVALID_PAYMENT_PLAN_DATA": "O preço ou a duração do plano superaram o limite permitido.",
-        "NO_RESPONSE": "Nosso servidor está indisponível no momento. Tente novamente mais tarde."
+        "NO_RESPONSE": "Nosso servidor está indisponível no momento. Tente novamente mais tarde.",
+        "ERROR_LOADING_SPECIALTIES": "Não foi possível recuperar as especialidades."
     },
     "loadingCheckData": "Checando dados",
     "errorLogin": "Falha ao logar!",
@@ -703,5 +704,23 @@
     "beAFitXTrainerDescription": "Para usar todos as ferramentas do FitX para treinadores, escolha criar uma conta de treinador na página de criação de configuração após ter seus dados checados na página de registro.",
     "bePartOfFitxInstruction": "Você pode usar todas essas ferramentas criando uma conta agora mesmo! Vá até a primeira seção dessa página e clique no botão 'Entrar ou Criar Conta'. Preencha os formulários de registro e seja um cliente ou treinador FitX!",
     "appDatesAlert": "Todas as datas e horários do FitX, incluindo as relacionadas aos contratos, seguem o horário de Brasília (GMT-3).",
-    "searchTrainer": "Buscar treinador"
+    "searchTrainer": "Buscar treinador",
+    "invalidTrainerData": "Dados do treinador inválidos!",
+    "errorCreateTrainer": "Falha ao criar treinador!",
+    "loadingCreateTrainer": "Criando treinador",
+    "trainerSpecialties": "Especialidades do Treinador",
+    "errorSpecialties": "Falha ao carregar especialidades!",
+    "trainerSpecialtiesDescription": "Selecione as especialidades que descrevem suas habilidades como treinador!",
+    "trainerSpecialtiesInstruction": "Clique uma vez em uma especialidade para selecioná-la, duas vezes para indicar que ela é uma das suas especialidades principais, e três vezes para removê-la.",
+    "mainSpecialty": "Especialidade Principal",
+    "checkData": "Verificar Dados",
+    "mainSpecialtiesDescription": "As especialidades principais são aquelas que melhor representam suas habilidades como treinador. Podem ser escolhidas até 3 principais especialidades, que vão ser destacadas no seu cartão profissional e no seu perfil.",
+    "mainSpecialtiesAlert": "Você pode escolher até 3 especialidades principais!",
+    "errorLoadingSpecialties": "Falha ao carregar especialidades!",
+    "errorOcurredSpecialties": "Ocorreu um erro ao carregar as especialidades do treinador!",
+    "editSpecialties": "Editar Especialidades",
+    "loadingModifySpecialties": "Modificando especialidades",
+    "successModifySpecialties": "Especialidades modificadas com sucesso!",
+    "errorModifySpecialties": "Falha ao modificar especialidades",
+    "noSpecialties": "O treinador ainda não possui especialidades."
 }
