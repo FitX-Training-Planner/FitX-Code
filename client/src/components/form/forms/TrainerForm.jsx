@@ -137,7 +137,7 @@ function TrainerForm({
                     </Stack>
 
                     <SubmitFormButton
-                        text={t("signUp")}
+                        text={t("confirm")}
                     />
                 </Stack>
             </form>

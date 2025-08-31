@@ -308,6 +308,8 @@ function ClientHome() {
                                                                 canBeContracted={trainer.canBeContracted}
                                                                 handleSave={() => handleOnSaveTrainer(trainer.ID)}
                                                                 hasSaved={trainer.hasSaved}
+                                                                top3Specialties={trainer.top3Specialties}
+                                                                extraSpecialtiesCount={trainer.extraSpecialtiesCount}
                                                             />
                                                         </React.Fragment>
                                                     ))

@@ -5,11 +5,7 @@ import TrainerForm from "../form/forms/TrainerForm";
 import { validateTrainerPostRequestData } from "../../utils/validators/formValidator";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSystemMessage } from "../../app/useSystemMessage";
-import api from "../../api/axios";
-import authUser from "../../utils/requests/auth";
 import { useDispatch } from "react-redux";
-import useRequest from "../../hooks/useRequest";
-import { setUser } from "../../slices/user/userSlice";
 import styles from "./CreateTrainer.module.css";
 import useWindowSize from "../../hooks/useWindowSize";
 import { useTranslation } from "react-i18next";
@@ -27,8 +23,6 @@ function CreateTrainer() {
 
     const { width } = useWindowSize();
     const { notify } = useSystemMessage();
-    const { request: postTrainerRequest } = useRequest();
-    const { request: authRequest } = useRequest();
     
     const [localUser, setLocalUser] = useState({
         name: "",
@@ -78,41 +72,8 @@ function CreateTrainer() {
 
         if (!validateTrainerPostRequestData(error, setError, trainer.cref_number, trainer.description, trainer.crefUF, 10)) return;
 
-        const postTrainerFormData = new FormData();
-
-        postTrainerFormData.append("name", localUser.name);
-        postTrainerFormData.append("email", localUser.email);
-        postTrainerFormData.append("password", localUser.password);
-        postTrainerFormData.append("isDarkTheme", localUser.config.is_dark_theme);
-        postTrainerFormData.append("isComplainterAnonymous", localUser.config.is_complainter_anonymous);
-        postTrainerFormData.append("isRaterAnonymous", localUser.config.is_rater_anonymous);
-        postTrainerFormData.append("emailNotificationPermission", localUser.config.email_notification_permission);
-        postTrainerFormData.append("isEnglish", localUser.config.is_english);
-        postTrainerFormData.append("photoFile", localUser.config.photoFile);
-        postTrainerFormData.append("crefNumber", trainer.cref_number && trainer.crefUF ? `${trainer.cref_number}/${trainer.crefUF}` : "");
-        postTrainerFormData.append("description", trainer.description);
-
-        const postTrainer = () => {
-            return api.post("/trainers", postTrainerFormData);
-        };
-
-        const handleOnPostTrainerSuccess = (data) => {
-            authUser(data.userID, dispatch, navigate, authRequest, setUser, false, t);
-        }
-
-        const handleOnPostTrainerError = () => {
-            setError(true);
-        }
-
-        postTrainerRequest(
-            postTrainer, 
-            handleOnPostTrainerSuccess, 
-            handleOnPostTrainerError, 
-            t("loadingCreateUser"), 
-            undefined, 
-            t("errorCreateUser")
-        );
-    }, [acceptTerms, authRequest, dispatch, error, localUser.config.email_notification_permission, localUser.config.is_complainter_anonymous, localUser.config.is_dark_theme, localUser.config.is_english, localUser.config.is_rater_anonymous, localUser.config.photoFile, localUser.email, localUser.name, localUser.password, navigate, postTrainerRequest, t, trainer.crefUF, trainer.cref_number, trainer.description]);
+        navigate("/trainer-specialties", { state: { localTrainer: { ...localUser, ...trainer } } });
+    }, [acceptTerms, error, setError, localUser, navigate, trainer]);
 
     useEffect(() => {
         document.title = t("trainerProfile");

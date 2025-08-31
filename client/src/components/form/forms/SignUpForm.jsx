@@ -107,7 +107,7 @@ function SignUpForm({
 
                     <Stack>
                         <SubmitFormButton
-                            text={t("signUp")}
+                            text={t("checkData")}
                         />
 
                         <span>

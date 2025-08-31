@@ -9,6 +9,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import TrainerCRCInfo from "../../layout/TrainerCRCInfo";
 import Alert from "../../messages/Alert";
+import { useSelector } from "react-redux";
 
 function SmallTrainerProfessionalCard({
     name,
@@ -21,9 +22,13 @@ function SmallTrainerProfessionalCard({
     handleExpand,
     handleSave,
     canBeContracted,
-    hasSaved
+    hasSaved,
+    top3Specialties,
+    extraSpecialtiesCount
 }) {
     const { t } = useTranslation();
+
+    const user = useSelector(state => state.user);
 
     const { width } = useWindowSize();
 
@@ -52,7 +57,6 @@ function SmallTrainerProfessionalCard({
             </Stack>
 
             <Stack
-                // gap="0.5em"
                 alignItems="start"
                 direction={width <= 640 ? "column" : "row"}
                 className={styles.professional_name_container}
@@ -93,6 +97,55 @@ function SmallTrainerProfessionalCard({
                 complaintsNumber={complaintsNumber}
                 contractsNumber={contractsNumber}
             />
+
+            {top3Specialties.length !== 0 && (
+                <Stack
+                    direction={width <= 440 ? "column" : "row"}
+                    justifyContent={width <= 440 ? "start" : "center"}
+                >
+                    <Stack
+                        direction={width <= 440 ? "column" : "row"}
+                        justifyContent="center"
+                        className={styles.specialties}
+                    >
+                        {top3Specialties.map((specialty, index) => (
+                            <React.Fragment
+                                key={index}
+                            >
+                                <Stack 
+                                    direction={width <= 840 ? "column" : "row"}
+                                    className={styles.specialty}
+                                >
+                                    <img
+                                        src={`/${specialty.media?.url}`}
+                                        alt={specialty.name}
+                                    />
+
+                                    <span
+                                        style={{ textAlign: width <= 840 ? "center" : "end" }}
+                                    >
+                                        {
+                                            user.config.isEnglish 
+                                            ? t(`databaseData.specialties.${specialty.ID}.name`) 
+                                            : specialty.name
+                                        }
+                                    </span>
+                                </Stack>
+                            </React.Fragment>
+                        ))}
+                    </Stack>
+                    
+                    {extraSpecialtiesCount && (
+                        <span
+                            className={styles.extra_specialties_count}
+                        >
+                            + {extraSpecialtiesCount}
+                        </span>
+                    )}
+                </Stack>
+            )}
+
+            <hr/>
 
             {paymentPlans.length !== 0 ? (
                 <Stack

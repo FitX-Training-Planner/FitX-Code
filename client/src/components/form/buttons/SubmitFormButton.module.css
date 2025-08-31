@@ -3,6 +3,7 @@
     padding: 0.5em;
     border-radius: 10px;
     transition: var(--fast-transition);
+    hyphens: none;
 }
 
 .submit_form_button:hover {
