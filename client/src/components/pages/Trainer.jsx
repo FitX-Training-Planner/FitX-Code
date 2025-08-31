@@ -18,6 +18,7 @@ import ComplaintsContainer from "../layout/ComplaintsContainer";
 import PaymentPlansContainer from "../layout/PaymentPlansContainer";
 import BackButton from "../form/buttons/BackButton";
 import Alert from "../messages/Alert";
+import SpecialtiesContainer from "../layout/SpecialtiesContainer";
 
 function Trainer() {
     const { t } = useTranslation();
@@ -40,6 +41,7 @@ function Trainer() {
     const { request: getTrainerReq } = useRequest();
     const { request: removeComplaintReq } = useRequest();
     const { request: removeRatingReq } = useRequest();
+    const { request: getSpecialtiesReq, loading: specialtiesLoading } = useRequest();
 
     const user = useSelector(state => state.user);
 
@@ -55,6 +57,7 @@ function Trainer() {
         }
     }, []);
 
+    const specialtiesStorageKey = "trainerSpecialties";
     const ratingsLimit = 10;
     const complaintsLimit = 10;
 
@@ -79,6 +82,11 @@ function Trainer() {
     const [complaints, setComplaints] = useState([]);
     const [complaintsError, setComplaintsError] = useState(false);
     const [complaintsOffset, setComplaintsOffset] = useState(0);
+    const [specialties, setSpecialties] = useState({
+        mainSpecialties: [],
+        secondarySpecialties: []
+    });
+    const [specialtiesError, setSpecialtiesError] = useState(false);
 
     const loadRatings = useCallback((hasError, updatedRatings, offset) => {
         if (hasError) return;
@@ -189,6 +197,27 @@ function Trainer() {
                 t("loadingTrainer"), 
                 undefined, 
                 t("errorLoadingTrainer")
+            );
+
+            const getSpecialties = () => {
+                return api.get(`/trainers/${id}/specialties`);
+            }
+        
+            const handleOnGetSpecialtiesSuccess = (data) => {
+                setSpecialties(data);
+            };
+
+            const handleOnGetSpecialtiesError = () => {
+                setSpecialtiesError(true);
+            };
+
+            getSpecialtiesReq(
+                getSpecialties, 
+                handleOnGetSpecialtiesSuccess, 
+                handleOnGetSpecialtiesError, 
+                undefined, 
+                undefined, 
+                t("errorLoadingSpecialties")
             );
 
             loadRatings(ratingsError, ratings, ratingsOffset);
@@ -496,6 +525,13 @@ function Trainer() {
                             </Stack>
                         </Stack>
                     </Stack>
+
+                    <SpecialtiesContainer
+                        specialties={specialties}
+                        specialtiesError={specialtiesError}
+                        specialtiesLoading={specialtiesLoading}
+                        viewerIsClient
+                    />
 
                     <Stack>
                         {!trainer.canBeContracted && (

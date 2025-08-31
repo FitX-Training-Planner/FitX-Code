@@ -27,6 +27,7 @@ import ClientTrainingContractCard from "../cards/user/ClientTrainingContractCard
 import { cleanCacheData, getCacheData, setCacheData } from "../../utils/cache/operations";
 import { verifyIsClient, verifyIsTrainer } from "../../utils/requests/verifyUserType";
 import FooterLayout from "../containers/FooterLayout";
+import SpecialtiesContainer from "../layout/SpecialtiesContainer";
 
 function MyProfile() {
     const { t } = useTranslation();
@@ -61,11 +62,13 @@ function MyProfile() {
     const { request: isClient } = useRequest();
     const { request: isTrainer } = useRequest();
     const { request: getClientTraining, loading: trainingLoading } = useRequest();
+    const { request: getSpecialtiesReq, loading: specialtiesLoading } = useRequest();
 
     const user = useSelector(state => state.user);
 
     const clientTrainingStorageKey = "clientTraining";
     const emailStorageKey = "fitxEmail";
+    const specialtiesStorageKey = "trainerSpecialties";
     const ratingsLimit = 10;
     const complaintsLimit = 10;
 
@@ -99,6 +102,11 @@ function MyProfile() {
     const [complaints, setComplaints] = useState([]);
     const [complaintsError, setComplaintsError] = useState(false);
     const [complaintsOffset, setComplaintsOffset] = useState(0);
+    const [specialties, setSpecialties] = useState({
+        mainSpecialties: [],
+        secondarySpecialties: []
+    });
+    const [specialtiesError, setSpecialtiesError] = useState(false);
     const [modifyUserError, setModifyUserError] = useState(false);
     const [modifyTrainerError, setModifyTrainerError] = useState(false);
     const [clientTraining, setClientTraining] = useState(null);
@@ -224,7 +232,7 @@ function MyProfile() {
                         getEmail, 
                         handleOnGetEmailSuccess, 
                         handleOnGetEmailError, 
-                        t("loadingUserInfo"), 
+                        undefined, 
                         undefined, 
                         t("errorLoadingUserInfo")
                     );
@@ -285,10 +293,39 @@ function MyProfile() {
                     getTrainerInfo, 
                     handleOnGetTrainerInfoSuccess, 
                     () => undefined, 
-                    t("loadingTrainer"), 
+                    undefined, 
                     undefined, 
                     t("errorLoadingTrainer")
                 );
+
+                const cachedSpecialties = getCacheData(specialtiesStorageKey);
+
+                if (cachedSpecialties) {
+                    setSpecialties(cachedSpecialties);
+                } else {
+                    const getSpecialties = () => {
+                        return api.get(`/trainers/me/specialties`);
+                    }
+                
+                    const handleOnGetSpecialtiesSuccess = (data) => {
+                        setSpecialties(data);
+    
+                        setCacheData(specialtiesStorageKey, data);
+                    };
+    
+                    const handleOnGetSpecialtiesError = () => {
+                        setSpecialtiesError(true);
+                    };
+    
+                    getSpecialtiesReq(
+                        getSpecialties, 
+                        handleOnGetSpecialtiesSuccess, 
+                        handleOnGetSpecialtiesError, 
+                        undefined, 
+                        undefined, 
+                        t("errorLoadingSpecialties")
+                    );
+                }
     
                 loadRatings(ratingsError, ratings, ratingsOffset);
     
@@ -337,6 +374,8 @@ function MyProfile() {
             const handleOnDeactivateSuccess = () => {
                 dispatch(resetUser());
 
+                sessionStorage.clear();
+
                 navigate("/login");
             };
     
@@ -367,6 +406,8 @@ function MyProfile() {
                 const handleOnDeleteSuccess = () => {
                     dispatch(resetUser());
 
+                    sessionStorage.clear();
+
                     navigate("/login");
                 };
         
@@ -392,6 +433,8 @@ function MyProfile() {
         
             const handleOnLogoutSuccess = () => {
                 dispatch(resetUser());
+
+                sessionStorage.clear();
 
                 navigate("/login");
             };
@@ -747,6 +790,12 @@ function MyProfile() {
                                         setModifyTrainerError={setModifyTrainerError}
                                         handleSubmit={handleOnModifyTrainer}
                                         hasChanged={trainerHasChanged}
+                                    />
+
+                                    <SpecialtiesContainer
+                                        specialties={specialties}
+                                        specialtiesError={specialtiesError}
+                                        specialtiesLoading={specialtiesLoading}
                                     />
                                 </Stack>
                             )}

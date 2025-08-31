@@ -214,6 +214,21 @@ export default function useGets() {
             t("errorTrainingTechniques")
         )
     }, [request, t, translateData]);
+    
+    const getSpecialties = useCallback(async (handleSuccess, handleError, translateKey, setFn) => {
+        await request(
+            () => {return api.get("/trainers/specialties")},
+            (data) => {
+                handleSuccess();
+                
+                translateData(data, translateKey, setFn);
+            },
+            handleError,
+            undefined,
+            undefined,
+            t("errorSpecialties")
+        )
+    }, [request, t, translateData]);
 
     return {
         getCardioOptions,
@@ -227,6 +242,7 @@ export default function useGets() {
         getGripWidths,
         getLateralities,
         getSetTypes,
-        getTrainingTechniques
+        getTrainingTechniques,
+        getSpecialties
     };
 }

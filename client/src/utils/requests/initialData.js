@@ -1,6 +1,6 @@
 import { getCacheData, setCacheData } from "../cache/operations";
 
-export default async function getAndSetInitialData(getRequest, setData, navigateState, navigate, destination, key) {
+export default async function getAndSetInitialData(getRequest, setData, navigateStateError, navigate, errorDestination, key) {
     const cachedData = getCacheData(key);
 
     if (cachedData) {
@@ -16,7 +16,7 @@ export default async function getAndSetInitialData(getRequest, setData, navigate
     };
 
     const handleOnError = () => {
-        navigate(destination, { state: navigateState });
+        navigate(errorDestination, { state: navigateStateError });
     };
     
     const success = await new Promise((resolve) => {
