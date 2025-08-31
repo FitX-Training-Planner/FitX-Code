@@ -118,7 +118,7 @@ function SmallTrainerProfessionalCard({
                                 >
                                     <img
                                         src={`/${specialty.media?.url}`}
-                                        alt={specialty.name}
+                                        alt=""
                                     />
 
                                     <span

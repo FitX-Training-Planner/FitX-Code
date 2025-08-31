@@ -3,7 +3,7 @@ import useRequest from "../../hooks/useRequest";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSystemMessage } from "../../app/useSystemMessage";
 import { setUser } from "../../slices/user/userSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import authUser from "../../utils/requests/auth";
 import api from "../../api/axios";
 import { useTranslation } from "react-i18next";
@@ -21,6 +21,8 @@ import { cleanCacheData } from "../../utils/cache/operations";
 
 function TrainerSpecialties() {
     const { t } = useTranslation();
+
+    const user = useSelector(state => state.user);
 
     const location = useLocation();
 
@@ -273,7 +275,11 @@ function TrainerSpecialties() {
                             key={index}
                         >
                             <SpecialtyCard
-                                name={specialty.name}
+                                name={
+                                    user.config.isEnglish 
+                                    ? t(`databaseData.specialties.${specialty.ID}.name`) 
+                                    : specialty.name
+                                }
                                 icon={specialty.media?.url}
                                 isSelected={specialty.isSelected}
                                 isMain={specialty.isMain}

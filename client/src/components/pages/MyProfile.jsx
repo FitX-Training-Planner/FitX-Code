@@ -576,6 +576,8 @@ function MyProfile() {
         }
     
         const handleOnPutConfigSuccess = (data) => {
+            if (changedUser.isEnglish !== user.config.isEnglish) sessionStorage.clear();
+
             dispatch(updateUser(data.user));
         };
     
