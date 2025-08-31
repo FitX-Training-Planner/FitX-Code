@@ -9,7 +9,7 @@ import { validateTrainingDay } from "../../utils/validators/formValidator";
 import Stack from "../containers/Stack";
 import TrainingDayForm from "../form/forms/TrainingDayForm";
 import duplicateObjectInObjectList from "../../utils/generators/duplicate";
-import BackButton from "../form/buttons/BackButton";
+import BackButton from "../layout/BackButton";
 import { useTranslation } from "react-i18next";
 
 function ModifyTrainingDay() {

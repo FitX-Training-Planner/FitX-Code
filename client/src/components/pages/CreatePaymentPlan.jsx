@@ -10,7 +10,7 @@ import useRequest from "../../hooks/useRequest";
 import Stack from "../containers/Stack";
 import { verifyIsTrainer } from "../../utils/requests/verifyUserType";
 import { cleanCacheData } from "../../utils/cache/operations";
-import BackButton from "../form/buttons/BackButton";
+import BackButton from "../layout/BackButton";
 import { validatePaymentPlan } from "../../utils/validators/formValidator";
 import PaymentPlanForm from "../form/forms/PaymentPlanForm";
 import { useTranslation } from "react-i18next";

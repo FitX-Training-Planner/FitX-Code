@@ -722,5 +722,7 @@
     "loadingModifySpecialties": "Modificando especialidades",
     "successModifySpecialties": "Especialidades modificadas com sucesso!",
     "errorModifySpecialties": "Falha ao modificar especialidades",
-    "noSpecialties": "O treinador ainda não possui especialidades."
+    "noSpecialties": "O treinador ainda não possui especialidades.",
+    "portuguese": "Português",
+    "lightTheme": "Tema Claro"
 }

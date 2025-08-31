@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import ClickableIcon from "./ClickableIcon";
+import ClickableIcon from "../form/buttons/ClickableIcon";
 import styles from "./BackButton.module.css";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";

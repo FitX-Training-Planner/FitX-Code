@@ -9,7 +9,7 @@ import useGets from "../../hooks/useGetRequest";
 import getAndSetInitialData from "../../utils/requests/initialData";
 import Stack from "../containers/Stack";
 import CardioSessionForm from "../form/forms/CardioSessionForm";
-import BackButton from "../form/buttons/BackButton";
+import BackButton from "../layout/BackButton";
 import { useTranslation } from "react-i18next";
 
 function ModifyCardioSession() {

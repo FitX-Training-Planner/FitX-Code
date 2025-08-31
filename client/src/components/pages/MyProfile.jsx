@@ -20,7 +20,7 @@ import { useConfirmIdentityCallback } from "../../app/useConfirmIdentityCallback
 import { validateModifyUserRequestData, validateTrainerPostRequestData } from "../../utils/validators/formValidator";
 import TrainerCRCInfo from "../layout/TrainerCRCInfo";
 import PhotoInput from "../form/fields/PhotoInput";
-import BackButton from "../form/buttons/BackButton";
+import BackButton from "../layout/BackButton";
 import Alert from "../messages/Alert";
 import MercadopagoConnectButton from "../layout/MercadopagoConnectButton";
 import ClientTrainingContractCard from "../cards/user/ClientTrainingContractCard";

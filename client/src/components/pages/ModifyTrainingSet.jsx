@@ -9,7 +9,7 @@ import getAndSetInitialData from "../../utils/requests/initialData";
 import { validateSet } from "../../utils/validators/formValidator";
 import Stack from "../containers/Stack";
 import TrainingSetForm from "../form/forms/TrainingSetForm";
-import BackButton from "../form/buttons/BackButton";
+import BackButton from "../layout/BackButton";
 import { useTranslation } from "react-i18next";
 
 function ModifyExerciseSet() {

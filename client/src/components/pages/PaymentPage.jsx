@@ -12,7 +12,7 @@ import AcceptTerms from "../form/fields/AcceptTerms";
 import useWindowSize from "../../hooks/useWindowSize";
 import Alert from "../messages/Alert";
 import FooterLayout from "../containers/FooterLayout";
-import BackButton from "../form/buttons/BackButton";
+import BackButton from "../layout/BackButton";
 
 function PaymentPage() {
     const { t } = useTranslation();

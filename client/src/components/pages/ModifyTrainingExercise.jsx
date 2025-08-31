@@ -11,7 +11,7 @@ import getAndSetInitialData from "../../utils/requests/initialData";
 import Stack from "../containers/Stack";
 import TrainingExerciseForm from "../form/forms/TrainingExerciseForm";
 import duplicateObjectInObjectList from "../../utils/generators/duplicate";
-import BackButton from "../form/buttons/BackButton";
+import BackButton from "../layout/BackButton";
 import { useTranslation } from "react-i18next";
 
 function ModifyExercise() {

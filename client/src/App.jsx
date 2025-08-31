@@ -34,6 +34,7 @@ import SavedTrainers from "./components/pages/SavedTrainers";
 import PaymentPage from "./components/pages/PaymentPage";
 import WelcomePage from "./components/pages/WelcomePage";
 import TrainerSpecialties from "./components/pages/TrainerSpecialties";
+import ChangeLanguageAndThemeButton from "./components/layout/ChangeLanguageAndThemeButton";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -133,6 +134,8 @@ function App() {
 
   return (
     <>
+      <ChangeLanguageAndThemeButton />
+
       <Routes>
         <Route
           path="/error"

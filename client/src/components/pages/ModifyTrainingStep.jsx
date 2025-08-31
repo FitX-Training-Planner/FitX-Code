@@ -8,7 +8,7 @@ import { getNextOrder, removeAndReorder } from "../../utils/generators/generateO
 import Stack from "../containers/Stack";
 import TrainingStepForm from "../form/forms/TrainingStepForm";
 import duplicateObjectInObjectList from "../../utils/generators/duplicate";
-import BackButton from "../form/buttons/BackButton";
+import BackButton from "../layout/BackButton";
 import { useTranslation } from "react-i18next";
 
 function ModifyTrainingStep() {

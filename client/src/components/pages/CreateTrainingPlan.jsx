@@ -14,7 +14,7 @@ import TrainingPlanForm from "../form/forms/TrainingPlanForm";
 import duplicateObjectInObjectList from "../../utils/generators/duplicate";
 import { verifyIsTrainer } from "../../utils/requests/verifyUserType";
 import { cleanCacheData } from "../../utils/cache/operations";
-import BackButton from "../form/buttons/BackButton";
+import BackButton from "../layout/BackButton";
 import { useTranslation } from "react-i18next";
 
 function CreateTrainingPlan() {   

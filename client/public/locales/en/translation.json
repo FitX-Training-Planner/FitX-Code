@@ -723,6 +723,8 @@
     "successModifySpecialties": "Specialties modified successfully!",
     "errorModifySpecialties": "Failed to modify specialties!",
     "noSpecialties": "The trainer has no specialties yet.",
+    "portuguese": "Português",
+    "lightTheme": "Light Theme",
     "databaseData": {
         "muscleGroups": {
             "1": {

@@ -16,7 +16,7 @@ import ClickableIcon from "../form/buttons/ClickableIcon";
 import RatingsContainer from "../layout/RatingsContainer";
 import ComplaintsContainer from "../layout/ComplaintsContainer";
 import PaymentPlansContainer from "../layout/PaymentPlansContainer";
-import BackButton from "../form/buttons/BackButton";
+import BackButton from "../layout/BackButton";
 import Alert from "../messages/Alert";
 import SpecialtiesContainer from "../layout/SpecialtiesContainer";
 

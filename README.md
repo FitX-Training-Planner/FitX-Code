@@ -73,3 +73,7 @@ Este repositório contém o código e documentos relacionados ao projeto FitX, u
 <a href="https://www.flaticon.com/br/icones-gratis/forca" title="força ícones">Força ícones criados por Freepik - Flaticon</a>
 <a href="https://www.flaticon.com/br/icones-gratis/gravida" title="gravida ícones">Gravida ícones criados por agus raharjo - Flaticon</a>
 <a href="https://www.flaticon.com/br/icones-gratis/deficiencia" title="deficiência ícones">Deficiência ícones criados por Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/brasil" title="brasil ícones">Brasil ícones criados por Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/eua" title="eua ícones">Eua ícones criados por Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/brilho" title="brilho ícones">Brilho ícones criados por Anggara - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/lua" title="lua ícones">Lua ícones criados por Vectors Market - Flaticon</a>

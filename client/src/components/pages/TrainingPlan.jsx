@@ -7,7 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useSystemMessage } from "../../app/useSystemMessage";
 import api from "../../api/axios";
 import TrainingPlanExpandedCard from "../cards/training/TrainingPlanExpandedCard";
-import BackButton from "../form/buttons/BackButton";
+import BackButton from "../layout/BackButton";
 import Stack from "../containers/Stack";
 import FilterItemsById from "../form/buttons/FilterItemsById";
 import { useTranslation } from "react-i18next";
