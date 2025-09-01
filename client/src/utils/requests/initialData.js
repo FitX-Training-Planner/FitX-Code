@@ -16,7 +16,7 @@ export default async function getAndSetInitialData(getRequest, setData, navigate
     };
 
     const handleOnError = () => {
-        navigate(errorDestination, { state: navigateStateError });
+        if (navigate && errorDestination) navigate(errorDestination, { state: navigateStateError });
     };
     
     const success = await new Promise((resolve) => {

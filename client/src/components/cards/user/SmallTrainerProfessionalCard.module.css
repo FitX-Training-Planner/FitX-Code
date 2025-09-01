@@ -42,29 +42,6 @@
     width: max-content;
 }
 
-.specialties > .specialty {
-    border: 1px solid var(--dark-theme-color);
-    border-radius: 1em;
-    padding: 0.5em;
-    background-color: var(--light-theme-color);
-    cursor: pointer;
-    transition: var(--fast-transition);
-}
-
-.specialties > .specialty:hover {
-    transform: scale(1.05);
-}
-
-.specialties > .specialty > img {
-    height: 2em;
-    filter: drop-shadow(-1px 1px 1px var(--dark-color));
-}
-
-.specialties > .specialty > span {
-    hyphens: none;
-    font-weight: bold;
-}
-
 .extra_specialties_count {
     min-width: max-content;
 }

@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 import TrainerCRCInfo from "../../layout/TrainerCRCInfo";
 import Alert from "../../messages/Alert";
 import { useSelector } from "react-redux";
+import SmallSpecialtyCard from "../training/SmallSpecialtyCard";
 
 function SmallTrainerProfessionalCard({
     name,
@@ -112,25 +113,14 @@ function SmallTrainerProfessionalCard({
                             <React.Fragment
                                 key={index}
                             >
-                                <Stack 
-                                    direction={width <= 840 ? "column" : "row"}
-                                    className={styles.specialty}
-                                >
-                                    <img
-                                        src={`/${specialty.media?.url}`}
-                                        alt=""
-                                    />
-
-                                    <span
-                                        style={{ textAlign: width <= 840 ? "center" : "end" }}
-                                    >
-                                        {
-                                            user.config.isEnglish 
-                                            ? t(`databaseData.specialties.${specialty.ID}.name`) 
-                                            : specialty.name
-                                        }
-                                    </span>
-                                </Stack>
+                                <SmallSpecialtyCard
+                                    icon={specialty.media?.url}
+                                    name={
+                                        user.config.isEnglish 
+                                        ? t(`databaseData.specialties.${specialty.ID}.name`) 
+                                        : specialty.name
+                                    }
+                                />
                             </React.Fragment>
                         ))}
                     </Stack>

@@ -39,3 +39,26 @@
     filter: none;
     background-color: var(--dark-theme-color);
 }
+
+.small_specialty_card {
+    border: 1px solid var(--dark-theme-color);
+    border-radius: 1em;
+    padding: 0.5em;
+    background-color: var(--light-theme-color);
+    cursor: pointer;
+    transition: var(--fast-transition);
+}
+
+.small_specialty_card:hover {
+    transform: scale(1.05);
+}
+
+.small_specialty_card > img {
+    height: 2em;
+    filter: drop-shadow(-1px 1px 1px var(--dark-color));
+}
+
+.small_specialty_card > span {
+    hyphens: none;
+    font-weight: bold;
+}
