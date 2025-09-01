@@ -5,3 +5,17 @@
 .client_home p {
     text-align: center;
 }
+
+.specialties {
+    overflow-x: auto;
+    padding: 0.5em;
+}
+
+.specialties .specialty {
+    min-width: max-content;
+    transition: var(--fast-transition);
+}
+
+.specialties .specialty.selected {
+    filter: brightness(0.7);
+}

@@ -4,26 +4,31 @@ import useWindowSize from "../../../hooks/useWindowSize";
 
 function SmallSpecialtyCard({
     name,
-    icon
+    icon,
+    handleClick
 }) {
     const { width } = useWindowSize();
 
     return (
-        <Stack 
-            direction={width <= 840 ? "column" : "row"}
-            className={styles.small_specialty_card}
+        <div
+            onClick={handleClick || undefined}
         >
-            <img
-                src={`/${icon}`}
-                alt=""
-            />
-
-            <span
-                style={{ textAlign: width <= 840 ? "center" : "end" }}
+            <Stack 
+                direction={width <= 840 ? "column" : "row"}
+                className={styles.small_specialty_card}
             >
-                {name}
-            </span>
-        </Stack>
+                <img
+                    src={`/${icon}`}
+                    alt=""
+                />
+
+                <span
+                    style={{ textAlign: width <= 840 ? "center" : "end" }}
+                >
+                    {name}
+                </span>
+            </Stack>
+        </div>
     );
 }
 

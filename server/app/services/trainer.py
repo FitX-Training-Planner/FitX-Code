@@ -771,7 +771,7 @@ def get_partial_trainer_contracts(db, offset, limit, sort, full_date, month, yea
 
         raise Exception(f"Erro ao recuperar os contratos do treinador: {e}")
     
-def get_partial_trainers(db, offset, limit, sort, search, viewer_id):
+def get_partial_trainers(db, offset, limit, sort, search, specialty_id, viewer_id):
     try:
         result = []
 
@@ -793,27 +793,42 @@ def get_partial_trainers(db, offset, limit, sort, search, viewer_id):
                 Users.name.ilike(search_term)
             )
 
+        if specialty_id:
+            query = (
+                query.join(TrainerSpecialty)
+                .filter(TrainerSpecialty.fk_specialty_ID == specialty_id)
+            )
+
+            order_by_main = [desc(TrainerSpecialty.is_main)]
+
+        else:
+            order_by_main = []
+            
         if sort == "most_popular":
-            query = query.order_by(desc(Trainer.contracts_number))
+            query = query.order_by(*order_by_main, desc(Trainer.contracts_number))
 
         elif sort == "best_rated":
             C = 2.5  # média global esperada
             m = 1 # número mínimo de avaliações para ser considerado confiável
-            
+
             query = query.order_by(
+                *order_by_main,
                 desc(
-                    (Trainer.rates_number / (Trainer.rates_number + m)) * Trainer.rate + (m / (Trainer.rates_number + m)) * C
+                    (Trainer.rates_number / (Trainer.rates_number + m)) * Trainer.rate
+                    + (m / (Trainer.rates_number + m)) * C
                 )
             )
 
         elif sort == "most_affordable":
             query = query.order_by(
+                *order_by_main,
                 Trainer.best_price_plan.is_(None),
                 asc(Trainer.best_price_plan)
             )
 
         elif sort == "best_value":
             query = query.order_by(
+                *order_by_main,
                 Trainer.best_value_ratio.is_(None),
                 desc(Trainer.best_value_ratio)
             )
@@ -1577,7 +1592,7 @@ def refresh_mp_token(db, trainer_id, mp_refresh_token):
 
 def get_all_specialties(db):
     try:
-        specialties = db.query(Specialty).options(joinedload(Specialty.media)).all()
+        specialties = db.query(Specialty).options(joinedload(Specialty.media)).order_by(asc(Specialty.name)).all()
 
         if specialties is None:
             print("Erro ao recuperar especialidades.")
