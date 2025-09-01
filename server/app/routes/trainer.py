@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from ..services.user import insert_user, insert_photo
 from ..services.trainer import insert_trainer, insert_training_plan, get_trainer_plans, get_training_plan, modify_training_plan, remove_training_plan, insert_payment_plan, modify_payment_plan, remove_payment_plan, get_trainer_payment_plans, get_partial_trainer_contracts, get_partial_trainers, get_partial_trainer_complaints, get_partial_trainer_ratings, like_complaint, like_rating, get_trainer_profile, insert_trainer_rating, insert_trainer_complaint, remove_complaint, remove_rating, get_trainer_info, modify_trainer_data, toggle_trainer_contracts_paused, get_all_specialties, get_trainer_specialties, modify_trainer_specialties
+from ..services.user import get_user_by_id
 from ..database.context_manager import get_db
 from ..exceptions.api_error import ApiError
 from flask_jwt_extended import jwt_required
@@ -12,6 +13,7 @@ from flask_jwt_extended import get_jwt_identity
 import json
 from ..utils.message_codes import MessageCodes
 from ..services.client import save_trainer
+import os
 
 trainer_bp = Blueprint("trainer", __name__, url_prefix="/trainers")
         
@@ -927,6 +929,40 @@ def put_self_specialties():
         except Exception as e:
             db.rollback()
 
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
+        
+@trainer_bp.route("/<int:trainer_id>/share", methods=["GET"])
+def share_trainer(trainer_id):
+    error_message = "Erro na rota de compartilhamento de treinador"
+
+    with get_db() as db:
+        try:        
+            trainer = get_user_by_id(db, trainer_id, False)
+
+            html = f"""
+            <html>
+            <head>
+                <meta property="og:title" content="Treinador {trainer["name"]}" />
+                <meta property="og:description" content="Veja o perfil do treinador {trainer["name"]}!" />
+                <meta property="og:image" content="{trainer["config"]["photoUrl"]}" />
+                <meta property="og:url" content="{request.url}" />
+            </head>
+            <body>
+                <script>window.location.href='{os.getenv("FRONT_END_URL")}/trainers/{trainer_id}'</script>
+            </body>
+            </html>
+            """
+
+            return html
+        
+        except ApiError as e:
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": str(e)}), e.status_code
+
+        except Exception as e:
             print(f"{error_message}: {e}")
 
             return jsonify({"message": MessageCodes.ERROR_SERVER}), 500

@@ -19,6 +19,7 @@ import PaymentPlansContainer from "../layout/PaymentPlansContainer";
 import BackButton from "../layout/BackButton";
 import Alert from "../messages/Alert";
 import SpecialtiesContainer from "../layout/SpecialtiesContainer";
+import ShareTrainer from "../layout/ShareTrainer";
 
 function Trainer() {
     const { t } = useTranslation();
@@ -494,11 +495,23 @@ function Trainer() {
                             className={styles.trainer_main_info}
                             justifyContent="center"
                         >
-                            <Title
-                                headingNumber={1}
-                                text={trainer.name}
-                                varColor="--theme-color"
-                            />
+                            <Stack 
+                                direction="row"
+                                justifyContent="center"
+                            >
+                                <Title
+                                    headingNumber={1}
+                                    text={trainer.name}
+                                    varColor="--theme-color"
+                                />
+
+                                <ShareTrainer
+                                    trainerName={trainer.name}
+                                    trainerID={id}
+                                    notify={notify}
+                                    size="medium"
+                                />
+                            </Stack>
 
                             <Stack>
                                 {trainer.crefNumber && (

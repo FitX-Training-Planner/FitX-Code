@@ -726,6 +726,10 @@
     "portuguese": "Português",
     "lightTheme": "Light Theme",
     "toggleVisibility": "Toggle Visibility",
+    "shareAlert": "Sharing is not supported in this browser!",
+    "seeTheFitXProfileOfTrainer": "See the FitX profile of the trainer",
+    "errorShare": "Failed to share trainer!",
+    "share": "Share",
     "databaseData": {
         "muscleGroups": {
             "1": {

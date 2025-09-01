@@ -159,6 +159,7 @@ function SavedTrainers() {
                                         key={index}
                                     >
                                         <SmallTrainerProfessionalCard
+                                            trainerID={trainer.ID}
                                             name={trainer.name} 
                                             photoUrl={trainer.photoUrl} 
                                             crefNumber={trainer.crefNumber} 

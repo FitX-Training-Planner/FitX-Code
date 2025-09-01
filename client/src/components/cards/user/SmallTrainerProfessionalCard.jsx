@@ -11,8 +11,11 @@ import TrainerCRCInfo from "../../layout/TrainerCRCInfo";
 import Alert from "../../messages/Alert";
 import { useSelector } from "react-redux";
 import SmallSpecialtyCard from "../training/SmallSpecialtyCard";
+import { useSystemMessage } from "../../../app/useSystemMessage";
+import ShareTrainer from "../../layout/ShareTrainer";
 
 function SmallTrainerProfessionalCard({
+    trainerID,
     name,
     photoUrl,
     crefNumber,
@@ -31,6 +34,8 @@ function SmallTrainerProfessionalCard({
 
     const user = useSelector(state => state.user);
 
+    const { notify } = useSystemMessage();
+
     const { width } = useWindowSize();
 
     return (
@@ -41,13 +46,25 @@ function SmallTrainerProfessionalCard({
             <Stack
                 direction="row"
             >
-                <ClickableIcon
-                    iconSrc={`/images/icons/${hasSaved ? "saved" : "save"}.png`}
-                    name={t("saveTrainer")}
-                    handleClick={handleSave}
-                    size="small"
-                    hasTheme={hasSaved ? false : true}
-                />
+                <Stack 
+                    direction="row"
+                    justifyContent="start"
+                >
+                    <ClickableIcon
+                        iconSrc={`/images/icons/${hasSaved ? "saved" : "save"}.png`}
+                        name={t("saveTrainer")}
+                        handleClick={handleSave}
+                        size="small"
+                        hasTheme={hasSaved ? false : true}
+                    />
+
+                    <ShareTrainer
+                        trainerName={name}
+                        trainerID={trainerID}
+                        notify={notify}
+                        size="small"
+                    />
+                </Stack>
 
                 <ClickableIcon
                     iconSrc="/images/icons/expand.png"

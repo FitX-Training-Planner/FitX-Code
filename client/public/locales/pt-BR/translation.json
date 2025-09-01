@@ -725,5 +725,9 @@
     "noSpecialties": "O treinador ainda não possui especialidades.",
     "portuguese": "Português",
     "lightTheme": "Tema Claro",
-    "toggleVisibility": "Alternar Visibilidade"
+    "toggleVisibility": "Alternar Visibilidade",
+    "shareAlert": "O compartilhamento não é suportado neste navegador!",
+    "seeTheFitXProfileOfTrainer": "Veja o perfil FitX do treinador",
+    "errorShare": "Falha ao compartilhar treinador!",
+    "share": "Compartilhar"
 }

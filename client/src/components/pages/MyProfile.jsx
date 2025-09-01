@@ -376,7 +376,7 @@ function MyProfile() {
 
                 sessionStorage.clear();
 
-                navigate("/login");
+                navigate("/introduction");
             };
     
             deactivateProfileReq(
@@ -408,7 +408,7 @@ function MyProfile() {
 
                     sessionStorage.clear();
 
-                    navigate("/login");
+                    navigate("/introduction");
                 };
         
                 deleteAccountReq(
@@ -436,7 +436,7 @@ function MyProfile() {
 
                 sessionStorage.clear();
 
-                navigate("/login");
+                navigate("/introduction");
             };
     
             logoutReq(
