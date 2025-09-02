@@ -21,8 +21,7 @@
     width: var(--size);
 }
 
-.text_input.dark_theme > label > img,
-.password_input.dark_theme > img{
+.text_input.dark_theme > label > img {
     filter: invert(1);
 }
 
@@ -30,7 +29,7 @@
     line-height: var(--size);
 }
 
-.text_input > :where(input, textarea) {
+.text_input :where(input, textarea) {
     padding: 0.8em;
     width: 100%;
     font-size: var(--text-size);
@@ -39,7 +38,7 @@
     border: 1px solid var(--text-color);
 }
 
-.text_input > input {
+.text_input input {
     border-radius: var(--input-border-radius);
 }
 
@@ -65,8 +64,13 @@
     position: relative;
 }
 
+.password_input > input {
+    padding-right: 3em;
+}
+
 .password_input > button {
     position: absolute;
-    top: 2.7em;
+    top: 50%;
+    transform: translateY(-50%);
     right: 1em;
 }

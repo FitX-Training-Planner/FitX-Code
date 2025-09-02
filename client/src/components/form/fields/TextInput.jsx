@@ -1,4 +1,6 @@
+import { useTranslation } from "react-i18next";
 import Stack from "../../containers/Stack";
+import ClickableIcon from "../buttons/ClickableIcon";
 import styles from "./TextInput.module.css";
 import { useSelector } from "react-redux";
 
@@ -12,8 +14,12 @@ function TextInput({
     icon, 
     alertMessage, 
     error = false, 
-    maxLength 
+    maxLength,
+    handleTogglePasswordVisibility,
+    isPasswordVisible
 }) {
+    const { t } = useTranslation();
+
     const user = useSelector(state => state.user);
 
     return (
@@ -40,16 +46,29 @@ function TextInput({
                 </label>
             )}
 
-            <input 
-                type={type}
-                id={name}
-                name={name}
-                placeholder={placeholder}
-                value={value}
-                onChange={handleChange || undefined}
-                maxLength={maxLength}
-                readOnly={!handleChange}
-            />
+            <Stack
+                className={styles.password_input}
+            >
+                <input 
+                    type={type}
+                    id={name}
+                    name={name}
+                    placeholder={placeholder}
+                    value={value}
+                    onChange={handleChange || undefined}
+                    maxLength={maxLength}
+                    readOnly={!handleChange}
+                />
+
+                {handleTogglePasswordVisibility && (
+                    <ClickableIcon
+                        iconSrc={`/images/icons/${isPasswordVisible ? "opened_eye" : "closed_eye"}.png`}
+                        name={t("toggleVisibility")}
+                        handleClick={handleTogglePasswordVisibility}
+                        size="small"
+                    />
+                )}
+            </Stack>
 
            {alertMessage && (
                 <p 
