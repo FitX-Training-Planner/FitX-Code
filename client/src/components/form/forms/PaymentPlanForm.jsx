@@ -171,6 +171,8 @@ function PaymentPlanForm({
                             isAccepted={acceptTerms}
                             setIsAccepted={setAcceptedTerms}
                             description={t("createPaymentPlanTerms")}
+                            policyDestinies={["/app/policies/refund-and-cancellation", "/app/terms-and-conditions"]}
+                            policyNames={[t("refundAndCancellationPolicy"), t("refundAndCancellationPolicy")]}
                         />
                     </Stack>
                 </Stack>

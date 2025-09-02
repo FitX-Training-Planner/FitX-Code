@@ -358,7 +358,9 @@ function PaymentPage() {
                         <AcceptTerms
                             isAccepted={acceptTerms}
                             setIsAccepted={setAcceptedTerms}
-                            description={t("payPlanTerms")}
+                            description={t("createPaymentPlanTerms")}
+                            policyDestinies={["/app/policies/refund-and-cancellation", "/app/terms-and-conditions"]}
+                            policyNames={[t("refundAndCancellationPolicy"), t("refundAndCancellationPolicy")]}
                         />
 
                         {acceptTerms && (

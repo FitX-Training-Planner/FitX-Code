@@ -1,12 +1,14 @@
 import { useTranslation } from "react-i18next";
 import Stack from "../../containers/Stack";
 import styles from "./AcceptTerms.module.css";
-import TermsLink from "../../text/TermsLink";
+import Link from "../../text/Link";
 
 function AcceptTerms({ 
     isAccepted, 
     setIsAccepted, 
-    description 
+    description,
+    policyNames,
+    policyDestinies
 }) {
     const { t } = useTranslation();
 
@@ -31,14 +33,31 @@ function AcceptTerms({
                 >
                     {description} 
                 </p>
-                
-                <p>
-                    {`${t("checkThe")} `}
 
-                    <TermsLink />
+                {policyDestinies?.length > 0 ? (
+                    policyDestinies?.map((destiny, index) => (
+                        <p
+                            key={index}
+                        >
+                            {t("checkThe")}
 
-                    {` ${t("forMoreInfo")}`}.
-                </p>
+                            <Link 
+                                destiny={destiny}
+                                text={policyNames[-index]}
+                            />
+
+                            {t("forMoreInfo")}.
+                        </p>
+                    ))
+                ) : (
+                    <p>
+                        {t("checkThe")}
+
+                        <Link />
+
+                        {t("forMoreInfo")}.
+                    </p>
+                )}
             </Stack>
         </Stack>
     );

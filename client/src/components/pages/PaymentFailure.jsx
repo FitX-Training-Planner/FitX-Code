@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import styles from "./ErrorPage.module.css";
 import NonBackgroundButton from "../form/buttons/NonBackgroundButton";
 import Title from "../text/Title";
-import TermsLink from "../text/TermsLink";
 
 function PaymentFailure({ 
     hasFailed =  false

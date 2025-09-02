@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import styles from "./ErrorPage.module.css";
 import NonBackgroundButton from "../form/buttons/NonBackgroundButton";
 import Title from "../text/Title";
-import TermsLink from "../text/TermsLink";
+import Link from "../text/Link";
 
 function PaymentSuccess() {
     const { t } = useTranslation();
@@ -50,11 +50,11 @@ function PaymentSuccess() {
                             <p
                                 className={styles.terms_alert}
                             >
-                                {`${t("checkThe")} `}
+                                {t("checkThe")}
 
-                                <TermsLink />
+                                <Link />
 
-                                {` ${t("forMoreContractInfo")}`}
+                                {t("forMoreContractInfo")}
                             </p>
                         </Stack>
                     </Stack>
