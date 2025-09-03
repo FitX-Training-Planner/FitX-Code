@@ -16,7 +16,7 @@ import LoadMoreButton from "../form/buttons/LoadMoreButton";
 import FilterItemsLayout from "../containers/FilterItemsLayout";
 import { useTranslation } from "react-i18next";
 import PaymentPlansContainer from "../layout/PaymentPlansContainer";
-import DateInput from "../form/fields/dateInput";
+import DateInput from "../form/fields/DateInput";
 import FooterLayout from "../containers/FooterLayout";
 
 function TrainerPayments() {

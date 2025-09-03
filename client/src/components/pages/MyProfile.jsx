@@ -674,7 +674,6 @@ function MyProfile() {
         }
     
         const handleOnPutUserSuccess = (data) => {
-            console.log(data)
             setClientInfo(prevInfo => ({ ...prevInfo, ...data }));
 
             setClientChangedInfo(prevInfo => ({ ...prevInfo, ...data, sex: undefined, weekMuscles: undefined }));
