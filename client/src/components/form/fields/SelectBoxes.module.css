@@ -1,0 +1,66 @@
+.select_boxes_container {
+    width: max-content;
+    padding: 1em;
+}
+
+.select_boxes > div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5em;
+}
+
+.select_boxes > div > span {
+    min-width: 1.3em;
+    min-height: 1.3em;
+    cursor: pointer;
+    border: 1px solid var(--theme-color);
+    position: relative;
+    transition: var(--fast-transition); 
+}
+
+.select_boxes > div > span.accepted {
+    background-color: var(--theme-color);
+}
+
+.select_boxes > div > span.accepted::before {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--white-color);
+    content: "✓";
+}
+
+.select_boxes > div > p {
+    cursor: pointer;
+    font-size: var(--small-text-size);
+    line-height: 1.3em;
+    hyphens: none;
+}
+
+.select_boxes_container > span {
+    --size: 1em;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 0.5em;
+    font-size: var(--large-text-size);
+    font-weight: bold;
+    width: 100%;
+    padding: 0 var(--margin-inline);
+    margin-bottom: 0.2em;
+}
+
+.select_boxes_container > span > img {
+    height: var(--size);
+    width: var(--size);
+}
+
+.select_boxes_container.dark_theme > span > img {
+    filter: invert(1);
+}
+
+.select_boxes_container > span > p {
+    line-height: var(--size);
+}

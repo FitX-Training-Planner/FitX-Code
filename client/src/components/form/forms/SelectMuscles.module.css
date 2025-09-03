@@ -1,0 +1,16 @@
+.muscle_groups_select {
+    position: relative;
+}
+
+.muscle_groups_select > img:first-of-type {
+    max-width: 100%;
+    max-height: 23em;
+    z-index: 2;
+} 
+
+.muscle_groups_select > img:not(:first-of-type) {
+    position: absolute;
+    max-width: 100%;
+    max-height: 23em;
+    z-index: 1;
+}
