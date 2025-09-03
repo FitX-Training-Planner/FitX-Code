@@ -362,59 +362,70 @@ def mercadopago_webhook():
 
             if not transaction:
                 raise ApiError(MessageCodes.TRANSACTION_NOT_FOUND, 404)
-
-            sdk = mercadopago.SDK(get_valid_mp_token(db, transaction.fk_trainer_ID))
             
-            result = sdk.payment().get(payment_id)
+            try:
+                sdk = mercadopago.SDK(get_valid_mp_token(db, transaction.fk_trainer_ID))
+                
+                result = sdk.payment().get(payment_id)
 
-            if result["status"] != 200:
-                raise ApiError(MessageCodes.MP_PAYMENT_NOT_FOUND, 500)
+                if result["status"] != 200:
+                    raise ApiError(MessageCodes.MP_PAYMENT_NOT_FOUND, 500)
 
-            payment_info = result["response"]
-            status = payment_info["status"]
-            mp_transaction_id = str(payment_info["id"])
-            receipt_url = payment_info.get("receipt_url")
-            payment_method = payment_info.get("payment_type_id")
-            mp_fee =  payment_info.get("transaction_details", {}).get("fee_amount", 0)
+                payment_info = result["response"]
+                status = payment_info["status"]
+                mp_transaction_id = str(payment_info["id"])
+                receipt_url = payment_info.get("receipt_url")
+                payment_method = payment_info.get("payment_type_id")
+                mp_fee =  payment_info.get("transaction_details", {}).get("fee_amount", 0)
 
-            if status == "approved":
-                release_trainer_lock(transaction.fk_trainer_ID) 
-                release_client_lock(transaction.fk_user_ID)
+                if status == "approved":
+                    release_trainer_lock(transaction.fk_trainer_ID) 
+                    release_client_lock(transaction.fk_user_ID)
 
-                transaction.is_finished = True
-                transaction.mp_transaction_id = mp_transaction_id
-                transaction.receipt_url = receipt_url
-                transaction.create_date =  datetime.now(brazil_tz)
-                transaction.payment_method = payment_method
-                transaction.mp_fee = mp_fee
-                transaction.trainer_received = transaction.amount - transaction.app_fee - transaction.mp_fee
+                    transaction.is_finished = True
+                    transaction.mp_transaction_id = mp_transaction_id
+                    transaction.receipt_url = receipt_url
+                    transaction.create_date =  datetime.now(brazil_tz)
+                    transaction.payment_method = payment_method
+                    transaction.mp_fee = mp_fee
+                    transaction.trainer_received = transaction.amount - transaction.app_fee - transaction.mp_fee
 
-                start_date = datetime.now(brazil_tz).date()
-                end_date = start_date + timedelta(days=transaction.payment_plan.duration_days)
+                    start_date = datetime.now(brazil_tz).date()
+                    end_date = start_date + timedelta(days=transaction.payment_plan.duration_days)
 
-                new_contract = PlanContract(
-                    start_date = start_date,
-                    end_date = end_date,
-                    last_day_full_refund = start_date + timedelta(days=7),
-                    last_day_allowed_refund = end_date - timedelta(days=10),
-                    fk_user_ID = transaction.fk_user_ID,
-                    fk_trainer_ID = transaction.fk_trainer_ID,
-                    fk_payment_plan_ID = transaction.fk_payment_plan_ID,
-                    fk_payment_transaction_ID = transaction.ID,
-                    fk_contract_status_ID = (
-                        db.query(ContractStatus)
-                        .filter(ContractStatus.name == "Ativo")
-                        .scalar()
+                    new_contract = PlanContract(
+                        start_date = start_date,
+                        end_date = end_date,
+                        last_day_full_refund = start_date + timedelta(days=7),
+                        last_day_allowed_refund = end_date - timedelta(days=10),
+                        fk_user_ID = transaction.fk_user_ID,
+                        fk_trainer_ID = transaction.fk_trainer_ID,
+                        fk_payment_plan_ID = transaction.fk_payment_plan_ID,
+                        fk_payment_transaction_ID = transaction.ID,
+                        fk_contract_status_ID = (
+                            db.query(ContractStatus)
+                            .filter(ContractStatus.name == "Ativo")
+                            .scalar()
+                        )
                     )
-                )
 
-                transaction.trainer.contracts_number += 1
+                    transaction.trainer.contracts_number += 1
 
-                db.add(new_contract)
+                    db.add(new_contract)
 
-                db.commit() 
+                    db.commit() 
 
-            elif status == "rejected" or status == "cancelled" or status == "refunded" or status == "charged_back" or status == "expired":
+                elif status == "rejected" or status == "cancelled" or status == "refunded" or status == "charged_back" or status == "expired":
+                    release_trainer_lock(transaction.fk_trainer_ID)
+                    release_client_lock(transaction.fk_user_ID)
+
+                    db.delete(transaction)
+
+                    db.commit()
+
+                return "", 201
+            
+            except ApiError as e:
                 release_trainer_lock(transaction.fk_trainer_ID)
                 release_client_lock(transaction.fk_user_ID)
 
@@ -422,7 +433,18 @@ def mercadopago_webhook():
 
                 db.commit()
 
-            return "", 201
+                raise e
+
+            except Exception as e:
+                release_trainer_lock(transaction.fk_trainer_ID)
+                release_client_lock(transaction.fk_user_ID)
+
+                db.delete(transaction)
+
+                db.commit()
+
+                raise e
+
         
         except ApiError as e:
             db.rollback()
