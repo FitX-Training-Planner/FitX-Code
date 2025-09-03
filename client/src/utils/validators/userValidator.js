@@ -45,3 +45,31 @@ export function isRatingCommentValid(comment) {
 export function isMaxActiveContractsValid(value) {
     return Number(value) >= 1 && Number(value) <= 30;
 }
+
+export function isBirthDateValid(birthDate) {
+  if (!birthDate) return false;
+
+  const today = new Date();
+  const dob = new Date(birthDate);
+
+  let age = today.getFullYear() - dob.getFullYear();
+  const monthDiff = today.getMonth() - dob.getMonth();
+
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() <= dob.getDate())) {
+    age--;
+  }
+
+  return age >= 15 && age <= 120;
+}
+
+export function isHeightValid(height) {
+    return Number(height) >= 40 && Number(height) <= 300;
+}
+
+export function isWeightValid(weight) {
+    return Number(weight) >= 20 && Number(weight) <= 600;
+}
+
+export function isAvailableDaysValid(days) {
+    return Number(days) >= 1 && Number(days) <= 7;
+}

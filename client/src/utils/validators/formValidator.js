@@ -1,6 +1,6 @@
 import { isPaymentPlanBenefitDescriptionValid, isPaymentPlanDurationValid, isPaymentPlanPriceValid } from "./paymentsValidator";
 import { isCardioDurationValid, isDurationSetValid, isNoteValid, isPlanNameValid, isRepsValid, isRestValid } from "./trainingValidator";
-import { isCREFValid, isDocumentValid, isEmailValid, isMaxActiveContractsValid, isMessageValid, isNameValid, isPasswordValid, isRatingCommentValid, isTrainerDescriptionValid } from "./userValidator";
+import { isBirthDateValid, isAvailableDaysValid, isCREFValid, isDocumentValid, isEmailValid, isHeightValid, isMaxActiveContractsValid, isMessageValid, isNameValid, isPasswordValid, isRatingCommentValid, isTrainerDescriptionValid, isWeightValid } from "./userValidator";
 
 export function hasEmptyFieldsInObject(object) {
     return Object.values(object).some(value => value === null || value === "")
@@ -398,6 +398,26 @@ export function validateRating(ratingError, setRatingError, comment) {
 
         return false;
     }
+
+    return true;
+}
+
+export function validateClientPostRequestData(clientError, setClientError, height, weight, birthDate, availableDays, limitationsDescription) {
+    if (clientError) return false;
+
+    if (
+        !(
+            (!height || isHeightValid(height)) && 
+            (!weight || isWeightValid(weight)) && 
+            (!birthDate || isBirthDateValid(birthDate)) && 
+            (!availableDays || isAvailableDaysValid(availableDays)) && 
+            (!limitationsDescription || isTrainerDescriptionValid(limitationsDescription))
+        )
+    ) {
+        setClientError(true);
+
+        return false;
+    }   
 
     return true;
 }
