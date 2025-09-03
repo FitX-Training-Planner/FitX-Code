@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify
-from ..services.training import get_all_cardio_options, get_all_cardio_intensities, get_all_exercises, get_all_exercise_equipments, get_all_body_positions, get_all_pulley_heights, get_all_pulley_attachments, get_all_grip_types, get_all_grip_widths, get_all_lateralities, get_all_set_types, get_all_training_techniques
+from ..services.training import get_all_cardio_options, get_all_cardio_intensities, get_all_exercises, get_all_exercise_equipments, get_all_body_positions, get_all_pulley_heights, get_all_pulley_attachments, get_all_grip_types, get_all_grip_widths, get_all_lateralities, get_all_set_types, get_all_training_techniques, get_all_muscle_groups
 from ..database.context_manager import get_db
 from ..exceptions.api_error import ApiError
 from flask_jwt_extended import jwt_required
@@ -248,6 +248,26 @@ def get_training_techniques():
             training_techniques = get_all_training_techniques(db)
 
             return jsonify(training_techniques), 200
+
+        except ApiError as e:
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": str(e)}), e.status_code
+
+        except Exception as e:    
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
+        
+@training_bp.route("/muscle-groups", methods=["GET"])
+def get_muscle_groups():
+    error_message = "Erro na rota de recuperação de grupos musculares"
+
+    with get_db() as db:
+        try:
+            muscle_groups = get_all_muscle_groups(db)
+
+            return jsonify(muscle_groups), 200
 
         except ApiError as e:
             print(f"{error_message}: {e}")

@@ -1,4 +1,4 @@
-from datetime import time
+from datetime import time, datetime, date
 
 def serialize_field(value):
     if value is None:
@@ -8,6 +8,12 @@ def serialize_field(value):
         return str(value)
     
     return value
+
+def serialize_date(date_value):
+    if isinstance(date_value, (date, datetime)):
+        return date_value.strftime("%Y-%m-%d")
+    
+    return ""
 
 def serialize_cardio_option(option):
     return {
@@ -342,6 +348,22 @@ def serialize_trainer_base_info(trainer):
         "isContractsPaused": trainer.is_contracts_paused
     }
 
+def serialize_client_base_info(client):
+    return {
+        "sex": {
+            "ID": (
+                "male" if client.sex is True
+                else "female" if client.sex is False
+                else "preferNotToAnswer"
+            )
+        },
+        "birthDate": serialize_date(client.birth_date),
+        "height": serialize_field(client.height_cm),
+        "weight": serialize_field(client.weight_kg),
+        "limitationsDescription": serialize_field(client.limitations_description),
+        "availableDays": serialize_field(client.available_days)
+    }
+
 def serialize_specialty(specialty, is_selected = False, isMain = False):
     return {
         "ID": specialty.ID,
@@ -351,4 +373,18 @@ def serialize_specialty(specialty, is_selected = False, isMain = False):
         } if specialty.media else None,
         "isSelected": is_selected,
         "isMain": isMain
+    }
+
+def serialize_muscle_group(muscle_group, is_selected = False):
+    return {
+        "ID": muscle_group.ID,
+        "name": muscle_group.name,
+        "isPosteriorMuscle": muscle_group.is_posterior_muscle,
+        "maleMedia": {
+            "url": muscle_group.male_model_media.url
+        } if muscle_group.male_model_media else None,
+        "femaleMedia": {
+            "url": muscle_group.female_model_media.url
+        } if muscle_group.female_model_media else None,
+        "isSelected": is_selected
     }

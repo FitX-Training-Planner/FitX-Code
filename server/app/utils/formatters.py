@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 
 def safe_int(value):
     if value in ("", None):
@@ -33,14 +33,30 @@ def safe_bool(value):
     return False
 
 def safe_str(value):
-    return value if value != "" else None
-
+    if isinstance(value, (str, int, float)) and value != "":
+        return str(value)
+    
+    return None
+    
 def safe_time(value):
     if value in ("", None):
         return None
     
     try:
         return datetime.strptime(value, "%H:%M").time()
+    
+    except Exception:
+        return None
+
+def safe_date(value):
+    if value in ("", None):
+        return None
+
+    if isinstance(value, date):
+        return value 
+
+    try:
+        return datetime.strptime(str(value), "%Y-%m-%d").date()
     
     except Exception:
         return None

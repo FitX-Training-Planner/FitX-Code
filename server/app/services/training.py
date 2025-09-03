@@ -1,5 +1,5 @@
-from ..database.models import CardioOption, CardioIntensity, Exercise, ExerciseEquipment, PulleyAttachment, PulleyHeight, GripType, GripWidth, Laterality, SetType, TrainingTechnique, BodyPosition, ExerciseMuscleGroup
-from ..utils.serialize import serialize_cardio_option, serialize_cardio_intensity, serialize_exercise, serialize_exercise_equipment, serialize_body_position, serialize_pulley_height, serialize_pulley_attachment, serialize_grip_type, serialize_grip_width, serialize_laterality, serialize_set_type, serialize_training_technique
+from ..database.models import CardioOption, CardioIntensity, Exercise, ExerciseEquipment, PulleyAttachment, PulleyHeight, GripType, GripWidth, Laterality, SetType, TrainingTechnique, BodyPosition, ExerciseMuscleGroup, MuscleGroup
+from ..utils.serialize import serialize_cardio_option, serialize_cardio_intensity, serialize_exercise, serialize_exercise_equipment, serialize_body_position, serialize_pulley_height, serialize_pulley_attachment, serialize_grip_type, serialize_grip_width, serialize_laterality, serialize_set_type, serialize_training_technique, serialize_muscle_group
 from sqlalchemy.orm import joinedload, subqueryload
 from ..exceptions.api_error import ApiError
 from ..utils.message_codes import MessageCodes
@@ -214,12 +214,37 @@ def get_all_training_techniques(db):
         training_techniques = db.query(TrainingTechnique).all()
 
         if training_techniques is None:
-            print("Erro ao recuperar técnicas de trein.")
+            print("Erro ao recuperar técnicas de treino.")
 
             raise ApiError(MessageCodes.ERROR_LOADING_TRAINING_TECHNIQUES, 500)
 
         return [
             serialize_training_technique(technique) for technique in training_techniques
+        ]
+
+    except Exception as e:
+        print("Erro ao recuperar técnicas de trein.")
+
+        raise Exception(f"Erro ao recuperar as técnicas de treino: {e}")
+    
+def get_all_muscle_groups(db):
+    try:
+        muscle_groups = (
+            db.query(MuscleGroup)
+            .options(
+                joinedload(MuscleGroup.male_model_media),
+                joinedload(MuscleGroup.female_model_media)
+            )
+            .all()
+        )
+
+        if muscle_groups is None:
+            print("Erro ao recuperar grupos musculares.")
+
+            raise ApiError(MessageCodes.ERROR_LOADING_MUSCLE_GROUPS, 500)
+
+        return [
+            serialize_muscle_group(muscle_group) for muscle_group in muscle_groups
         ]
 
     except Exception as e:

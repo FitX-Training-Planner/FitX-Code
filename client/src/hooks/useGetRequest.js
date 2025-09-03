@@ -229,6 +229,21 @@ export default function useGets() {
             t("errorSpecialties")
         )
     }, [request, t, translateData]);
+    
+    const getMuscles = useCallback(async (handleSuccess, handleError, translateKey, setFn) => {
+        await request(
+            () => {return api.get("/training/muscle-groups")},
+            (data) => {
+                handleSuccess();
+                
+                translateData(data, translateKey, setFn);
+            },
+            handleError,
+            undefined,
+            undefined,
+            t("errorMuscles")
+        )
+    }, [request, t, translateData]);
 
     return {
         getCardioOptions,
@@ -243,6 +258,7 @@ export default function useGets() {
         getLateralities,
         getSetTypes,
         getTrainingTechniques,
-        getSpecialties
+        getSpecialties,
+        getMuscles
     };
 }
