@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import useRequest from "../../hooks/useRequest";
 import { useSystemMessage } from "../../app/useSystemMessage";
 import useWindowSize from "../../hooks/useWindowSize";
-import { cleanCacheData, getCacheData, setCacheData } from "../../utils/cache/operations";
+import { cleanCacheData } from "../../utils/cache/operations";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { verifyIsClient } from "../../utils/requests/verifyUserType";
 import api from "../../api/axios";
@@ -14,7 +14,6 @@ import FilterItemsLayout from "../containers/FilterItemsLayout";
 import { useNavigate } from "react-router-dom";
 import styles from "./Home.module.css";
 import LoadMoreButton from "../form/buttons/LoadMoreButton";
-import ClientTrainingContractCard from "../cards/user/ClientTrainingContractCard";
 import SmallTrainerProfessionalCard from "../cards/user/SmallTrainerProfessionalCard";
 import { useTranslation } from "react-i18next";
 import FooterLayout from "../containers/FooterLayout";
@@ -36,13 +35,11 @@ function ClientHome() {
     
     const { request: isClient } = useRequest();
     const { request: getTrainers, loading: trainersLoading } = useRequest();
-    const { request: getClientTraining, loading: trainingLoading } = useRequest();
     const { request: saveTrainerReq, loading: saveTrainerLoading } = useRequest();
     const { getSpecialties } = useGets();
             
     const user = useSelector(state => state.user);
 
-    const clientTrainingStorageKey = "clientTraining";
     const trainersLimit = 8;
 
     const trainersFilters = useMemo(() => {
@@ -54,8 +51,6 @@ function ClientHome() {
         ]
     }, [t]);  
 
-    const [clientTraining, setClientTraining] = useState(null);
-    const [clientTrainingError, setClientTrainingError] = useState(false);
     const [trainers, setTrainers] = useState([]);
     const [trainersError, setTrainersError] = useState(false);
     const [trainersOffset, setTrainersOffset] = useState(0);
@@ -112,15 +107,27 @@ function ClientHome() {
             !isFirstLoading ? t("successTrainers") : undefined, 
             t("errorTrainers")
         );
-    }, [getTrainers, notify, t]);
+    }, [getTrainers, notify, searchText, t]);
     
-    const handleOnChangeFilter = useCallback((filter) => {
+    const handleOnChangeFilter = useCallback((filter, specialtyID) => {
         setTrainers([]);
         setTrainersOffset(0);
         setTrainersError(false);
 
-        loadTrainers(false, [], 0, filter, selectedSpecialtyID);
+        loadTrainers(false, [], 0, filter, specialtyID);
     }, [loadTrainers]);
+
+    const handleOnChangeSpecialtyFilter = useCallback((ID) => {
+        const isEqual = ID === selectedSpecialtyID;
+
+        if (isEqual) {
+            setSelectedSpecialtyID(null);
+        } else {
+            setSelectedSpecialtyID(ID);            
+        }
+        
+        handleOnChangeFilter(activeTrainerFilter.value, isEqual ? null : ID);
+    }, [activeTrainerFilter.value, handleOnChangeFilter, selectedSpecialtyID]);
 
     useEffect(() => {
         if (hasRun.current) return;
@@ -133,37 +140,6 @@ function ClientHome() {
             if (!success) return;
 
             loadTrainers(trainersError, trainers, trainersOffset, activeTrainerFilter.value);
-
-            const cachedData = getCacheData(clientTrainingStorageKey);
-            
-            if (cachedData) {
-                setClientTraining(cachedData);
-                
-                return;
-            }
-            
-            const getTraining = () => {
-                return api.get(`/me/training-contract`);
-            }
-            
-            const handleOnGetClientTrainingSuccess = (data) => {
-                setClientTraining(data);
-
-                setCacheData(clientTrainingStorageKey, data);
-            };
-        
-            const handleOnGetClientTrainingError = () => {
-                setClientTrainingError(true);
-            };
-
-            getClientTraining(
-                getTraining, 
-                handleOnGetClientTrainingSuccess, 
-                handleOnGetClientTrainingError, 
-                undefined, 
-                undefined, 
-                t("errorTrainingContract")
-            );
 
             const specialtiesData = await getAndSetInitialData(
                 getSpecialties,
@@ -180,11 +156,7 @@ function ClientHome() {
         }
 
         fetchData();
-    }, [navigate, notify, user, trainersError, trainers, trainersOffset, isClient, loadTrainers, activeTrainerFilter.value, getClientTraining, t]);
-
-    useEffect(() => {
-        handleOnChangeFilter(activeTrainerFilter.value);
-    }, [selectedSpecialtyID]);
+    }, [navigate, notify, user, trainersError, trainers, trainersOffset, isClient, loadTrainers, activeTrainerFilter.value, t, getSpecialties]);
     
     const handleOnSaveTrainer = useCallback(ID => {
         if (!saveTrainerLoading) {
@@ -255,169 +227,124 @@ function ClientHome() {
                             />
                         </Stack>
 
-                        <Stack
-                            gap="3em"
-                        >
-                            <Stack>
-                                <Title
-                                    headingNumber={2}
-                                    text={t("yourTraining")}
-                                />
+                        <Stack>
+                            <Title
+                                headingNumber={2}
+                                text={t("otherTrainers")}
+                            />
 
-                                {trainingLoading || !clientTraining || clientTrainingError ? (
-                                    clientTrainingError ? (
-                                        <p>
-                                            {t("errorOcurredTrainingContract")}
+                            <Stack
+                                className={styles.contracts}
+                                gap="2em"
+                            >
+                                <Stack>
+                                    <SearchInput
+                                        searchText={searchText}
+                                        setSearchText={setSearchText}
+                                        placeholder={t("searchTrainer")}
+                                        handleSubmit={() => handleOnChangeFilter(activeTrainerFilter.value)}
+                                    />
+
+                                    <FilterItemsLayout
+                                        filters={trainersFilters}
+                                        activeFilter={activeTrainerFilter}
+                                        setActiveFilter={setActiveTrainerFilter}
+                                        handleChange={handleOnChangeFilter}
+                                    >
+                                        <Stack
+                                            gap="3em"
+                                        >
+                                            <Stack
+                                                direction="row"
+                                                className={styles.specialties}
+                                            >
+                                                {!specialtiesError ? (
+                                                    specialties.map((specialty, index) => (
+                                                        <React.Fragment
+                                                            key={index}
+                                                        >
+                                                            <Stack
+                                                                className={`${styles.specialty} ${specialty.ID === selectedSpecialtyID ? styles.selected : undefined}`}
+                                                            >
+                                                                <SmallSpecialtyCard
+                                                                    icon={specialty.media?.url}
+                                                                    name={
+                                                                        user.config.isEnglish 
+                                                                        ? t(`databaseData.specialties.${specialty.ID}.name`) 
+                                                                        : specialty.name
+                                                                    }
+                                                                    handleClick={() => handleOnChangeSpecialtyFilter(specialty.ID)}
+                                                                />
+                                                            </Stack>
+                                                        </React.Fragment>
+                                                    ))
+                                                ) : (
+                                                    <p>
+                                                        <>
+                                                            {t("errorOcurredSpecialties")}
+
+                                                            <br/>
+                                                            
+                                                            {t("reloadOrTryLater")}
+                                                        </>
+                                                    </p>
+                                                )}
+                                            </Stack>
+
+                                            <Stack
+                                                gap="2em"
+                                            >
+                                                {trainers.length !== 0 ? (
+                                                    trainers.map((trainer, index) => (
+                                                        <React.Fragment
+                                                            key={index}
+                                                        >
+                                                            <SmallTrainerProfessionalCard
+                                                                trainerID={trainer.ID}
+                                                                name={trainer.name} 
+                                                                photoUrl={trainer.photoUrl} 
+                                                                crefNumber={trainer.crefNumber} 
+                                                                rate={trainer.rate} 
+                                                                contractsNumber={trainer.contractsNumber} 
+                                                                complaintsNumber={trainer.complaintsNumber} 
+                                                                paymentPlans={trainer.paymentPlans} 
+                                                                handleExpand={() => navigate(`/trainers/${trainer.ID}`)}
+                                                                canBeContracted={trainer.canBeContracted}
+                                                                handleSave={() => handleOnSaveTrainer(trainer.ID)}
+                                                                hasSaved={trainer.hasSaved}
+                                                                top3Specialties={trainer.top3Specialties}
+                                                                extraSpecialtiesCount={trainer.extraSpecialtiesCount}
+                                                            />
+                                                        </React.Fragment>
+                                                    ))
+                                                ) : (
+                                                    !trainersLoading && (
+                                                        <p>
+                                                            {t("noTrainersFinded")}
+                                                        </p>
+                                                    )
+                                                )}
+                                            </Stack>
+                                        </Stack>
+                                    </FilterItemsLayout>
+                                </Stack>
+
+                                {trainersError ? (
+                                    <p>
+                                        <>
+                                            {t("errorOcurredTrainers")}
 
                                             <br/>
                                             
                                             {t("reloadOrTryLater")}
-                                        </p>
-                                    ) : (
-                                        <p>
-                                            {t("noContractActive")}
-
-                                            <br/>
-
-                                            {t("searchTrainersInstruction")}
-                                        </p>
-                                    )
+                                        </>
+                                    </p>
                                 ) : (
-                                    <ClientTrainingContractCard
-                                        trainerName={clientTraining.trainer?.name} 
-                                        trainerPhotoUrl={clientTraining.trainer?.photoUrl} 
-                                        trainerCrefNumber={clientTraining.trainer?.crefNumber} 
-                                        trainingPlanID={clientTraining.trainingPlan?.ID}
-                                        trainingPlanName={clientTraining.trainingPlan?.name} 
-                                        contractStartDate={clientTraining.contract?.startDate} 
-                                        contractEndDate={clientTraining.contract?.endDate} 
+                                    <LoadMoreButton
+                                        handleLoad={() => loadTrainers(trainersError, trainers, trainersOffset, activeTrainerFilter.value, selectedSpecialtyID)}
+                                        loading={trainersLoading}
                                     />
                                 )}
-                            </Stack>
-
-                            <Stack>
-                                <Title
-                                    headingNumber={2}
-                                    text={t("otherTrainers")}
-                                />
-
-                                <Stack
-                                    className={styles.contracts}
-                                    gap="2em"
-                                >
-                                    <Stack>
-                                        <SearchInput
-                                            searchText={searchText}
-                                            setSearchText={setSearchText}
-                                            placeholder={t("searchTrainer")}
-                                            handleSubmit={() => handleOnChangeFilter(activeTrainerFilter.value)}
-                                        />
-
-                                        <FilterItemsLayout
-                                            filters={trainersFilters}
-                                            activeFilter={activeTrainerFilter}
-                                            setActiveFilter={setActiveTrainerFilter}
-                                            handleChange={handleOnChangeFilter}
-                                        >
-                                            <Stack
-                                                gap="3em"
-                                            >
-                                                <Stack
-                                                    direction="row"
-                                                    className={styles.specialties}
-                                                >
-                                                    {!specialtiesError ? (
-                                                        specialties.map((specialty, index) => (
-                                                            <React.Fragment
-                                                                key={index}
-                                                            >
-                                                                <Stack
-                                                                    className={`${styles.specialty} ${specialty.ID === selectedSpecialtyID ? styles.selected : undefined}`}
-                                                                >
-                                                                    <SmallSpecialtyCard
-                                                                        icon={specialty.media?.url}
-                                                                        name={
-                                                                            user.config.isEnglish 
-                                                                            ? t(`databaseData.specialties.${specialty.ID}.name`) 
-                                                                            : specialty.name
-                                                                        }
-                                                                        handleClick={() => {
-                                                                            specialty.ID === selectedSpecialtyID 
-                                                                            ? setSelectedSpecialtyID(null) 
-                                                                            : setSelectedSpecialtyID(specialty.ID);
-                                                                        }}
-                                                                    />
-                                                                </Stack>
-                                                            </React.Fragment>
-                                                        ))
-                                                    ) : (
-                                                        <p>
-                                                            <>
-                                                                {t("errorOcurredSpecialties")}
-
-                                                                <br/>
-                                                                
-                                                                {t("reloadOrTryLater")}
-                                                            </>
-                                                        </p>
-                                                    )}
-                                                </Stack>
-
-                                                <Stack
-                                                    gap="2em"
-                                                >
-                                                    {trainers.length !== 0 ? (
-                                                        trainers.map((trainer, index) => (
-                                                            <React.Fragment
-                                                                key={index}
-                                                            >
-                                                                <SmallTrainerProfessionalCard
-                                                                    trainerID={trainer.ID}
-                                                                    name={trainer.name} 
-                                                                    photoUrl={trainer.photoUrl} 
-                                                                    crefNumber={trainer.crefNumber} 
-                                                                    rate={trainer.rate} 
-                                                                    contractsNumber={trainer.contractsNumber} 
-                                                                    complaintsNumber={trainer.complaintsNumber} 
-                                                                    paymentPlans={trainer.paymentPlans} 
-                                                                    handleExpand={() => navigate(`/trainers/${trainer.ID}`)}
-                                                                    canBeContracted={trainer.canBeContracted}
-                                                                    handleSave={() => handleOnSaveTrainer(trainer.ID)}
-                                                                    hasSaved={trainer.hasSaved}
-                                                                    top3Specialties={trainer.top3Specialties}
-                                                                    extraSpecialtiesCount={trainer.extraSpecialtiesCount}
-                                                                />
-                                                            </React.Fragment>
-                                                        ))
-                                                    ) : (
-                                                        !trainersLoading && (
-                                                            <p>
-                                                                {t("noTrainersFinded")}
-                                                            </p>
-                                                        )
-                                                    )}
-                                                </Stack>
-                                            </Stack>
-                                        </FilterItemsLayout>
-                                    </Stack>
-
-                                    {trainersError ? (
-                                        <p>
-                                            <>
-                                                {t("errorOcurredTrainers")}
-
-                                                <br/>
-                                                
-                                                {t("reloadOrTryLater")}
-                                            </>
-                                        </p>
-                                    ) : (
-                                        <LoadMoreButton
-                                            handleLoad={() => loadTrainers(trainersError, trainers, trainersOffset, activeTrainerFilter.value, selectedSpecialtyID)}
-                                            loading={trainersLoading}
-                                        />
-                                    )}
-                                </Stack>
                             </Stack>
                         </Stack>
                     </Stack>

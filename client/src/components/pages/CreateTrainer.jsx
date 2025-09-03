@@ -5,7 +5,6 @@ import TrainerForm from "../form/forms/TrainerForm";
 import { validateTrainerPostRequestData } from "../../utils/validators/formValidator";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSystemMessage } from "../../app/useSystemMessage";
-import { useDispatch } from "react-redux";
 import styles from "./CreateTrainer.module.css";
 import useWindowSize from "../../hooks/useWindowSize";
 import { useTranslation } from "react-i18next";
@@ -19,8 +18,6 @@ function CreateTrainer() {
 
     const navigate = useNavigate();
 
-    const dispatch = useDispatch();
-
     const { width } = useWindowSize();
     const { notify } = useSystemMessage();
     
@@ -29,7 +26,7 @@ function CreateTrainer() {
         email: "",
         password: "",
         config: {
-            is_client: true,
+            is_client: false,
             is_dark_theme: false,
             is_complainter_anonymous: true,
             is_rater_anonymous: false,
