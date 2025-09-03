@@ -99,6 +99,8 @@ function SignUpForm({
                             isAccepted={acceptTerms}
                             setIsAccepted={setAcceptedTerms}
                             description={t("createAccountTerms")}
+                            policyDestinies={["/app/policies", "/app/terms-and-conditions"]}
+                            policyNames={[t("policies"), t("UseTermsAndConditions")]}
                         />
                     </Stack>
 

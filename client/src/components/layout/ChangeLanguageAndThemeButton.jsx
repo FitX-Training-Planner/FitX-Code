@@ -15,11 +15,13 @@ const ChangeLanguageAndThemeButton = () => {
 
     const handleOnChangeTheme = useCallback(() => {
         dispatch(updateUser({ config: { isDarkTheme: !user.config.isDarkTheme } }));
-    }, [user]);
+    }, [dispatch, user.config.isDarkTheme]);
     
     const handleOnChangeLang = useCallback(() => {
         dispatch(updateUser({ config: { isEnglish: !user.config.isEnglish } }));
-    }, [user]);
+
+        sessionStorage.clear();
+    }, [dispatch, user.config.isEnglish]);
 
     return (
         <Stack

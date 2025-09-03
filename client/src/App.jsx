@@ -35,6 +35,7 @@ import PaymentPage from "./components/pages/PaymentPage";
 import WelcomePage from "./components/pages/WelcomePage";
 import TrainerSpecialties from "./components/pages/TrainerSpecialties";
 import ChangeLanguageAndThemeButton from "./components/layout/ChangeLanguageAndThemeButton";
+import CreateClient from "./components/pages/CreateClient";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -111,7 +112,7 @@ function App() {
         getUser,
         handleOnGetUserSuccess,
         handleOnGetUserError,
-        t("loadingUser"),
+        undefined,
         undefined,
         t("errorUser")
       );
@@ -170,6 +171,11 @@ function App() {
             <Route
               path="/create-trainer"
               element={<CreateTrainer />}
+            />
+
+            <Route
+              path="/create-client"
+              element={<CreateClient />}
             />
 
             <Route
