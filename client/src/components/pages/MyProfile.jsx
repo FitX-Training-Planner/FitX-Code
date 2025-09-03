@@ -17,17 +17,19 @@ import SubmitFormButton from "../form/buttons/SubmitFormButton";
 import NonBackgroundButton from "../form/buttons/NonBackgroundButton";
 import { resetUser, updateUser } from "../../slices/user/userSlice";
 import { useConfirmIdentityCallback } from "../../app/useConfirmIdentityCallback";
-import { validateModifyUserRequestData, validateTrainerPostRequestData } from "../../utils/validators/formValidator";
+import { validateClientPostRequestData, validateModifyUserRequestData, validateTrainerPostRequestData } from "../../utils/validators/formValidator";
 import TrainerCRCInfo from "../layout/TrainerCRCInfo";
 import PhotoInput from "../form/fields/PhotoInput";
 import BackButton from "../layout/BackButton";
 import Alert from "../messages/Alert";
 import MercadopagoConnectButton from "../layout/MercadopagoConnectButton";
-import ClientTrainingContractCard from "../cards/user/ClientTrainingContractCard";
-import { cleanCacheData, getCacheData, setCacheData } from "../../utils/cache/operations";
+import { getCacheData, setCacheData } from "../../utils/cache/operations";
 import { verifyIsClient, verifyIsTrainer } from "../../utils/requests/verifyUserType";
 import FooterLayout from "../containers/FooterLayout";
 import SpecialtiesContainer from "../layout/SpecialtiesContainer";
+import ModifyClientForm from "../form/forms/ModifyClientForm";
+import getAndSetInitialData from "../../utils/requests/initialData";
+import useGets from "../../hooks/useGetRequest";
 
 function MyProfile() {
     const { t } = useTranslation();
@@ -46,8 +48,8 @@ function MyProfile() {
 
     const { request: getRatings, loading: ratingsLoading } = useRequest();
     const { request: getComplaints, loading: complaintsLoading } = useRequest();
-    const { request: cancelClientContract } = useRequest();
     const { request: getTrainerInfoReq } = useRequest();
+    const { request: getClientInfoReq } = useRequest();
     const { request: getUserEmailReq } = useRequest();
     const { request: deactivateProfileReq } = useRequest();
     const { request: deleteAccountReq } = useRequest();
@@ -61,12 +63,11 @@ function MyProfile() {
     const { request: toggleContractsPauseReq } = useRequest();
     const { request: isClient } = useRequest();
     const { request: isTrainer } = useRequest();
-    const { request: getClientTraining, loading: trainingLoading } = useRequest();
     const { request: getSpecialtiesReq, loading: specialtiesLoading } = useRequest();
+    const { getMuscles } = useGets();
 
     const user = useSelector(state => state.user);
 
-    const clientTrainingStorageKey = "clientTraining";
     const emailStorageKey = "fitxEmail";
     const specialtiesStorageKey = "trainerSpecialties";
     const ratingsLimit = 10;
@@ -95,6 +96,39 @@ function MyProfile() {
         hasConnectedMP: false,
         isContractsPaused: false
     });
+    const [clientInfo, setClientInfo] = useState({
+        sex: {
+            ID: "preferNotToAnswer"
+        },
+        birthDate: "",
+        height: "",
+        weight: "",
+        limitationsDescription: "",
+        availableDays: "",
+        weekMuscles: []
+    });
+    const [sexes, setSexes] = useState([
+        {
+            ID: "male",
+            isSelected: false
+        },
+        {
+            ID: "female",
+            isSelected: false
+        },
+        {
+            ID: "preferNotToAnswer",
+            isSelected: true
+        }
+    ]);
+    const [muscles, setMuscles] = useState([]);
+    const [clientChangedInfo, setClientChangedInfo] = useState({
+        birthDate: "",
+        height: "",
+        weight: "",
+        limitationsDescription: "",
+        availableDays: ""
+    });
     const [prevMaxActiveContracts, setPrevMaxActiveContracts] = useState("");
     const [ratings, setRatings] = useState([]);
     const [ratingsError, setRatingsError] = useState(false);
@@ -109,8 +143,7 @@ function MyProfile() {
     const [specialtiesError, setSpecialtiesError] = useState(false);
     const [modifyUserError, setModifyUserError] = useState(false);
     const [modifyTrainerError, setModifyTrainerError] = useState(false);
-    const [clientTraining, setClientTraining] = useState(null);
-    const [clientTrainingError, setClientTrainingError] = useState(false);
+    const [modifyClientError, setModifyClientError] = useState(false);
 
     const loadRatings = useCallback((hasError, updatedRatings, offset) => {
         if (hasError) return;
@@ -244,35 +277,36 @@ function MyProfile() {
 
                 if (!success) return;
 
-                const cachedContractData = getCacheData(clientTrainingStorageKey);
-                
-                if (cachedContractData) {
-                    setClientTraining(cachedContractData);
-                    
-                    return;
-                }
-                
-                const getTraining = () => {
-                    return api.get(`/me/training-contract`);
-                }
-                
-                const handleOnGetClientTrainingSuccess = (data) => {
-                    setClientTraining(data);
+                getAndSetInitialData(
+                    getMuscles,
+                    setMuscles,
+                    undefined,
+                    navigate,
+                    undefined,
+                    "muscleGroups"
+                );
 
-                    setCacheData(clientTrainingStorageKey, data);
-                };
+                const getClientInfo = () => {
+                    return api.get(`/me/client-info`);
+                }
             
-                const handleOnGetClientTrainingError = () => {
-                    setClientTrainingError(true);
-                };
+                const handleOnGetClientInfoSuccess = (data) => {
+                    setClientInfo(data);
 
-                getClientTraining(
-                    getTraining, 
-                    handleOnGetClientTrainingSuccess, 
-                    handleOnGetClientTrainingError, 
+                    setClientChangedInfo({ ...data, sex: undefined, weekMuscles: undefined });
+
+                    setSexes(prevSexes => prevSexes.map((sex) => ({ ...sex, isSelected: sex.ID === (data.sex?.ID ?? "preferNotToAnswer") })));
+
+                    setMuscles(prevMuscles => prevMuscles.map((muscle) => ({ ...muscle, isSelected: (data.weekMuscles ?? []).some((m) => m.ID === muscle.ID) })));
+                };
+    
+                getClientInfoReq(
+                    getClientInfo, 
+                    handleOnGetClientInfoSuccess, 
+                    () => undefined, 
                     undefined, 
                     undefined, 
-                    t("errorTrainingContract")
+                    t("errorLoadingUserInfo")
                 );
             } else {
                 const success = await verifyIsTrainer(isTrainer, user, navigate, notify, t);
@@ -334,7 +368,7 @@ function MyProfile() {
         }
 
         fetchData();
-    }, [complaints, complaintsError, complaintsOffset, getClientTraining, getTrainerInfoReq, getUserEmailReq, isClient, isTrainer, loadComplaints, loadRatings, location.state?.updatedEmail, navigate, notify, ratings, ratingsError, ratingsOffset, t, user, user.config.isClient]);
+    }, [complaints, complaintsError, complaintsOffset, getClientInfoReq, getMuscles, getSpecialtiesReq, getTrainerInfoReq, getUserEmailReq, isClient, isTrainer, loadComplaints, loadRatings, location.state?.updatedEmail, navigate, notify, ratings, ratingsError, ratingsOffset, t, user]);
 
     const handleOnToggleContractsPaused = useCallback(async (e) => {
         e.preventDefault();
@@ -591,6 +625,83 @@ function MyProfile() {
         );
     }, [changedUser.emailNotificationPermission, changedUser.isComplainterAnonymous, changedUser.isDarkTheme, changedUser.isEnglish, changedUser.isRaterAnonymous, dispatch, modifyConfigReq, t, user.config.emailNotificationPermission, user.config.isComplainterAnonymous, user.config.isDarkTheme, user.config.isEnglish, user.config.isRaterAnonymous]);
 
+    const handleOnModifyClient = useCallback((e) => {
+        e.preventDefault();
+
+        if (!validateClientPostRequestData(
+            modifyClientError, 
+            setModifyClientError, 
+            clientChangedInfo.height,
+            clientChangedInfo.weight,
+            clientChangedInfo.birthDate,
+            clientChangedInfo.availableDays,
+            clientChangedInfo.limitationsDescription
+        )) return;
+       
+        const formData = new FormData();
+
+        const selectedMuscleIds = muscles.filter(m => m.isSelected).map(m => m.ID);
+        const originalMuscleIds = (clientInfo.weekMuscles ?? []).map(m => m.ID);
+
+        const musclesChanged = selectedMuscleIds.length !== originalMuscleIds.length || !selectedMuscleIds.every(id => originalMuscleIds.includes(id));
+
+        if ((clientInfo.sex.ID ?? "") !== (sexes.find(sex => sex.isSelected)?.ID ?? "")) formData.append("sex", sexes.find(sex => sex.isSelected)?.ID) 
+
+        if ((clientInfo.birthDate ?? "") !== (clientChangedInfo.birthDate ?? "")) formData.append("birthDate", clientChangedInfo.birthDate) 
+        
+        if ((clientInfo.height ?? "") !== (clientChangedInfo.height ?? "")) formData.append("height", clientChangedInfo.height) 
+        
+        if ((clientInfo.weight ?? "") !== (clientChangedInfo.weight ?? "")) formData.append("weight", clientChangedInfo.weight) 
+        
+        if ((clientInfo.limitationsDescription ?? "") !== (clientChangedInfo.limitationsDescription ?? "")) formData.append("limitationsDescription", clientChangedInfo.limitationsDescription) 
+        
+        if ((clientInfo.availableDays ?? "") !== (clientChangedInfo.availableDays ?? "")) formData.append("availableDays", clientChangedInfo.availableDays) 
+        
+        if (musclesChanged) {
+            if (selectedMuscleIds.length === 0) {
+                formData.append("weekMuscles[]", []);
+            } else {
+                muscles.forEach((muscle) => {
+                    if (muscle.isSelected) {
+                        formData.append("weekMuscles[]", muscle.ID);
+                    }
+                });
+            }
+        }
+
+        const putUser = () => {
+            return api.put("/me/client-info", formData);
+        }
+    
+        const handleOnPutUserSuccess = (data) => {
+            console.log(data)
+            setClientInfo(prevInfo => ({ ...prevInfo, ...data }));
+
+            setClientChangedInfo(prevInfo => ({ ...prevInfo, ...data, sex: undefined, weekMuscles: undefined }));
+
+            if (data.sex) {
+                setSexes(prevSexes => prevSexes.map((sex) => ({ ...sex, isSelected: sex.ID === (data.sex?.ID ?? "preferNotToAnswer") })));
+            }
+
+            if (data.weekMuscles) {
+                setMuscles(prevMuscles => prevMuscles.map((muscle) => ({ ...muscle, isSelected: (data.weekMuscles ?? []).some((m) => m.ID === muscle.ID) })));
+            }
+        };
+    
+        const handleOnPutUserError = () => {
+            setModifyUserError(true);
+        };
+    
+        modifyUserReq(
+            putUser,
+            handleOnPutUserSuccess, 
+            handleOnPutUserError, 
+            t("loadingModifyUser"), 
+            t("successModifyUser"), 
+            t("errorModifyUser")
+        );
+    }, [clientChangedInfo.availableDays, clientChangedInfo.birthDate, clientChangedInfo.height, clientChangedInfo.limitationsDescription, clientChangedInfo.weight, clientInfo.availableDays, clientInfo.birthDate, clientInfo.height, clientInfo.limitationsDescription, clientInfo.sex.ID, clientInfo.weekMuscles, clientInfo.weight, modifyClientError, modifyUserReq, muscles, sexes, t]);
+    
     const handleOnModifyTrainer = useCallback((e) => {
         e.preventDefault();
 
@@ -662,37 +773,6 @@ function MyProfile() {
         );
     }, [getIdReq, t]);
 
-    const cancelContract = useCallback(async (e) => {
-        e.preventDefault();
-
-        const userConfirmed = await confirm(t("cancelContractConfirm"));
-        
-        if (userConfirmed) {
-            navigate("/code-confirmation", { state: { localUser: { email: usedEmail }, origin: "cancelContract" } });
-
-            setHandleOnConfirmed(() => () => {
-                const cancelContract = () => {
-                    return api.put(`/me/active-contract`);
-                }
-            
-                const handleOnCancelContractSuccess = () => {
-                    setClientTraining(null);
-
-                    cleanCacheData(clientTrainingStorageKey);
-                };
-
-                cancelClientContract(
-                    cancelContract, 
-                    handleOnCancelContractSuccess, 
-                    () => undefined, 
-                    t("loadingCancelContract"), 
-                    t("successCancelContract"),
-                    t("errorCancelContract")
-                );
-            });
-        }
-    }, [cancelClientContract, confirm, navigate, setHandleOnConfirmed, t, usedEmail]);
-
     const userHasChanged = useMemo(() => {
         if (
             usedEmail !== changedUser.email ||
@@ -731,6 +811,27 @@ function MyProfile() {
         return false
     }, [prevMaxActiveContracts, trainerInfo.description, trainerInfo.maxActiveContracts, trainerInfo.newCrefNumber, trainerInfo.newCrefUF, user.description]);
     
+    const clientHasChanged = useMemo(() => {
+        const selectedMuscleIds = muscles.filter(m => m.isSelected).map(m => m.ID);
+        const originalMuscleIds = (clientInfo.weekMuscles ?? []).map(m => m.ID);
+
+        const musclesChanged = selectedMuscleIds.length !== originalMuscleIds.length || !selectedMuscleIds.every(id => originalMuscleIds.includes(id));
+
+        if (
+            ((clientInfo.sex.ID ?? "") !== (sexes.find(sex => sex.isSelected)?.ID ?? "")) ||  
+            ((clientInfo.birthDate ?? "") !== (clientChangedInfo.birthDate ?? "")) ||
+            ((clientInfo.height ?? "") !== (clientChangedInfo.height ?? "")) ||
+            ((clientInfo.weight ?? "") !== (clientChangedInfo.weight ?? "")) ||
+            ((clientInfo.limitationsDescription ?? "") !== (clientChangedInfo.limitationsDescription ?? "")) ||
+            ((clientInfo.availableDays ?? "") !== (clientChangedInfo.availableDays ?? "")) ||
+            musclesChanged
+        ) {
+            return true;
+        }
+
+        return false
+    }, [clientChangedInfo.availableDays, clientChangedInfo.birthDate, clientChangedInfo.height, clientChangedInfo.limitationsDescription, clientChangedInfo.weight, clientInfo.availableDays, clientInfo.birthDate, clientInfo.height, clientInfo.limitationsDescription, clientInfo.sex.ID, clientInfo.weekMuscles, clientInfo.weight, muscles, sexes]);
+    
     useEffect(() => {
         document.title = t("personalProfile")
     }, [t]);
@@ -745,95 +846,113 @@ function MyProfile() {
                 />
 
                 <Stack
-                    gap="4em"
+                    gap="10em"
                 >
-                    <Stack>
-                        <Title
-                            headingNumber={1}
-                            text={t("personalProfile")}
-                            varColor="--theme-color"
-                        />
-                    </Stack>
-
                     <Stack
-                        gap="5em"
+                        gap="4em"
                     >
-                        <Stack
-                            gap="4em"
-                        >
-                            <PhotoInput
-                                name="photoFile"
-                                size="large"
-                                blobUrl={user.config.photoUrl}
-                                handleChange={handleOnModifyPhoto}
-                            />
-                            
-                            <ModifyUserForm
-                                changedUser={changedUser}
-                                setChangedUser={setChangedUser}
-                                setModifyUserError={setModifyUserError}
-                                handleSubmit={handleOnModifyUser}
-                                hasChanged={userHasChanged}
-                            />
-
-                            {!user.config.isClient && (
-                                <Stack
-                                    gap="2em"
-                                >
-                                    <TrainerCRCInfo
-                                        rate={trainerInfo.rate}
-                                        complaintsNumber={trainerInfo.complaintsNumber}
-                                        contractsNumber={trainerInfo.contractsNumber}
-                                    />
-                                    
-                                    <ModifyTrainerForm
-                                        changedTrainer={trainerInfo}
-                                        setChangedTrainer={setTrainerInfo}
-                                        setModifyTrainerError={setModifyTrainerError}
-                                        handleSubmit={handleOnModifyTrainer}
-                                        hasChanged={trainerHasChanged}
-                                    />
-
-                                    <SpecialtiesContainer
-                                        specialties={specialties}
-                                        specialtiesError={specialtiesError}
-                                        specialtiesLoading={specialtiesLoading}
-                                    />
-                                </Stack>
-                            )}
-
-                            <ModifyConfigForm
-                                changedConfig={changedUser}
-                                setChangedConfig={setChangedUser}
-                                handleSubmit={handleOnModifyConfig}
-                                hasChanged={configHasChanged}
+                        <Stack>
+                            <Title
+                                headingNumber={1}
+                                text={t("personalProfile")}
+                                varColor="--theme-color"
                             />
                         </Stack>
 
-                        {!user.config.isClient && (
+                        <Stack
+                            gap="5em"
+                        >
                             <Stack
-                                gap="5em"
+                                gap="4em"
                             >
-                                <RatingsContainer
-                                    ratings={ratings}
-                                    ratingsError={ratingsError}
-                                    ratingsOffset={ratingsOffset}
-                                    ratingsLoading={ratingsLoading}
-                                    handleLoadRatings={loadRatings}
-                                    trainerRate={trainerInfo.rate}
-                                    trainerRatesNumber={trainerInfo.ratesNumber}
+                                <PhotoInput
+                                    name="photoFile"
+                                    size="large"
+                                    blobUrl={user.config.photoUrl}
+                                    handleChange={handleOnModifyPhoto}
                                 />
-            
-                                <ComplaintsContainer
-                                    complaints={complaints}
-                                    complaintsError={complaintsError}
-                                    complaintsOffset={complaintsOffset}
-                                    complaintsLoading={complaintsLoading}
-                                    handleLoadComplaints={loadComplaints}
-                                    trainerComplaintsNumber={trainerInfo.complaintsNumber}
+                                
+                                <ModifyUserForm
+                                    changedUser={changedUser}
+                                    setChangedUser={setChangedUser}
+                                    setModifyUserError={setModifyUserError}
+                                    handleSubmit={handleOnModifyUser}
+                                    hasChanged={userHasChanged}
+                                />
+
+                                {!user.config.isClient && (
+                                    <Stack
+                                        gap="2em"
+                                    >
+                                        <TrainerCRCInfo
+                                            rate={trainerInfo.rate}
+                                            complaintsNumber={trainerInfo.complaintsNumber}
+                                            contractsNumber={trainerInfo.contractsNumber}
+                                        />
+                                        
+                                        <ModifyTrainerForm
+                                            changedTrainer={trainerInfo}
+                                            setChangedTrainer={setTrainerInfo}
+                                            setModifyTrainerError={setModifyTrainerError}
+                                            handleSubmit={handleOnModifyTrainer}
+                                            hasChanged={trainerHasChanged}
+                                        />
+
+                                        <SpecialtiesContainer
+                                            specialties={specialties}
+                                            specialtiesError={specialtiesError}
+                                            specialtiesLoading={specialtiesLoading}
+                                        />
+                                    </Stack>
+                                )}
+
+                                {user.config.isClient && (
+                                    <ModifyClientForm
+                                        client={clientChangedInfo}
+                                        setClient={setClientChangedInfo}
+                                        setClientError={setModifyClientError}
+                                        sexes={sexes}
+                                        setSexes={setSexes}
+                                        muscleGroups={muscles}
+                                        setMuscleGroups={setMuscles}
+                                        handleSubmit={handleOnModifyClient}
+                                        hasChanged={clientHasChanged}
+                                    />
+                                )}
+
+                                <ModifyConfigForm
+                                    changedConfig={changedUser}
+                                    setChangedConfig={setChangedUser}
+                                    handleSubmit={handleOnModifyConfig}
+                                    hasChanged={configHasChanged}
                                 />
                             </Stack>
-                        )}
+
+                            {!user.config.isClient && (
+                                <Stack
+                                    gap="5em"
+                                >
+                                    <RatingsContainer
+                                        ratings={ratings}
+                                        ratingsError={ratingsError}
+                                        ratingsOffset={ratingsOffset}
+                                        ratingsLoading={ratingsLoading}
+                                        handleLoadRatings={loadRatings}
+                                        trainerRate={trainerInfo.rate}
+                                        trainerRatesNumber={trainerInfo.ratesNumber}
+                                    />
+                
+                                    <ComplaintsContainer
+                                        complaints={complaints}
+                                        complaintsError={complaintsError}
+                                        complaintsOffset={complaintsOffset}
+                                        complaintsLoading={complaintsLoading}
+                                        handleLoadComplaints={loadComplaints}
+                                        trainerComplaintsNumber={trainerInfo.complaintsNumber}
+                                    />
+                                </Stack>
+                            )}
+                        </Stack>
                     </Stack>
 
                     <Stack
@@ -885,7 +1004,7 @@ function MyProfile() {
                         <Stack
                             gap="3em"
                         >
-                            {!user.config.isClient ? (
+                            {!user.config.isClient && (
                                 <form
                                     onSubmit={handleOnToggleContractsPaused}
                                 >   
@@ -909,48 +1028,8 @@ function MyProfile() {
                                         )}
                                     </Stack>
                                 </form>
-                            ) : (
-                                <Stack
-                                    className={styles.client_training}
-                                >
-                                    <Title
-                                        headingNumber={2}
-                                        text={t("yourTraining")}
-                                    />
-
-                                    {trainingLoading || !clientTraining || clientTrainingError ? (
-                                        clientTrainingError ? (
-                                            <p>
-                                                {t("errorOcurredTrainingContract")}
-
-                                                <br/>
-                                                
-                                                {t("reloadOrTryLater")}
-                                            </p>
-                                        ) : (
-                                            <p>
-                                                {t("noContractActive")}
-
-                                                <br/>
-
-                                                {t("searchTrainersInstruction")}
-                                            </p>
-                                        )
-                                    ) : (
-                                        <ClientTrainingContractCard
-                                            trainerName={clientTraining.trainer?.name} 
-                                            trainerPhotoUrl={clientTraining.trainer?.photoUrl} 
-                                            trainerCrefNumber={clientTraining.trainer?.crefNumber} 
-                                            trainingPlanID={clientTraining.trainingPlan?.ID}
-                                            trainingPlanName={clientTraining.trainingPlan?.name} 
-                                            contractStartDate={clientTraining.contract?.startDate} 
-                                            contractEndDate={clientTraining.contract?.endDate} 
-                                            handleCancelContract={cancelContract}
-                                        />
-                                    )}
-                                </Stack>
                             )}
-
+                                
                             <Stack
                                 gap="1.5em"
                             >
@@ -966,14 +1045,14 @@ function MyProfile() {
                                         />
                                     </form>
 
-                                    {(user.config.isClient && !trainingLoading && clientTraining) && (
+                                    {user.config.isClient && (
                                         <Stack
                                             direction="row"
                                             justifyContent="start"
                                         >
                                             <Alert />
             
-                                            {t("clientContractFeature8")}
+                                            {t("clientContractFeature7")}
                                         </Stack>
                                     )}
                                 </Stack>
@@ -990,14 +1069,14 @@ function MyProfile() {
                                         />
                                     </form>
 
-                                    {(user.config.isClient && !trainingLoading && clientTraining) && (
+                                    {user.config.isClient && (
                                         <Stack
                                             direction="row"
                                             justifyContent="start"
                                         >
                                             <Alert />
             
-                                            {t("refundTerm7")}
+                                            {t("refundTerm8")}
                                         </Stack>
                                     )}
                                 </Stack>
