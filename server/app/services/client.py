@@ -1,6 +1,6 @@
-from app.database.models import Users, PlanContract, ContractStatus, PaymentPlan, PaymentTransaction, Trainer, SaveTrainer
+from app.database.models import Users, PlanContract, ContractStatus, PaymentPlan, PaymentTransaction, Trainer, SaveTrainer, ClientMuscleGroups, MuscleGroup
 from ..exceptions.api_error import ApiError
-from ..utils.serialize import serialize_training_contract, serialize_trainer_in_trainers
+from ..utils.serialize import serialize_training_contract, serialize_trainer_in_trainers, serialize_muscle_group, serialize_field, serialize_client_base_info, serialize_date
 from sqlalchemy.orm import joinedload, subqueryload
 from ..utils.message_codes import MessageCodes
 from ..utils.mercadopago import create_payment_preference
@@ -8,7 +8,7 @@ from ..utils.user import decrypt_email
 from ..utils.trainer import acquire_trainer_lock, release_trainer_lock
 from ..utils.client import acquire_client_lock, release_client_lock
 from .trainer import get_top3_specialties_data, get_valid_mp_token, check_trainer_can_be_contracted
-
+from ..utils.formatters import safe_date, safe_int, safe_str 
 def get_client_training_contract(db, client_id):
     try:
         training_contract = check_client_active_contract(db, client_id)
@@ -259,3 +259,128 @@ def save_trainer(db, trainer_id, client_id):
         print(f"Erro ao salvar treinador: {e}")
 
         raise Exception(f"Erro ao salvar o treinador: {e}")
+
+def get_client_info(db, client_id):
+    try:
+        client = (
+            db.query(Users)
+            .options(
+                subqueryload(Users.muscle_groups)
+                    .joinedload(ClientMuscleGroups.muscle_group)
+                    .joinedload(MuscleGroup.male_model_media),
+                subqueryload(Users.muscle_groups)
+                    .joinedload(ClientMuscleGroups.muscle_group)
+                    .joinedload(MuscleGroup.female_model_media)
+            )
+            .filter(Users.ID == client_id)
+            .first()
+        )
+
+        if client is None:
+            raise ApiError(MessageCodes.CLIENT_NOT_FOUND, 404)
+
+        data = serialize_client_base_info(client)
+
+        data["weekMuscles"] = [serialize_muscle_group(cmg.muscle_group, True) for cmg in client.muscle_groups]
+
+        return data
+
+    except ApiError as e:
+        print(f"Erro ao recuperar informações de base do cliente: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao recuperar informações de base do cliente: {e}")
+
+        raise Exception(f"Erro ao recuperar as informações de base do cliente: {e}")
+
+def modify_client_data(
+    db,
+    client_id,
+    sex = None,
+    birth_date = None,
+    height = None,
+    weight = None,
+    limitations_description = None,
+    available_days = None,
+    week_muscles = None
+):
+    try:
+        user = db.query(Users).filter(Users.ID == client_id).first()
+        
+        if user is None:
+            raise ApiError(MessageCodes.CLIENT_NOT_FOUND, 404)
+
+        updated_fields = {}
+
+        if sex is not None:
+            user.sex = sex if sex != "none" else None
+
+            updated_fields["sex"] = {
+                "ID": (
+                    "male" if user.sex is True
+                    else "female" if user.sex is False
+                    else "preferNotToAnswer"
+                )
+            }
+        
+        if birth_date is not None:
+            user.birth_date = safe_date(birth_date)
+            
+            updated_fields["birthDate"] = serialize_date(user.birth_date)
+
+        if height is not None:
+            user.height_cm = safe_int(height)
+
+            updated_fields["height"] = serialize_field(user.height_cm)
+        
+        if weight is not None:
+            user.weight_kg = safe_int(weight)
+
+            updated_fields["weight"] = serialize_field(user.weight_kg)
+
+        if limitations_description is not None:
+            user.limitations_description = safe_str(limitations_description)
+
+            updated_fields["limitationsDescription"] = serialize_field(user.limitations_description)
+
+        if available_days is not None:
+            user.available_days = safe_int(available_days)
+
+            updated_fields["availableDays"] = serialize_field(user.available_days)
+
+        if week_muscles is not None:
+            db.query(ClientMuscleGroups).filter(
+                ClientMuscleGroups.fk_user_ID == client_id
+            ).delete(synchronize_session=False)
+
+            db.flush()
+
+            for muscle_id in week_muscles:
+                user.muscle_groups.append(
+                    ClientMuscleGroups(
+                        fk_muscle_group_ID=muscle_id
+                    )
+                )
+
+            updated_fields["weekMuscles"] = [
+                serialize_muscle_group(
+                    db.query(MuscleGroup).get(cmg.fk_muscle_group_ID), True
+                )
+                for cmg in user.muscle_groups
+            ]
+
+        db.commit()
+
+        return updated_fields
+
+    except ApiError as e:
+        print(f"Erro ao modificar usuário: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao modificar usuário: {e}")
+
+        raise Exception(f"Erro ao modificar o usuário: {e}")

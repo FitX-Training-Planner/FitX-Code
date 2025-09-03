@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from ..exceptions.api_error import ApiError
-from ..services.client import get_client_training_contract, cancel_contract, create_payment, get_client_saved_trainers
+from ..services.client import get_client_training_contract, cancel_contract, create_payment, get_client_saved_trainers, modify_client_data, get_client_info
 from flask_jwt_extended import jwt_required
 from ..utils.client_decorator import only_client
 from flask import request, jsonify
@@ -113,6 +113,89 @@ def get_saved_trainers():
             return jsonify({"message": str(e)}), e.status_code
 
         except Exception as e:
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
+
+@client_bp.route("/me/client-info", methods=["GET"])
+@jwt_required()
+@only_client
+def get_user_client_info():
+    error_message = "Erro na rota de recuperação de informações de base do cliente"
+
+    with get_db() as db:
+        try:        
+            identity = get_jwt_identity()
+
+            info = get_client_info(db, identity)
+
+            return jsonify(info), 200
+        
+        except ApiError as e:
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": str(e)}), e.status_code
+
+        except Exception as e:
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
+
+@client_bp.route("/me/client-info", methods=["PUT"])
+@jwt_required()
+@only_client
+def modify_client():
+    error_message = "Erro na rota de modificação do ciente"
+
+    with get_db() as db:
+        try:
+            data = request.form
+
+            identity = get_jwt_identity()
+
+            sex = data.get("sex")
+
+            if sex is not None:
+                if sex == "male" or sex == "female":
+                    sex = sex == "male"
+                
+                else:
+                    sex = "none"
+
+            if "weekMuscles[]" in data:
+                week_muscles = data.getlist("weekMuscles[]")
+
+                if week_muscles == [""]:
+                    week_muscles = []
+
+            else:
+                week_muscles = None
+
+
+            modified_data = modify_client_data(
+                db, 
+                identity,
+                sex,
+                data.get("birthDate") if data.get("birthDate") is not None else None,
+                data.get("height") if data.get("height") is not None else None,
+                data.get("weight") if data.get("weight") is not None else None,
+                data.get("limitationsDescription") if data.get("limitationsDescription") is not None else None,
+                data.get("availableDays") if data.get("availableDays") is not None else None,
+                week_muscles if week_muscles is not None else None
+            )
+
+            return jsonify(modified_data), 200
+
+        except ApiError as e:
+            db.rollback()
+
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": str(e)}), e.status_code
+
+        except Exception as e:
+            db.rollback()
+
             print(f"{error_message}: {e}")
 
             return jsonify({"message": MessageCodes.ERROR_SERVER}), 500

@@ -1,4 +1,4 @@
-from ..database.models import Users, Media, Trainer, ContractStatus
+from ..database.models import Users, Media, Trainer, ContractStatus, ClientMuscleGroups
 from ..utils.user import is_email_used, hash_email, encrypt_email, hash_password, decrypt_email
 from ..utils.cloudinary import upload_file
 from sqlalchemy.orm import joinedload
@@ -7,6 +7,7 @@ from ..utils.serialize import serialize_user
 from ..utils.message_codes import MessageCodes
 from .client import check_client_active_contract
 from .trainer import count_trainer_active_contract
+from ..utils.formatters import safe_int, safe_str, safe_date
 
 def get_user_by_id(db, user_id, is_client):
     try:
@@ -166,6 +167,13 @@ def insert_user(
     is_rater_anonymous,
     email_notification_permission,
     is_english,
+    sex,
+    birth_date,
+    height,
+    weight,
+    limitations_description,
+    available_days,
+    week_muscles,
     fk_media_ID
 ):
     try:
@@ -190,8 +198,22 @@ def insert_user(
             is_rater_anonymous=is_rater_anonymous,
             email_notification_permission=email_notification_permission,
             is_english=is_english,
-            fk_media_ID=fk_media_ID
+            fk_media_ID=fk_media_ID,
+            sex=sex,
+            birth_date=safe_date(birth_date),
+            height_cm=safe_int(height),
+            weight_kg=safe_int(weight),
+            limitations_description=safe_str(limitations_description),
+            available_days=safe_int(available_days)
         )
+
+        if week_muscles:
+            for muscle_group_id in week_muscles:
+                new_user.muscle_groups.append(
+                    ClientMuscleGroups(
+                        fk_muscle_group_ID=muscle_group_id
+                    )
+                )
 
         db.add(new_user)
 

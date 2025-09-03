@@ -53,6 +53,14 @@ def post_user():
             if photo_file:
                 fk_media_ID = insert_photo(db, photo_file)
 
+            sex = data.get("sex")
+
+            if sex == "male" or sex == "female":
+                sex = sex == "male"
+            
+            else:
+                sex = None
+
             user_ID = insert_user(
                 db,
                 data.get("name"),
@@ -64,6 +72,13 @@ def post_user():
                 data.get("isRaterAnonymous") == "true",
                 data.get("emailNotificationPermission") == "true",
                 data.get("isEnglish") == "true",
+                sex,
+                data.get("birthDate"),
+                data.get("height"),
+                data.get("weight"),
+                data.get("limitationsDescription"),
+                data.get("availableDays"),
+                data.getlist("weekMuscles[]"),
                 fk_media_ID
             )
 
