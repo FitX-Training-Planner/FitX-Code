@@ -79,3 +79,9 @@ Este repositório contém o código e documentos relacionados ao projeto FitX, u
 <a href="https://www.flaticon.com/br/icones-gratis/lua" title="lua ícones">Lua ícones criados por Vectors Market - Flaticon</a>
 <a href="https://www.flaticon.com/br/icones-gratis/perto" title="perto ícones">Perto ícones criados por Bankume - Flaticon</a>
 <a href="https://www.flaticon.com/br/icones-gratis/compartilhar" title="compartilhar ícones">Compartilhar ícones criados por Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/grupo-de-idade" title="grupo de idade ícones">Grupo de idade ícones criados por Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/altura" title="altura ícones">Altura ícones criados por Mayor Icons - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/balanca" title="balança ícones">Balança ícones criados por Soremba - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/semanal" title="semanal ícones">Semanal ícones criados por Arafat Uddin - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/genero" title="gênero ícones">Gênero ícones criados por edt.im - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/fraqueza" title="fraqueza ícones">Fraqueza ícones criados por Freepik - Flaticon</a>
