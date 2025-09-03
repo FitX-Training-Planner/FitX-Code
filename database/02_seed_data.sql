@@ -134,21 +134,21 @@ INSERT INTO media (url) VALUES
 ('images/specialties/adapted_training.png');
 
 
-INSERT INTO muscle_group (name, fk_male_model_media_ID, fk_female_model_media_ID) VALUES
-('Abdômen', 2, 1),
-('Bíceps', 4, 3),
-('Tríceps', 6, 5),
-('Antebraço', 8, 7),
-('Ombro', 10, 9),
-('Peito', 12, 11),
-('Quadríceps', 14, 13),
-('Adutor', 16, 15),
-('Trapézio', 18, 17),
-('Dorsal', 20, 19),
-('Lombar', 22, 21),
-('Posterior de Coxa', 24, 23),
-('Glúteos', 26, 25),
-('Panturrilha', 28, 27);
+INSERT INTO muscle_group (name, fk_male_model_media_ID, fk_female_model_media_ID, is_posterior_muscle) VALUES
+('Abdômen', 2, 1, 0),
+('Bíceps', 4, 3, 0),
+('Tríceps', 6, 5, 1),
+('Antebraço', 8, 7, 0),
+('Ombro', 10, 9, 0),
+('Peito', 12, 11, 0),
+('Quadríceps', 14, 13, 0),
+('Adutor', 16, 15, 0),
+('Trapézio', 18, 17, 1),
+('Dorsal', 20, 19, 1),
+('Lombar', 22, 21, 1),
+('Posterior de Coxa', 24, 23, 1),
+('Glúteos', 26, 25, 1),
+('Panturrilha', 28, 27, 1);
 
 INSERT INTO exercise (name, description, is_fixed, fk_media_ID) VALUES 
 ('Tríceps Francês', 'Empurre um peso para cima com os braços acima da cabeça. Movimente somente o antebraço.', 0, 37),

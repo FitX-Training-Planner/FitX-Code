@@ -28,12 +28,19 @@ class Users(Base):
     is_rater_anonymous = Column(Boolean, nullable=False, default=False)
     email_notification_permission = Column(Boolean, nullable=False, default=True)
     is_english = Column(Boolean, nullable=False, default=False)
+    sex = Column(Boolean)
+    birth_date = Column(DATE)
+    height_cm = Column(SMALLINT(unsigned=True))
+    weight_kg = Column(SMALLINT(unsigned=True))
+    limitations_description = Column(TEXT)
+    available_days = Column(TINYINT(unsigned=True))
     fk_media_ID = Column(INTEGER(unsigned=True), ForeignKey("media.ID", ondelete="SET NULL"), index=True, unique=True)  
     fk_training_plan_ID = Column(INTEGER(unsigned=True), ForeignKey("training_plan.ID", ondelete="SET NULL", name="fk_user_training_plan"), index=True)  
 
     media = relationship("Media")
     training_plan = relationship("TrainingPlan")
 
+    muscle_groups = relationship("ClientMuscleGroups", back_populates="user", passive_deletes=True)
     exercise_set_logs = relationship("ExerciseSetLog", back_populates="user", passive_deletes=True)
     trainer = relationship("Trainer", back_populates="user", uselist=False, passive_deletes=True)
     ratings = relationship("Rating", back_populates="user", passive_deletes=True)
@@ -181,6 +188,7 @@ class MuscleGroup(Base):
 
     ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     name = Column(String(30), nullable=False, unique=True)
+    is_posterior_muscle = Column(Boolean, nullable=False)
     fk_male_model_media_ID = Column(INTEGER(unsigned=True), ForeignKey("media.ID"), index=True, nullable=False, unique=True)
     fk_female_model_media_ID = Column(INTEGER(unsigned=True), ForeignKey("media.ID"), index=True, nullable=False, unique=True)
     
@@ -188,6 +196,20 @@ class MuscleGroup(Base):
     female_model_media = relationship("Media", foreign_keys=[fk_female_model_media_ID])
 
     exercises = relationship("ExerciseMuscleGroup", back_populates="muscle_group", passive_deletes=True)
+
+class ClientMuscleGroups(Base):
+    __tablename__ = "client_muscle_groups"
+
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
+    fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="CASCADE"), index=True, nullable=False)
+    fk_muscle_group_ID = Column(INTEGER(unsigned=True), ForeignKey("muscle_group.ID", ondelete="CASCADE"), index=True, nullable=False)
+
+    user = relationship("Users", back_populates="muscle_groups")
+    muscle_group = relationship("MuscleGroup")
+
+    __table_args__ = (
+        UniqueConstraint("fk_user_ID", "fk_muscle_group_ID", name="uq_user_muscle_group"),
+    )
 
 class Exercise(Base):
     __tablename__ = "exercise"

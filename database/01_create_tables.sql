@@ -27,6 +27,7 @@ DROP TABLE IF EXISTS exercise_equipment;
 DROP TABLE IF EXISTS body_position;
 DROP TABLE IF EXISTS exercise_muscle_group;
 DROP TABLE IF EXISTS exercise;
+DROP TABLE IF EXISTS client_muscle_groups;
 DROP TABLE IF EXISTS muscle_group;
 DROP TABLE IF EXISTS complaint_like;
 DROP TABLE IF EXISTS complaint;
@@ -58,6 +59,12 @@ CREATE TABLE IF NOT EXISTS users (
     is_rater_anonymous BOOLEAN NOT NULL DEFAULT 0,
     email_notification_permission BOOLEAN NOT NULL DEFAULT 1,
     is_english BOOLEAN NOT NULL DEFAULT 0,
+    sex BOOLEAN,
+    birth_date DATE,
+    height_cm SMALLINT UNSIGNED,
+    weight_kg SMALLINT UNSIGNED,
+    limitations_description TEXT,
+    available_days TINYINT UNSIGNED,
     fk_media_ID INT UNSIGNED UNIQUE,
     fk_training_plan_ID INT UNSIGNED,
     FOREIGN KEY (fk_media_ID) REFERENCES media(ID),
@@ -175,12 +182,24 @@ CREATE TABLE IF NOT EXISTS save_trainer (
 CREATE TABLE IF NOT EXISTS muscle_group (
     ID INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(30) NOT NULL UNIQUE,
+    is_posterior_muscle BOOLEAN NOT NULL,
     fk_male_model_media_ID INT UNSIGNED NOT NULL UNIQUE,
     fk_female_model_media_ID INT UNSIGNED NOT NULL UNIQUE,
     FOREIGN KEY (fk_male_model_media_ID) REFERENCES media(ID),
     FOREIGN KEY (fk_female_model_media_ID) REFERENCES media(ID),
     INDEX idx_fk_male_model_media_ID (fk_male_model_media_ID),
     INDEX idx_fk_female_model_media_ID (fk_female_model_media_ID)
+);
+
+CREATE TABLE IF NOT EXISTS client_muscle_groups (
+    ID INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    fk_user_ID INT NOT NULL UNSIGNED,
+    fk_muscle_group_ID INT NOT NULL UNSIGNED,
+    FOREIGN KEY (fk_user_ID) REFERENCES users(ID),
+    FOREIGN KEY (fk_muscle_group_ID) REFERENCES muscle_group(ID),
+    UNIQUE (fk_user_ID, fk_muscle_group_ID),
+    INDEX idx_fk_user_ID (fk_user_ID),
+    INDEX idx_fk_muscle_group_ID (fk_muscle_group_ID)
 );
 
 CREATE TABLE IF NOT EXISTS exercise (
