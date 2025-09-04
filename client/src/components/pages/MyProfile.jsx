@@ -986,12 +986,25 @@ function MyProfile() {
                                         />
 
                                         <Stack
-                                            direction="row"
-                                            justifyContent="start"
+                                            gap="0.5em"
                                         >
-                                            <Alert />
-            
-                                            {t("connectMPInstruction")}
+                                            <Stack
+                                                direction="row"
+                                                justifyContent="start"
+                                            >
+                                                <Alert />
+                
+                                                {t("connectMPInstruction")}
+                                            </Stack>
+
+                                            <Stack
+                                                direction="row"
+                                                justifyContent="start"
+                                            >
+                                                <Alert />
+                
+                                                {t("merchantAccountInstruction")}
+                                            </Stack>
                                         </Stack>
                                     </>
                                 )}

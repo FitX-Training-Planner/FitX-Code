@@ -62,7 +62,8 @@
         "NO_RESPONSE": "Our server is unavailable now. Try again later.",
         "ERROR_LOADING_SPECIALTIES": "Unable to load specialties.",
         "ERROR_LOADING_MUSCLE_GROUPS": "Unable to load muscle groups.",
-        "CLIENT_NOT_FOUND": "Client not found."   
+        "CLIENT_NOT_FOUND": "Client not found.",
+        "INVALID_MERCHANT_TRAINER": "The trainer has not yet enabled the Mercado Pago account for sales."
     },
     "loadingCheckData": "Checking data",
     "errorLogin": "Login failed!",
@@ -759,6 +760,7 @@
     "other": "Other",
     "preferNotToAnswer": "I prefer not to answer",
     "sex": "Sex",
+    "merchantAccountInstruction": "In order for you to receive payments and for clients to contract you, your Mercado Pago account must be enabled as a Merchant Account.",
     "databaseData": {
         "muscleGroups": {
             "1": {

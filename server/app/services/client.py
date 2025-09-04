@@ -154,19 +154,22 @@ def create_payment(db, client_id, payment_plan_id):
                 300
             )
 
+            transaction.mp_preference_id = preference["id"]
+
+            db.commit()
+
+            return {
+                "init_point": preference["init_point"]
+            }
+        
         except Exception as e:
             release_trainer_lock(payment_plan.fk_trainer_ID)
             release_client_lock(client_id)
 
+            if hasattr(e, "args") and len(e.args) > 0 and "invalid_collector_id" in str(e.args[0]):
+                raise ApiError(MessageCodes.INVALID_MERCHANT_TRAINER, 400)
+            
             raise
-
-        transaction.mp_preference_id = preference["id"]
-
-        db.commit()
-
-        return {
-            "init_point": preference["init_point"]
-        }
 
     except ApiError as e:
         print(f"Erro ao criar preferência de pagamento: {e}")

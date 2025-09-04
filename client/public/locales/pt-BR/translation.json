@@ -62,7 +62,8 @@
         "NO_RESPONSE": "Nosso servidor está indisponível no momento. Tente novamente mais tarde.",
         "ERROR_LOADING_SPECIALTIES": "Não foi possível recuperar as especialidades.",
         "ERROR_LOADING_MUSCLE_GROUPS": "Não foi possível recuperar os grupos musculares.",
-        "CLIENT_NOT_FOUND": "Cliente não encontrado."
+        "CLIENT_NOT_FOUND": "Cliente não encontrado.",
+        "INVALID_MERCHANT_TRAINER": "O treinador ainda não habilitou a conta do Mercado Pago para vendas."
     },
     "loadingCheckData": "Checando dados",
     "errorLogin": "Falha ao logar!",
@@ -758,5 +759,6 @@
     "female": "Feminino",
     "other": "Outro",
     "preferNotToAnswer": "Prefiro não responder",
-    "sex": "Sexo"
+    "sex": "Sexo",
+    "merchantAccountInstruction": "Para que você possa receber pagamentos e clientes possam te contratar, é necessário que sua conta do Mercado Pago seja habilitada como Conta de Vendedor."
 }
