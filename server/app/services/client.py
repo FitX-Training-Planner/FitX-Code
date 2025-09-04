@@ -132,10 +132,10 @@ def create_payment(db, client_id, payment_plan_id):
 
         db.flush()
         
-        if not acquire_trainer_lock(payment_plan.fk_trainer_ID, None):
+        if not acquire_trainer_lock(payment_plan.fk_trainer_ID, 300):
             raise ApiError(MessageCodes.TRAINER_IS_IN_HIRING, 409)
         
-        if not acquire_client_lock(client_id, None):
+        if not acquire_client_lock(client_id, 300):
             raise ApiError(MessageCodes.CLIENT_IS_IN_HIRING, 409)
         
         try:

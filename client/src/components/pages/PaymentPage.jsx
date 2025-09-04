@@ -386,7 +386,7 @@ function PaymentPage() {
                                             </span>
 
                                             <span>
-                                                {formatPriceToBR(paymentPlan?.appFee)}
+                                                {`${t("feeOf")} `} {formatPriceToBR(paymentPlan?.appFee)}
                                             </span>
                                         </Stack>
 
