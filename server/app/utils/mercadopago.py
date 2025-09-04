@@ -16,6 +16,8 @@ def create_payment_preference(mp_user_id, item_id, title, description, price, ap
         start_time = datetime.now(brazil_tz)
         end_time = start_time + timedelta(seconds=expiration_seconds)
 
+        print(mp_user_id)
+
         preference_data = {
             "items": [
                 {
