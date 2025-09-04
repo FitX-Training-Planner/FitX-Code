@@ -58,6 +58,7 @@ class MercadopagoConfig:
     MP_CLIENT_ID = os.getenv("MP_CLIENT_ID")
     MP_REDIRECT_URI = os.getenv("MP_REDIRECT_URI")
     MP_CLIENT_SECRET = os.getenv("MP_CLIENT_SECRET")
+    MP_CLIENT_ACCESS_TOKEN = os.getenv("MP_CLIENT_ACCESS_TOKEN")
 
 class SendGridConfig:
     SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")

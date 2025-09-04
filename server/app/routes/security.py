@@ -303,9 +303,6 @@ def mercadopago_webhook():
     error_message = "Erro na rota de recebimento de notificação do mercado pago"
 
     print("=== MERCADO PAGO WEBHOOK RECEBIDO ===")
-    print("Parâmetros (request.args):", request.args)
-    print("Body JSON:", request.get_json(silent=True))
-    print("======================================")
 
     with get_db() as db:
         transaction = None
@@ -314,6 +311,8 @@ def mercadopago_webhook():
 
         try:
             args = request.args
+
+            print(f"request.args: {request.args}")
 
             topic = args.get("type") or args.get("topic")
             resource_id = args.get("id") or args.get("data.id")
@@ -376,47 +375,86 @@ def mercadopago_webhook():
 
             if result["status"] != 200:
                 raise ApiError(MessageCodes.MP_PAYMENT_NOT_FOUND, 500)
+            
+            print(f"payment info: {payment_info}")
 
             payment_info = result["response"]
-            status = payment_info["status"]
+            payment_status = payment_info["status"]
             mp_transaction_id = str(payment_info["id"])
-            receipt_url = payment_info.get("receipt_url")
             payment_method = payment_info.get("payment_type_id")
-            mp_fee =  payment_info.get("transaction_details", {}).get("fee_amount", 0)
+            transaction_details = payment_info.get("transaction_details", {})
 
-            if status == "approved":
+            total_paid = transaction_details.get("total_paid_amount", 0)
+            trainer_received = transaction_details.get("net_received_amount", 0)
+
+            ticket_url = payment_info.get("point_of_interaction", {}).get("transaction_data", {}).get("ticket_url")
+            receipt_url = payment_info.get("receipt_url") or ticket_url or ""
+
+            mp_fee = transaction_details.get("fee_amount")
+
+            app_fee = None
+
+            if mp_fee is not None:
+                app_fee = total_paid - trainer_received - mp_fee
+
+            if payment_status == "approved":
                 transaction.is_finished = True
-                transaction.mp_transaction_id = mp_transaction_id
-                transaction.receipt_url = receipt_url
-                transaction.create_date =  datetime.now(brazil_tz)
-                transaction.payment_method = payment_method
-                transaction.mp_fee = mp_fee
-                transaction.trainer_received = transaction.amount - transaction.app_fee - transaction.mp_fee
 
-                start_date = datetime.now(brazil_tz).date()
-                end_date = start_date + timedelta(days=transaction.payment_plan.duration_days)
+                if not transaction.mp_transaction_id:
+                    transaction.mp_transaction_id = mp_transaction_id
 
-                status = db.query(ContractStatus).filter(ContractStatus.name == "Ativo").first()
+                elif transaction.mp_transaction_id != mp_transaction_id:
+                    raise ApiError(MessageCodes.PAYMENT_TRANSACTION_MISMATCH, 400)
 
-                new_contract = PlanContract(
-                    start_date = start_date,
-                    end_date = end_date,
-                    last_day_full_refund = start_date + timedelta(days=7),
-                    last_day_allowed_refund = end_date - timedelta(days=10),
-                    fk_user_ID = client_ID,
-                    fk_trainer_ID = trainer_ID,
-                    fk_payment_plan_ID = transaction.fk_payment_plan_ID,
-                    fk_payment_transaction_ID = transaction.ID,
-                    fk_contract_status_ID = status.ID
+                if app_fee not in [None, 0] and transaction.app_fee != app_fee:
+                    transaction.app_fee = app_fee
+
+                if mp_fee is not None and transaction.mp_fee != mp_fee:
+                    transaction.mp_fee = mp_fee
+
+                if trainer_received != 0 and transaction.trainer_received != trainer_received:
+                    transaction.trainer_received = trainer_received
+
+                if receipt_url and transaction.receipt_url != receipt_url:
+                    transaction.receipt_url = receipt_url
+
+                if payment_method and transaction.payment_method != payment_method:
+                    transaction.payment_method = payment_method
+
+                if not transaction.create_date:
+                    transaction.create_date = datetime.now(brazil_tz)
+
+                existing_contract = (
+                    db.query(PlanContract)
+                    .filter(PlanContract.fk_payment_transaction_ID == transaction.ID)
+                    .first()
                 )
 
-                transaction.trainer.contracts_number += 1
+                if not existing_contract:
+                    start_date = datetime.now(brazil_tz).date()
+                    end_date = start_date + timedelta(days=transaction.payment_plan.duration_days)
 
-                db.add(new_contract)
+                    contract_status = db.query(ContractStatus).filter(ContractStatus.name == "Ativo").first()
+
+                    new_contract = PlanContract(
+                        start_date = start_date,
+                        end_date = end_date,
+                        last_day_full_refund = start_date + timedelta(days=7),
+                        last_day_allowed_refund = end_date - timedelta(days=10),
+                        fk_user_ID = client_ID,
+                        fk_trainer_ID = trainer_ID,
+                        fk_payment_plan_ID = transaction.fk_payment_plan_ID,
+                        fk_payment_transaction_ID = transaction.ID,
+                        fk_contract_status_ID = contract_status.ID
+                    )
+
+                    transaction.trainer.contracts_number += 1
+
+                    db.add(new_contract)
 
                 db.commit() 
 
-            elif status in ["rejected", "cancelled", "refunded", "charged_back", "expired"]:
+            elif payment_status in ["rejected", "cancelled", "refunded", "charged_back", "expired"]:
                 db.delete(transaction)
 
                 db.commit()

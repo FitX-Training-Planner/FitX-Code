@@ -2,11 +2,12 @@ import mercadopago
 import os
 from zoneinfo import ZoneInfo
 from datetime import datetime, timedelta
+from ..config import MercadopagoConfig
 
 brazil_tz = ZoneInfo("America/Sao_Paulo")
 
-def create_payment_preference(trainer_access_token, item_id, title, description, price, app_fee, payer_email, payer_first_name, transaction_id, expiration_seconds):
-    sdk = mercadopago.SDK(trainer_access_token)
+def create_payment_preference(mp_user_id, item_id, title, description, price, app_fee, payer_email, payer_first_name, transaction_id, expiration_seconds):
+    sdk = mercadopago.SDK(MercadopagoConfig.MP_CLIENT_ACCESS_TOKEN)
 
     frontend_base_url = os.getenv("FRONT_END_URL")
     api_url = os.getenv("API_URL")
@@ -39,6 +40,7 @@ def create_payment_preference(trainer_access_token, item_id, title, description,
         "binary_mode": True,
         "purpose": "wallet_purchase",
         "application_fee": float(app_fee),
+        "collector_id": mp_user_id, 
         "payment_methods": {
             "excluded_payment_types": [
                 { "id": "ticket" },

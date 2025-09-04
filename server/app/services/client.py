@@ -122,7 +122,6 @@ def create_payment(db, client_id, payment_plan_id):
 
         transaction = PaymentTransaction(
             amount=payment_plan.full_price + payment_plan.app_fee,
-            app_fee=payment_plan.app_fee,
             fk_payment_plan_ID=payment_plan.ID,
             fk_user_ID=client_id,
             fk_trainer_ID=payment_plan.fk_trainer_ID
@@ -142,7 +141,7 @@ def create_payment(db, client_id, payment_plan_id):
             description = f"Plano '{payment_plan.name}' de {payment_plan.duration_days} dias do FitX"
 
             preference = create_payment_preference(
-                get_valid_mp_token(db, payment_plan.fk_trainer_ID),
+                payment_plan.trainer.mp_user_id,
                 payment_plan.ID,
                 payment_plan.name,
                 description,
