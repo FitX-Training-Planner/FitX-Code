@@ -28,10 +28,8 @@ def hash_password(password):
 def check_password(password, hashed):
     return bcrypt.check_password_hash(hashed, password)
 
-def send_email(email, template_path, subject, **template_vars):
+def send_email(email, template, subject):
     try:
-        template = render_template(template_path, **template_vars)
-
         message = Message(
             subject=subject,
             recipients=[email],

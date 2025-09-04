@@ -114,11 +114,12 @@ def identity_confirmation():
         else:
             generated_code = generate_code(email)
 
+            template = render_template("code_verification.html", code=generated_code)
+
             send_email(
                 email,
-                "code_verification.html",
+                template,
                 "Código de Verificação",
-                code=generated_code
             )
 
         return "", 204 
