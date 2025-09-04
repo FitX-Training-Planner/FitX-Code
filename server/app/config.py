@@ -16,14 +16,6 @@ class AppConfig:
     JWT_ACCESS_COOKIE_NAME = os.getenv("JWT_ACCESS_COOKIE_NAME")
     JWT_REFRESH_COOKIE_NAME = os.getenv("JWT_REFRESH_COOKIE_NAME")
 
-    MAIL_SERVER = os.getenv("MAIL_SERVER")
-    MAIL_PORT = int(os.getenv("MAIL_PORT"))
-    MAIL_USE_TLS = os.getenv("MAIL_USE_TLS").lower() == "true"
-    MAIL_USE_SSL = os.getenv("MAIL_USE_SSL").lower() == "true"
-    MAIL_USERNAME = os.getenv("MAIL_USERNAME")
-    MAIL_PASSWORD = os.getenv("MAIL_PASSWORD")
-    MAIL_DEFAULT_SENDER = (os.getenv("MAIL_SENDER_NAME"), os.getenv("MAIL_SENDER_EMAIL"))
-
 class SQLAlchemyConfig:
     DB_URL = os.getenv("MYSQL_URL")
 
