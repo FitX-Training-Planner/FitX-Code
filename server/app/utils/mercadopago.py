@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 
 brazil_tz = ZoneInfo("America/Sao_Paulo")
 
-def create_payment_preference(trainer_access_token, item_id, title, description, price, app_fee, payer_email, transaction_id, expiration_seconds):
+def create_payment_preference(trainer_access_token, item_id, title, description, price, app_fee, payer_email, payer_first_name, transaction_id, expiration_seconds):
     sdk = mercadopago.SDK(trainer_access_token)
 
     frontend_base_url = os.getenv("FRONT_END_URL")
@@ -26,7 +26,8 @@ def create_payment_preference(trainer_access_token, item_id, title, description,
             }
         ],
         "payer": {
-            "email": payer_email,
+            "first_name": payer_first_name,
+            "email": payer_email
         },
         "back_urls": {
             "success": f"{frontend_base_url}/payment/success",

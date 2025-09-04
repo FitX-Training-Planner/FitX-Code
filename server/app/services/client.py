@@ -149,6 +149,7 @@ def create_payment(db, client_id, payment_plan_id):
             payment_plan.full_price,
             payment_plan.app_fee,
             decrypt_email(client.email_encrypted),
+            client.name.split()[0],
             transaction.ID,
             300
         )
