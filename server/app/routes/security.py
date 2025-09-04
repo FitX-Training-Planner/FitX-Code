@@ -381,8 +381,8 @@ def mercadopago_webhook():
                 mp_fee =  payment_info.get("transaction_details", {}).get("fee_amount", 0)
 
                 if status == "approved":
-                    release_trainer_lock(transaction.fk_trainer_ID) 
-                    release_client_lock(transaction.fk_user_ID)
+                    # release_trainer_lock(transaction.fk_trainer_ID) 
+                    # release_client_lock(transaction.fk_user_ID)
 
                     transaction.is_finished = True
                     transaction.mp_transaction_id = mp_transaction_id
@@ -418,8 +418,8 @@ def mercadopago_webhook():
                     db.commit() 
 
                 elif status == "rejected" or status == "cancelled" or status == "refunded" or status == "charged_back" or status == "expired":
-                    release_trainer_lock(transaction.fk_trainer_ID)
-                    release_client_lock(transaction.fk_user_ID)
+                    # release_trainer_lock(transaction.fk_trainer_ID)
+                    # release_client_lock(transaction.fk_user_ID)
 
                     db.delete(transaction)
 
@@ -428,8 +428,8 @@ def mercadopago_webhook():
                 return "", 201
             
             except ApiError as e:
-                release_trainer_lock(transaction.fk_trainer_ID)
-                release_client_lock(transaction.fk_user_ID)
+                # release_trainer_lock(transaction.fk_trainer_ID)
+                # release_client_lock(transaction.fk_user_ID)
 
                 db.delete(transaction)
 
@@ -438,8 +438,8 @@ def mercadopago_webhook():
                 raise e
 
             except Exception as e:
-                release_trainer_lock(transaction.fk_trainer_ID)
-                release_client_lock(transaction.fk_user_ID)
+                # release_trainer_lock(transaction.fk_trainer_ID)
+                # release_client_lock(transaction.fk_user_ID)
 
                 db.delete(transaction)
 
