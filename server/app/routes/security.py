@@ -392,11 +392,6 @@ def mercadopago_webhook():
 
             mp_fee = transaction_details.get("fee_amount")
 
-            app_fee = None
-
-            if mp_fee is not None:
-                app_fee = total_paid - trainer_received - mp_fee
-
             if payment_status == "approved":
                 transaction.is_finished = True
 
@@ -405,9 +400,6 @@ def mercadopago_webhook():
 
                 elif transaction.mp_transaction_id != mp_transaction_id:
                     raise ApiError(MessageCodes.PAYMENT_TRANSACTION_MISMATCH, 400)
-
-                if app_fee not in [None, 0] and transaction.app_fee != app_fee:
-                    transaction.app_fee = app_fee
 
                 if mp_fee is not None and transaction.mp_fee != mp_fee:
                     transaction.mp_fee = mp_fee

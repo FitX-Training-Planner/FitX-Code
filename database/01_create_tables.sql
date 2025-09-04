@@ -397,7 +397,7 @@ CREATE TABLE IF NOT EXISTS payment_plan (
 CREATE TABLE IF NOT EXISTS payment_transaction (
     ID INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     amount DECIMAL(7,2) UNSIGNED NOT NULL,
-    app_fee = DECIMAL(6,2) UNSIGNED,
+    app_fee = DECIMAL(6,2) UNSIGNED NOT NULL,
     payment_method = VARCHAR(50),
     mp_fee = DECIMAL(6,2) UNSIGNED,
     trainer_received = DECIMAL(7,2) UNSIGNED,

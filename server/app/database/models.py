@@ -456,7 +456,7 @@ class PaymentTransaction(Base):
 
     ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     amount = Column(DECIMAL(7, 2, unsigned=True), nullable=False)  
-    app_fee = Column(DECIMAL(6, 2, unsigned=True))  
+    app_fee = Column(DECIMAL(6, 2, unsigned=True), nullable=False)  
     payment_method = Column(String(50)) 
     mp_fee = Column(DECIMAL(6, 2, unsigned=True)) 
     trainer_received = Column(DECIMAL(7, 2, unsigned=True)) 
