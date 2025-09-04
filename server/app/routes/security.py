@@ -308,6 +308,10 @@ def mercadopago_webhook():
     print("======================================")
 
     with get_db() as db:
+        transaction = None
+        trainer_ID = None
+        client_ID = None
+
         try:
             args = request.args
 
@@ -363,80 +367,64 @@ def mercadopago_webhook():
             if not transaction:
                 raise ApiError(MessageCodes.TRANSACTION_NOT_FOUND, 404)
             
-            try:
-                sdk = mercadopago.SDK(get_valid_mp_token(db, transaction.fk_trainer_ID))
-                
-                result = sdk.payment().get(payment_id)
-
-                if result["status"] != 200:
-                    raise ApiError(MessageCodes.MP_PAYMENT_NOT_FOUND, 500)
-
-                payment_info = result["response"]
-                status = payment_info["status"]
-                mp_transaction_id = str(payment_info["id"])
-                receipt_url = payment_info.get("receipt_url")
-                payment_method = payment_info.get("payment_type_id")
-                mp_fee =  payment_info.get("transaction_details", {}).get("fee_amount", 0)
-
-                if status == "approved":
-                    # release_trainer_lock(transaction.fk_trainer_ID) 
-                    # release_client_lock(transaction.fk_user_ID)
-
-                    transaction.is_finished = True
-                    transaction.mp_transaction_id = mp_transaction_id
-                    transaction.receipt_url = receipt_url
-                    transaction.create_date =  datetime.now(brazil_tz)
-                    transaction.payment_method = payment_method
-                    transaction.mp_fee = mp_fee
-                    transaction.trainer_received = transaction.amount - transaction.app_fee - transaction.mp_fee
-
-                    start_date = datetime.now(brazil_tz).date()
-                    end_date = start_date + timedelta(days=transaction.payment_plan.duration_days)
-
-                    new_contract = PlanContract(
-                        start_date = start_date,
-                        end_date = end_date,
-                        last_day_full_refund = start_date + timedelta(days=7),
-                        last_day_allowed_refund = end_date - timedelta(days=10),
-                        fk_user_ID = transaction.fk_user_ID,
-                        fk_trainer_ID = transaction.fk_trainer_ID,
-                        fk_payment_plan_ID = transaction.fk_payment_plan_ID,
-                        fk_payment_transaction_ID = transaction.ID,
-                        fk_contract_status_ID = (
-                            db.query(ContractStatus)
-                            .filter(ContractStatus.name == "Ativo")
-                            .scalar()
-                        )
-                    )
-
-                    transaction.trainer.contracts_number += 1
-
-                    db.add(new_contract)
-
-                    db.commit() 
-
-                elif status in ["rejected", "cancelled", "refunded", "charged_back", "expired"]:
-                    # release_trainer_lock(transaction.fk_trainer_ID)
-                    # release_client_lock(transaction.fk_user_ID)
-
-                    db.delete(transaction)
-
-                    db.commit()
-
-                return "", 201
+            trainer_ID = transaction.fk_trainer_ID
+            client_ID = transaction.fk_user_ID
             
-            except Exception as e:
-                # release_trainer_lock(transaction.fk_trainer_ID)
-                # release_client_lock(transaction.fk_user_ID)
+            sdk = mercadopago.SDK(get_valid_mp_token(db, trainer_ID))
+            
+            result = sdk.payment().get(payment_id)
 
-                db.rollback()
+            if result["status"] != 200:
+                raise ApiError(MessageCodes.MP_PAYMENT_NOT_FOUND, 500)
 
+            payment_info = result["response"]
+            status = payment_info["status"]
+            mp_transaction_id = str(payment_info["id"])
+            receipt_url = payment_info.get("receipt_url")
+            payment_method = payment_info.get("payment_type_id")
+            mp_fee =  payment_info.get("transaction_details", {}).get("fee_amount", 0)
+
+            if status == "approved":
+                transaction.is_finished = True
+                transaction.mp_transaction_id = mp_transaction_id
+                transaction.receipt_url = receipt_url
+                transaction.create_date =  datetime.now(brazil_tz)
+                transaction.payment_method = payment_method
+                transaction.mp_fee = mp_fee
+                transaction.trainer_received = transaction.amount - transaction.app_fee - transaction.mp_fee
+
+                start_date = datetime.now(brazil_tz).date()
+                end_date = start_date + timedelta(days=transaction.payment_plan.duration_days)
+
+                new_contract = PlanContract(
+                    start_date = start_date,
+                    end_date = end_date,
+                    last_day_full_refund = start_date + timedelta(days=7),
+                    last_day_allowed_refund = end_date - timedelta(days=10),
+                    fk_user_ID = client_ID,
+                    fk_trainer_ID = trainer_ID,
+                    fk_payment_plan_ID = transaction.fk_payment_plan_ID,
+                    fk_payment_transaction_ID = transaction.ID,
+                    fk_contract_status_ID = (
+                        db.query(ContractStatus)
+                        .filter(ContractStatus.name == "Ativo")
+                        .scalar()
+                    )
+                )
+
+                transaction.trainer.contracts_number += 1
+
+                db.add(new_contract)
+
+                db.commit() 
+
+            elif status in ["rejected", "cancelled", "refunded", "charged_back", "expired"]:
                 db.delete(transaction)
 
                 db.commit()
-                
-                raise e
 
+            return "", 201
+            
         except ApiError as e:
             db.rollback()
 
@@ -445,11 +433,24 @@ def mercadopago_webhook():
             return jsonify({"message": str(e)}), e.status_code
 
         except Exception as e:
-            db.rollback()
+            if db.is_active:
+                db.rollback()
+
+            if transaction:
+                db.delete(transaction)
+
+                db.commit()
 
             print(f"{error_message}: {e}")
 
             return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
+
+        finally:
+            if trainer_ID:
+                release_trainer_lock(trainer_ID)
+
+            if client_ID:
+                release_client_lock(client_ID)
         
 @security_bp.route("/me/id", methods=["GET"])
 @jwt_required()
