@@ -22,7 +22,7 @@ def create_payment_preference(trainer_access_token, item_id, title, description,
                 "description": description,
                 "quantity": 1,
                 "currency_id": "BRL",
-                "unit_price": float(price)
+                "unit_price": float(price + app_fee)
             }
         ],
         "payer": {
