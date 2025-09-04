@@ -116,7 +116,7 @@ function SmallTrainerProfessionalCard({
                 contractsNumber={contractsNumber}
             />
 
-            {top3Specialties.length !== 0 && (
+            {top3Specialties?.length !== 0 && (
                 <Stack
                     direction={width <= 440 ? "column" : "row"}
                     justifyContent={width <= 440 ? "start" : "center"}
@@ -126,7 +126,7 @@ function SmallTrainerProfessionalCard({
                         justifyContent="center"
                         className={styles.specialties}
                     >
-                        {top3Specialties.map((specialty, index) => (
+                        {top3Specialties?.map((specialty, index) => (
                             <React.Fragment
                                 key={index}
                             >
@@ -154,7 +154,7 @@ function SmallTrainerProfessionalCard({
 
             <hr/>
 
-            {paymentPlans.length !== 0 ? (
+            {paymentPlans?.length !== 0 ? (
                 <Stack
                     className={styles.payment_plans_container}
                     gap="2em"
@@ -170,7 +170,7 @@ function SmallTrainerProfessionalCard({
                         justifyContent="center" 
                         uniformWidth={false}
                     >
-                        {paymentPlans.map((plan, index) => (
+                        {paymentPlans?.map((plan, index) => (
                             <React.Fragment
                                 key={index}
                             >
