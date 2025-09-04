@@ -345,21 +345,18 @@ def mercadopago_webhook():
 
             payment_info = fallback_result["response"]
 
-            preference_id = (
-                payment_info.get("order", {}).get("preference_id") or
-                payment_info.get("preference_id")
-            )
+            external_reference = payment_info.get("external_reference")
 
-            if not preference_id:
-                raise ApiError(MessageCodes.MP_PREFERENCE_ID_NOT_FOUND, 400)
-            
+            if not external_reference:
+                raise ApiError(MessageCodes.MP_PAYMENT_ID_NOT_FOUND, 400)
+
             transaction = (
                 db.query(PaymentTransaction)
                 .options(
                     joinedload(PaymentTransaction.payment_plan),
                     joinedload(PaymentTransaction.trainer)    
                 )
-                .filter(PaymentTransaction.mp_preference_id == preference_id)
+                .filter(PaymentTransaction.ID == external_reference)
                 .first()
             )
 
@@ -418,7 +415,7 @@ def mercadopago_webhook():
 
                     db.commit() 
 
-                elif status == "rejected" or status == "cancelled" or status == "refunded" or status == "charged_back" or status == "expired":
+                elif status in ["rejected", "cancelled", "refunded", "charged_back", "expired"]:
                     # release_trainer_lock(transaction.fk_trainer_ID)
                     # release_client_lock(transaction.fk_user_ID)
 
@@ -428,27 +425,18 @@ def mercadopago_webhook():
 
                 return "", 201
             
-            except ApiError as e:
-                # release_trainer_lock(transaction.fk_trainer_ID)
-                # release_client_lock(transaction.fk_user_ID)
-
-                db.delete(transaction)
-
-                db.commit()
-
-                raise e
-
             except Exception as e:
                 # release_trainer_lock(transaction.fk_trainer_ID)
                 # release_client_lock(transaction.fk_user_ID)
 
+                db.rollback()
+
                 db.delete(transaction)
 
                 db.commit()
-
+                
                 raise e
 
-        
         except ApiError as e:
             db.rollback()
 
