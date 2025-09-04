@@ -169,7 +169,7 @@ function PaymentPage() {
                                         <span
                                             className={styles.plan_price}
                                         >
-                                            {formatPriceToBR(String(Number(paymentPlan?.fullPrice) + Number(paymentPlan?.fullPrice)))}
+                                            {formatPriceToBR(String(Number(paymentPlan?.fullPrice) + Number(paymentPlan?.appFee)))}
                                         </span>
                                         
                                         <span
@@ -382,7 +382,7 @@ function PaymentPage() {
                                             <span
                                                 className={styles.plan_price}
                                             >
-                                                {formatPriceToBR(String(Number(paymentPlan?.fullPrice) + Number(paymentPlan?.fullPrice)))}
+                                                {formatPriceToBR(String(Number(paymentPlan?.fullPrice) + Number(paymentPlan?.appFee)))}
                                             </span>
 
                                             <span>

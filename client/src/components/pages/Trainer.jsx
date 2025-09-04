@@ -58,7 +58,6 @@ function Trainer() {
         }
     }, []);
 
-    const specialtiesStorageKey = "trainerSpecialties";
     const ratingsLimit = 10;
     const complaintsLimit = 10;
 
@@ -227,7 +226,7 @@ function Trainer() {
         }
 
         fetchData();
-    }, [complaints, complaintsError, complaintsOffset, getTrainerReq, id, isClient, loadComplaints, loadRatings, navigate, notify, ratings, ratingsError, ratingsOffset, t, user]);
+    }, [complaints, complaintsError, complaintsOffset, getSpecialtiesReq, getTrainerReq, id, isClient, loadComplaints, loadRatings, navigate, notify, ratings, ratingsError, ratingsOffset, t, user]);
 
     const handleOnLikeComplaint = useCallback(ID => {
         if (!likeComplaintLoading) {
@@ -539,30 +538,34 @@ function Trainer() {
                         </Stack>
                     </Stack>
 
-                    <SpecialtiesContainer
-                        specialties={specialties}
-                        specialtiesError={specialtiesError}
-                        specialtiesLoading={specialtiesLoading}
-                        viewerIsClient
-                    />
-
-                    <Stack>
-                        {!trainer.canBeContracted && (
-                            <Stack
-                                direction="row"
-                                justifyContent="center"
-                            >
-                                <Alert />
-
-                                {t("trainerCannotBeContracted")}
-                            </Stack>
-                        )}
-
-                        <PaymentPlansContainer
-                            paymentPlans={trainer.paymentPlans}
+                    <Stack
+                        gap="5em"
+                    >
+                        <SpecialtiesContainer
+                            specialties={specialties}
+                            specialtiesError={specialtiesError}
+                            specialtiesLoading={specialtiesLoading}
                             viewerIsClient
-                            handlePayPaymentPlan={trainer.canBeContracted ? handleOnPay : undefined}
                         />
+
+                        <Stack>
+                            {!trainer.canBeContracted && (
+                                <Stack
+                                    direction="row"
+                                    justifyContent="center"
+                                >
+                                    <Alert />
+
+                                    {t("trainerCannotBeContracted")}
+                                </Stack>
+                            )}
+
+                            <PaymentPlansContainer
+                                paymentPlans={trainer.paymentPlans}
+                                viewerIsClient
+                                handlePayPaymentPlan={trainer.canBeContracted ? handleOnPay : undefined}
+                            />
+                        </Stack>
                     </Stack>
                 </Stack>
 
