@@ -56,6 +56,8 @@ def create_payment_preference(mp_user_id, item_id, title, description, price, ap
 
         preference_response = sdk.preference().create(preference_data)
 
+        print(preference_response)
+
         return preference_response["response"]
 
     except Exception as e:
