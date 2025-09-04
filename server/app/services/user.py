@@ -167,14 +167,14 @@ def insert_user(
     is_rater_anonymous,
     email_notification_permission,
     is_english,
-    sex,
-    birth_date,
-    height,
-    weight,
-    limitations_description,
-    available_days,
-    week_muscles,
-    fk_media_ID
+    sex = None,
+    birth_date = None,
+    height = None,
+    weight = None,
+    limitations_description = None,
+    available_days = None,
+    week_muscles = None,
+    fk_media_ID = None
 ):
     try:
         if is_email_used(db, email):
