@@ -5,13 +5,11 @@ from datetime import datetime, timedelta
 
 brazil_tz = ZoneInfo("America/Sao_Paulo")
 
-def create_payment_preference(trainer_access_token, item_id, title, description, price, payer_email, transaction_id, expiration_seconds):
+def create_payment_preference(trainer_access_token, item_id, title, description, price, app_fee, payer_email, transaction_id, expiration_seconds):
     sdk = mercadopago.SDK(trainer_access_token)
 
     frontend_base_url = os.getenv("FRONT_END_URL")
     api_url = os.getenv("API_URL")
-
-    app_fee = calculate_app_fee_in_payment_plan(price)
 
     start_time = datetime.now(brazil_tz)
     end_time = start_time + timedelta(seconds=expiration_seconds)
@@ -24,7 +22,7 @@ def create_payment_preference(trainer_access_token, item_id, title, description,
                 "description": description,
                 "quantity": 1,
                 "currency_id": "BRL",
-                "unit_price": price
+                "unit_price": float(price)
             }
         ],
         "payer": {
@@ -39,7 +37,7 @@ def create_payment_preference(trainer_access_token, item_id, title, description,
         "external_reference": str(transaction_id),
         "binary_mode": True,
         "purpose": "wallet_purchase",
-        "application_fee": app_fee,
+        "application_fee": float(app_fee),
         "payment_methods": {
             "excluded_payment_types": [
                 { "id": "ticket" },
