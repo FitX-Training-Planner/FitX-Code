@@ -1,16 +1,16 @@
 from flask import Flask, jsonify
-from .config import AppConfig, CloudinaryConfig, FernetConfig, RedisConfig, CORSConfig, OpenaiConfig
+from .config import AppConfig, CloudinaryConfig, FernetConfig, RedisConfig, CORSConfig, OpenaiConfig, SendGridConfig
 import cloudinary
 from flask_bcrypt import Bcrypt
 from cryptography.fernet import Fernet
 import redis
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
-from flask_mail import Mail
 import os
 from openai import OpenAI
 from .utils.message_codes import MessageCodes
 import json
+from sendgrid import SendGridAPIClient
 
 bcrypt = Bcrypt()
 
@@ -20,9 +20,9 @@ openai_client = OpenAI(api_key=OpenaiConfig.OPENAI_API_KEY)
 
 redis_client = redis.StrictRedis(**RedisConfig.settings)
 
-jwt = JWTManager()
+sg = SendGridAPIClient(SendGridConfig.SENDGRID_API_KEY)
 
-mail = Mail()
+jwt = JWTManager()
 
 def load_embeddings(path):
     with open(path, "r", encoding="utf-8") as f:
@@ -63,8 +63,6 @@ def create_app():
     CORS(app, **CORSConfig.settings)
 
     jwt.init_app(app)
-
-    mail.init_app(app)
 
     cloudinary.config(**CloudinaryConfig.settings)
 

@@ -1,10 +1,9 @@
-from ..__init__ import fernet, bcrypt, mail
+from ..__init__ import fernet, bcrypt, sg
 import hashlib
 from ..database.models import Users
-from ..exceptions.api_error import ApiError
-from flask_mail import Message
-from flask import render_template
 import os
+from sendgrid.helpers.mail import Mail
+from ..config import SendGridConfig
 
 def hash_email(email):
     combination = (email.lower() + os.getenv("HASHLIB_SALT")).encode("utf-8")
@@ -28,16 +27,18 @@ def hash_password(password):
 def check_password(password, hashed):
     return bcrypt.check_password_hash(hashed, password)
 
-def send_email(email, template, subject):
+def send_email_with_template(to_email, subject, template_id, dynamic_data):
     try:
-        message = Message(
-            subject=subject,
-            recipients=[email],
-            html=template
+        message = Mail(
+            from_email=SendGridConfig.SENDGRID_SENDER_EMAIL,
+            to_emails=to_email,
+            subject=subject
         )
-        message.charset = 'utf-8'
+        message.template_id = template_id
+        message.dynamic_template_data = dynamic_data
 
-        mail.send(message)
-
+        sg.send(message)
+       
     except Exception as e:
         print(f"Erro ao enviar e-mail: {e}")
+      
