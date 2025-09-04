@@ -232,6 +232,7 @@ def connect_mercado_pago(trainer_id):
             f"&platform_id=mp"
             f"&state={trainer_id}"
             f"&redirect_uri={MercadopagoConfig.MP_REDIRECT_URI}"
+            f"&prompt=login%20select_account"
         )
 
         return redirect(authorization_url)
