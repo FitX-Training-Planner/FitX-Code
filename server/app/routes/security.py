@@ -396,6 +396,8 @@ def mercadopago_webhook():
                 start_date = datetime.now(brazil_tz).date()
                 end_date = start_date + timedelta(days=transaction.payment_plan.duration_days)
 
+                status = db.query(ContractStatus).filter(ContractStatus.name == "Ativo").first()
+
                 new_contract = PlanContract(
                     start_date = start_date,
                     end_date = end_date,
@@ -405,11 +407,7 @@ def mercadopago_webhook():
                     fk_trainer_ID = trainer_ID,
                     fk_payment_plan_ID = transaction.fk_payment_plan_ID,
                     fk_payment_transaction_ID = transaction.ID,
-                    fk_contract_status_ID = (
-                        db.query(ContractStatus)
-                        .filter(ContractStatus.name == "Ativo")
-                        .scalar()
-                    )
+                    fk_contract_status_ID = status.ID
                 )
 
                 transaction.trainer.contracts_number += 1
