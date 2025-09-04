@@ -41,7 +41,7 @@ def create_payment_preference(mp_user_id, item_id, title, description, price, ap
             "binary_mode": True,
             "purpose": "wallet_purchase",
             "application_fee": float(app_fee),
-            "collector_id": mp_user_id, 
+            "collector_id": int(mp_user_id), 
             "payment_methods": {
                 "excluded_payment_types": [
                     { "id": "ticket" },
