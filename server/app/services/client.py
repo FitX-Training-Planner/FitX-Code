@@ -94,19 +94,20 @@ def create_payment(db, client_id, payment_plan_id):
         
         payment_plan = (
             db.query(PaymentPlan)
+            .join(PaymentPlan.trainer)
+            .join(Trainer.user)
             .options(
-                subqueryload(PaymentPlan.trainer)
-                    .joinedload(Trainer.user)
+                joinedload(PaymentPlan.trainer)
             )
             .filter(PaymentPlan.ID == payment_plan_id)
             .first()
         )
 
-        if not payment_plan.trainer.user.is_active:
-            raise ApiError(MessageCodes.TRAINER_DEACTIVATED, 404)
-
         if not payment_plan:
             raise ApiError(MessageCodes.PAYMENT_PLAN_NOT_FOUND, 404)
+
+        if not payment_plan.trainer.user.is_active:
+            raise ApiError(MessageCodes.TRAINER_DEACTIVATED, 404)
         
         if not check_trainer_can_be_contracted(db, payment_plan.fk_trainer_ID):
             raise ApiError(MessageCodes.TRAINER_CANNOT_BE_CONTRACTED, 409)
@@ -137,6 +138,8 @@ def create_payment(db, client_id, payment_plan_id):
         
         if not acquire_client_lock(client_id, 300):
             raise ApiError(MessageCodes.CLIENT_IS_IN_HIRING, 409)
+        
+        print(payment_plan.trainer)
         
         try:
             description = f"Plano '{payment_plan.name}' de {payment_plan.duration_days} dias do FitX"
