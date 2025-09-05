@@ -138,9 +138,7 @@ def create_payment(db, client_id, payment_plan_id):
         
         if not acquire_client_lock(client_id, 300):
             raise ApiError(MessageCodes.CLIENT_IS_IN_HIRING, 409)
-        
-        print(payment_plan.trainer)
-        
+                
         try:
             description = f"Plano '{payment_plan.name}' de {payment_plan.duration_days} dias do FitX"
 

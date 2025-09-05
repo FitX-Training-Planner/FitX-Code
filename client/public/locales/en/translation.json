@@ -760,7 +760,7 @@
     "other": "Other",
     "preferNotToAnswer": "I prefer not to answer",
     "sex": "Sex",
-    "merchantAccountInstruction": "In order for you to receive payments and for clients to contract you, your Mercado Pago account must be enabled as a Merchant Account.",
+    "merchantAccountInstruction": "To receive payments and allow client to hire your services, your Mercado Pago account must be enabled as a Seller Account (Business), which requires the creation of a valid CNPJ.",
     "databaseData": {
         "muscleGroups": {
             "1": {

@@ -760,5 +760,5 @@
     "other": "Outro",
     "preferNotToAnswer": "Prefiro não responder",
     "sex": "Sexo",
-    "merchantAccountInstruction": "Para que você possa receber pagamentos e clientes possam te contratar, é necessário que sua conta do Mercado Pago seja habilitada como Conta de Vendedor."
+    "merchantAccountInstruction": "Para receber pagamentos e permitir que clientes contratem seus serviços, é necessário que sua conta do Mercado Pago esteja habilitada como Conta de Vendedor (Business), o que exige a criação de um CNPJ válido."
 }
