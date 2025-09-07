@@ -414,7 +414,6 @@ def get_trainer_contracts():
 
             return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
 
-
 @trainer_bp.route("/<int:trainer_id>/ratings", methods=["GET"])
 @jwt_required()
 @only_client

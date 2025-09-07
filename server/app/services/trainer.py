@@ -715,7 +715,7 @@ def get_partial_trainer_contracts(db, offset, limit, sort, full_date, month, yea
                 query = query.filter(PlanContract.start_date == parsed_date)
 
             except ValueError:
-                raise ApiError("INVALID_DATE_FORMAT", 400)
+                raise ApiError(MessageCodes.INVALID_DATE_FORMAT, 400)
 
         elif month and year:
             query = query.filter(

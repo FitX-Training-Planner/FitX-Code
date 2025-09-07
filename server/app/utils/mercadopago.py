@@ -81,3 +81,33 @@ def calculate_app_fee_in_payment_plan(full_price):
         fee = full_price * 0.05
 
     return round(fee, 2)
+
+def calculate_refund(start_date, end_date, last_day_full_refund, last_day_allowed_refund, amount, app_fee):
+    today = datetime.now(brazil_tz).date()
+
+    contract_value = amount - app_fee
+    refund_fee = 0.0
+    refund = 0.0
+
+    if today <= last_day_full_refund:
+        refund = amount
+
+    elif today > last_day_allowed_refund:
+        refund_fee = contract_value * 0.10
+        
+    else:
+        total_days = (end_date - start_date).days
+        days_used = (today - start_date).days
+
+        proportion = max(0, min(1, days_used / total_days))
+
+        consumed_value = contract_value * proportion
+
+        refund = contract_value - consumed_value
+
+        refund_fee = contract_value * 0.10
+
+    return {
+        "fee": round(refund_fee, 2), 
+        "refund": round(refund, 2)
+    }
