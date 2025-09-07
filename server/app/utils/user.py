@@ -27,12 +27,11 @@ def hash_password(password):
 def check_password(password, hashed):
     return bcrypt.check_password_hash(hashed, password)
 
-def send_email_with_template(to_email, subject, template_id, dynamic_data):
+def send_email_with_template(to_email, template_id, dynamic_data):
     try:
         message = Mail(
             from_email=SendGridConfig.SENDGRID_SENDER_EMAIL,
-            to_emails=to_email,
-            subject=subject
+            to_emails=to_email
         )
         message.template_id = template_id
         message.dynamic_template_data = dynamic_data

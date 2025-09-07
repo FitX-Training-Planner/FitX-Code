@@ -13,7 +13,7 @@ from ..utils.trainer import release_trainer_lock
 from ..utils.client import release_client_lock
 from ..config import MercadopagoConfig, SendGridConfig
 from ..services.trainer import insert_mercadopago_trainer_info
-from ..services.client import get_valid_mp_token
+from ..services.trainer import get_valid_mp_token
 import requests
 import os
 from sqlalchemy.orm import joinedload, subqueryload
@@ -116,7 +116,6 @@ def identity_confirmation():
 
             send_email_with_template(
                 email,
-                "Código de Verificação",
                 SendGridConfig.SENDGRID_TEMPLATE_CONFIRMATION,
                 {
                     "code": generated_code
