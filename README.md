@@ -85,3 +85,5 @@ Este repositório contém o código e documentos relacionados ao projeto FitX, u
 <a href="https://www.flaticon.com/br/icones-gratis/semanal" title="semanal ícones">Semanal ícones criados por Arafat Uddin - Flaticon</a>
 <a href="https://www.flaticon.com/br/icones-gratis/genero" title="gênero ícones">Gênero ícones criados por edt.im - Flaticon</a>
 <a href="https://www.flaticon.com/br/icones-gratis/fraqueza" title="fraqueza ícones">Fraqueza ícones criados por Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/academia" title="academia ícones">Academia ícones criados por Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/painel-de-controle" title="painel de controle ícones">Painel de controle ícones criados por Freepik - Flaticon</a>

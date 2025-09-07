@@ -16,6 +16,31 @@ function ClientNavBar({
             isActive={isActive}
         >           
             <li
+                onClick={() => navigate("/me/contract")}
+                className={isActive("/me/contract") ? styles.selected : undefined}
+            >
+                <Stack
+                    justifyContent="start"
+                    direction="row"
+                    className={styles.nav_bar_item}
+                >
+                    <Stack
+                        alignItems="center"
+                        className={styles.nav_bar_item_icon}
+                    >
+                        <ClickableIcon
+                            iconSrc="/images/icons/training_plan.png"
+                            name={t("contract")}
+                        />
+                    </Stack>
+
+                    <span>
+                        {t("contract")}
+                    </span>
+                </Stack>
+            </li>
+
+            <li
                 onClick={() => navigate("/me/training-plan")}
                 className={`${styles.nav_bar_item} ${isActive("/me/training-plan") ? styles.selected : undefined}`}
             >
@@ -28,38 +53,13 @@ function ClientNavBar({
                         className={styles.nav_bar_item_icon}
                     >
                         <ClickableIcon
-                            iconSrc="/images/icons/training_plan.png"
+                            iconSrc="/images/icons/dumbell.png"
                             name={t("myWorkout")}
                         />
                     </Stack>
 
                     <span>
                         {t("myWorkout")}
-                    </span>
-                </Stack>
-            </li>
-
-            <li
-                onClick={() => navigate("/me/trainer-chat")}
-                className={isActive("/me/trainer-chat") ? styles.selected : undefined}
-            >
-                <Stack
-                    justifyContent="start"
-                    direction="row"
-                    className={styles.nav_bar_item}
-                >
-                    <Stack
-                        alignItems="center"
-                        className={styles.nav_bar_item_icon}
-                    >
-                        <ClickableIcon
-                            iconSrc="/images/icons/chat.png"
-                            name={t("chatWithTrainer")}
-                        />
-                    </Stack>
-
-                    <span>
-                        {t("chatWithTrainer")}
                     </span>
                 </Stack>
             </li>

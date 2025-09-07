@@ -65,31 +65,6 @@ function TrainerNavBar({
             </li>
 
             <li
-                onClick={() => navigate("/trainers/me/chats")}
-                className={isActive("/trainers/me/chats") ? styles.selected : undefined}
-            >
-                <Stack
-                    justifyContent="start"
-                    direction="row"
-                    className={styles.nav_bar_item}
-                >
-                    <Stack
-                        alignItems="center"
-                        className={styles.nav_bar_item_icon}
-                    >
-                        <ClickableIcon
-                            iconSrc="/images/icons/chat.png"
-                            name={t("chatsWithClients")}
-                        />
-                    </Stack>
-
-                    <span>
-                        {t("chatsWithClients")}
-                    </span>
-                </Stack>
-            </li>
-
-            <li
                 onClick={() => navigate("/trainers/me/payments")}
                 className={isActive("/trainers/me/payments") ? styles.selected : undefined}
             >
@@ -110,6 +85,31 @@ function TrainerNavBar({
 
                     <span>
                         {t("paymentsAndContracts")}
+                    </span>
+                </Stack>
+            </li>
+
+            <li
+                onClick={() => navigate("/trainers/me/dashboard")}
+                className={isActive("/trainers/me/dashboard") ? styles.selected : undefined}
+            >
+                <Stack
+                    justifyContent="start"
+                    direction="row"
+                    className={styles.nav_bar_item}
+                >
+                    <Stack
+                        alignItems="center"
+                        className={styles.nav_bar_item_icon}
+                    >
+                        <ClickableIcon
+                            iconSrc="/images/icons/dashboard.png"
+                            name={t("dashboard")}
+                        />
+                    </Stack>
+
+                    <span>
+                        {t("dashboard")}
                     </span>
                 </Stack>
             </li>
