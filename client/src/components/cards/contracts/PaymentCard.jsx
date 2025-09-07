@@ -72,21 +72,21 @@ function PaymentCard({
                             </span>
                         </Stack>
 
-                        <Stack
-                            gap="0.5em"
-                            alignItems="start"
-                            className={styles.descriptioned_item}
-                        >
-                            <span>
-                                {t("received")}:
-                            </span>
+                        {trainerReceived && (
+                            <Stack
+                                gap="0.5em"
+                                alignItems="start"
+                                className={styles.descriptioned_item}
+                            >
+                                <span>
+                                    {t("received")}:
+                                </span>
 
-                            {trainerReceived && (
                                 <span>
                                     {formatPriceToBR(trainerReceived)}
                                 </span>
-                            )}
-                        </Stack>
+                            </Stack>
+                        )}
                         
                         <Stack
                             gap="0.5em"
@@ -120,7 +120,7 @@ function PaymentCard({
                         className={styles.descriptioned_item}
                     >
                         <span>
-                            {t("paymentMethod")}:
+                            {t("paymentMethodId")}:
                         </span>
 
                         <Stack

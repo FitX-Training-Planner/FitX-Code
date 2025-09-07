@@ -48,8 +48,7 @@ function PaymentPage() {
             t("refundTerm6"),
             t("refundTerm7"),
             t("refundTerm8"),
-            t("refundTerm9"),
-            t("refundTerm10")
+            t("refundTerm9")
         ]
     }, [t]);
 

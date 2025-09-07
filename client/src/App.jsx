@@ -36,6 +36,7 @@ import WelcomePage from "./components/pages/WelcomePage";
 import TrainerSpecialties from "./components/pages/TrainerSpecialties";
 import ChangeLanguageAndThemeButton from "./components/layout/ChangeLanguageAndThemeButton";
 import CreateClient from "./components/pages/CreateClient";
+import ClientContract from "./components/pages/ClientContract";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -76,7 +77,8 @@ function App() {
       "/payment/failure",
       "/payment/pending",
       "/me/saved-trainers",
-      "/checkout/:planId"
+      "/checkout/:planId",
+      "/me/contract"
     ];
 
     const shouldSkip = !validPaths.includes(location.pathname);
@@ -278,6 +280,11 @@ function App() {
             <Route 
               path="/me/saved-trainers"
               element={<SavedTrainers />}
+            />
+
+            <Route 
+              path="/me/contract"
+              element={<ClientContract />}
             />
 
             <Route 

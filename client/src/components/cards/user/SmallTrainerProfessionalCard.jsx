@@ -81,7 +81,6 @@ function SmallTrainerProfessionalCard({
             >
                 <Stack
                     direction={width <= 640 ? "column" : "row"}
-                    className={styles.descriptioned_item}
                     justifyContent={width <= 640 ? "center" : "start"}
                 >
                     <PhotoInput
