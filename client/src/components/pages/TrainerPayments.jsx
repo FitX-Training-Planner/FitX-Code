@@ -53,7 +53,6 @@ function TrainerPayments() {
     }, [t]);  
     
     const [contracts, setContracts] = useState([]);
-    const [showedContracts, setShowedContracts] = useState([]);
     const [contractsError, setContractsError] = useState(false);
     const [contractsOffset, setContractsOffset] = useState(0);
     const [activeContractFilter, setActiveContractFilter] = useState(contractsFilters[0]);
@@ -94,7 +93,6 @@ function TrainerPayments() {
             const newContracts = [...updatedContracts, ...data];
 
             setContracts(newContracts);
-            setShowedContracts(newContracts);
 
             setContractsOffset(offset + contractsLimit);
         };
@@ -119,7 +117,6 @@ function TrainerPayments() {
         if (e) e.preventDefault();
 
         setContracts([]);
-        setShowedContracts([]);
         setContractsOffset(0);
         setContractsError(false);
 
@@ -294,8 +291,8 @@ function TrainerPayments() {
                                         <Stack
                                             gap="2em"
                                         >
-                                            {showedContracts.length !== 0 ? (
-                                                showedContracts.map((contract, index) => (
+                                            {contracts.length !== 0 ? (
+                                                contracts.map((contract, index) => (
                                                     <React.Fragment
                                                         key={index}
                                                     >

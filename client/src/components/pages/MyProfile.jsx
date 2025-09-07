@@ -840,9 +840,7 @@ function MyProfile() {
             <main
                 className={styles.my_profile_page}
             >
-                <BackButton
-                    destiny="/"
-                />
+                <BackButton/>
 
                 <Stack
                     gap="10em"

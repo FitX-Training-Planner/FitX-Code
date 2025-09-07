@@ -9,7 +9,7 @@ function Title({
 
     return (
         <Heading 
-            style={{ color: `var(${varColor})`, textAlign }}
+            style={{ color: `var(${varColor})`, textAlign, hyphens: "none" }}
         >
             {text}
         </Heading>

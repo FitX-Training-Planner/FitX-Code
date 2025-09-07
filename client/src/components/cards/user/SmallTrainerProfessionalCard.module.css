@@ -1,5 +1,4 @@
-.small_professional_card,
-.training_contract_card {
+.small_professional_card {
     border: 3px solid var(--dark-theme-color);
     border-radius: 20px;
     padding: 1em;
