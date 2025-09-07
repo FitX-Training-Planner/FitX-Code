@@ -1,0 +1,32 @@
+.client_contract_page {
+    padding: 2em 1em;
+}
+
+.contracts_container {
+    padding: 0 1em;
+}
+
+.contracts > p {
+    text-align: center;
+}
+
+.professional_name_container {
+    padding: 1em;
+    background-color: var(--light-theme-color);
+    font-weight: bold;
+    border-radius: 10px;
+}
+
+.professional_name_container > span {
+    min-width: max-content;
+}
+
+.descriptioned_item > span:last-of-type {
+    font-size: var(--small-title-size);
+    font-family: var(--fonts-1);
+}
+
+.center_description {
+    text-align: center;
+    hyphens: none;
+}
