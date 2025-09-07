@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from ..exceptions.api_error import ApiError
-from ..services.client import get_client_training_contract, cancel_contract, create_payment, get_client_saved_trainers, modify_client_data, get_client_info
+from ..services.client import get_client_training_contract, create_payment, get_client_saved_trainers, modify_client_data, get_client_info, get_partial_client_contracts, cancel_contract
 from flask_jwt_extended import jwt_required
 from ..utils.client_decorator import only_client
 from flask import request, jsonify
@@ -34,8 +34,42 @@ def get_training_contract():
             print(f"{error_message}: {e}")
 
             return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
+
+@client_bp.route("/me/contracts", methods=["GET"])
+@jwt_required()
+@only_client
+def get_client_contracts():
+    error_message = "Erro na rota de recuperação de contratos do cliente"
+
+    with get_db() as db:
+        try:        
+            params = request.args
+
+            identity = get_jwt_identity()
+
+            contracts = get_partial_client_contracts(
+                db, 
+                params.get("offset"), 
+                params.get("limit"), 
+                params.get("fullDate"),
+                params.get("month"),
+                params.get("year"),
+                identity
+            )
+
+            return jsonify(contracts), 200
         
-@client_bp.route("/me/active-contract", methods=["PUT"])
+        except ApiError as e:
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": str(e)}), e.status_code
+
+        except Exception as e:
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
+        
+@client_bp.route("/me/cancel-contract", methods=["PUT"])
 @jwt_required()
 @only_client
 def cancel_client_contract():

@@ -1,22 +1,36 @@
 from app.database.models import Users, PlanContract, ContractStatus, PaymentPlan, PaymentTransaction, Trainer, SaveTrainer, ClientMuscleGroups, MuscleGroup
 from ..exceptions.api_error import ApiError
-from ..utils.serialize import serialize_training_contract, serialize_trainer_in_trainers, serialize_muscle_group, serialize_field, serialize_client_base_info, serialize_date
+from ..utils.serialize import serialize_training_contract, serialize_trainer_in_trainers, serialize_muscle_group, serialize_field, serialize_client_base_info, serialize_date, serialize_contract, serialize_payment_plan
 from sqlalchemy.orm import joinedload, subqueryload
+from sqlalchemy import desc, extract
 from ..utils.message_codes import MessageCodes
-from ..utils.mercadopago import create_payment_preference
+from ..utils.mercadopago import create_payment_preference, calculate_refund
 from ..utils.user import decrypt_email
 from ..utils.trainer import acquire_trainer_lock, release_trainer_lock
 from ..utils.client import acquire_client_lock, release_client_lock
-from .trainer import get_top3_specialties_data, get_valid_mp_token, check_trainer_can_be_contracted
+from .trainer import get_top3_specialties_data, check_trainer_can_be_contracted
 from ..utils.formatters import safe_date, safe_int, safe_str 
+from datetime import datetime
+
 def get_client_training_contract(db, client_id):
     try:
         training_contract = check_client_active_contract(db, client_id)
 
         if training_contract is None:
             return None
+        
+        serialized_contract = serialize_training_contract(training_contract)
 
-        return serialize_training_contract(training_contract)
+        serialized_contract["refundInfo"] = calculate_refund(
+            training_contract.start_date, 
+            training_contract.end_date, 
+            training_contract.last_day_full_refund, 
+            training_contract.last_day_allowed_refund,
+            training_contract.payment_transaction.amount,
+            training_contract.payment_transaction.app_fee
+        )
+
+        return serialized_contract
 
     except ApiError as e:
         print(f"Erro ao recuperar informações do treinamento e contrato: {e}")
@@ -37,7 +51,8 @@ def check_client_active_contract(db, client_id):
                 joinedload(PlanContract.trainer),
                 subqueryload(PlanContract.user)
                     .joinedload(Users.training_plan),
-                joinedload(PlanContract.contract_status)
+                joinedload(PlanContract.contract_status),
+                joinedload(PlanContract.payment_transaction)
             )
             .filter(
                 PlanContract.fk_user_ID == client_id,
@@ -60,6 +75,7 @@ def check_client_active_contract(db, client_id):
     
 def cancel_contract(db, client_id):
     try:
+        # Fazer lógica do reembolso
         contract = check_client_active_contract(db, client_id)
 
         if contract is None:
@@ -133,10 +149,10 @@ def create_payment(db, client_id, payment_plan_id):
 
         db.flush()
         
-        if not acquire_trainer_lock(payment_plan.fk_trainer_ID, 300):
+        if not acquire_trainer_lock(payment_plan.fk_trainer_ID, 600):
             raise ApiError(MessageCodes.TRAINER_IS_IN_HIRING, 409)
         
-        if not acquire_client_lock(client_id, 300):
+        if not acquire_client_lock(client_id, 600):
             raise ApiError(MessageCodes.CLIENT_IS_IN_HIRING, 409)
                 
         try:
@@ -390,3 +406,58 @@ def modify_client_data(
         print(f"Erro ao modificar usuário: {e}")
 
         raise Exception(f"Erro ao modificar o usuário: {e}")
+
+def get_partial_client_contracts(db, offset, limit, full_date, month, year, client_id):
+    try:
+        query = (
+            db.query(PlanContract)
+            .join(PaymentTransaction, isouter=True)
+            .join(PaymentPlan, isouter=True)
+            .join(ContractStatus)
+            .options(
+                joinedload(PlanContract.payment_plan),
+                joinedload(PlanContract.payment_transaction),
+                joinedload(PlanContract.contract_status),
+                subqueryload(PlanContract.trainer)
+                    .subqueryload(Trainer.user)
+                    .joinedload(Users.media)
+            )
+            .filter(PlanContract.fk_user_ID == client_id)
+            .order_by(desc(PlanContract.start_date))
+        )
+
+        if full_date:
+            try:
+                parsed_date = datetime.strptime(full_date, "%Y-%m-%d").date()
+
+                query = query.filter(PlanContract.start_date == parsed_date)
+
+            except ValueError:
+                raise ApiError(MessageCodes.INVALID_DATE_FORMAT, 400)
+
+        elif month and year:
+            query = query.filter(
+                extract("month", PlanContract.start_date) == month,
+                extract("year", PlanContract.start_date) == year
+            )
+
+        elif month:
+            query = query.filter(extract("month", PlanContract.start_date) == month)
+
+        elif year:
+            query = query.filter(extract("year", PlanContract.start_date) == year)
+
+        contracts = query.offset(offset).limit(limit).all()
+
+        return [serialize_contract(contract, True) for contract in contracts]
+
+    except ApiError as e:
+        print(f"Erro ao recuperar contratos do treinador: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao recuperar contratos do treinador: {e}")
+
+        raise Exception(f"Erro ao recuperar os contratos do treinador: {e}")
+    

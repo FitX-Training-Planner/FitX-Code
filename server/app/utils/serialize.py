@@ -272,7 +272,8 @@ def serialize_trainer_in_trainers(trainer, has_saved = None, top3_specialties = 
     }
 
 def serialize_training_contract(training_contract):
-    return {
+    contract = {
+        "ID": training_contract.ID,
         "trainer": {
             "ID": training_contract.fk_trainer_ID,
             "name": training_contract.trainer.user.name,
@@ -281,10 +282,12 @@ def serialize_training_contract(training_contract):
                 if training_contract.trainer.user.fk_media_ID and training_contract.trainer.user.media 
                 else None,
             "crefNumber": training_contract.trainer.cref_number if training_contract.trainer.cref_number else None,
+            "rate": serialize_field(training_contract.trainer.rate),
         },
         "trainingPlan": {
             "ID": training_contract.user.fk_training_plan_ID,
             "name": training_contract.user.training_plan.name,
+            "note": training_contract.user.training_plan.note
         } if training_contract.user.fk_training_plan_ID else None,
         "contract": {
             "ID": training_contract.ID,
@@ -292,6 +295,11 @@ def serialize_training_contract(training_contract):
             "endDate": training_contract.end_date
         }
     }
+
+    if training_contract.fk_payment_plan_ID is not None:
+        contract["paymentPlan"] = serialize_payment_plan(training_contract.payment_plan)
+
+    return contract
 
 def serialize_rating(rating, has_liked = None):
     data = {
