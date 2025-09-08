@@ -109,7 +109,6 @@ function TrainingPlanForm({
                                                 handleModifyTrainingDay={() => handleModifyTrainingDay(day)}
                                                 handleRemoveTrainingDay={() => handleRemoveTrainingDay(day.orderInPlan)}
                                                 handleDuplicateTrainingDay={() => handleDuplicateTrainingDay(day)}
-                                                viewWidth={width}
                                             />
                                         </SortableItem>
                                     ))

@@ -8,6 +8,7 @@ import TextInput from "../fields/TextInput";
 import Select from "../fields/Select";
 import { handleOnChangeSelect, handleOnChangeTextField } from "../../../utils/handlers/changeHandlers";
 import { useTranslation } from "react-i18next";
+import useWindowSize from "../../../hooks/useWindowSize";
 
 function CardioSessionForm({
     cardioSession,
@@ -19,6 +20,8 @@ function CardioSessionForm({
 }) {
     const { t } = useTranslation();
 
+    const { width } = useWindowSize();
+    
     const arrays = useMemo(() => ({
         "cardioIntensities": cardioIntensities,
         "cardioOptions": cardioOptions
@@ -40,9 +43,7 @@ function CardioSessionForm({
                     - {t("mandatoryFields")}
                 </p>
 
-                <Stack
-                    gap="2em"
-                >
+                <Stack>
                     <TextInput
                         name="durationMinutes"
                         placeholder={t("cardioDurationMinutesPlaceholder")}
@@ -54,23 +55,28 @@ function CardioSessionForm({
                         maxLength={3}
                     />
 
-                    <Select
-                        name="cardioOption"
-                        placeholder={t("cardioOptionPlaceholder")}
-                        labelText={`${t("cardioOption")} *`}
-                        value={cardioOptions.find(option => String(option.ID) === String(cardioSession.cardioOption?.ID))?.name}
-                        handleChange={(e) => handleOnChangeSelect(e, arrays.cardioOptions, "name", cardioSession, setCardioSession, setCardioSessionError)}
-                        options={cardioOptions.map(option => option.name)}
-                    />
+                    <Stack
+                        direction={width <= 440 ? "column" : "row"}
+                        alignItems="end"
+                    >
+                        <Select
+                            name="cardioOption"
+                            placeholder={t("cardioOptionPlaceholder")}
+                            labelText={`${t("cardioOption")} *`}
+                            value={cardioOptions.find(option => String(option.ID) === String(cardioSession.cardioOption?.ID))?.name}
+                            handleChange={(e) => handleOnChangeSelect(e, arrays.cardioOptions, "name", cardioSession, setCardioSession, setCardioSessionError)}
+                            options={cardioOptions.map(option => option.name)}
+                        />
 
-                    <Select
-                        name="cardioIntensity"
-                        placeholder={t("cardioIntensityPlaceholder")}
-                        labelText={`${t("cardioIntensity")} *`}
-                        value={cardioIntensities.find(intensity => String(intensity.ID) === String(cardioSession.cardioIntensity?.ID))?.type}
-                        handleChange={(e) => handleOnChangeSelect(e, arrays.cardioIntensities, "type", cardioSession, setCardioSession, setCardioSessionError)}
-                        options={cardioIntensities.map(intensity => intensity.type)}
-                    />
+                        <Select
+                            name="cardioIntensity"
+                            placeholder={t("cardioIntensityPlaceholder")}
+                            labelText={`${t("cardioIntensity")} *`}
+                            value={cardioIntensities.find(intensity => String(intensity.ID) === String(cardioSession.cardioIntensity?.ID))?.type}
+                            handleChange={(e) => handleOnChangeSelect(e, arrays.cardioIntensities, "type", cardioSession, setCardioSession, setCardioSessionError)}
+                            options={cardioIntensities.map(intensity => intensity.type)}
+                        />
+                    </Stack>
 
                     <TextInput
                         type="time"

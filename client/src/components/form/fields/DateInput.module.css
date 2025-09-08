@@ -2,7 +2,7 @@
     --border: 2px solid var(--theme-color);
     --border-radius: 15px;
     --gap: 0.2em;
-    --day-width: 3em;
+    --day-width: 3.5em;
     --month-width: 7em;
     --year-width: 10em;
     width: calc(var(--day-width) + var(--month-width) + var(--year-width) + var(--gap) * 2);

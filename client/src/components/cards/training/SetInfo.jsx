@@ -3,6 +3,7 @@ import convertTime from "../../../utils/formatters/text/convertTime";
 import Stack from "../../containers/Stack";
 import Title from "../../text/Title";
 import styles from "./TrainingCards.module.css";
+import useWindowSize from "../../../hooks/useWindowSize";
 
 function SetInfo({
     orderInExercise,
@@ -15,6 +16,8 @@ function SetInfo({
     headingNumber
 }) {
     const { t } = useTranslation();
+
+    const { width } = useWindowSize();
 
     return (
         <Stack>
@@ -38,9 +41,19 @@ function SetInfo({
                 gap="0.5em"
             >                                            
                 {minReps && maxReps ? (
-                    <span>
-                        {minReps} - {maxReps} {t("reps")}
-                    </span>    
+                    <Stack
+                        gap={width <= 640 ? "0.2em" : "0.5em"}
+                        direction={width <= 640 ? "column" : "row"}
+                        justifyContent="center"
+                    >
+                        <span>
+                            {minReps} - {maxReps}
+                        </span>    
+
+                        <span>
+                            {t("reps")}
+                        </span>    
+                    </Stack>
                 ) : durationSeconds && (
                     <span>
                         {convertTime(durationSeconds, "second", t)} {t("inIsometry")}

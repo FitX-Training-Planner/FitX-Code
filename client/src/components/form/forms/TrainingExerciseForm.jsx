@@ -83,9 +83,7 @@ function TrainingExerciseForm({
                     - {t("mandatoryFields")}
                 </p>
                 
-                <Stack
-                    gap="2em"
-                >
+                <Stack>
                     <Stack
                         gap="2em"
                     >
@@ -195,7 +193,10 @@ function TrainingExerciseForm({
                             />
 
                             {exercise.exerciseEquipment?.name.toLowerCase() === "polia" && (
-                                <>
+                                <Stack
+                                    direction={width <= 440 ? "column" : "row"}
+                                    alignItems="end"
+                                >
                                     <Select
                                         name="pulleyHeight"
                                         placeholder={t("pulleyHeightPlaceholder")}
@@ -204,7 +205,7 @@ function TrainingExerciseForm({
                                         handleChange={(e) => handleOnChangeSelect(e, arrays.pulleyHeights, "description", exercise, setExercise, setExerciseError)}
                                         options={pulleyHeights.map(height => height.description)}    
                                     />
-                                    
+
                                     <Select
                                         name="pulleyAttachment"
                                         placeholder={t("pulleyAttachmentPlaceholder")}
@@ -213,26 +214,31 @@ function TrainingExerciseForm({
                                         handleChange={(e) => handleOnChangeSelect(e, arrays.pulleyAttachments, "name", exercise, setExercise, setExerciseError)}
                                         options={pulleyAttachments.map(attachment => attachment.name)}    
                                     />
-                                </>
+                                </Stack>
                             )} 
 
-                            <Select
-                                name="gripType"
-                                placeholder={t("gripTypePlaceholder")}
-                                labelText={t("gripType")}
-                                value={gripTypes.find(type => String(type.ID) === String(exercise.gripType?.ID))?.name}
-                                handleChange={(e) => handleOnChangeSelect(e, arrays.gripTypes, "name", exercise, setExercise, setExerciseError)}
-                                options={gripTypes.map(type => type.name)}    
-                            />
+                            <Stack
+                                direction={width <= 440 ? "column" : "row"}
+                                alignItems="end"
+                            >
+                                <Select
+                                    name="gripType"
+                                    placeholder={t("gripTypePlaceholder")}
+                                    labelText={t("gripType")}
+                                    value={gripTypes.find(type => String(type.ID) === String(exercise.gripType?.ID))?.name}
+                                    handleChange={(e) => handleOnChangeSelect(e, arrays.gripTypes, "name", exercise, setExercise, setExerciseError)}
+                                    options={gripTypes.map(type => type.name)}    
+                                />
 
-                            <Select
-                                name="gripWidth"
-                                placeholder={t("gripWidthPlaceholder")}
-                                labelText={t("gripWidth")}
-                                value={gripWidths.find(width => String(width.ID) === String(exercise.gripWidth?.ID))?.description}
-                                handleChange={(e) => handleOnChangeSelect(e, arrays.gripWidths, "description", exercise, setExercise, setExerciseError)}
-                                options={gripWidths.map(width => width.description)}    
-                            />
+                                <Select
+                                    name="gripWidth"
+                                    placeholder={t("gripWidthPlaceholder")}
+                                    labelText={t("gripWidth")}
+                                    value={gripWidths.find(width => String(width.ID) === String(exercise.gripWidth?.ID))?.description}
+                                    handleChange={(e) => handleOnChangeSelect(e, arrays.gripWidths, "description", exercise, setExercise, setExerciseError)}
+                                    options={gripWidths.map(width => width.description)}    
+                                />
+                            </Stack>
 
                             <Select
                                 name="laterality"

@@ -6,6 +6,7 @@ import getStepType from "../../../utils/generators/stepType";
 import TrainingDayInfo from "./TrainingDayInfo";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
+import useWindowSize from "../../../hooks/useWindowSize";
 
 function TrainingDayCard({
     name,
@@ -17,10 +18,11 @@ function TrainingDayCard({
     headingNumber,
     handleModifyTrainingDay,
     handleRemoveTrainingDay,
-    handleDuplicateTrainingDay,
-    viewWidth
+    handleDuplicateTrainingDay
 }) {
     const { t } = useTranslation();
+
+    const { width } = useWindowSize();
 
     const user = useSelector(state => state.user);
 
@@ -54,7 +56,7 @@ function TrainingDayCard({
                 headingNumber={headingNumber}
             >
                 <Stack
-                    direction={viewWidth <= 440 ? "column" : "row"}
+                    direction={width <= 440 ? "column" : "row"}
                     alignItems="start"
                     gap="2em"
                 >
@@ -109,7 +111,7 @@ function TrainingDayCard({
                     {cardioSessions.length > 0 && (
                         <>
                             <Stack>
-                                {viewWidth <= 440 && (
+                                {width <= 440 && (
                                     <hr/>
                                 )}
 

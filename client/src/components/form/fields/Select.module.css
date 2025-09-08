@@ -26,6 +26,7 @@
 }
 
 .select_container > label > p {
+    hyphens: none;
     line-height: var(--size);
 }
 
@@ -73,6 +74,8 @@
 .select > div,
 .select > ul > li {
     padding: var(--padding);
+    white-space: nowrap;
+    overflow-x: auto;
 }
 
 .select > ul > li:hover,

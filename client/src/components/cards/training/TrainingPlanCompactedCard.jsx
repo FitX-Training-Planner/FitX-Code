@@ -115,6 +115,7 @@ function TrainingPlanCompactedCard({
                                             <Title
                                                 headingNumber={headingNumber + 2}
                                                 text={t("exercises")}
+                                                varColor="--light-theme-color"
                                             />
 
                                             <hr/>
@@ -176,6 +177,7 @@ function TrainingPlanCompactedCard({
                                             <Title
                                                 headingNumber={headingNumber + 2}
                                                 text={t("cardioSessions")}
+                                                varColor="--light-theme-color"
                                             />
 
                                             <hr/>
@@ -189,10 +191,11 @@ function TrainingPlanCompactedCard({
                                                             gap="0.5em"
                                                             className={styles.cardio_session}
                                                         >
-                                                            <span>
-                                                                {user.config.isEnglish ? t(`databaseData.cardioOptions.${session.cardioOption.ID}.name`) : session.cardioOption.name}
-                                                            </span>
-
+                                                            <Title
+                                                                headingNumber={headingNumber + 3}
+                                                                text={user.config.isEnglish ? t(`databaseData.cardioOptions.${session.cardioOption.ID}.name`) : session.cardioOption.name}
+                                                            />
+                                                          
                                                             <span>
                                                                 {user.config.isEnglish ? t(`databaseData.cardioIntensities.${session.cardioIntensity.ID}.type`) : session.cardioIntensity.type}
                                                             </span>

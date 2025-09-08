@@ -7,6 +7,7 @@ import Select from "../fields/Select";
 import TextInput from "../fields/TextInput";
 import { handleOnChangeSelect, handleOnChangeTextField } from "../../../utils/handlers/changeHandlers";
 import { useTranslation } from "react-i18next";
+import useWindowSize from "../../../hooks/useWindowSize";
 
 function TrainingSetForm({
     set,
@@ -17,6 +18,8 @@ function TrainingSetForm({
     trainingTechniques
 }) {
     const { t } = useTranslation();
+
+    const { width } = useWindowSize();
 
     const arrays = useMemo(() => ({
         "setTypes": setTypes,
@@ -46,30 +49,33 @@ function TrainingSetForm({
                     </p>
                 </Stack>
 
-                <Stack
-                    gap="2em"
-                > 
-                    <TextInput
-                        name="minReps"
-                        placeholder={t("minRepsPlaceholder")}
-                        labelText={t("minReps")}
-                        value={set.minReps}
-                        handleChange={(e) => handleOnChangeTextField(e, formattSecondsMinutesAndReps, () => isRepsValid(e.target.value, set.maxReps), set, setSet, setSetError, setErrors, "reps", false)}
-                        alertMessage={t("alertMinReps")}
-                        error={errors.reps}
-                        maxLength={3}
-                    />
+                <Stack> 
+                    <Stack
+                        direction={width <= 440 ? "column" : "row"}
+                        alignItems="end"
+                    >
+                        <TextInput
+                            name="minReps"
+                            placeholder={t("minRepsPlaceholder")}
+                            labelText={t("minReps")}
+                            value={set.minReps}
+                            handleChange={(e) => handleOnChangeTextField(e, formattSecondsMinutesAndReps, () => isRepsValid(e.target.value, set.maxReps), set, setSet, setSetError, setErrors, "reps", false)}
+                            alertMessage={t("alertMinReps")}
+                            error={errors.reps}
+                            maxLength={3}
+                        />
 
-                    <TextInput
-                        name="maxReps"
-                        placeholder={t("maxRepsPlaceholder")}
-                        labelText={t("maxReps")}
-                        value={set.maxReps}
-                        handleChange={(e) => handleOnChangeTextField(e, formattSecondsMinutesAndReps, () => isRepsValid(set.minReps, e.target.value), set, setSet, setSetError, setErrors, "reps", false)}
-                        alertMessage={t("alertMaxReps")}
-                        error={errors.reps}
-                        maxLength={3}
-                    />
+                        <TextInput
+                            name="maxReps"
+                            placeholder={t("maxRepsPlaceholder")}
+                            labelText={t("maxReps")}
+                            value={set.maxReps}
+                            handleChange={(e) => handleOnChangeTextField(e, formattSecondsMinutesAndReps, () => isRepsValid(set.minReps, e.target.value), set, setSet, setSetError, setErrors, "reps", false)}
+                            alertMessage={t("alertMaxReps")}
+                            error={errors.reps}
+                            maxLength={3}
+                        />
+                    </Stack>
 
                     <TextInput
                         name="durationSeconds"

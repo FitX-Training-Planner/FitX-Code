@@ -26,6 +26,7 @@
 }
 
 .text_input > label > p {
+    hyphens: none;
     line-height: var(--size);
 }
 
