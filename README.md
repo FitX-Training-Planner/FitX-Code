@@ -87,3 +87,13 @@ Este repositório contém o código e documentos relacionados ao projeto FitX, u
 <a href="https://www.flaticon.com/br/icones-gratis/fraqueza" title="fraqueza ícones">Fraqueza ícones criados por Freepik - Flaticon</a>
 <a href="https://www.flaticon.com/br/icones-gratis/academia" title="academia ícones">Academia ícones criados por Freepik - Flaticon</a>
 <a href="https://www.flaticon.com/br/icones-gratis/painel-de-controle" title="painel de controle ícones">Painel de controle ícones criados por Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/genero" title="genero ícones">Genero ícones criados por Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/cancelar" title="cancelar ícones">Cancelar ícones criados por Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/triste" title="triste ícones">Triste ícones criados por IYAHICON - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/dormir" title="dormir ícones">Dormir ícones criados por Sumitsaengtong - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/banco" title="banco ícones">Banco ícones criados por Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/mao-aberta" title="mão aberta ícones">Mão aberta ícones criados por juicy_fish - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/haltere" title="haltere ícones">Haltere ícones criados por Leremy - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/alavanca" title="alavanca ícones">Alavanca ícones criados por Good Ware - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/proximo" title="próximo ícones">Próximo ícones criados por Roundicons - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/relogio" title="relógio ícones">Relógio ícones criados por Smashicons - Flaticon</a>
