@@ -110,6 +110,13 @@ def create_payment_preference(mp_trainer_token, item_id, title, description, pri
 
         preference_response = sdk.preference().create(preference_data)
 
+        if preference_response.get("status") != 201:
+            raise Exception(
+                f"Erro ao criar preferência de pagamento: "
+                f"{preference_response.get('error')} - {preference_response.get('message')} "
+                f"(status {preference_response.get('status')})"
+            )
+
         return preference_response["response"]
 
     except Exception as e:

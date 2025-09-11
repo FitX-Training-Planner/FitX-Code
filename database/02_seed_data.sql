@@ -448,4 +448,4 @@ INSERT INTO specialty (name, fk_media_ID) VALUES
 ('Ganho de Músculo', 130),
 ('Fisiculturismo', 131),
 ('Treinamento para Gestantes', 132),
-('Treinamento Adaptado', 133)
+('Treinamento Adaptado', 133);

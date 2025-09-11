@@ -43,7 +43,7 @@ function AcceptTerms({
 
                             <Link 
                                 destiny={destiny}
-                                text={policyNames[-index]}
+                                text={policyNames[index]}
                             />
 
                             {t("forMoreInfo")}.
