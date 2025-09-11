@@ -680,6 +680,8 @@ function MyProfile() {
 
             if (data.sex) {
                 setSexes(prevSexes => prevSexes.map((sex) => ({ ...sex, isSelected: sex.ID === (data.sex?.ID ?? "preferNotToAnswer") })));
+
+                dispatch(updateUser({ sex: data.sex?.ID }));
             }
 
             if (data.weekMuscles) {
@@ -699,7 +701,7 @@ function MyProfile() {
             t("successModifyUser"), 
             t("errorModifyUser")
         );
-    }, [clientChangedInfo.availableDays, clientChangedInfo.birthDate, clientChangedInfo.height, clientChangedInfo.limitationsDescription, clientChangedInfo.weight, clientInfo.availableDays, clientInfo.birthDate, clientInfo.height, clientInfo.limitationsDescription, clientInfo.sex.ID, clientInfo.weekMuscles, clientInfo.weight, modifyClientError, modifyUserReq, muscles, sexes, t]);
+    }, [clientChangedInfo.availableDays, clientChangedInfo.birthDate, clientChangedInfo.height, clientChangedInfo.limitationsDescription, clientChangedInfo.weight, clientInfo.availableDays, clientInfo.birthDate, clientInfo.height, clientInfo.limitationsDescription, clientInfo.sex.ID, clientInfo.weekMuscles, clientInfo.weight, dispatch, modifyClientError, modifyUserReq, muscles, sexes, t]);
     
     const handleOnModifyTrainer = useCallback((e) => {
         e.preventDefault();

@@ -37,6 +37,8 @@ import TrainerSpecialties from "./components/pages/TrainerSpecialties";
 import ChangeLanguageAndThemeButton from "./components/layout/ChangeLanguageAndThemeButton";
 import CreateClient from "./components/pages/CreateClient";
 import ClientContract from "./components/pages/ClientContract";
+import TrainerClients from "./components/pages/TrainerClients";
+import ClientTrainingPlan from "./components/pages/ClientTrainingPlan";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -226,6 +228,11 @@ function App() {
             />
 
             <Route
+              path="/me/training-plan"
+              element={<ClientTrainingPlan />}
+            />
+
+            <Route
               path="/trainers/me/create-training-plan"
               element={<CreateTrainingPlan />}
             />
@@ -285,6 +292,11 @@ function App() {
             <Route 
               path="/me/contract"
               element={<ClientContract />}
+            />
+
+            <Route 
+              path="trainers/me/clients"
+              element={<TrainerClients />}
             />
 
             <Route 
