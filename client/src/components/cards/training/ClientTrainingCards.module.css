@@ -1,0 +1,105 @@
+.training_card {
+    border: 2px solid var(--theme-color);
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.training_card span {
+    hyphens: none;
+}
+
+.day_name_container {
+    background-color: var(--light-theme-color);
+    padding: 2em 1em;
+}
+
+.training_card_body {
+    padding: 1em;
+}
+
+.training_item {
+    --border: 2px solid var(--dark-theme-color);
+    width: max-content;
+    min-width: min-content;
+    overflow: hidden;
+    border-top: var(--border);
+    border-bottom: var(--border);
+    border-radius: 10px;
+}
+
+.training_item > div:last-of-type {
+    padding: 0.5em;
+    width: 100%;
+}
+
+.training_item > div:last-of-type span {
+    hyphens: none;
+    text-align: center;
+}
+
+.training_item > .training_item_actions {
+    background-color: var(--theme-color);
+    padding: 0.3em;
+}
+
+.item_order {
+    font-size: var(--small-text-size);
+}
+
+.items_container {
+    flex-wrap: wrap;
+}
+
+.descriptioned_item {
+    max-width: max-content;
+}
+
+.descriptioned_item > span:first-of-type {
+    font-weight: bold;
+}
+
+.exercise_media {
+    min-width: 50%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    position: relative;
+    border-radius: 20px;
+    border: 3px solid var(--light-theme-color);
+}
+
+.exercise_media > button {
+    position: absolute;
+    bottom: 1em;
+    left: 1em;
+}
+
+.exercise_media > :where(video, img) {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+}
+
+.view_muscles {
+    transition: var(--fast-transition);
+}
+
+.view_muscles.active {
+    transform: rotate(180deg);
+}
+
+.muscle_groups_select {
+    position: relative;
+}
+
+.muscle_groups_select > img:first-of-type {
+    max-width: 100%;
+    max-height: 80dvh;
+    z-index: 2;
+} 
+
+.muscle_groups_select > img:not(:first-of-type) {
+    position: absolute;
+    max-width: 100%;
+    max-height: 80dvh;
+    z-index: 1;
+}
