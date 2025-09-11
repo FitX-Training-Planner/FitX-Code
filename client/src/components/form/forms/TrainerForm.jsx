@@ -132,6 +132,8 @@ function TrainerForm({
                                 isAccepted={acceptTerms}
                                 setIsAccepted={setAcceptedTerms}
                                 description={t("createTrainerTerms")}
+                                policyDestinies={["/app/policies/content", "/app/policies"]}
+                                policyNames={[t("contentPolicy"), t("policies")]}
                             />
                         </Stack>
                     </Stack>

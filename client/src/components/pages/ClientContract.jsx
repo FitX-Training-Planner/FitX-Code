@@ -382,7 +382,7 @@ function ClientContract() {
                                                     >
                                                         <Title
                                                             headingNumber={3}
-                                                            text={t("trainingPlan")}
+                                                            text={t("training")}
                                                         />
 
                                                         <Stack
@@ -411,6 +411,7 @@ function ClientContract() {
                                                                             <Stack
                                                                                 alignItems="start"
                                                                                 gap="0.5em"
+                                                                                className={styles.descriptioned_item}
                                                                             >
                                                                                 <span>
                                                                                     {t("trainingPlan")}:

@@ -20,7 +20,7 @@ function ClickableIcon({
         >
             <img
                 src={iconSrc}
-                alt={name}
+                alt={name || ""}
             />
         </button>
     );

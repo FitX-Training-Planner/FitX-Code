@@ -1,5 +1,9 @@
-.clickable_icon.small {
+.clickable_icon.tiny {
     --size: 1em;
+}
+
+.clickable_icon.small {
+    --size: 1.5em;
 }
 
 .clickable_icon.medium {

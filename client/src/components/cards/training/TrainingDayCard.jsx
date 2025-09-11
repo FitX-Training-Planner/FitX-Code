@@ -142,7 +142,7 @@ function TrainingDayCard({
                                                     gap="0.5em"
                                                     alignItems="start"
                                                 >
-                                                     <span>
+                                                    <span>
                                                         {user.config.isEnglish ? t(`databaseData.cardioOptions.${session.cardioOption.ID}.name`) : session.cardioOption.name}
                                                     </span>
 

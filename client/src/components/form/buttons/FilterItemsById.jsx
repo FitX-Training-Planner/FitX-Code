@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import Stack from "../../containers/Stack";
 import styles from "./FilterItemsById.module.css";
 
@@ -7,15 +7,23 @@ function FilterItemsById({
     orderKey, 
     setShowedItems 
 }) {
-    const [selectedOrder, setSelectedOrder] = useState("1");
+    const [selectedOrder, setSelectedOrder] = useState("");
 
     const uniqueOrders = useMemo(() => {
         return [...new Set(items.map(item => String(item[orderKey])))].sort((a, b) => a - b)
     }, [items, orderKey]);
 
-    useEffect(() => {
-        setShowedItems(items.filter(item => String(item[orderKey]) === "1"));
-    }, [items, orderKey, setShowedItems]);
+    const handleOnChangeOrder = useCallback((order) => {
+        if (order === selectedOrder) {
+            setShowedItems(items);
+
+            setSelectedOrder("");
+        } else {
+            setShowedItems(items.filter(item => String(item[orderKey]) === order));
+
+            setSelectedOrder(order);
+        }
+    }, [items, orderKey, selectedOrder, setShowedItems]);
 
     return (
         <Stack
@@ -28,10 +36,7 @@ function FilterItemsById({
                     <li
                         key={order}
                         className={selectedOrder === order ? styles.selected : undefined}
-                        onClick={() => {
-                            setShowedItems(items.filter(item => String(item[orderKey]) === order));
-                            setSelectedOrder(order);
-                        }}
+                        onClick={() => handleOnChangeOrder(order)}
                     >
                         {order}
                     </li>

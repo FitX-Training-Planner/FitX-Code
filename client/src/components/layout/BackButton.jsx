@@ -5,7 +5,8 @@ import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 
 const BackButton = ({ 
-    destiny = null 
+    destiny = null,
+    state
 }) => {
     const { t } = useTranslation();
     
@@ -13,7 +14,7 @@ const BackButton = ({
 
     const handleClick = useCallback(() => {
         if (destiny) {
-            navigate(destiny);
+            navigate(destiny, state);
         } else {
             if (window.history.length > 1) {
                 navigate(-1);
@@ -21,7 +22,7 @@ const BackButton = ({
                 navigate("/");
             }
         }
-    }, [destiny, navigate]);
+    }, [destiny, navigate, state]);
 
     return (
         <div

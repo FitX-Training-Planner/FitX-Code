@@ -1,7 +1,7 @@
 import styles from "./LoginForm.module.css";
 import { useState } from "react";
 import { formattEmailAndPassword, formattName } from "../../../utils/formatters/user/formatOnChange";
-import { isEmailValid, isNameValid, isPasswordValid } from "../../../utils/validators/userValidator";
+import { isEmailValid, isNameValid } from "../../../utils/validators/userValidator";
 import Stack from "../../containers/Stack";
 import TextInput from "../fields/TextInput";
 import SubmitFormButton from "../buttons/SubmitFormButton";

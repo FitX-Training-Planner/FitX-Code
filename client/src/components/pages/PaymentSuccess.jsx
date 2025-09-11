@@ -59,11 +59,19 @@ function PaymentSuccess() {
                         </Stack>
                     </Stack>
 
-                    <NonBackgroundButton
-                        text={t("backToHome")}
-                        handleClick={() => navigate("/")}
-                        varColor="--light-theme-color"
-                    />
+                    <Stack>
+                        <NonBackgroundButton
+                            text={t("viewContract")}
+                            handleClick={() => navigate("/me/contract")}
+                            varColor="--light-theme-color"
+                        />
+
+                        <NonBackgroundButton
+                            text={t("backToHome")}
+                            handleClick={() => navigate("/")}
+                            varColor="--light-theme-color"
+                        />
+                    </Stack>
                 </Stack>
             </Stack>
         </main>

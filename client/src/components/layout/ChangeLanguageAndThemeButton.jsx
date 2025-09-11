@@ -34,7 +34,7 @@ const ChangeLanguageAndThemeButton = () => {
                     <ClickableIcon 
                         iconSrc="/images/icons/english.png" 
                         name={t("english")} 
-                        size="small"
+                        size="tiny"
                         hasTheme={false}
                         handleClick={handleOnChangeLang}
                     />
@@ -42,7 +42,7 @@ const ChangeLanguageAndThemeButton = () => {
                     <ClickableIcon 
                         iconSrc="/images/icons/portuguese.png" 
                         name={t("portuguese")} 
-                        size="small"
+                        size="tiny"
                         hasTheme={false}
                         handleClick={handleOnChangeLang}
                     />
@@ -56,7 +56,7 @@ const ChangeLanguageAndThemeButton = () => {
                     <ClickableIcon 
                         iconSrc="/images/icons/sun.png" 
                         name={t("lightTheme")} 
-                        size="small"
+                        size="tiny"
                         hasTheme={false}
                         handleClick={handleOnChangeTheme}
                     />
@@ -64,7 +64,7 @@ const ChangeLanguageAndThemeButton = () => {
                     <ClickableIcon 
                         iconSrc="/images/icons/moon.png" 
                         name={t("darkTheme")} 
-                        size="small"
+                        size="tiny"
                         hasTheme={false}
                         handleClick={handleOnChangeTheme}
                     />
