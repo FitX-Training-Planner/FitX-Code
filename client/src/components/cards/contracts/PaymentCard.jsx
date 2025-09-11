@@ -152,18 +152,30 @@ function PaymentCard({
                 <Stack
                     direction="row"
                 >
-                    <p
-                        className={styles.receipt_url}
-                    >
-                        {receiptUrl}
-                    </p>
+                    {receiptUrl ? (
+                        <>
+                            <p
+                                className={styles.receipt_url}
+                            >
+                                {receiptUrl}
+                            </p>
+        
+                            <ClickableIcon
+                                iconSrc="/images/icons/redirect.png"
+                                name={t("seeReceipt")}
+                                handleClick={() => window.open(receiptUrl, "_blank", "noopener,noreferrer")}
+                                size="small"
+                            />
+                        </>
+                    ) : (
+                        <>
+                            <Alert/>
 
-                    <ClickableIcon
-                        iconSrc="/images/icons/redirect.png"
-                        name={t("seeReceipt")}
-                        handleClick={() => window.open(receiptUrl, "_blank", "noopener,noreferrer")}
-                        size="small"
-                    />
+                            <p>
+                                {t("notReceiptAlert")}
+                            </p>
+                        </>
+                    )}
                 </Stack>
             </Stack>
         </Stack>

@@ -835,5 +835,6 @@
     "exerciseVideoAlert": "O vídeo ou imagem acima serve apenas como uma referência para a execução. Consulte as informações ao lado para realizar o exercício como o seu treinador prescreveu.",
     "duration": "Duração",
     "viewOtherCardioSessions": "Visualizar outras seções",
-    "viewOtherSteps": "Visualizar outros exercícios"
+    "viewOtherSteps": "Visualizar outros exercícios",
+    "notReceiptAlert": "O Mercado Pago não envia recibos nas notificações para o nosso app quando a compra é feita com crédito da conta. Você pode consultar os detalhes da transação diretamente no aplicativo do Mercado Pago."
 }

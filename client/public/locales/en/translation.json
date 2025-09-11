@@ -836,6 +836,7 @@
     "duration": "Duration",
     "viewOtherCardioSessions": "View other sessions",
     "viewOtherSteps": "View other exercises",
+    "notReceiptAlert": "Mercado Pago doesn't send receipts in notifications to our app when purchases are made with account credit. You can check the transaction details directly in the Mercado Pago app.",
     "databaseData": {
         "muscleGroups": {
             "1": {

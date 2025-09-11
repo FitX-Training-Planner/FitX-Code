@@ -382,6 +382,7 @@ def mercadopago_webhook():
             mp_transaction_id = str(payment_info["id"])
             payment_method = payment_info.get("payment_type_id")
             transaction_details = payment_info.get("transaction_details", {})
+            fee_details = payment_info.get("fee_details", [])
 
             total_paid = transaction_details.get("total_paid_amount", 0)
             trainer_received = transaction_details.get("net_received_amount", 0)
@@ -389,7 +390,7 @@ def mercadopago_webhook():
             ticket_url = payment_info.get("point_of_interaction", {}).get("transaction_data", {}).get("ticket_url")
             receipt_url = payment_info.get("receipt_url") or ticket_url or ""
 
-            mp_fee = transaction_details.get("fee_amount")
+            mp_fee = sum(fee.get("amount", 0) for fee in fee_details if fee.get("type") == "mercadopago_fee") if fee_details else None
 
             if payment_status == "approved":
                 transaction.is_finished = True
