@@ -4,6 +4,10 @@ from ..database.models import Users
 import os
 from sendgrid.helpers.mail import Mail
 from ..config import SendGridConfig
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
+brazil_tz = ZoneInfo("America/Sao_Paulo")
 
 def hash_email(email):
     combination = (email.lower() + os.getenv("HASHLIB_SALT")).encode("utf-8")
@@ -41,3 +45,13 @@ def send_email_with_template(to_email, template_id, dynamic_data):
     except Exception as e:
         print(f"Erro ao enviar e-mail: {e}")
       
+
+def calculate_age(birth_date):
+    if not birth_date:
+        return None
+    
+    today = datetime.now(brazil_tz).date()
+    
+    return today.year - birth_date.year - (
+        (today.month, today.day) < (birth_date.month, birth_date.day)
+    )

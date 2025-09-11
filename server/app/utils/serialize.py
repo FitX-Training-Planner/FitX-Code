@@ -42,6 +42,14 @@ def serialize_exercise(exercise):
         } if exercise.media else None,
         "muscleGroups": [
             {
+                "ID": emg.muscle_group.ID,
+                "isPosteriorMuscle": emg.muscle_group.is_posterior_muscle,
+                "maleMedia": {
+                    "url": emg.muscle_group.male_model_media.url
+                } if emg.muscle_group.male_model_media else None,
+                "femaleMedia": {
+                    "url": emg.muscle_group.female_model_media.url
+                } if emg.muscle_group.female_model_media else None,
                 "name": emg.muscle_group.name,
                 "isPrimary": emg.is_primary
             }
@@ -113,6 +121,11 @@ def serialize_user(user):
         "name": user.name,
         "crefNumber": user.trainer.cref_number if user.trainer else None,
         "description": user.trainer.description if user.trainer else None,
+        "sex": (
+            "male" if user.sex is True
+            else "female" if user.sex is False
+            else "preferNotToAnswer"
+        ),
         "config": {
             "isClient": user.is_client,
             "isDarkTheme": user.is_dark_theme,
@@ -395,4 +408,59 @@ def serialize_muscle_group(muscle_group, is_selected = False):
             "url": muscle_group.female_model_media.url
         } if muscle_group.female_model_media else None,
         "isSelected": is_selected
+    }
+
+def serialize_client_in_clients(client, is_in_active_contract = False, client_contracts_info = None): 
+    data = {
+        "ID": client.ID,
+        "name": client.name,
+        "sex": (
+            "male" if client.sex is True
+            else "female" if client.sex is False
+            else None
+        ),
+        "photoUrl": (
+            client.media.url
+            if client.fk_media_ID and client.media
+            else None
+        )
+    }
+
+    if is_in_active_contract:
+        data["age"] = serialize_field(client.age)
+        data["height"] = serialize_field(client.height_cm)
+        data["weight"] = serialize_field(client.weight_kg)
+        data["limitationsDescription"] = serialize_field(client.limitations_description)
+        data["availableDays"] = serialize_field(client.available_days)
+        data["trainingPlan"] = {
+            "ID": client.fk_training_plan_ID,
+            "name": client.training_plan.name 
+        } if client.fk_training_plan_ID else None
+        data["paymentPlan"] = {
+            "ID": client.plan_contracts[0].payment_plan.ID,
+            "name": client.plan_contracts[0].payment_plan.name,
+            "fullPrice": client.plan_contracts[0].payment_plan.full_price,
+            "appFee": client.plan_contracts[0].payment_plan.app_fee
+        } if client.plan_contracts[0].fk_payment_plan_ID else None
+        data["contract"] = {
+            "ID": client.plan_contracts[0].ID,
+            "startDate": client.plan_contracts[0].start_date,
+            "endDate": client.plan_contracts[0].end_date
+        }
+    
+    elif client_contracts_info is not None:
+        data["firstContractDate"] = client_contracts_info.first_contract_date
+        data["lastContractDate"] = client_contracts_info.last_contract_date
+        data["contractsNumber"] = serialize_field(client_contracts_info.contracts_number)
+        data["daysInContract"] = serialize_field(client_contracts_info.days_in_contract)
+        data["completedContracts"] = serialize_field(client_contracts_info.completed_contracts)
+        data["canceledContracts"] = serialize_field(client_contracts_info.canceled_contracts)
+        data["amountPaid"] = serialize_field(client_contracts_info.amount_paid)
+
+    return data
+
+def serialize_training_plan_base(plan):
+    return {
+        "ID": plan.ID,
+        "name": plan.name
     }
