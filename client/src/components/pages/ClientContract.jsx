@@ -749,6 +749,7 @@ function ClientContract() {
                                                                 startDate={contract.startDate} 
                                                                 endDate={contract.endDate} 
                                                                 status={translateDatabaseData(contract.status, "contractStatus", "name", user, t)} 
+                                                                canceledOrRescindedDate={contract.canceledOrRescindedDate}
                                                                 paymentPlanName={contract.paymentPlan?.name} 
                                                                 transactionAmount={contract.paymentTransaction?.amount} 
                                                                 transactionAppFee={contract.paymentTransaction?.appFee}

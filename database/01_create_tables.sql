@@ -428,6 +428,7 @@ CREATE TABLE IF NOT EXISTS plan_contract (
     end_date DATE NOT NULL,
     last_day_full_refund DATE NOT NULL,
     last_day_allowed_refund DATE NOT NULL,
+    canceled_or_rescinded_date DATE,
     fk_user_ID INT UNSIGNED,
     fk_trainer_ID INT UNSIGNED,
     fk_payment_plan_ID INT UNSIGNED,

@@ -11,6 +11,9 @@ from ..utils.client import acquire_client_lock, release_client_lock, check_clien
 from .trainer import get_top3_specialties_data, check_trainer_can_be_contracted, get_valid_mp_token
 from ..utils.formatters import safe_date, safe_int, safe_str 
 from datetime import datetime
+from zoneinfo import ZoneInfo
+
+brazil_tz = ZoneInfo("America/Sao_Paulo")
 
 def get_client_training_contract(db, client_id):
     try:
@@ -55,6 +58,8 @@ def cancel_contract(db, client_id):
             .filter(ContractStatus.name == "Cancelado")
             .first()
         )
+
+        contract.canceled_or_rescinded_date = datetime.now(brazil_tz).date()
 
         contract.user.fk_training_plan_ID = None
         

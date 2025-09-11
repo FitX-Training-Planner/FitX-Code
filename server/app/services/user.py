@@ -8,6 +8,10 @@ from ..utils.message_codes import MessageCodes
 from ..utils.client import check_client_active_contract
 from .trainer import count_trainer_active_contract
 from ..utils.formatters import safe_int, safe_str, safe_date
+from zoneinfo import ZoneInfo
+from datetime import datetime
+
+brazil_tz = ZoneInfo("America/Sao_Paulo")
 
 def get_user_by_id(db, user_id, is_client):
     try:
@@ -65,6 +69,8 @@ def delete_user_account(db, user_id, is_client):
                 .filter(ContractStatus.name == "Rescindido")
                 .first()
             )
+
+        active_contract.canceled_or_rescinded_date = datetime.now(brazil_tz).date()
         
         db.delete(user)
 

@@ -224,6 +224,7 @@ def serialize_contract(contract, is_client):
             "ID": contract.fk_contract_status_ID,
             "name": contract.contract_status.name
         },      
+        "canceledOrRescindedDate": contract.canceled_or_rescinded_date,
         "trainer": {
             "ID": contract.fk_trainer_ID,
             "name": contract.trainer.user.name,

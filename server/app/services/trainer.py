@@ -1808,6 +1808,8 @@ def cancel_trainer_contract(db, trainer_id, client_id, contract_id):
             .first()
         )
 
+        contract.canceled_or_rescinded_date = datetime.now(brazil_tz).date()
+
         contract.user.fk_training_plan_ID = None
         
         db.commit()

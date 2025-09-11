@@ -15,6 +15,7 @@ function ContractCard({
     startDate,
     endDate,
     status,
+    canceledOrRescindedDate,
     paymentPlanName,
     transactionAmount, 
     transactionAppFee, 
@@ -150,6 +151,23 @@ function ContractCard({
                                         {formatDateToExtend(endDate, i18n.language)}
                                     </span>
                                 </Stack>
+
+                                {canceledOrRescindedDate && (
+                                    <Stack
+                                        alignItems={width <= 640 ? "start" : "end"}
+                                        extraStyles={{ textAlign: width <= 640 ? "start" : "end" }}
+                                        gap="0.5em"
+                                        className={styles.descriptioned_item}
+                                    >
+                                        <span>
+                                            {status}:
+                                        </span>
+
+                                        <span>
+                                            {formatDateToExtend(canceledOrRescindedDate, i18n.language)}
+                                        </span>
+                                    </Stack>
+                                )}
                             </Stack>
                         </Stack>
                     </Stack>

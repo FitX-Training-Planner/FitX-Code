@@ -488,6 +488,7 @@ class PlanContract(Base):
     end_date = Column(DATE, nullable=False)
     last_day_full_refund = Column(DATE, nullable=False)
     last_day_allowed_refund = Column(DATE, nullable=False)
+    canceled_or_rescinded_date = Column(DATE)
     fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="SET NULL"), index=True)
     fk_trainer_ID = Column(INTEGER(unsigned=True), ForeignKey("trainer.ID", ondelete="SET NULL"), index=True)
     fk_payment_plan_ID = Column(INTEGER(unsigned=True), ForeignKey("payment_plan.ID", ondelete="SET NULL"), index=True)
