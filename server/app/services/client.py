@@ -156,7 +156,7 @@ def create_payment(db, client_id, payment_plan_id):
                 300
             )
 
-            if preference["error"] == "invalid_collector_id":
+            if preference.get("error") == "invalid_collector_id":
                 raise ApiError(MessageCodes.INVALID_MERCHANT_TRAINER, 400)
 
         except Exception as e:
