@@ -1,15 +1,19 @@
-from app.database.models import Trainer, TrainerSpecialty, TrainingPlan, TrainingDay, TrainingDayStep, StepExercise, ExerciseSet, CardioSession, PaymentPlan, PaymentPlanBenefit, PlanContract, Users, PaymentTransaction, Rating, Complaint, ComplaintLike, RatingLike, ContractStatus, SaveTrainer, Specialty
+from app.database.models import Trainer, TrainerSpecialty, TrainingPlan, TrainingDay, TrainingDayStep, StepExercise, ExerciseSet, CardioSession, PaymentPlan, PaymentPlanBenefit, PlanContract, Users, PaymentTransaction, Rating, Complaint, ComplaintLike, RatingLike, ContractStatus, SaveTrainer, Specialty, Exercise
 from ..utils.trainer import is_cref_used
 from ..exceptions.api_error import ApiError
 from ..utils.formatters import safe_str, safe_int, safe_float, safe_bool, safe_time
-from ..utils.serialize import serialize_specialty, serialize_training_plan, serialize_payment_plan, serialize_contract, serialize_trainer_in_trainers, serialize_rating, serialize_complaint, serialize_trainer_base_info
-from sqlalchemy.orm import joinedload, subqueryload
+from ..utils.serialize import serialize_specialty, serialize_training_plan, serialize_payment_plan, serialize_contract, serialize_trainer_in_trainers, serialize_rating, serialize_complaint, serialize_trainer_base_info, serialize_client_in_clients, serialize_training_plan_base
+from sqlalchemy.orm import joinedload, subqueryload, selectinload
 from sqlalchemy import asc, desc, func, case, extract
 from ..utils.message_codes import MessageCodes
 from datetime import datetime, timezone, timedelta
 import requests
 from ..config import MercadopagoConfig
-from ..utils.user import encrypt_email, decrypt_email
+from ..utils.user import encrypt_email, decrypt_email, calculate_age
+from ..utils.client import check_client_active_contract
+from zoneinfo import ZoneInfo
+
+brazil_tz = ZoneInfo("America/Sao_Paulo")
 
 def insert_trainer(db, cref_number, decription, main_specialties, secondary_specialties, fk_user_ID):
     try:
@@ -312,58 +316,38 @@ def get_training_plan(db, training_plan_id):
         training_plan = (
             db.query(TrainingPlan)
             .options(
-                subqueryload(TrainingPlan.training_days)
-                    .subqueryload(TrainingDay.training_day_steps)
-                    .subqueryload(TrainingDayStep.step_exercises)
-                    .subqueryload(StepExercise.exercise_sets)
-                    .joinedload(ExerciseSet.set_type),
-                subqueryload(TrainingPlan.training_days)
-                    .subqueryload(TrainingDay.training_day_steps)
-                    .subqueryload(TrainingDayStep.step_exercises)
-                    .subqueryload(StepExercise.exercise_sets)
-                    .joinedload(ExerciseSet.training_technique),
-                subqueryload(TrainingPlan.training_days)
-                    .subqueryload(TrainingDay.training_day_steps)
-                    .subqueryload(TrainingDayStep.step_exercises)
-                    .joinedload(StepExercise.exercise),
-                subqueryload(TrainingPlan.training_days)
-                    .subqueryload(TrainingDay.training_day_steps)
-                    .subqueryload(TrainingDayStep.step_exercises)
-                    .joinedload(StepExercise.exercise_equipment),
-                subqueryload(TrainingPlan.training_days)
-                    .subqueryload(TrainingDay.training_day_steps)
-                    .subqueryload(TrainingDayStep.step_exercises)
-                    .joinedload(StepExercise.body_position),
-                subqueryload(TrainingPlan.training_days)
-                    .subqueryload(TrainingDay.training_day_steps)
-                    .subqueryload(TrainingDayStep.step_exercises)
-                    .joinedload(StepExercise.pulley_height),
-                subqueryload(TrainingPlan.training_days)
-                    .subqueryload(TrainingDay.training_day_steps)
-                    .subqueryload(TrainingDayStep.step_exercises)
-                    .joinedload(StepExercise.pulley_attachment),
-                subqueryload(TrainingPlan.training_days)
-                    .subqueryload(TrainingDay.training_day_steps)
-                    .subqueryload(TrainingDayStep.step_exercises)
-                    .joinedload(StepExercise.grip_type),
-                subqueryload(TrainingPlan.training_days)
-                    .subqueryload(TrainingDay.training_day_steps)
-                    .subqueryload(TrainingDayStep.step_exercises)
-                    .joinedload(StepExercise.grip_width),
-                subqueryload(TrainingPlan.training_days)
-                    .subqueryload(TrainingDay.training_day_steps)
-                    .subqueryload(TrainingDayStep.step_exercises)
-                    .joinedload(StepExercise.laterality),
-                subqueryload(TrainingPlan.training_days)
-                    .subqueryload(TrainingDay.cardio_sessions)
-                    .joinedload(CardioSession.cardio_option),
-                subqueryload(TrainingPlan.training_days)
-                    .subqueryload(TrainingDay.cardio_sessions)
-                    .joinedload(CardioSession.cardio_intensity)
+                selectinload(TrainingPlan.training_days)
+                    .selectinload(TrainingDay.training_day_steps)
+                    .selectinload(TrainingDayStep.step_exercises)
+                    .selectinload(StepExercise.exercise_sets)
+                    .options(
+                        joinedload(ExerciseSet.set_type),
+                        joinedload(ExerciseSet.training_technique)
+                    ),
+                selectinload(TrainingPlan.training_days)
+                    .selectinload(TrainingDay.training_day_steps)
+                    .selectinload(TrainingDayStep.step_exercises)
+                    .options(
+                        joinedload(StepExercise.exercise).selectinload(Exercise.muscle_groups),
+                        joinedload(StepExercise.exercise_equipment),
+                        joinedload(StepExercise.body_position),
+                        joinedload(StepExercise.pulley_height),
+                        joinedload(StepExercise.pulley_attachment),
+                        joinedload(StepExercise.grip_type),
+                        joinedload(StepExercise.grip_width),
+                        joinedload(StepExercise.laterality),
+                    ),
+                selectinload(TrainingPlan.training_days)
+                    .selectinload(TrainingDay.cardio_sessions)
+                    .options(
+                        joinedload(CardioSession.cardio_option),
+                        joinedload(CardioSession.cardio_intensity)
+                    )
             )
             .filter(TrainingPlan.ID == training_plan_id)
             .first()
         )
+
 
         if training_plan is None:
             raise ApiError(MessageCodes.TRAINING_PLAN_NOT_FOUND, 404)
@@ -411,54 +395,33 @@ def get_trainer_plans(db, trainer_id):
         training_plans = (
             db.query(TrainingPlan)
             .options(
-                subqueryload(TrainingPlan.training_days)
-                    .subqueryload(TrainingDay.training_day_steps)
-                    .subqueryload(TrainingDayStep.step_exercises)
-                    .subqueryload(StepExercise.exercise_sets)
-                    .joinedload(ExerciseSet.set_type),
-                subqueryload(TrainingPlan.training_days)
-                    .subqueryload(TrainingDay.training_day_steps)
-                    .subqueryload(TrainingDayStep.step_exercises)
-                    .subqueryload(StepExercise.exercise_sets)
-                    .joinedload(ExerciseSet.training_technique),
-                subqueryload(TrainingPlan.training_days)
-                    .subqueryload(TrainingDay.training_day_steps)
-                    .subqueryload(TrainingDayStep.step_exercises)
-                    .joinedload(StepExercise.exercise),
-                subqueryload(TrainingPlan.training_days)
-                    .subqueryload(TrainingDay.training_day_steps)
-                    .subqueryload(TrainingDayStep.step_exercises)
-                    .joinedload(StepExercise.exercise_equipment),
-                subqueryload(TrainingPlan.training_days)
-                    .subqueryload(TrainingDay.training_day_steps)
-                    .subqueryload(TrainingDayStep.step_exercises)
-                    .joinedload(StepExercise.body_position),
-                subqueryload(TrainingPlan.training_days)
-                    .subqueryload(TrainingDay.training_day_steps)
-                    .subqueryload(TrainingDayStep.step_exercises)
-                    .joinedload(StepExercise.pulley_height),
-                subqueryload(TrainingPlan.training_days)
-                    .subqueryload(TrainingDay.training_day_steps)
-                    .subqueryload(TrainingDayStep.step_exercises)
-                    .joinedload(StepExercise.pulley_attachment),
-                subqueryload(TrainingPlan.training_days)
-                    .subqueryload(TrainingDay.training_day_steps)
-                    .subqueryload(TrainingDayStep.step_exercises)
-                    .joinedload(StepExercise.grip_type),
-                subqueryload(TrainingPlan.training_days)
-                    .subqueryload(TrainingDay.training_day_steps)
-                    .subqueryload(TrainingDayStep.step_exercises)
-                    .joinedload(StepExercise.grip_width),
-                subqueryload(TrainingPlan.training_days)
-                    .subqueryload(TrainingDay.training_day_steps)
-                    .subqueryload(TrainingDayStep.step_exercises)
-                    .joinedload(StepExercise.laterality),
-                subqueryload(TrainingPlan.training_days)
-                    .subqueryload(TrainingDay.cardio_sessions)
-                    .joinedload(CardioSession.cardio_option),
-                subqueryload(TrainingPlan.training_days)
-                    .subqueryload(TrainingDay.cardio_sessions)
-                    .joinedload(CardioSession.cardio_intensity)
+                selectinload(TrainingPlan.training_days)
+                    .selectinload(TrainingDay.training_day_steps)
+                    .selectinload(TrainingDayStep.step_exercises)
+                    .selectinload(StepExercise.exercise_sets)
+                    .options(
+                        joinedload(ExerciseSet.set_type),
+                        joinedload(ExerciseSet.training_technique)
+                    ),
+                selectinload(TrainingPlan.training_days)
+                    .selectinload(TrainingDay.training_day_steps)
+                    .selectinload(TrainingDayStep.step_exercises)
+                    .options(
+                        joinedload(StepExercise.exercise).selectinload(Exercise.muscle_groups),
+                        joinedload(StepExercise.exercise_equipment),
+                        joinedload(StepExercise.body_position),
+                        joinedload(StepExercise.pulley_height),
+                        joinedload(StepExercise.pulley_attachment),
+                        joinedload(StepExercise.grip_type),
+                        joinedload(StepExercise.grip_width),
+                        joinedload(StepExercise.laterality),
+                    ),
+                selectinload(TrainingPlan.training_days)
+                    .selectinload(TrainingDay.cardio_sessions)
+                    .options(
+                        joinedload(CardioSession.cardio_option),
+                        joinedload(CardioSession.cardio_intensity)
+                    )
             )
             .filter(TrainingPlan.fk_trainer_ID == trainer_id)
             .all()
@@ -475,6 +438,26 @@ def get_trainer_plans(db, trainer_id):
         print(f"Erro ao recuperar planos de treino do treinador: {e}")
 
         raise Exception(f"Erro ao recuperar os planos de treino do treinador: {e}")
+
+def get_trainer_plans_base(db, trainer_id):
+    try:
+        training_plans = (
+            db.query(TrainingPlan.ID, TrainingPlan.name)
+            .filter(TrainingPlan.fk_trainer_ID == trainer_id)
+            .all()
+        )
+
+        return [serialize_training_plan_base(plan) for plan in training_plans]
+
+    except ApiError as e:
+        print(f"Erro ao recuperar informações básica dos planos de treino do treinador: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao recuperar informações básica dos planos de treino do treinador: {e}")
+
+        raise Exception(f"Erro ao recuperar as informações básica dos planos de treino do treinador: {e}")
 
 def insert_payment_plan(db, name, full_price, duration_days, description, benefits, app_fee, trainer_id):
     try:
@@ -1687,3 +1670,177 @@ def modify_trainer_specialties(db, main_specialties, secondary_specialties, trai
         print(f"Erro ao modificar especialidades do treinador: {e}")
         
         raise Exception(f"Erro ao modificar as especialidades do treinador: {e}")
+
+def get_trainer_active_clients(db, trainer_id):
+    try:
+        clients = (
+            db.query(Users)
+            .join(
+                PlanContract,
+                (PlanContract.fk_user_ID == Users.ID) &
+                (PlanContract.fk_trainer_ID == trainer_id)
+            )
+            .join(
+                ContractStatus,
+                ContractStatus.ID == PlanContract.fk_contract_status_ID
+            )
+            .options(
+                joinedload(Users.media),
+                joinedload(Users.training_plan),
+                joinedload(Users.plan_contracts.and_(PlanContract.fk_trainer_ID == trainer_id, PlanContract.contract_status.has(name="Ativo")))
+                    .joinedload(PlanContract.payment_plan)
+            )
+            .filter(
+                ContractStatus.name == "Ativo",
+                Users.is_active == True
+            )
+            .all()
+        )
+
+        for client in clients:
+            client.age = calculate_age(client.birth_date)
+
+        return [serialize_client_in_clients(client, True) for client in clients]
+    
+    except ApiError as e:
+        print(f"Erro ao recuperar clientes ativos do treinador: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao recuperar clientes ativos do treinador: {e}")
+        
+        raise Exception(f"Erro ao recuperar os clientes ativos do treinador: {e}")
+
+def get_trainer_clients_history(db, offset, limit, sort, search, trainer_id):
+    try:
+        query = (
+            db.query(
+                Users,
+                func.min(PlanContract.start_date).label("first_contract_date"),
+                func.max(PlanContract.start_date).label("last_contract_date"),
+                func.count(PlanContract.ID).label("contracts_number"),
+                func.sum(case(
+                    (
+                        ContractStatus.name == "Ativo",
+                        func.datediff(datetime.now(brazil_tz).date(), PlanContract.start_date),
+                    ),
+                    else_=func.datediff(PlanContract.end_date, PlanContract.start_date),
+                )).label("days_in_contract"),
+                func.sum(case((ContractStatus.name == "Vencido", 1), else_=0)).label("completed_contracts"),
+                func.sum(case((ContractStatus.name == "Cancelado", 1), else_=0)).label("canceled_contracts"),
+                func.sum(case((ContractStatus.name.in_(["Ativo", "Vencido"]), PaymentTransaction.trainer_received), else_=0)).label("amount_paid")
+            )
+            .join(PlanContract, PlanContract.fk_user_ID == Users.ID)
+            .join(ContractStatus, ContractStatus.ID == PlanContract.fk_contract_status_ID)
+            .join(PaymentTransaction, PaymentTransaction.ID == PlanContract.fk_payment_transaction_ID, isouter=True)
+            .filter(
+                PlanContract.fk_trainer_ID == trainer_id,
+                Users.is_active == True
+            )
+            .group_by(Users.ID)
+        )
+
+        if search:
+            search_term = f"%{search}%"
+            
+            query = query.filter(
+                Users.name.ilike(search_term)
+            )
+
+        if sort == "newest":
+            query = query.order_by(desc("first_contract_date"))
+        
+        elif sort == "oldest":
+            query = query.order_by(asc("first_contract_date"))
+        
+        elif sort == "more_hires":
+            query = query.order_by(desc("contracts_number"))
+        
+        elif sort == "more_hiring_time":
+            query = query.order_by(desc("days_in_contract"))
+        
+        elif sort == "more_completed_contracts":
+            query = query.order_by(desc("completed_contracts"))
+        
+        elif sort == "more_canceled_contracts":
+            query = query.order_by(desc("canceled_contracts"))
+        
+        elif sort == "most_valuable_historic":
+            query = query.order_by(desc("amount_paid"))
+        
+        else:
+            raise ApiError(MessageCodes.INVALID_CLIENTS_FILTER, 400)
+
+        results = query.offset(offset).limit(limit).all()
+
+        return [serialize_client_in_clients(result[0], client_contracts_info=result) for result in results]
+    
+    except ApiError as e:
+        print(f"Erro ao recuperar histórico de clientes do treinador: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao recuperar histórico de clientes do treinador: {e}")
+
+        raise Exception(f"Erro ao recuperar o histórico de clientes do treinador: {e}")
+
+def cancel_trainer_contract(db, trainer_id, client_id, contract_id):
+    try:
+        # Fazer lógica do reembolso
+        contract = check_client_active_contract(db, client_id)
+
+        if contract is None:
+            raise ApiError(MessageCodes.ACTIVE_CONTRACT_NOT_FOUND, 404)
+        
+        if str(contract.ID) != str(contract_id) or str(contract.fk_trainer_ID) != str(trainer_id):
+            raise ApiError(MessageCodes.ACTIVE_CONTRACT_NOT_MATCH_DATA, 404)
+
+        contract.contract_status = (
+            db.query(ContractStatus)
+            .filter(ContractStatus.name == "Cancelado")
+            .first()
+        )
+
+        contract.user.fk_training_plan_ID = None
+        
+        db.commit()
+
+        return True
+
+    except ApiError as e:
+        print(f"Erro ao cancelar contrato do treinador: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao cancelar contrato do treinador: {e}")
+
+        raise Exception(f"Erro ao cancelar o contrato do treinador: {e}")
+
+def modify_client_training(db, trainer_id, client_id, contract_id, training_plan_id):
+    try:
+        contract = check_client_active_contract(db, client_id)
+
+        if contract is None:
+            raise ApiError(MessageCodes.ACTIVE_CONTRACT_NOT_FOUND, 404)
+        
+        if str(contract.ID) != str(contract_id) or str(contract.fk_trainer_ID) != str(trainer_id):
+            raise ApiError(MessageCodes.ACTIVE_CONTRACT_NOT_MATCH_DATA, 404)
+
+        contract.user.fk_training_plan_ID = training_plan_id or None
+        
+        db.commit()
+
+        return True
+
+    except ApiError as e:
+        print(f"Erro ao cancelar contrato do treinador: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao cancelar contrato do treinador: {e}")
+
+        raise Exception(f"Erro ao cancelar o contrato do treinador: {e}")
