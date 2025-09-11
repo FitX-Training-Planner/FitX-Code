@@ -8,7 +8,7 @@ from ..utils.mercadopago import create_payment_preference, calculate_refund
 from ..utils.user import decrypt_email
 from ..utils.trainer import acquire_trainer_lock, release_trainer_lock
 from ..utils.client import acquire_client_lock, release_client_lock, check_client_active_contract
-from .trainer import get_top3_specialties_data, check_trainer_can_be_contracted
+from .trainer import get_top3_specialties_data, check_trainer_can_be_contracted, get_valid_mp_token
 from ..utils.formatters import safe_date, safe_int, safe_str 
 from datetime import datetime
 
@@ -127,13 +127,24 @@ def create_payment(db, client_id, payment_plan_id):
         try:
             description = f"Plano '{payment_plan.name}' de {payment_plan.duration_days} dias do FitX"
 
+            # preference = create_payment_preference(
+            #     payment_plan.trainer.mp_user_id,
+            #     payment_plan.ID,
+            #     payment_plan.name,
+            #     description,
+            #     payment_plan.full_price,
+            #     payment_plan.app_fee,
+            #     decrypt_email(client.email_encrypted),
+            #     client.name.split()[0],
+            #     transaction.ID,
+            #     300
+            # )
             preference = create_payment_preference(
-                payment_plan.trainer.mp_user_id,
+                get_valid_mp_token(db, payment_plan.trainer.ID),
                 payment_plan.ID,
                 payment_plan.name,
                 description,
                 payment_plan.full_price,
-                payment_plan.app_fee,
                 decrypt_email(client.email_encrypted),
                 client.name.split()[0],
                 transaction.ID,
