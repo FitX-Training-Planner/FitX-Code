@@ -14,6 +14,7 @@ import { formattClientData } from "../../../utils/formatters/user/formatOnChange
 import SelectMuscles from "./SelectMuscles";
 import useWindowSize from "../../../hooks/useWindowSize";
 import SelectBoxes from "../fields/SelectBoxes";
+import AcceptTerms from "../fields/AcceptTerms";
 
 function ClientForm({
     client,
@@ -23,7 +24,9 @@ function ClientForm({
     setSexes,
     muscleGroups,
     setMuscleGroups,
-    handleSubmit
+    handleSubmit,
+    acceptTerms, 
+    setAcceptedTerms
 }) {
     const { t } = useTranslation();
 
@@ -152,12 +155,22 @@ function ClientForm({
                                 />
                             </Stack>
                             
-                            <SelectMuscles
-                                muscleGroups={muscleGroups}
-                                isMale={!(sexes.find(sex => sex.isSelected)?.ID === "female")}
-                                setMuscleGroups={setMuscleGroups}
-                                figuresDirection={(width <= 840 && width > 640) || width <= 440 ? "column" : "row"}
-                            />
+                            <Stack>
+                                <SelectMuscles
+                                    muscleGroups={muscleGroups}
+                                    isMale={!(sexes.find(sex => sex.isSelected)?.ID === "female")}
+                                    setMuscleGroups={setMuscleGroups}
+                                    figuresDirection={(width <= 840 && width > 640) || width <= 440 ? "column" : "row"}
+                                />
+
+                                <AcceptTerms
+                                    isAccepted={acceptTerms}
+                                    setIsAccepted={setAcceptedTerms}
+                                    description={t("createClientTerms")}
+                                    policyDestinies={["/app/policies/content", "/app/policies/privacy"]}
+                                    policyNames={[t("contentPolicy"), t("privacyPolicy")]}
+                                />
+                            </Stack>
                         </Stack>
                     </Stack>
 

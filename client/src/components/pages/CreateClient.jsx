@@ -72,6 +72,7 @@ function CreateClient() {
     ]);
     const [muscles, setMuscles] = useState([])
     const [error, setError] = useState(false);
+    const [acceptTerms, setAcceptedTerms] = useState(false);
 
     useEffect(() => {
         if (hasRun.current) return;
@@ -108,6 +109,8 @@ function CreateClient() {
 
     const handleOnSubmit = useCallback((e) => {
         e.preventDefault();
+
+        if (!acceptTerms) return;
 
         if (!validateClientPostRequestData(
             error, 
@@ -164,7 +167,7 @@ function CreateClient() {
             undefined, 
             t("errorCreateUser")
         );    
-    }, [authRequest, dispatch, error, localUser.config.email_notification_permission, localUser.config.is_complainter_anonymous, localUser.config.is_dark_theme, localUser.config.is_english, localUser.config.is_rater_anonymous, localUser.config.photoFile, localUser.email, localUser.name, localUser.password, sexes, client.birthDate, client.height, client.weight, client.limitationsDescription, client.availableDays, navigate, postClientRequest, muscles, t]);
+    }, [authRequest, acceptTerms, dispatch, error, localUser.config.email_notification_permission, localUser.config.is_complainter_anonymous, localUser.config.is_dark_theme, localUser.config.is_english, localUser.config.is_rater_anonymous, localUser.config.photoFile, localUser.email, localUser.name, localUser.password, sexes, client.birthDate, client.height, client.weight, client.limitationsDescription, client.availableDays, navigate, postClientRequest, muscles, t]);
 
     useEffect(() => {
         document.title = t("clientProfile");
@@ -201,6 +204,8 @@ function CreateClient() {
                         setMuscleGroups={setMuscles}
                         sexes={sexes}
                         setSexes={setSexes}
+                        acceptTerms={acceptTerms}
+                        setAcceptedTerms={setAcceptedTerms}
                     />
                 </Stack>
             </Stack>
