@@ -203,7 +203,6 @@ function PaymentPage() {
                                                         >
                                                             <Stack
                                                                 direction="row"
-                                                                alignItems="start"
                                                                 justifyContent="start"
                                                                 className={styles.benefit}
                                                             >
