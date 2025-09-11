@@ -333,7 +333,7 @@
     "errorContracts": "Falha ao carregar contratos!",
     "errorPaymentPlans": "Falha ao recuperar planos de pagamento!",
     "limitAlertPaymentPlans": "Você atingiu o limite de 6 planos de pagamento.",
-    "removeConfirmPaymentPlan": "Deseja remover esse plano de pagamento?",
+    "removeConfirmPaymentPlan": "Deseja remover esse plano de pagamento? Os dados do plano não poderão mais ser consultados nem por você nem pelos seus cliente, possivelmente prejudicando seu controle e a confiança dos seus clientes.",
     "loadingRemovePaymentPlan": "Removendo plano",
     "successRemovePaymentPlan": "Plano removido!",
     "errorRemovePaymentPlan": "Falha ao remover plano!",

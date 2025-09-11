@@ -333,7 +333,7 @@
     "errorContracts": "Failed to load contracts!",
     "errorPaymentPlans": "Failed to load payment plans!",
     "limitAlertPaymentPlans": "You have reached the limit of 6 payment plans.",
-    "removeConfirmPaymentPlan": "Do you want to remove this payment plan?",
+    "removeConfirmPaymentPlan": "Do you want to remove this payment plan? The plan data will no longer be viewable by you and your clients, potentially damaging your control and your clients trust.",
     "loadingRemovePaymentPlan": "Removing plan",
     "successRemovePaymentPlan": "Plan removed!",
     "errorRemovePaymentPlan": "Failed to remove plan!",
