@@ -5,6 +5,7 @@ const initialState = {
     name: "",
     crefNumber: null,
     description: null,
+    sex: "preferNotToAnswer",
     config: {
         isClient: true,
         isDarkTheme: false,

@@ -28,12 +28,12 @@ export default function convertTime(amount, timeUnit = "second", t) {
         const minutes = Math.floor(totalSeconds / 60);
         const seconds = Math.floor(totalSeconds % 60);
 
-        return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")} ${t("minutes")}`;
+        return `${String(minutes).padStart(2)}:${String(seconds).padStart(2, "0")} ${t("minutes")}`;
     }
 
     const hours = Math.floor(totalSeconds / 3600);
     const remainingSeconds = totalSeconds % 3600;
     const minutes = Math.floor(remainingSeconds / 60);
 
-    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")} ${t("hours")}`;
+    return `${String(hours).padStart(2)}:${String(minutes).padStart(2, "0")} ${t("hours")}`;
 }

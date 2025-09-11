@@ -26,7 +26,7 @@ export function handleOnChangeTextField(e, formattFunction, dataValidator, targe
 }
     
 export function handleOnChangeSelect(e, dbDataArray, valueFieldName, targetObect, setTargetObject, setHasError) {
-    setHasError(false);
+    if (setHasError) setHasError(false);
     
     const name = e.target.name;
 
