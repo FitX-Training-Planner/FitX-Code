@@ -5,6 +5,7 @@ import Stack from "../../containers/Stack";
 import ClickableIcon from "../../form/buttons/ClickableIcon";
 import Alert from "../../messages/Alert";
 import styles from "./ContractCard.module.css";
+import useWindowSize from "../../../hooks/useWindowSize";
 
 function PaymentCard({
     amount,
@@ -17,6 +18,8 @@ function PaymentCard({
     paymentMethod,
 }) {
     const { t, i18n } = useTranslation();
+
+    const { width } = useWindowSize();
     
     return (
         <Stack
@@ -24,9 +27,11 @@ function PaymentCard({
         >
             <Stack
                 gap="2em"
+                direction={width <= 640 ? "column" : "row-reverse"}
             >
                 <Stack
                     className={styles.descriptioned_item}
+                    alignItems={width <= 640 ? "center" : "end"}
                 >
                     <span>
                         {t("transaction")}:
@@ -34,6 +39,7 @@ function PaymentCard({
 
                     <Stack
                         gap="0.8em"
+                        alignItems={width <= 640 ? "center" : "end"}
                     >
                         <span>
                             {formatDateToExtend(transactionDate, i18n.language)}
@@ -41,7 +47,7 @@ function PaymentCard({
 
                         <Stack
                             direction="row"
-                            justifyContent="center"
+                            justifyContent={width <= 640 ? "center" : "end"}
                         >
                             <span>
                                 ID: {mercadoPagoTransactionId}

@@ -61,40 +61,6 @@ function ContractCard({
                         gap="2em"
                     >
                         <Stack
-                            gap="0.5em"
-                            className={styles.descriptioned_item}
-                        >
-                            <span>
-                                {t("value")}:
-                            </span>
-
-                            <span>
-                                {formatPriceToBR(transactionAmount)}
-                            </span>
-                        </Stack>
-
-                        <Stack
-                            gap="0.5em"
-                            className={styles.descriptioned_item}
-                            extraStyles={{ textAlign: "center" }}
-                        >
-                            <span>
-                                {t("paymentPlan")}:
-                            </span>
-
-                            {paymentPlanName ? (
-                                <span>
-                                    {paymentPlanName}
-                                </span>
-                            ) : (
-                                <p>
-                                    {t("deletedPaymentPlanAlert")}
-                                </p>
-                            )}
-
-                        </Stack>
-
-                        <Stack
                             gap="2em"
                             direction={width <= 640 ? "column" : "row"}
                         >
@@ -117,7 +83,7 @@ function ContractCard({
                                             <PhotoInput
                                                 blobUrl={userPhoto}
                                                 disabled
-                                                size={width <= 440 ? "small" : "medium"}
+                                                size={width <= 840 ? "small" : "medium"}
                                             />
 
                                             <span>
@@ -127,6 +93,41 @@ function ContractCard({
                                     ) : (
                                         <p>
                                             {t("deletedUser")}
+                                        </p>
+                                    )}
+                                </Stack>
+                            </Stack>
+
+                            <Stack>
+                                <Stack
+                                    gap="0.5em"
+                                    className={styles.descriptioned_item}
+                                >
+                                    <span>
+                                        {t("value")}:
+                                    </span>
+
+                                    <span>
+                                        {formatPriceToBR(transactionAmount)}
+                                    </span>
+                                </Stack>
+
+                                <Stack
+                                    gap="0.5em"
+                                    className={styles.descriptioned_item}
+                                    extraStyles={{ textAlign: "center" }}
+                                >
+                                    <span>
+                                        {t("paymentPlan")}:
+                                    </span>
+
+                                    {paymentPlanName ? (
+                                        <span>
+                                            {paymentPlanName}
+                                        </span>
+                                    ) : (
+                                        <p>
+                                            {t("deletedPaymentPlanAlert")}
                                         </p>
                                     )}
                                 </Stack>
