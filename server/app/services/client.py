@@ -7,7 +7,7 @@ from ..utils.message_codes import MessageCodes
 from ..utils.mercadopago import create_payment_preference, calculate_refund
 from ..utils.user import decrypt_email
 from ..utils.trainer import acquire_trainer_lock, release_trainer_lock
-from ..utils.client import acquire_client_lock, release_client_lock
+from ..utils.client import acquire_client_lock, release_client_lock, check_client_active_contract
 from .trainer import get_top3_specialties_data, check_trainer_can_be_contracted
 from ..utils.formatters import safe_date, safe_int, safe_str 
 from datetime import datetime
@@ -41,37 +41,6 @@ def get_client_training_contract(db, client_id):
         print(f"Erro ao recuperar informações do treinamento e contrato: {e}")
 
         raise Exception(f"Erro ao recuperar as informações do treinamento e contrato: {e}")
-
-def check_client_active_contract(db, client_id):
-    try:
-        contract = (
-            db.query(PlanContract)
-            .join(ContractStatus)
-            .options(
-                joinedload(PlanContract.trainer),
-                subqueryload(PlanContract.user)
-                    .joinedload(Users.training_plan),
-                joinedload(PlanContract.contract_status),
-                joinedload(PlanContract.payment_transaction)
-            )
-            .filter(
-                PlanContract.fk_user_ID == client_id,
-                ContractStatus.name == "Ativo"
-            )
-            .first()
-        )
-
-        return contract
-
-    except ApiError as e:
-        print(f"Erro ao recuperar contrato ativo do cliente: {e}")
-
-        raise
-
-    except Exception as e:
-        print(f"Erro ao recuperar contrato ativo do cliente: {e}")
-
-        raise Exception(f"Erro ao recuperar o contrato ativo do cliente: {e}")
     
 def cancel_contract(db, client_id):
     try:

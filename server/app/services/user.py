@@ -5,7 +5,7 @@ from sqlalchemy.orm import joinedload
 from ..exceptions.api_error import ApiError
 from ..utils.serialize import serialize_user
 from ..utils.message_codes import MessageCodes
-from .client import check_client_active_contract
+from ..utils.client import check_client_active_contract
 from .trainer import count_trainer_active_contract
 from ..utils.formatters import safe_int, safe_str, safe_date
 

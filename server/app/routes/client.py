@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from ..exceptions.api_error import ApiError
-from ..services.client import get_client_training_contract, create_payment, get_client_saved_trainers, modify_client_data, get_client_info, get_partial_client_contracts, cancel_contract
+from ..services.client import get_client_training_contract, create_payment, get_client_saved_trainers, modify_client_data, get_client_info, get_partial_client_contracts, cancel_contract, check_client_active_contract
+from ..services.trainer import get_training_plan
 from flask_jwt_extended import jwt_required
 from ..utils.client_decorator import only_client
 from flask import request, jsonify
@@ -230,6 +231,44 @@ def modify_client():
         except Exception as e:
             db.rollback()
 
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
+
+@client_bp.route("/me/training-plan", methods=["GET"])
+@jwt_required()
+@only_client
+def get_client_training_plan():
+    error_message = "Erro na rota de recuperação de plano de treino do cliente"
+
+    with get_db() as db:
+        try:        
+            identity = get_jwt_identity()
+
+            contract = check_client_active_contract(db, identity)
+
+            if contract is None:
+                return "", 204
+            
+            plan_id = contract.user.fk_training_plan_ID
+            trainer_id = contract.trainer.ID
+
+            if not plan_id:
+                return "", 204
+
+            plan = get_training_plan(db, plan_id)
+
+            if str(trainer_id) != str(plan.get("trainerID")):
+                return "", 204
+
+            return jsonify(plan), 200
+        
+        except ApiError as e:
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": str(e)}), e.status_code
+
+        except Exception as e:
             print(f"{error_message}: {e}")
 
             return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
