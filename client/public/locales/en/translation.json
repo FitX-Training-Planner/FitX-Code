@@ -59,6 +59,7 @@
         "TRAINER_IS_IN_HIRING": "Another client is already in the process of hiring with this trainer. Please try again in a few minutes.",
         "CLIENT_IS_IN_HIRING": "You are in the process of hiring a trainer. Please wait for payment to be processed.",
         "INVALID_PAYMENT_PLAN_DATA": "The price or duration of the plan exceeded the allowed limit.",
+        "INVALID_TRAINER_DATA": "The trainer data is invalid.",
         "NO_RESPONSE": "Our server is unavailable now. Try again later.",
         "ERROR_LOADING_SPECIALTIES": "Unable to load specialties.",
         "ERROR_LOADING_MUSCLE_GROUPS": "Unable to load muscle groups.",

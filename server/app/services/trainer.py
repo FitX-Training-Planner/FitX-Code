@@ -87,7 +87,12 @@ def modify_trainer_data(db, trainer_id, cref_number = None, description = None, 
             updated_fields["description"] = trainer.description
 
         if maxActiveContracts is not None:
-            trainer.max_active_contracts = safe_int(maxActiveContracts)
+            maxActiveContracts = safe_int(maxActiveContracts)
+
+            if maxActiveContracts < 1 or maxActiveContracts > 30:
+                raise ApiError(MessageCodes.INVALID_TRAINER_DATA)
+
+            trainer.max_active_contracts = maxActiveContracts
             
             updated_fields["maxActiveContracts"] = trainer.max_active_contracts
 

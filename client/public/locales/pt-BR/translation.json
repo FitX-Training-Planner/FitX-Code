@@ -59,6 +59,7 @@
         "TRAINER_IS_IN_HIRING": "Algum outro cliente já está em processo de contratação com esse treinador. Tente novamente após alguns minutos.",
         "CLIENT_IS_IN_HIRING": "Você está em processo de contratação com um treinador. Aguarde até que o pagamento seja processado.",
         "INVALID_PAYMENT_PLAN_DATA": "O preço ou a duração do plano superaram o limite permitido.",
+        "INVALID_TRAINER_DATA": "Os dados do treinador estão inválidos.",
         "NO_RESPONSE": "Nosso servidor está indisponível no momento. Tente novamente mais tarde.",
         "ERROR_LOADING_SPECIALTIES": "Não foi possível recuperar as especialidades.",
         "ERROR_LOADING_MUSCLE_GROUPS": "Não foi possível recuperar os grupos musculares.",
