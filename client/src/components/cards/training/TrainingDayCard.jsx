@@ -7,6 +7,7 @@ import TrainingDayInfo from "./TrainingDayInfo";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import useWindowSize from "../../../hooks/useWindowSize";
+import { translateDatabaseData } from "../../../utils/formatters/text/translate";
 
 function TrainingDayCard({
     name,
@@ -95,7 +96,7 @@ function TrainingDayCard({
                                                             <span
                                                                 key={index}
                                                             >
-                                                                {user.config.isEnglish ? t(`databaseData.exercises.${exercise.exercise.ID}.name`) : exercise.exercise.name}
+                                                                {translateDatabaseData(exercise.exercise, "exercises", "name", user, t)}
                                                             </span>
                                                         ))}
                                                     </Stack>
@@ -143,11 +144,11 @@ function TrainingDayCard({
                                                     alignItems="start"
                                                 >
                                                     <span>
-                                                        {user.config.isEnglish ? t(`databaseData.cardioOptions.${session.cardioOption.ID}.name`) : session.cardioOption.name}
+                                                        {translateDatabaseData(session.cardioOption, "cardioOptions", "name", user, t)}
                                                     </span>
 
                                                     <span>
-                                                        {user.config.isEnglish ? t(`databaseData.cardioIntensities.${session.cardioIntensity.ID}.type`) : session.cardioIntensity.type}
+                                                        {translateDatabaseData(session.cardioIntensity, "cardioIntensities", "type", user, t)}
                                                     </span>
                                                 </Stack>
                                             </Stack>

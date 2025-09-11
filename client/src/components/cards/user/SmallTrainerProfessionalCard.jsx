@@ -13,6 +13,7 @@ import { useSelector } from "react-redux";
 import SmallSpecialtyCard from "../training/SmallSpecialtyCard";
 import { useSystemMessage } from "../../../app/useSystemMessage";
 import ShareTrainer from "../../layout/ShareTrainer";
+import { translateDatabaseData } from "../../../utils/formatters/text/translate";
 
 function SmallTrainerProfessionalCard({
     trainerID,
@@ -131,11 +132,7 @@ function SmallTrainerProfessionalCard({
                             >
                                 <SmallSpecialtyCard
                                     icon={specialty.media?.url}
-                                    name={
-                                        user.config.isEnglish 
-                                        ? t(`databaseData.specialties.${specialty.ID}.name`) 
-                                        : specialty.name
-                                    }
+                                    name={translateDatabaseData(specialty, "specialties", "name", user, t)}
                                 />
                             </React.Fragment>
                         ))}

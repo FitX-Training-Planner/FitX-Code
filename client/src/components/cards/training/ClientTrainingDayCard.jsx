@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Stack from "../../containers/Stack";
 import ClickableIcon from "../../form/buttons/ClickableIcon";
 import Title from "../../text/Title";
@@ -13,6 +13,7 @@ import ClientTrainingCardioSessionCard from "./ClientTrainingCardioSessionCard";
 import ClientTrainingExerciseCard from "./ClientTrainingExerciseCard";
 
 function ClientTrainingDayCard({
+    dayID,
     name,
     isRestDay,
     orderInPlan,
@@ -28,6 +29,12 @@ function ClientTrainingDayCard({
 
     const [expandedCardio, setExpandedCardio] = useState(null);
     const [expandedStep, setExpandedStep] = useState(null);
+
+    useEffect(() => {
+        setExpandedCardio(null);
+
+        setExpandedStep(null);
+    }, [dayID]);
 
     return (
         <Stack  
@@ -160,11 +167,7 @@ function ClientTrainingDayCard({
                                                                                 style={{ textAlign: "center", fontSize: width <= 440 ? "var(--text-size)" : "var(--small-text-size)" }}
                                                                                 key={index}
                                                                             >
-                                                                                {
-                                                                                    user.config.isEnglish 
-                                                                                    ? t(`databaseData.exercises.${ex.exercise?.ID}.name`) 
-                                                                                    : ex.exercise?.name
-                                                                                }
+                                                                                {translateDatabaseData(ex.exercise, "exercises", "name", user, t)}
                                                                             </span>
                                                                         ))}
                                                                     </Stack>
@@ -194,11 +197,7 @@ function ClientTrainingDayCard({
                                                                     <span
                                                                         style={{ textAlign: "center" }}
                                                                     >
-                                                                        {
-                                                                            user.config.isEnglish 
-                                                                            ? t(`databaseData.exercises.${step.exercises[0].exercise?.ID}.name`) 
-                                                                            : step.exercises[0].exercise?.name
-                                                                        }
+                                                                        {translateDatabaseData(step.exercises[0], "exercises", "name", user, t)}
                                                                     </span>
                                                                     
                                                                     <span>
@@ -274,11 +273,7 @@ function ClientTrainingDayCard({
                                                             />
     
                                                             <span>
-                                                                {
-                                                                    user.config.isEnglish 
-                                                                    ? t(`databaseData.cardioOptions.${session.cardioOption.ID}.name`) 
-                                                                    : session.cardioOption.name
-                                                                }
+                                                                {translateDatabaseData(session.cardioOption, "cardioOptions", "name", user, t)}
                                                             </span>
                                                         </Stack>
     

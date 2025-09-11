@@ -17,6 +17,7 @@ import useWindowSize from "../../../hooks/useWindowSize";
 import CardioSessionCard from "../../cards/training/CardioSessionCard";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
+import { translateDatabaseData } from "../../../utils/formatters/text/translate";
 
 function TrainingDayForm({
     trainingDay,
@@ -173,24 +174,8 @@ function TrainingDayForm({
                                         <CardioSessionCard
                                             usedID={session.usedID}
                                             note={session.note}
-                                            cardioOptionName={
-                                                session.cardioOption?.ID
-                                                ? (
-                                                    user.config.isEnglish 
-                                                    ? t(`databaseData.cardioOptions.${session.cardioOption.ID}.name`) 
-                                                    : session.cardioOption.name
-                                                )
-                                                : undefined
-                                            }
-                                            cardioIntensityType={
-                                                session.cardioIntensity?.ID
-                                                ? (
-                                                    user.config.isEnglish 
-                                                    ? t(`databaseData.cardioIntensities.${session.cardioIntensity.ID}.type`) 
-                                                    : session.cardioIntensity.type
-                                                )
-                                                : undefined
-                                            }
+                                            cardioOptionName={translateDatabaseData(session.cardioOption, "cardioOptions", "name", user, t)}
+                                            cardioIntensityType={translateDatabaseData(session.cardioIntensity, "cardioIntensities", "type", user, t)}
                                             durationMinutes={session.durationMinutes}
                                             sessionTime={session.sessionTime}
                                             headingNumber={4}

@@ -18,6 +18,7 @@ import useWindowSize from "../../hooks/useWindowSize";
 import styles from "./TrainerSpecialties.module.css";
 import SubmitFormButton from "../form/buttons/SubmitFormButton";
 import { cleanCacheData } from "../../utils/cache/operations";
+import { translateDatabaseData } from "../../utils/formatters/text/translate";
 
 function TrainerSpecialties() {
     const { t } = useTranslation();
@@ -105,7 +106,7 @@ function TrainerSpecialties() {
         }
 
         fetchData();
-    }, [location.state, navigate, notify, t]);
+    }, [getSpecialties, location.state, navigate, notify, t]);
 
     const handleOnSelectSpecialty = useCallback((ID) => {
         setSpecialties((prevSpecialties) =>
@@ -224,7 +225,7 @@ function TrainerSpecialties() {
                 t("errorModifySpecialties")
             );
         }
-    }, [authRequest, dispatch, error, localTrainer?.config?.email_notification_permission, localTrainer?.config?.is_complainter_anonymous, localTrainer?.config?.is_dark_theme, localTrainer?.config?.is_english, localTrainer?.config?.is_rater_anonymous, localTrainer?.config?.photoFile, localTrainer?.email, localTrainer?.name, localTrainer?.password, localTrainer?.crefUF, localTrainer?.cref_number, localTrainer?.description, navigate, notify, postTrainerRequest, putSpecialtiesRequest, specialties, t]);
+    }, [specialties, localTrainer, notify, t, error, postTrainerRequest, navigate, dispatch, authRequest, putSpecialtiesRequest]);
 
     useEffect(() => {
         document.title = t("trainerSpecialties");
@@ -275,11 +276,7 @@ function TrainerSpecialties() {
                             key={index}
                         >
                             <SpecialtyCard
-                                name={
-                                    user.config.isEnglish 
-                                    ? t(`databaseData.specialties.${specialty.ID}.name`) 
-                                    : specialty.name
-                                }
+                                name={translateDatabaseData(specialty, "specialties", "name", user, t)}
                                 icon={specialty.media?.url}
                                 isSelected={specialty.isSelected}
                                 isMain={specialty.isMain}

@@ -15,6 +15,7 @@ import useWindowSize from "../../../hooks/useWindowSize";
 import SetCard from "../../cards/training/SetCard";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
+import { translateDatabaseData } from "../../../utils/formatters/text/translate";
 
 function TrainingExerciseForm({
     exercise,
@@ -121,24 +122,8 @@ function TrainingExerciseForm({
                                             <SetCard
                                                 restSeconds={set.restSeconds}
                                                 durationSeconds={set.durationSeconds}
-                                                setTypeName={
-                                                    set.setType?.ID
-                                                    ? (
-                                                        user.config.isEnglish 
-                                                        ? t(`databaseData.setTypes.${set.setType.ID}.name`) 
-                                                        : set.setType.name
-                                                    )
-                                                    : undefined
-                                                }
-                                                trainingTechniqueName={
-                                                    set.trainingTechnique?.ID
-                                                    ? (
-                                                        user.config.isEnglish 
-                                                        ? t(`databaseData.trainingTechniques.${set.trainingTechnique.ID}.name`) 
-                                                        : set.trainingTechnique.name
-                                                    )
-                                                    : undefined
-                                                }
+                                                setTypeName={translateDatabaseData(set.setType, "setTypes", "name", user, t)}
+                                                trainingTechniqueName={translateDatabaseData(set.trainingTechnique, "trainingTechniques", "name", user, t)}
                                                 minReps={set.minReps}
                                                 maxReps={set.maxReps}
                                                 orderInExercise={set.orderInExercise}

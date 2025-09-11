@@ -8,6 +8,7 @@ import convertTime from "../../../utils/formatters/text/convertTime";
 import getStepType from "../../../utils/generators/stepType";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
+import { translateDatabaseData } from "../../../utils/formatters/text/translate";
 
 function TrainingPlanCompactedCard({
     headingNumber,
@@ -149,7 +150,7 @@ function TrainingPlanCompactedCard({
                                                                             >
                                                                                 {step.exercises.length > 1 && (
                                                                                     <span>
-                                                                                        {user.config.isEnglish ? t(`databaseData.exercises.${exercise.exercise.ID}.name`) : exercise.exercise.name}
+                                                                                        {translateDatabaseData(exercise.exercise, "exercises", "name", user, t)}
                                                                                     </span>
                                                                                 )}
 
@@ -193,11 +194,11 @@ function TrainingPlanCompactedCard({
                                                         >
                                                             <Title
                                                                 headingNumber={headingNumber + 3}
-                                                                text={user.config.isEnglish ? t(`databaseData.cardioOptions.${session.cardioOption.ID}.name`) : session.cardioOption.name}
+                                                                text={translateDatabaseData(session.cardioOption, "cardioOptions", "name", user, t)}
                                                             />
                                                           
                                                             <span>
-                                                                {user.config.isEnglish ? t(`databaseData.cardioIntensities.${session.cardioIntensity.ID}.type`) : session.cardioIntensity.type}
+                                                                {translateDatabaseData(session.cardioIntensity, "cardioIntensities", "type", user, t)}
                                                             </span>
 
                                                             <span>

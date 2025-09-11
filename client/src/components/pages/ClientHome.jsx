@@ -21,6 +21,7 @@ import SearchInput from "../form/fields/SearchInput";
 import getAndSetInitialData from "../../utils/requests/initialData";
 import useGets from "../../hooks/useGetRequest";
 import SmallSpecialtyCard from "../cards/training/SmallSpecialtyCard";
+import { translateDatabaseData } from "../../utils/formatters/text/translate";
 
 function ClientHome() {
     const { t } = useTranslation();
@@ -268,11 +269,7 @@ function ClientHome() {
                                                             >
                                                                 <SmallSpecialtyCard
                                                                     icon={specialty.media?.url}
-                                                                    name={
-                                                                        user.config.isEnglish 
-                                                                        ? t(`databaseData.specialties.${specialty.ID}.name`) 
-                                                                        : specialty.name
-                                                                    }
+                                                                    name={translateDatabaseData(specialty, "specialties", "name", user, t)}
                                                                     handleClick={() => handleOnChangeSpecialtyFilter(specialty.ID)}
                                                                 />
                                                             </Stack>

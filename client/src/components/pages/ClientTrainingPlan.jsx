@@ -147,6 +147,7 @@ function ClientTrainingPlan() {
                                             key={index}
                                         >
                                             <ClientTrainingDayCard
+                                                dayID={day.ID}
                                                 name={day.name}
                                                 isRestDay={day.isRestDay}
                                                 orderInPlan={day.orderInPlan}

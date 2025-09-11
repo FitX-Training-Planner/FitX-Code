@@ -10,6 +10,7 @@ import useWindowSize from "../../hooks/useWindowSize";
 import { useSelector } from "react-redux";
 import NonBackgroundButton from "../form/buttons/NonBackgroundButton";
 import { useNavigate } from "react-router-dom";
+import { translateDatabaseData } from "../../utils/formatters/text/translate";
 
 function SpecialtiesContainer({
     specialties,
@@ -53,11 +54,7 @@ function SpecialtiesContainer({
                                                 key={index}
                                             >
                                                 <SpecialtyCard
-                                                    name={
-                                                        user.config.isEnglish 
-                                                        ? t(`databaseData.specialties.${specialty.ID}.name`) 
-                                                        : specialty.name
-                                                    }
+                                                    name={translateDatabaseData(specialty, "specialties", "name", user, t)}
                                                     icon={specialty.media?.url}
                                                     isSelected
                                                     isMain
@@ -82,11 +79,7 @@ function SpecialtiesContainer({
                                                 key={index}
                                             >
                                                 <SpecialtyCard
-                                                    name={
-                                                        user.config.isEnglish 
-                                                        ? t(`databaseData.specialties.${specialty.ID}.name`) 
-                                                        : specialty.name
-                                                    }
+                                                    name={translateDatabaseData(specialty, "specialties", "name", user, t)}
                                                     icon={specialty.media?.url}
                                                 />
                                             </React.Fragment>

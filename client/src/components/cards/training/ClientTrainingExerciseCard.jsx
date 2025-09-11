@@ -494,16 +494,8 @@ function ClientTrainingExerciseCard({
                                     <img
                                         key={index}
                                         src={`/${user.sex !== "female" ? group.maleMedia?.url : group.femaleMedia?.url}${group.isPrimary ? "primary" : "secondary"}.png`}
-                                        title={
-                                            user.config.isEnglish 
-                                            ? t(`databaseData.muscleGroups.${group.ID}.name`) 
-                                            : group.name
-                                        }
-                                        alt={
-                                            user.config.isEnglish 
-                                            ? t(`databaseData.muscleGroups.${group.ID}.name`) 
-                                            : group.name
-                                        }
+                                        title={translateDatabaseData(group, "muscleGroups", "name", user, t)}
+                                        alt={translateDatabaseData(group, "muscleGroups", "name", user, t)}
                                     />                    
                                 ))}
                             </Stack>
@@ -522,16 +514,8 @@ function ClientTrainingExerciseCard({
                                     <img
                                         key={index}
                                         src={`/${user.sex !== "female" ? group.maleMedia?.url : group.femaleMedia?.url}${group.isPrimary ? "primary" : "secondary"}.png`}
-                                        title={
-                                            user.config.isEnglish 
-                                            ? t(`databaseData.muscleGroups.${group.ID}.name`) 
-                                            : group.name
-                                        }
-                                        alt={
-                                            user.config.isEnglish 
-                                            ? t(`databaseData.muscleGroups.${group.ID}.name`) 
-                                            : group.name
-                                        }
+                                        title={translateDatabaseData(group, "muscleGroups", "name", user, t)}
+                                        alt={translateDatabaseData(group, "muscleGroups", "name", user, t)}
                                         style={{ zIndex: !user.sex !== "female" && group.name === "Glúteos" ? "2" : "1"}}
                                     />                    
                                 ))}

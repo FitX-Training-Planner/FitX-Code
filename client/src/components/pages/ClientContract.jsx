@@ -24,6 +24,7 @@ import SubmitFormButton from "../form/buttons/SubmitFormButton";
 import Link from "../text/Link";
 import { formatPriceToBR } from "../../utils/formatters/payments/formatOnChange";
 import Alert from "../messages/Alert";
+import { translateDatabaseData } from "../../utils/formatters/text/translate";
 
 function ClientContract() {
     const { t, i18n } = useTranslation();
@@ -747,15 +748,7 @@ function ClientContract() {
                                                                 userPhoto={contract.trainer?.photoUrl} 
                                                                 startDate={contract.startDate} 
                                                                 endDate={contract.endDate} 
-                                                                status={
-                                                                    contract.status?.ID
-                                                                    ? (
-                                                                        user.config.isEnglish 
-                                                                        ? t(`databaseData.contractStatus.${contract.status.ID}.name`) 
-                                                                        : contract.status.name
-                                                                    )
-                                                                    : undefined
-                                                                } 
+                                                                status={translateDatabaseData(contract.status, "contractStatus", "name", user, t)} 
                                                                 paymentPlanName={contract.paymentPlan?.name} 
                                                                 transactionAmount={contract.paymentTransaction?.amount} 
                                                                 transactionAppFee={contract.paymentTransaction?.appFee}

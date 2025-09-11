@@ -3,6 +3,7 @@ import Stack from "../../containers/Stack";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import SelectBoxes from "../fields/SelectBoxes";
+import { translateDatabaseData } from "../../../utils/formatters/text/translate";
 
 function SelectMuscles({
     muscleGroups,
@@ -44,16 +45,8 @@ function SelectMuscles({
                         <img
                             key={index}
                             src={`/${isMale ? group.maleMedia?.url : group.femaleMedia?.url}primary.png`}
-                            title={
-                                user.config.isEnglish 
-                                ? t(`databaseData.muscleGroups.${group.ID}.name`) 
-                                : group.name
-                            }
-                            alt={
-                                user.config.isEnglish 
-                                ? t(`databaseData.muscleGroups.${group.ID}.name`) 
-                                : group.name
-                            }
+                            title={translateDatabaseData(group, "muscleGroups", "name", user, t)}
+                            alt={translateDatabaseData(group, "muscleGroups", "name", user, t)}
                         />                    
                     ))}
                 </Stack>
@@ -72,16 +65,8 @@ function SelectMuscles({
                         <img
                             key={index}
                             src={`/${isMale ? group.maleMedia?.url : group.femaleMedia?.url}primary.png`}
-                            title={
-                                user.config.isEnglish 
-                                ? t(`databaseData.muscleGroups.${group.ID}.name`) 
-                                : group.name
-                            }
-                            alt={
-                                user.config.isEnglish 
-                                ? t(`databaseData.muscleGroups.${group.ID}.name`) 
-                                : group.name
-                            }
+                            title={translateDatabaseData(group, "muscleGroups", "name", user, t)}
+                            alt={translateDatabaseData(group, "muscleGroups", "name", user, t)}
                             style={{ zIndex: !isMale && group.name === "Glúteos" ? "2" : "1"}}
                         />                    
                     ))}

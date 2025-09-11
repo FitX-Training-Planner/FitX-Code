@@ -5,6 +5,7 @@ import Title from "../../text/Title";
 import styles from "./TrainingCards.module.css";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
+import { translateDatabaseData } from "../../../utils/formatters/text/translate";
 
 function StepCard({
     exercises,
@@ -52,7 +53,7 @@ function StepCard({
 
                 {exercises.length === 1 &&
                     <span>
-                        {user.config.isEnglish ? t(`databaseData.exercises.${exercises[0].exercise.ID}.name`) : exercises[0].exercise.name}
+                        {translateDatabaseData(exercises[0], "exercises", "name", user, t)}
                     </span>
                 }
             </Stack>
@@ -74,7 +75,7 @@ function StepCard({
                             <Stack>
                                 {exercises.length !== 1 &&
                                     <Title
-                                        text={user.config.isEnglish ? t(`databaseData.exercises.${exercise.exercise.ID}.name`) : exercise.exercise.name}
+                                        text={translateDatabaseData(exercise.exercise, "exercises", "name", user, t)}
                                         headingNumber={headingNumber + 1}
                                     /> 
                                 }
@@ -84,7 +85,7 @@ function StepCard({
                                 >
                                     {exercise.exerciseEquipment?.name && (
                                         <span>
-                                            {user.config.isEnglish ? t(`databaseData.exerciseEquipments.${exercise.exerciseEquipment.ID}.name`) : exercise.exerciseEquipment.name}
+                                            {translateDatabaseData(exercise.exerciseEquipment, "exerciseEquipments", "name", user, t)}
                                         </span>
                                     )}
 

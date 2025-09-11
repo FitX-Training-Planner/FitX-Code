@@ -18,6 +18,7 @@ import { useTranslation } from "react-i18next";
 import PaymentPlansContainer from "../layout/PaymentPlansContainer";
 import DateInput from "../form/fields/DateInput";
 import FooterLayout from "../containers/FooterLayout";
+import { translateDatabaseData } from "../../utils/formatters/text/translate";
 
 function TrainerPayments() {
     const { t } = useTranslation();
@@ -301,15 +302,7 @@ function TrainerPayments() {
                                                             userPhoto={contract.client?.photoUrl} 
                                                             startDate={contract.startDate} 
                                                             endDate={contract.endDate} 
-                                                            status={
-                                                                contract.status?.ID
-                                                                ? (
-                                                                    user.config.isEnglish 
-                                                                    ? t(`databaseData.contractStatus.${contract.status.ID}.name`) 
-                                                                    : contract.status.name
-                                                                )
-                                                                : undefined
-                                                            } 
+                                                            status={translateDatabaseData(contract.status, "contractStatus", "name", user, t)} 
                                                             paymentPlanName={contract.paymentPlan?.name} 
                                                             transactionAmount={contract.paymentTransaction?.amount} 
                                                             transactionAppFee={contract.paymentTransaction?.appFee}
