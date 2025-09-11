@@ -1,0 +1,49 @@
+.client_card {
+    border: 3px solid var(--dark-theme-color);
+    border-radius: 20px;
+    padding: 1em;
+}
+
+.descriptioned_item > span:last-of-type {
+    font-size: var(--small-title-size);
+    font-family: var(--fonts-1);
+}
+
+.days_in_contract > span:last-of-type {
+    color: var(--theme-color);
+    font-size: var(--large-title-size);
+}
+
+.client_main_info {
+    padding: 1em;
+    background-color: var(--light-theme-color);
+    font-weight: bold;
+    border-radius: 10px;
+}
+
+.amount_paid_container,
+.amount_paid_container span {
+    width: max-content;
+}
+
+.payment_plan_data > span:first-of-type {
+    font-weight: bold;
+}
+
+.payment_plan_data > span:last-of-type {
+    color: var(--theme-color);
+    font-size: var(--title-size);
+}
+
+.payment_plan_data {
+    text-align: center;
+    hyphens: none;
+}
+
+.limitations_description > span {
+    color: var(--light-theme-color);
+}
+
+.limitations_description > p {
+    text-align: justify;
+}
