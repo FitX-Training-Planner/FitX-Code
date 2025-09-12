@@ -2,13 +2,13 @@ from ..database.models import Users
 from ..utils.user import hash_email, check_password
 import random
 import string
-from ..utils.user import hash_email
+from ..utils.user import hash_email, send_email_with_template, decrypt_email
 from .redis import redis_delete, redis_get, redis_setex
 from flask_jwt_extended import create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies, unset_access_cookies, unset_refresh_cookies
-from datetime import timedelta
 from sqlalchemy.orm import joinedload
 from ..exceptions.api_error import ApiError
 from .message_codes import MessageCodes
+from ..config import SendGridConfig
 
 def check_login(db, email, password):
     email_hash = hash_email(email)
@@ -16,6 +16,17 @@ def check_login(db, email, password):
     user = db.query(Users).options(joinedload(Users.trainer)).filter(Users.email_hash == email_hash).first()
 
     if user is None or not check_password(password, user.password):
+        if user is not None:
+            try:
+                if user.email_notification_permission:
+                    send_email_with_template(
+                        decrypt_email(user.email_encrypted),
+                        SendGridConfig.SENDGRID_TEMPLATE_LOGIN_FAILED
+                    )
+
+            except Exception as e:
+                print(f"Erro ao enviar e-mail após tentativa de login: {e}")
+
         raise ApiError(MessageCodes.INVALID_LOGIN, 401)
     
     if user.trainer:
