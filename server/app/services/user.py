@@ -1,5 +1,5 @@
 from ..database.models import Users, Media, Trainer, ContractStatus, ClientMuscleGroups
-from ..utils.user import is_email_used, hash_email, encrypt_email, hash_password, decrypt_email
+from ..utils.user import is_email_used, hash_email, encrypt_email, hash_password, decrypt_email, send_email_with_template
 from ..utils.cloudinary import upload_file
 from sqlalchemy.orm import joinedload
 from ..exceptions.api_error import ApiError
@@ -10,6 +10,7 @@ from .trainer import count_trainer_active_contract
 from ..utils.formatters import safe_int, safe_str, safe_date
 from zoneinfo import ZoneInfo
 from datetime import datetime
+from ..config import SendGridConfig
 
 brazil_tz = ZoneInfo("America/Sao_Paulo")
 
@@ -46,12 +47,29 @@ def get_user_by_id(db, user_id, is_client):
 def delete_user_account(db, user_id, is_client):
     try:
         if not is_client:
-            trainer = db.query(Trainer).filter(Trainer.ID == user_id).first()
+            trainer = (
+                db.query(Trainer)
+                .options(
+                    joinedload(Trainer.user)
+                )
+                .filter(Trainer.ID == user_id)
+                .first()
+            )
 
             if not trainer:
                 raise ApiError(MessageCodes.TRAINER_NOT_FOUND, 404)
             
             if count_trainer_active_contract(db, user_id) > 0:
+                try:
+                    if trainer.user.email_notification_permission:
+                        send_email_with_template(
+                            decrypt_email(trainer.user.email_encrypted),
+                            SendGridConfig.SENDGRID_TEMPLATE_CANT_DELETE_ACCOUNT_IN_CONTRACT_FOR_TRAINER
+                        )
+
+                except Exception as e:
+                    print(f"Erro ao enviar e-mail após verificação de contrato ativo ao excluir conta do treinador: {e}")
+            
                 raise ApiError(MessageCodes.TRAINER_HAS_ACTIVE_CONTRACT, 409)
             
             user_id = trainer.fk_user_ID
@@ -71,11 +89,28 @@ def delete_user_account(db, user_id, is_client):
             )
 
         active_contract.canceled_or_rescinded_date = datetime.now(brazil_tz).date()
+
+        can_send_email = user.email_notification_permission
+        decrypted_email = decrypt_email(user.email_encrypted)
+        user_name = user.name
         
         db.delete(user)
 
         db.commit()
 
+        try:
+            if can_send_email:
+                send_email_with_template(
+                    decrypted_email,
+                    SendGridConfig.SENDGRID_TEMPLATE_DELETED_ACCOUNT,
+                    {
+                        "name": user_name
+                    }
+                )
+
+        except Exception as e:
+            print(f"Erro ao enviar e-mail após exclusão de conta: {e}")
+        
         return True
     
     except ApiError as e:
@@ -113,6 +148,23 @@ def toggle_activate_profile(db, user_id, is_client, is_active):
 
         db.commit()
 
+        try:
+            if user.email_notification_permission:
+                send_email_with_template(
+                    decrypt_email(user.email_encrypted),
+                    (
+                        SendGridConfig.SENDGRID_TEMPLATE_WELCOME_AGAIN
+                        if is_active
+                        else SendGridConfig.SENDGRID_TEMPLATE_DEACTIVATE_PROFILE
+                    ),
+                    {
+                        "name": user.name
+                    }
+                )
+
+        except Exception as e:
+            print(f"Erro ao enviar e-mail após ativação ou desativação do perfil: {e}")
+        
         return True if user.is_active else False
     
     except ApiError as e:
@@ -226,6 +278,19 @@ def insert_user(
         db.commit()
 
         db.refresh(new_user)
+
+        try:
+            if new_user.email_notification_permission:
+                send_email_with_template(
+                    decrypt_email(new_user.email_encrypted),
+                    SendGridConfig.SENDGRID_TEMPLATE_CREATE_ACCOUNT,
+                    {
+                        "name": new_user.name
+                    }
+                )
+
+        except Exception as e:
+            print(f"Erro ao enviar e-mail após criação de conta: {e}")
 
         return new_user.ID
     
@@ -405,6 +470,16 @@ def modify_user_password(db, user_id, new_password):
         user.password = hash_password(new_password)
 
         db.commit()
+        
+        try:
+            if user.email_notification_permission:
+                send_email_with_template(
+                    decrypt_email(user.email_encrypted),
+                    SendGridConfig.SENDGRID_TEMPLATE_MODIFIED_PASSWORD
+                )
+
+        except Exception as e:
+            print(f"Erro ao enviar e-mail após alteração de senha: {e}")
 
         return True
 
