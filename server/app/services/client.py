@@ -9,9 +9,11 @@ from ..utils.user import decrypt_email
 from ..utils.trainer import acquire_trainer_lock, release_trainer_lock
 from ..utils.client import acquire_client_lock, release_client_lock, check_client_active_contract
 from .trainer import get_top3_specialties_data, check_trainer_can_be_contracted, get_valid_mp_token
-from ..utils.formatters import safe_date, safe_int, safe_str 
+from ..utils.formatters import safe_date, safe_int, safe_str, format_date_to_extend
 from datetime import datetime
 from zoneinfo import ZoneInfo
+from ..utils.user import send_email_with_template, decrypt_email
+from ..config import SendGridConfig
 
 brazil_tz = ZoneInfo("America/Sao_Paulo")
 
@@ -65,6 +67,31 @@ def cancel_contract(db, client_id):
         
         db.commit()
 
+        try:
+            if contract.user.email_notification_permission:
+                send_email_with_template(
+                    decrypt_email(contract.user.email_encrypted),
+                    SendGridConfig.SENDGRID_TEMPLATE_CANCEL_CLIENT_CONTRACT_FOR_CLIENT,
+                    {
+                        "trainer_name": contract.trainer.user.name,
+                        "contract_end_date": format_date_to_extend(contract.end_date)
+                    }
+                )
+
+            if contract.trainer.user.email_notification_permission:
+                send_email_with_template(
+                    decrypt_email(contract.trainer.user.email_encrypted),
+                    SendGridConfig.SENDGRID_TEMPLATE_CANCEL_CLIENT_CONTRACT_FOR_TRAINER,
+                    {
+                        "client_name": contract.user.name,
+                        "contract_end_date": format_date_to_extend(contract.end_date)
+                        
+                    }
+                )
+
+        except Exception as e:
+            print(f"Erro ao enviar e-mail após cancelamento do contrato pelo cliente: {e}")
+
         return True
 
     except ApiError as e:
@@ -79,7 +106,22 @@ def cancel_contract(db, client_id):
 
 def create_payment(db, client_id, payment_plan_id):
     try:
-        if check_client_active_contract(db, client_id) is not None:
+        active_contract = check_client_active_contract(db, client_id) 
+
+        if active_contract is not None:
+            try:
+                if active_contract.user.email_notification_permission:
+                    send_email_with_template(
+                        decrypt_email(active_contract.user.email_encrypted),
+                        SendGridConfig.SENDGRID_TEMPLATE_CANT_CONTRACT_IN_CONTRACT,
+                        {
+                            "trainer_name": active_contract.trainer.user.name
+                        }
+                    )
+
+            except Exception as e:
+                print(f"Erro ao enviar e-mail após verificação do contrato ativo do cliente ao criar pagamento: {e}")
+            
             raise ApiError(MessageCodes.ERROR_ALREADY_CONTRACT_ACTIVE, 409)
         
         payment_plan = (
@@ -99,9 +141,6 @@ def create_payment(db, client_id, payment_plan_id):
         if not payment_plan.trainer.user.is_active:
             raise ApiError(MessageCodes.TRAINER_DEACTIVATED, 404)
         
-        if not check_trainer_can_be_contracted(db, payment_plan.fk_trainer_ID):
-            raise ApiError(MessageCodes.TRAINER_CANNOT_BE_CONTRACTED, 409)
-
         client = (
             db.query(Users)
             .filter(Users.ID == client_id)
@@ -110,6 +149,28 @@ def create_payment(db, client_id, payment_plan_id):
 
         if not client:
             raise ApiError(MessageCodes.USER_NOT_FOUND, 404)
+        
+        if not check_trainer_can_be_contracted(db, payment_plan.fk_trainer_ID):
+            try:
+                if client.email_notification_permission:
+                    send_email_with_template(
+                        decrypt_email(client.email_encrypted),
+                        SendGridConfig.SENDGRID_TEMPLATE_CANT_CONTRACT_TRAINER_FOR_CLIENT,
+                        {
+                            "trainer_name": payment_plan.trainer.user.name
+                        }
+                    )
+                
+                if payment_plan.trainer.user.email_notification_permission:
+                    send_email_with_template(
+                        decrypt_email(payment_plan.trainer.user.email_encrypted),
+                        SendGridConfig.SENDGRID_TEMPLATE_CANT_CONTRACT_TRAINER_FOR_TRAINER
+                    )
+
+            except Exception as e:
+                print(f"Erro ao enviar e-mail após verificação da possibilidade de contratar treinador ao criar pagamento: {e}")
+
+            raise ApiError(MessageCodes.TRAINER_CANNOT_BE_CONTRACTED, 409)
 
         transaction = PaymentTransaction(
             amount=payment_plan.full_price + payment_plan.app_fee,
@@ -379,6 +440,16 @@ def modify_client_data(
             ]
 
         db.commit()
+
+        try:
+            if user.email_notification_permission:
+                send_email_with_template(
+                    decrypt_email(user.email_encrypted),
+                    SendGridConfig.SENDGRID_TEMPLATE_MODIFY_CLIENT
+                )
+
+        except Exception as e:
+            print(f"Erro ao enviar e-mail após modificação do cliente: {e}")
 
         return updated_fields
 
