@@ -1,15 +1,15 @@
 from app.database.models import Trainer, TrainerSpecialty, TrainingPlan, TrainingDay, TrainingDayStep, StepExercise, ExerciseSet, CardioSession, PaymentPlan, PaymentPlanBenefit, PlanContract, Users, PaymentTransaction, Rating, Complaint, ComplaintLike, RatingLike, ContractStatus, SaveTrainer, Specialty, Exercise
 from ..utils.trainer import is_cref_used
 from ..exceptions.api_error import ApiError
-from ..utils.formatters import safe_str, safe_int, safe_float, safe_bool, safe_time
+from ..utils.formatters import safe_str, safe_int, safe_float, safe_bool, safe_time, format_date_to_extend
 from ..utils.serialize import serialize_specialty, serialize_training_plan, serialize_payment_plan, serialize_contract, serialize_trainer_in_trainers, serialize_rating, serialize_complaint, serialize_trainer_base_info, serialize_client_in_clients, serialize_training_plan_base
 from sqlalchemy.orm import joinedload, subqueryload, selectinload
 from sqlalchemy import asc, desc, func, case, extract
 from ..utils.message_codes import MessageCodes
 from datetime import datetime, timezone, timedelta
 import requests
-from ..config import MercadopagoConfig
-from ..utils.user import encrypt_email, decrypt_email, calculate_age
+from ..config import MercadopagoConfig, SendGridConfig
+from ..utils.user import encrypt_email, decrypt_email, calculate_age, send_email_with_template
 from ..utils.client import check_client_active_contract
 from zoneinfo import ZoneInfo
 
@@ -48,6 +48,19 @@ def insert_trainer(db, cref_number, decription, main_specialties, secondary_spec
         db.commit()
 
         db.refresh(new_trainer)
+
+        try:
+            if new_trainer.user.email_notification_permission:
+                send_email_with_template(
+                    decrypt_email(new_trainer.user.email_encrypted),
+                    SendGridConfig.SENDGRID_TEMPLATE_CREATE_TRAINER,
+                    {
+                        "trainer_name": new_trainer.user.name
+                    }
+                )
+
+        except Exception as e:
+            print(f"Erro ao enviar e-mail após criação de treinador: {e}")
 
         return new_trainer.ID
     
@@ -112,14 +125,35 @@ def modify_trainer_data(db, trainer_id, cref_number = None, description = None, 
     
 def toggle_trainer_contracts_paused(db, trainer_id):
     try:
-        trainer = db.query(Trainer).filter(Trainer.ID == trainer_id).first()
-        
+        trainer = (
+            db.query(Trainer)
+            .options(
+                joinedload(Trainer.user)
+            )
+            .filter(Trainer.ID == trainer_id)
+            .first()
+        )
+
         if trainer is None:
             raise ApiError(MessageCodes.TRAINER_NOT_FOUND, 404)
 
         trainer.is_contracts_paused = not trainer.is_contracts_paused
 
         db.commit()
+
+        try:
+            if trainer.user.email_notification_permission:
+                send_email_with_template(
+                    decrypt_email(trainer.user.email_encrypted),
+                    (
+                        SendGridConfig.SENDGRID_TEMPLATE_CONTRACTS_PAUSED 
+                        if trainer.is_contracts_paused 
+                        else SendGridConfig.SENDGRID_TEMPLATE_CONTRACTS_UNPAUSED
+                    )
+                )
+
+        except Exception as e:
+            print(f"Erro ao enviar e-mail após pausa ou despausa nas contratações do treinador: {e}")
 
         return trainer.is_contracts_paused
 
@@ -303,6 +337,23 @@ def modify_training_plan(db, training_plan, training_plan_id, trainer_id):
         db.commit()
 
         db.refresh(modified_training_plan)
+
+        try:
+            clients = (
+                db.query(Users.email_encrypted, Users.email_notification_permission)
+                .filter(Users.fk_training_plan_ID == training_plan_id)
+                .all()
+            )
+
+            for client in clients:
+                if client.email_notification_permission:
+                    send_email_with_template(
+                        decrypt_email(client.email_encrypted),
+                        SendGridConfig.SENDGRID_TEMPLATE_TRAINER_MODIFIED_TRAINING_PLAN_FOR_CLIENT
+                    )
+
+        except Exception as e:
+            print(f"Erro ao enviar e-mail após modificação de plano de treino do treinador: {e}")
         
         return modified_training_plan.ID
 
@@ -371,17 +422,38 @@ def get_training_plan(db, training_plan_id):
     
 def remove_training_plan(db, training_plan_id, trainer_id):
     try:
-        training_plan = db.query(TrainingPlan).filter(TrainingPlan.ID == training_plan_id).first()
+        training_plan = (
+            db.query(TrainingPlan)
+            .options(
+                subqueryload(TrainingPlan.trainer)
+                    .joinedload(Trainer.user)
+            )
+            .filter(TrainingPlan.ID == training_plan_id)
+            .first()
+        )
 
         if not training_plan:
             raise ApiError(MessageCodes.TRAINING_PLAN_NOT_FOUND, 404)
 
         if str(trainer_id) != str(training_plan.fk_trainer_ID):
             raise ApiError(MessageCodes.ERROR_TRAINER_AUTHOR_TRAINING_PLAN, 403)
+        
+        can_send_email = training_plan.trainer.user.email_notification_permission
+        decrypted_email = decrypt_email(training_plan.trainer.user.email_encrypted)
 
         db.delete(training_plan)
 
         db.commit()
+
+        try:
+            if can_send_email:
+                send_email_with_template(
+                    decrypted_email,    
+                    SendGridConfig.SENDGRID_TEMPLATE_DELETE_TRAINING_PLAN
+                )
+
+        except Exception as e:
+            print(f"Erro ao enviar e-mail após exclusão de plano de treino do treinador: {e}")
 
         return True
 
@@ -474,6 +546,7 @@ def insert_payment_plan(db, name, full_price, duration_days, description, benefi
             .filter(PaymentPlan.fk_trainer_ID == trainer_id)
             .count()
         )
+
         if payment_plans_count >= 6:
             raise ApiError(MessageCodes.ERROR_LIMIT_PAYMENT_PLANS, 409)
 
@@ -521,7 +594,15 @@ def insert_payment_plan(db, name, full_price, duration_days, description, benefi
     
 def modify_payment_plan(db, name, full_price, duration_days, description, benefits, app_fee, payment_plan_id, trainer_id):
     try:
-        modified_payment_plan = db.query(PaymentPlan).filter(PaymentPlan.ID == payment_plan_id).first()
+        modified_payment_plan = (
+            db.query(PaymentPlan)
+            .options(
+                subqueryload(PaymentPlan.trainer)
+                    .joinedload(Trainer.user)
+            )
+            .filter(PaymentPlan.ID == payment_plan_id)
+            .first()
+        )
 
         if not modified_payment_plan:
             raise ApiError(MessageCodes.TRAINING_PLAN_NOT_FOUND, 404)
@@ -552,6 +633,16 @@ def modify_payment_plan(db, name, full_price, duration_days, description, benefi
         update_trainer_price_info(db, trainer_id)
 
         db.refresh(modified_payment_plan)
+
+        try:
+            if modified_payment_plan.trainer.user.email_notification_permission:
+                send_email_with_template(
+                    decrypt_email(modified_payment_plan.trainer.user.email_encrypted),
+                    SendGridConfig.SENDGRID_TEMPLATE_TRAINER_MODIFIED_PAYMENT_PLAN_FOR_TRAINER
+                )
+
+        except Exception as e:
+            print(f"Erro ao enviar e-mail após modificação de plano de pagamento do treinador: {e}")
         
         return modified_payment_plan.ID
 
@@ -567,19 +658,40 @@ def modify_payment_plan(db, name, full_price, duration_days, description, benefi
 
 def remove_payment_plan(db, payment_plan_id, trainer_id):
     try:
-        payment_plan = db.query(PaymentPlan).filter(PaymentPlan.ID == payment_plan_id).first()
+        payment_plan = (
+            db.query(PaymentPlan)
+            .options(
+                subqueryload(PaymentPlan.trainer)
+                    .joinedload(Trainer.user)
+            )
+            .filter(PaymentPlan.ID == payment_plan_id)
+            .first()
+        )
 
         if not payment_plan:
             raise ApiError(MessageCodes.TRAINING_PLAN_NOT_FOUND, 404)
 
         if str(trainer_id) != str(payment_plan.fk_trainer_ID):
             raise ApiError(MessageCodes.ERROR_TRAINER_AUTHOR_TRAINING_PLAN, 403)
+        
+        can_send_email = payment_plan.trainer.user.email_notification_permission
+        decrypted_email = decrypt_email(payment_plan.trainer.user.email_encrypted)
 
         db.delete(payment_plan)
 
         db.commit()
 
         update_trainer_price_info(db, trainer_id)
+
+        try:
+            if can_send_email:
+                send_email_with_template(
+                    decrypted_email,    
+                    SendGridConfig.SENDGRID_TEMPLATE_DELETE_PAYMENT_PLAN
+                )
+
+        except Exception as e:
+            print(f"Erro ao enviar e-mail após exclusão de plano de pagamento do treinador: {e}")
 
         return True
 
@@ -1280,6 +1392,19 @@ def insert_trainer_rating(db, rating, comment, trainer_id, viewer_id):
 
         db.refresh(new_rating)
 
+        try:
+            if new_rating.user.email_notification_permission:
+                send_email_with_template(
+                    decrypt_email(new_rating.user.email_encrypted),
+                    SendGridConfig.SENDGRID_TEMPLATE_CREATE_RATING_FOR_CLIENT,
+                    { 
+                        "trainer_name": new_rating.trainer.user.name
+                    }
+                )
+
+        except Exception as e:
+            print(f"Erro ao enviar e-mail após avaliação do cliente: {e}")
+        
         return serialize_rating(new_rating, False)
     
     except ApiError as e:
@@ -1340,6 +1465,19 @@ def insert_trainer_complaint(db, reason, trainer_id, viewer_id):
         update_trainer_complaints_number(db, trainer_id, True)
 
         db.refresh(new_complaint)
+
+        try:
+            if new_complaint.user.email_notification_permission:
+                send_email_with_template(
+                    decrypt_email(new_complaint.user.email_encrypted),
+                    SendGridConfig.SENDGRID_TEMPLATE_CREATE_COMPLAINT_FOR_CLIENT,
+                    { 
+                        "trainer_name": new_complaint.trainer.user.name
+                    }
+                )
+
+        except Exception as e:
+            print(f"Erro ao enviar e-mail após denúncia do cliente: {e}")
 
         return serialize_complaint(new_complaint, False)
     
@@ -1483,6 +1621,9 @@ def insert_mercadopago_trainer_info(db, mp_user_id, access_token, refresh_token,
     try:
         trainer = (
             db.query(Trainer)
+            .options(
+                joinedload(Trainer.user)
+            )
             .filter(Trainer.ID == trainer_id)
             .first()
         )
@@ -1508,6 +1649,16 @@ def insert_mercadopago_trainer_info(db, mp_user_id, access_token, refresh_token,
         trainer.mp_token_expiration = token_expiration
 
         db.commit()
+        
+        try:
+            if trainer.user.email_notification_permission:
+                send_email_with_template(
+                    decrypt_email(trainer.user.email_encrypted),
+                    SendGridConfig.SENDGRID_TEMPLATE_CONNECT_MP
+                )
+
+        except Exception as e:
+            print(f"Erro ao enviar e-mail após OAuth do treinador com Mercado Pago: {e}")
 
         return True
 
@@ -1814,6 +1965,31 @@ def cancel_trainer_contract(db, trainer_id, client_id, contract_id):
         
         db.commit()
 
+        try:
+            if contract.user.email_notification_permission:
+                send_email_with_template(
+                    decrypt_email(contract.user.email_encrypted),
+                    SendGridConfig.SENDGRID_TEMPLATE_CANCEL_TRAINER_CONTRACT_FOR_CLIENT,
+                    {
+                        "trainer_name": contract.trainer.user.name,
+                        "contract_end_date": format_date_to_extend(contract.end_date) 
+                    }
+                )
+
+            if contract.trainer.user.email_notification_permission:
+                send_email_with_template(
+                    decrypt_email(contract.trainer.user.email_encrypted),
+                    SendGridConfig.SENDGRID_TEMPLATE_CANCEL_TRAINER_CONTRACT_FOR_TRAINER,
+                    {
+                        "client_name": contract.user.name,
+                        "contract_end_date": format_date_to_extend(contract.end_date)
+                        
+                    }
+                )
+
+        except Exception as e:
+            print(f"Erro ao enviar e-mail após cancelamento do contrato pelo treinador: {e}")
+
         return True
 
     except ApiError as e:
@@ -1839,6 +2015,20 @@ def modify_client_training(db, trainer_id, client_id, contract_id, training_plan
         contract.user.fk_training_plan_ID = training_plan_id or None
         
         db.commit()
+
+        try:
+            if contract.user.email_notification_permission:
+                send_email_with_template(
+                    decrypt_email(contract.user.email_encrypted),
+                    (
+                        SendGridConfig.SENDGRID_TEMPLATE_CLIENT_MODIFIED_TRAINING_PLAN_FOR_CLIENT
+                        if training_plan_id
+                        else SendGridConfig.SENDGRID_TEMPLATE_CLIENT_DELETED_TRAINING_PLAN_FOR_CLIENT
+                    )
+                )
+
+        except Exception as e:
+            print(f"Erro ao enviar e-mail após modificação do plano de treino do cliente: {e}")
 
         return True
 
