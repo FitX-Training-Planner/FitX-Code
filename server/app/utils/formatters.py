@@ -1,5 +1,21 @@
 from datetime import datetime, date
 
+   
+MONTHS = {
+    1: "janeiro",
+    2: "fevereiro",
+    3: "marco",
+    4: "abril",
+    5: "maio",
+    6: "junho",
+    7: "julho",
+    8: "agosto",
+    9: "setembro",
+    10: "outubro",
+    11: "novembro",
+    12: "dezembro",
+}
+
 def safe_int(value):
     if value in ("", None):
         return None
@@ -60,3 +76,6 @@ def safe_date(value):
     
     except Exception:
         return None
+ 
+def format_date_to_extend(data):
+    return f"{data.day} de {MONTHS[data.month]} de {data.year}"

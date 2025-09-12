@@ -31,7 +31,7 @@ def hash_password(password):
 def check_password(password, hashed):
     return bcrypt.check_password_hash(hashed, password)
 
-def send_email_with_template(to_email, template_id, dynamic_data):
+def send_email_with_template(to_email, template_id, dynamic_data = {}):
     try:
         message = Mail(
             from_email=SendGridConfig.SENDGRID_SENDER_EMAIL,
@@ -44,7 +44,6 @@ def send_email_with_template(to_email, template_id, dynamic_data):
        
     except Exception as e:
         print(f"Erro ao enviar e-mail: {e}")
-      
 
 def calculate_age(birth_date):
     if not birth_date:
