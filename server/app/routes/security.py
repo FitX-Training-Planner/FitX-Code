@@ -1,9 +1,9 @@
-from flask import Blueprint, jsonify, request, render_template, make_response, redirect
+from flask import Blueprint, jsonify, request, make_response, redirect
 from ..database.context_manager import get_db
-from ..database.models import PaymentTransaction, PlanContract, ContractStatus
+from ..database.models import PaymentTransaction, PlanContract, ContractStatus, Trainer
 from ..exceptions.api_error import ApiError
 from ..utils.security import check_login, generate_code, verify_code, set_jwt_cookies, set_jwt_access_cookies, unset_jwt_cookies
-from ..utils.user import is_email_used, send_email_with_template
+from ..utils.user import is_email_used, send_email_with_template, decrypt_email
 from ..services.user import get_user_by_id, get_user_id_by_email, modify_user_password, toggle_activate_profile
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from ..utils.trainer_decorator import only_trainer
@@ -11,6 +11,7 @@ from ..utils.client_decorator import only_client
 from ..utils.message_codes import MessageCodes
 from ..utils.trainer import release_trainer_lock
 from ..utils.client import release_client_lock
+from ..utils.formatters import format_date_to_extend
 from ..config import MercadopagoConfig, SendGridConfig
 from ..services.trainer import insert_mercadopago_trainer_info
 from ..services.trainer import get_valid_mp_token
@@ -356,7 +357,9 @@ def mercadopago_webhook():
                 db.query(PaymentTransaction)
                 .options(
                     joinedload(PaymentTransaction.payment_plan),
-                    joinedload(PaymentTransaction.trainer)    
+                    subqueryload(PaymentTransaction.trainer)
+                        .joinedload(Trainer.user),
+                    joinedload(PaymentTransaction.user) 
                 )
                 .filter(PaymentTransaction.ID == external_reference)
                 .first()
@@ -446,10 +449,53 @@ def mercadopago_webhook():
 
                 db.commit() 
 
+                if new_contract:
+                    try:
+                        if new_contract.user.email_notification_permission:
+                            send_email_with_template(
+                                decrypt_email(new_contract.user.email_encrypted),
+                                SendGridConfig.SENDGRID_TEMPLATE_NEW_CONTRACT_FOR_CLIENT,
+                                {
+                                    "trainer_name": new_contract.trainer.user.name,
+                                    "contract_end_date": format_date_to_extend(new_contract.end_date) 
+                                }
+                            )
+
+                        if new_contract.trainer.user.email_notification_permission:
+                            send_email_with_template(
+                                decrypt_email(new_contract.trainer.user.email_encrypted),
+                                SendGridConfig.SENDGRID_TEMPLATE_NEW_CONTRACT_FOR_TRAINER,
+                                {
+                                    "client_name": new_contract.user.name,
+                                    "contract_end_date": format_date_to_extend(new_contract.end_date) 
+                                }
+                            )
+
+                    except Exception as e:
+                        print(f"Erro ao enviar e-mail após criação de contrato no webhook do Mercado Pago: {e}")
+
             elif payment_status in ["rejected", "cancelled", "refunded", "charged_back", "expired"]:
+                can_send_email_for_client = transaction.user.email_notification_permission
+                decrypted_client_email = decrypt_email(transaction.user.email_encrypted)
+                trainer_name = transaction.trainer.user.name
+
                 db.delete(transaction)
 
                 db.commit()
+
+                try:
+                    if can_send_email_for_client:
+                        send_email_with_template(
+                            decrypted_client_email,
+                            SendGridConfig.SENDGRID_TEMPLATE_NEW_CONTRACT_FAILED_FOR_CLIENT,
+                            {
+                                "trainer_name": trainer_name
+                            }
+                        )
+
+                except Exception as e:
+                    print(f"Erro ao enviar e-mail após falha na criação de contrato no webhook do Mercado Pago: {e}")
+
 
             return "", 201
             
