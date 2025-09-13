@@ -326,6 +326,7 @@ function TrainerClients() {
                                                                     key={index}
                                                                 >
                                                                     <ActiveClientCard
+                                                                        isActive={client.isActive}
                                                                         name={client.name}
                                                                         photoUrl={client.photoUrl}
                                                                         sex={client.sex}

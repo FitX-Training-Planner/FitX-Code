@@ -12,6 +12,7 @@ import { formatDateToExtend } from "../../../utils/formatters/text/formatDate";
 import Alert from "../../messages/Alert";
 
 function ActiveClientCard({
+    isActive,
     name,
     photoUrl,
     sex,
@@ -81,25 +82,33 @@ function ActiveClientCard({
                                     </p>
                                 )}
 
-                                <form
-                                    onSubmit={handleOnModifyClientTrainingPlan}
-                                >
-                                    <Stack
-                                        alignItems="end"
+                                {isActive ? (
+                                    <form
+                                        onSubmit={handleOnModifyClientTrainingPlan}
                                     >
-                                        <Select
-                                            name="trainingPlan"
-                                            placeholder={t("selectATrainingPlan")}
-                                            value={trainingPlans.find(plan => String(plan.ID) === String(trainingPlanID))?.name}
-                                            handleChange={(e) => handleOnChangeSelect(e, trainingPlans, "name", client, setClient)}
-                                            options={trainingPlans.map(plan => plan.name)}
-                                        />
+                                        <Stack
+                                            alignItems="end"
+                                        >
+                                            <Select
+                                                name="trainingPlan"
+                                                placeholder={t("selectATrainingPlan")}
+                                                value={trainingPlans.find(plan => String(plan.ID) === String(trainingPlanID))?.name}
+                                                handleChange={(e) => handleOnChangeSelect(e, trainingPlans, "name", client, setClient)}
+                                                options={trainingPlans.map(plan => plan.name)}
+                                            />
 
-                                        <SubmitFormButton
-                                            text={t("modify")}
-                                        />
-                                    </Stack>
-                                </form>
+                                            <SubmitFormButton
+                                                text={t("modify")}
+                                            />
+                                        </Stack>
+                                    </form>
+                                ) : (
+                                    <p
+                                        style={{ textAlign: "center" }}
+                                    >
+                                        {t("clientDeactivateProfile")}
+                                    </p>
+                                )}
                             </>
                         )}
                     </Stack>

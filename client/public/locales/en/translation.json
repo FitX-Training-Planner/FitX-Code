@@ -840,6 +840,7 @@
     "viewOtherSteps": "View other exercises",
     "notReceiptAlert": "Mercado Pago doesn't send receipts in notifications to our app when purchases are made with account credit. You can check the transaction details directly in the Mercado Pago app.",
     "modifiedPaymentPlanAlert": "This payment plan may have been modified. Always check your contract details to receive accurate payment information.",
+    "clientDeactivateProfile": "This client has deactivated their profile and can no longer receive any services. You are relieved of responsibility for providing services to this client while their profile is deactivated.",
     "databaseData": {
         "muscleGroups": {
             "1": {

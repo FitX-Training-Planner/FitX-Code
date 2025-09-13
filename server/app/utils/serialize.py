@@ -448,6 +448,7 @@ def serialize_client_in_clients(client, is_in_active_contract = False, client_co
             "startDate": client.plan_contracts[0].start_date,
             "endDate": client.plan_contracts[0].end_date
         }
+        data["isActive"] = client.is_active
     
     elif client_contracts_info is not None:
         data["firstContractDate"] = client_contracts_info.first_contract_date

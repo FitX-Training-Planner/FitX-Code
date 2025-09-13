@@ -1896,8 +1896,7 @@ def get_trainer_active_clients(db, trainer_id):
                     .joinedload(PlanContract.payment_plan)
             )
             .filter(
-                ContractStatus.name == "Ativo",
-                Users.is_active == True
+                ContractStatus.name == "Ativo"
             )
             .all()
         )
