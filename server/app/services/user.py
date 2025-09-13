@@ -126,12 +126,29 @@ def delete_user_account(db, user_id, is_client):
 def toggle_activate_profile(db, user_id, is_client, is_active):
     try:
         if not is_client:
-            trainer = db.query(Trainer).filter(Trainer.ID == user_id).first()
+            trainer = (
+                db.query(Trainer)
+                .options(
+                    joinedload(Trainer.user)
+                )
+                .filter(Trainer.ID == user_id)
+                .first()
+            )
 
             if not trainer:
                 raise ApiError(MessageCodes.TRAINER_NOT_FOUND, 404)
             
             if not is_active and count_trainer_active_contract(db, user_id) > 0:
+                try:
+                    if trainer.user.email_notification_permission:
+                        send_email_with_template(
+                            decrypt_email(trainer.user.email_encrypted),
+                            SendGridConfig.SENDGRID_TEMPLATE_CANT_DELETE_ACCOUNT_IN_CONTRACT_FOR_TRAINER
+                        )
+
+                except Exception as e:
+                    print(f"Erro ao enviar e-mail após verificação de contrato ativo ao desativar perfil do treinador: {e}")
+
                 raise ApiError(MessageCodes.TRAINER_HAS_ACTIVE_CONTRACT, 409)
             
             user_id = trainer.fk_user_ID

@@ -76,7 +76,14 @@ def insert_trainer(db, cref_number, decription, main_specialties, secondary_spec
     
 def modify_trainer_data(db, trainer_id, cref_number = None, description = None, maxActiveContracts = None):
     try:
-        trainer = db.query(Trainer).filter(Trainer.ID == trainer_id).first()
+        trainer = (
+            db.query(Trainer)
+            .options(
+                joinedload(Trainer.user)
+            )
+            .filter(Trainer.ID == trainer_id)
+            .first()
+        )
         
         if trainer is None:
             raise ApiError(MessageCodes.TRAINER_NOT_FOUND, 404)
@@ -110,6 +117,16 @@ def modify_trainer_data(db, trainer_id, cref_number = None, description = None, 
             updated_fields["maxActiveContracts"] = trainer.max_active_contracts
 
         db.commit()
+
+        try:
+            if trainer.user.email_notification_permission:
+                send_email_with_template(
+                    decrypt_email(trainer.user.email_encrypted),
+                    SendGridConfig.SENDGRID_TEMPLATE_MODIFY_TRAINER
+                )
+
+        except Exception as e:
+            print(f"Erro ao enviar e-mail após modificação do treinador: {e}")
 
         return updated_fields
 
@@ -441,6 +458,12 @@ def remove_training_plan(db, training_plan_id, trainer_id):
         can_send_email = training_plan.trainer.user.email_notification_permission
         decrypted_email = decrypt_email(training_plan.trainer.user.email_encrypted)
 
+        clients = (
+            db.query(Users.email_encrypted, Users.email_notification_permission)
+            .filter(Users.fk_training_plan_ID == training_plan_id)
+            .all()
+        )
+
         db.delete(training_plan)
 
         db.commit()
@@ -451,6 +474,13 @@ def remove_training_plan(db, training_plan_id, trainer_id):
                     decrypted_email,    
                     SendGridConfig.SENDGRID_TEMPLATE_DELETE_TRAINING_PLAN
                 )
+
+            for client in clients:
+                if client.email_notification_permission:
+                    send_email_with_template(
+                        decrypt_email(client.email_encrypted),
+                        SendGridConfig.SENDGRID_TEMPLATE_CLIENT_DELETED_TRAINING_PLAN_FOR_CLIENT
+                    )
 
         except Exception as e:
             print(f"Erro ao enviar e-mail após exclusão de plano de treino do treinador: {e}")
@@ -1063,11 +1093,12 @@ def get_partial_trainer_complaints(db, offset, limit, trainer_id, viewer_id = No
 
         query = (
             db.query(Complaint)
+            .join(Complaint.user)
             .options(
                 subqueryload(Complaint.user)
                     .joinedload(Users.media)
             )
-            .filter(Complaint.fk_trainer_ID == trainer_id)
+            .filter(Complaint.fk_trainer_ID == trainer_id, Users.is_active == True)
         )
 
         if viewer_complaint:
@@ -1148,11 +1179,12 @@ def get_partial_trainer_ratings(db, offset, limit, trainer_id, viewer_id = None)
 
         query = (
             db.query(Rating)
+            .join(Rating.user)
             .options(
                 subqueryload(Rating.user)
                     .joinedload(Users.media)
             )
-            .filter(Rating.fk_trainer_ID == trainer_id)
+            .filter(Rating.fk_trainer_ID == trainer_id, Users.is_active == True)
         )
 
         if viewer_rating:
@@ -1785,7 +1817,14 @@ def get_trainer_specialties(db, trainer_id):
 
 def modify_trainer_specialties(db, main_specialties, secondary_specialties, trainer_id):
     try:
-        trainer = db.query(Trainer).filter(Trainer.ID == trainer_id).first()
+        trainer = (
+            db.query(Trainer)
+            .options(
+                joinedload(Trainer.user)
+            )
+            .filter(Trainer.ID == trainer_id)
+            .first()
+        )
 
         if not trainer:
             raise ApiError(MessageCodes.TRAINER_NOT_FOUND, 404)
@@ -1814,6 +1853,16 @@ def modify_trainer_specialties(db, main_specialties, secondary_specialties, trai
                 )
 
         db.commit()
+
+        try:
+            if trainer.user.email_notification_permission:
+                send_email_with_template(
+                    decrypt_email(trainer.user.email_encrypted),
+                    SendGridConfig.SENDGRID_TEMPLATE_MODIFY_TRAINER
+                )
+
+        except Exception as e:
+            print(f"Erro ao enviar e-mail após modificação das especialidades do treinador: {e}")
 
         return True
 
@@ -2011,6 +2060,9 @@ def modify_client_training(db, trainer_id, client_id, contract_id, training_plan
         
         if str(contract.ID) != str(contract_id) or str(contract.fk_trainer_ID) != str(trainer_id):
             raise ApiError(MessageCodes.ACTIVE_CONTRACT_NOT_MATCH_DATA, 404)
+        
+        if not contract.user.is_active:
+            raise ApiError(MessageCodes.CLIENT_DEACTIVATED, 404)
 
         contract.user.fk_training_plan_ID = training_plan_id or None
         
@@ -2021,7 +2073,7 @@ def modify_client_training(db, trainer_id, client_id, contract_id, training_plan
                 send_email_with_template(
                     decrypt_email(contract.user.email_encrypted),
                     (
-                        SendGridConfig.SENDGRID_TEMPLATE_CLIENT_MODIFIED_TRAINING_PLAN_FOR_CLIENT
+                        SendGridConfig.SENDGRID_TEMPLATE_TRAINER_MODIFIED_TRAINING_PLAN_FOR_CLIENT
                         if training_plan_id
                         else SendGridConfig.SENDGRID_TEMPLATE_CLIENT_DELETED_TRAINING_PLAN_FOR_CLIENT
                     )
