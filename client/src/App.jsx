@@ -80,7 +80,9 @@ function App() {
       "/payment/pending",
       "/me/saved-trainers",
       "/checkout/:planId",
-      "/me/contract"
+      "/me/contract",
+      "/me/training-plan",
+      "/trainers/me/clients"
     ];
 
     const shouldSkip = !validPaths.includes(location.pathname);
@@ -140,6 +142,7 @@ function App() {
       <ChangeLanguageAndThemeButton />
 
       <Routes>
+        {/* me/trainer-chat */}
         <Route
           path="/error"
           element={<ErrorPage />}
@@ -295,7 +298,7 @@ function App() {
             />
 
             <Route 
-              path="trainers/me/clients"
+              path="/trainers/me/clients"
               element={<TrainerClients />}
             />
 

@@ -66,7 +66,9 @@
         "CLIENT_NOT_FOUND": "Client not found.",
         "INVALID_MERCHANT_TRAINER": "The trainer has not yet enabled the Mercado Pago account for sales.",
         "INVALID_CLIENTS_FILTER": "Invalid clients filter",
-        "ACTIVE_CONTRACT_NOT_MATCH_DATA": "Your or the contract's identity is different from the client's active contract identity."
+        "ACTIVE_CONTRACT_NOT_MATCH_DATA": "Your or the contract's identity is different from the client's active contract identity.",
+        "CLIENT_DEACTIVATED": "The client has deactivated your profile.",
+        "TRAINER_DEACTIVATED": "The trainer has deactivate your profile."
     },
     "loadingCheckData": "Checking data",
     "errorLogin": "Login failed!",
@@ -837,6 +839,7 @@
     "viewOtherCardioSessions": "View other sessions",
     "viewOtherSteps": "View other exercises",
     "notReceiptAlert": "Mercado Pago doesn't send receipts in notifications to our app when purchases are made with account credit. You can check the transaction details directly in the Mercado Pago app.",
+    "modifiedPaymentPlanAlert": "This payment plan may have been modified. Always check your contract details to receive accurate payment information.",
     "databaseData": {
         "muscleGroups": {
             "1": {

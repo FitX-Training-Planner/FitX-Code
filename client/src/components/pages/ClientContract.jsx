@@ -502,14 +502,22 @@ function ClientContract() {
                                                         />
 
                                                         {contract.paymentPlan?.ID ? (
-                                                            <PaymentPlanCard
-                                                                name={contract.paymentPlan?.name} 
-                                                                fullPrice={contract.paymentPlan?.fullPrice} 
-                                                                durationDays={contract.paymentPlan?.durationDays} 
-                                                                description={contract.paymentPlan?.description} 
-                                                                benefits={contract.paymentPlan?.benefits}
-                                                                appFee={contract.paymentPlan?.appFee}
-                                                            />
+                                                            <Stack>
+                                                                <PaymentPlanCard
+                                                                    name={contract.paymentPlan?.name} 
+                                                                    fullPrice={contract.paymentPlan?.fullPrice} 
+                                                                    durationDays={contract.paymentPlan?.durationDays} 
+                                                                    description={contract.paymentPlan?.description} 
+                                                                    benefits={contract.paymentPlan?.benefits}
+                                                                    appFee={contract.paymentPlan?.appFee}
+                                                                />
+
+                                                                <p
+                                                                    style={{ fontSize: "var(--small-text-size)" }}
+                                                                >
+                                                                    {t("modifiedPaymentPlanAlert")}
+                                                                </p>
+                                                            </Stack>
                                                         ) : (
                                                             <p
                                                                 className={styles.center_description}
