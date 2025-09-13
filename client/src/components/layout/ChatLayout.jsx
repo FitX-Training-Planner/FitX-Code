@@ -114,7 +114,7 @@ function ChatLayout({
                                         direction="row"
                                     >
                                         <span>
-                                            {formatDateTime(message.createDate, t)}
+                                            {formatDateTime(message.createDate, t, true)}
                                         </span>
 
                                         <span>

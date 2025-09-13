@@ -27,8 +27,14 @@ export function formatDateToExtend(date, locale) {
     }).format(parsedDate);
 }
 
-export function formatDateTime(dateTime, t) {
-    const date = utcToZonedTime(new Date(dateTime));
+export function formatDateTime(dateTime, t, isDateCorrect = false) {
+    let date = null;
+    
+    if (isDateCorrect) {
+        date = new Date(dateTime);
+    } else {
+        date = utcToZonedTime(new Date(dateTime));
+    }
 
     const formattedDate = formatDate(dateTime, t);
 
