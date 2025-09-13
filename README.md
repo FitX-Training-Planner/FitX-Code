@@ -97,3 +97,8 @@ Este repositório contém o código e documentos relacionados ao projeto FitX, u
 <a href="https://www.flaticon.com/br/icones-gratis/alavanca" title="alavanca ícones">Alavanca ícones criados por Good Ware - Flaticon</a>
 <a href="https://www.flaticon.com/br/icones-gratis/proximo" title="próximo ícones">Próximo ícones criados por Roundicons - Flaticon</a>
 <a href="https://www.flaticon.com/br/icones-gratis/relogio" title="relógio ícones">Relógio ícones criados por Smashicons - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/atencao" title="atenção ícones">Atenção ícones criados por Saepul Nahwan - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/do-utilizador" title="do utilizador ícones">Do utilizador ícones criados por Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/dumbell" title="dumbell ícones">Dumbell ícones criados por Vector Stall - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/emoji" title="emoji ícones">Emoji ícones criados por Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/triste" title="triste ícones">Triste ícones criados por Ilham Fitrotul Hayat - Flaticon</a>
