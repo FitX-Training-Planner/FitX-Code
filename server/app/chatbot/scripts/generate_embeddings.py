@@ -1,7 +1,5 @@
-import os
 import json
 import glob
-from ...__init__ import openai_client
 from pathlib import Path
 
 try:
@@ -110,6 +108,8 @@ def process_language(lang = "pt"):
             })
 
     for i in range(0, len(items), BATCH_SIZE):
+        from ...__init__ import openai_client
+
         batch = items[i:i+BATCH_SIZE]
         inputs = [x["text"] for x in batch]
 
@@ -124,7 +124,3 @@ def process_language(lang = "pt"):
         json.dump(items, f, ensure_ascii=False, indent=2)
 
     print(f"Salvo {len(items)} chunks/embeddings em {out_file}")
-
-if __name__ == "__main__":
-    process_language("pt")
-    process_language("en")

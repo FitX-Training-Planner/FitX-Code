@@ -11,6 +11,7 @@ from openai import OpenAI
 from .utils.message_codes import MessageCodes
 import json
 from sendgrid import SendGridAPIClient
+from .chatbot.scripts.generate_embeddings import process_language
 
 bcrypt = Bcrypt()
 
@@ -36,6 +37,8 @@ EN_EMBEDDINGS_PATH = os.path.join(BASE_DIR, "chatbot", "data", "embeddings", "en
 
 pt_embeddings = load_embeddings(PT_EMBEDDINGS_PATH)
 en_embeddings = load_embeddings(EN_EMBEDDINGS_PATH)
+# pt_embeddings = None
+# en_embeddings = None
 
 @jwt.unauthorized_loader
 def custom_unauthorized_response(callback):
@@ -70,6 +73,9 @@ def create_app():
 
     from .routes import register_routes
     register_routes(app)
+
+    # process_language("pt")
+    # process_language("en")
 
     # from .database.database_connection import engine, Base
     # from .database.models import Media, Users, Trainer, Specialty, TrainerSpecialty, Rating, RatingLike, Complaint, ComplaintLike, SaveTrainer, MuscleGroup, Exercise, ExerciseMuscleGroup, BodyPosition, ExerciseEquipment, PulleyHeight, PulleyAttachment, GripType, GripWidth, Laterality, TrainingTechnique, TrainingPlan, TrainingDay, TrainingDayStep, StepExercise, SetType, ExerciseSet, CardioOption, CardioIntensity, CardioSession, PaymentPlan, PaymentTransaction, ContractStatus, PlanContract, PaymentPlanBenefit, BodyComposition, ExerciseSetLog, Chat, Message, BodyCompositionExam, BodyCompositionExamSend, ClientMuscleGroups
