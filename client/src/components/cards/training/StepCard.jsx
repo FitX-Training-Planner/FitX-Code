@@ -53,7 +53,7 @@ function StepCard({
 
                 {exercises.length === 1 &&
                     <span>
-                        {translateDatabaseData(exercises[0], "exercises", "name", user, t)}
+                        {translateDatabaseData(exercises[0].exercise, "exercises", "name", user, t)}
                     </span>
                 }
             </Stack>
