@@ -510,11 +510,6 @@ def mercadopago_webhook():
             if db.is_active:
                 db.rollback()
 
-            if transaction:
-                db.delete(transaction)
-
-                db.commit()
-
             print(f"{error_message}: {e}")
 
             return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
