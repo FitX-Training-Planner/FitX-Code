@@ -42,7 +42,6 @@ function ClientTrainingExerciseCard({
     const [videoError, setVideoError] = useState(false);
     const [imageError, setImageError] = useState(false);
 
-
     const handleOnFullscreenVideo = useCallback(() => {
         if (videoRef.current) {
             if (videoRef.current.requestFullscreen) {

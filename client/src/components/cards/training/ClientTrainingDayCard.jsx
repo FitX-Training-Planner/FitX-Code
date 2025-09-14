@@ -197,7 +197,7 @@ function ClientTrainingDayCard({
                                                                     <span
                                                                         style={{ textAlign: "center" }}
                                                                     >
-                                                                        {translateDatabaseData(step.exercises[0], "exercises", "name", user, t)}
+                                                                        {translateDatabaseData(step.exercises[0].exercise, "exercises", "name", user, t)}
                                                                     </span>
                                                                     
                                                                     <span>
