@@ -12,6 +12,7 @@ from ..config import MercadopagoConfig, SendGridConfig
 from ..utils.user import encrypt_email, decrypt_email, calculate_age, send_email_with_template
 from ..utils.client import check_client_active_contract
 from zoneinfo import ZoneInfo
+import traceback
 
 brazil_tz = ZoneInfo("America/Sao_Paulo")
 
@@ -1646,6 +1647,8 @@ def get_valid_mp_token(db, trainer_id):
 
     except Exception as e:
         print(f"Erro ao recuperar token válido do Mercado Pago do treinador: {e}")
+        
+        traceback.print_exc()
 
         raise Exception(f"Erro ao recuperar o token válido do Mercado Pago do treinador: {e}")
 
