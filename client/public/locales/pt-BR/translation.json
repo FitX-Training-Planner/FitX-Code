@@ -810,7 +810,7 @@
     "cancelContractTrainerAlert": "Se você optar por cancelar o contrato, terá que reembolsar 100% do valor que o cliente pagou, correspondente ao valor do plano de pagamento selecionado por ele somado à taxa de manutenção do FitX sobre o mesmo plano.",
     "completedContracts": "Contratos Finalizados",
     "canceledContracts": "Contratos Cancelados",
-    "clientAmountPaidAlert": "Only amounts that the trainer has received and from contracts that haven't been canceled are included in the calculation of the total amount paid.",
+    "clientAmountPaidAlert": "Somente os valores que o treinador recebeu e de contratos que não foram cancelados são incluídos no cálculo do valor total pago.",
     "amountPaid": "Valor Pago",
     "firstContract": "Primeiro Contrato",
     "lastContract": "Último Contrato",

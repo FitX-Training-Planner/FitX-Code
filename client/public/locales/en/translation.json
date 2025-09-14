@@ -810,7 +810,7 @@
     "cancelContractTrainerAlert": "If you choose to cancel the contract, you will have to refund 100% of the amount the client paid, corresponding to the value of the payment plan selected by them plus the FitX maintenance fee for the same plan.",
     "completedContracts": "Completed Contracts",
     "canceledContracts": "Canceled Contracts",
-    "clientAmountPaidAlert": "Amounts from contracts that have been canceled aren't included in the calculation of the total amount paid.",
+    "clientAmountPaidAlert": "Only amounts that the trainer has received and from contracts that haven't been canceled are included in the calculation of the total amount paid.",
     "amountPaid": "Amount Paid",
     "firstContract": "First Contract",
     "lastContract": "Last Contract",
