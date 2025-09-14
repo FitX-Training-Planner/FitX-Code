@@ -84,7 +84,9 @@ function TrainingPlan() {
                 destiny="/trainers/me/training-plans"
             />
 
-            <Stack>
+            <Stack
+                extraStyles={{ padding: "2em 0"}}
+            >
                 {trainingPlan.trainingDays.length > 1 && (
                     <FilterItemsById
                         items={trainingPlan.trainingDays}
