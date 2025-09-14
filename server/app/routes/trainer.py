@@ -43,7 +43,7 @@ def post_trainer():
                 data.get("isRaterAnonymous") == "true",
                 data.get("emailNotificationPermission") == "true",
                 data.get("isEnglish") == "true",
-                fk_media_ID
+                fk_media_ID=fk_media_ID
             )
 
             trainer_id = insert_trainer(
