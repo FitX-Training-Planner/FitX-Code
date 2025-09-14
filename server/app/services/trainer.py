@@ -1737,29 +1737,40 @@ def update_mercadopago_trainer_token(db, new_access_token, new_refresh_token, ne
         raise Exception(f"Erro ao atualizar o token de acesso do Mercado Pago do treinador: {e}")
 
 def refresh_mp_token(db, trainer_id, mp_refresh_token):
-    payload = {
-        "grant_type": "refresh_token",
-        "client_id": MercadopagoConfig.MP_CLIENT_ID,
-        "client_secret": MercadopagoConfig.MP_CLIENT_SECRET,
-        "refresh_token": mp_refresh_token
-    }
+    try: 
+        payload = {
+            "grant_type": "refresh_token",
+            "client_id": MercadopagoConfig.MP_CLIENT_ID,
+            "client_secret": MercadopagoConfig.MP_CLIENT_SECRET,
+            "refresh_token": mp_refresh_token
+        }
 
-    response = requests.post("https://api.mercadopago.com/oauth/token", json=payload)
+        response = requests.post("https://api.mercadopago.com/oauth/token", json=payload)
 
-    if response.status_code != 200:
-        raise ApiError(MessageCodes.MP_TOKEN_REFRESH_ERROR, 500)
+        if response.status_code != 200:
+            raise ApiError(MessageCodes.MP_TOKEN_REFRESH_ERROR, 500)
 
-    data = response.json()
+        data = response.json()
 
-    new_access_token = data["access_token"]
-    new_refresh_token = data["refresh_token"]
-    expires_in = data["expires_in"]
+        new_access_token = data["access_token"]
+        new_refresh_token = data["refresh_token"]
+        expires_in = data["expires_in"]
 
-    new_expiration = datetime.now(timezone.utc) + timedelta(seconds=expires_in)
+        new_expiration = datetime.now(timezone.utc) + timedelta(seconds=expires_in)
 
-    update_mercadopago_trainer_token(db, new_access_token, new_refresh_token, new_expiration, trainer_id)
+        update_mercadopago_trainer_token(db, new_access_token, new_refresh_token, new_expiration, trainer_id)
 
-    return new_access_token
+        return new_access_token
+
+    except ApiError as e:
+        print(f"Erro ao atualizar token de acesso do Mercado Pago: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao atualizar token de acesso do Mercado Pago: {e}")
+
+        raise Exception(f"Erro ao atualizar o token de acesso do Mercado Pago : {e}")
 
 def get_all_specialties(db):
     try:
