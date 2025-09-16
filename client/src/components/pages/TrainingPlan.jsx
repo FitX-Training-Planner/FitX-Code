@@ -1,16 +1,18 @@
 import { useSelector } from "react-redux";
 import useRequest from "../../hooks/useRequest";
 import useWindowSize from "../../hooks/useWindowSize";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { verifyIsTrainer } from "../../utils/requests/verifyUserType";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSystemMessage } from "../../app/useSystemMessage";
 import api from "../../api/axios";
-import TrainingPlanExpandedCard from "../cards/training/TrainingPlanExpandedCard";
 import BackButton from "../layout/BackButton";
 import Stack from "../containers/Stack";
 import FilterItemsById from "../form/buttons/FilterItemsById";
 import { useTranslation } from "react-i18next";
+import ClientTrainingDayCard from "../cards/training/ClientTrainingDayCard";
+import NavBarLayout from "../containers/NavBarLayout";
+import Title from "../text/Title";
 
 function TrainingPlan() {
     const { t } = useTranslation();
@@ -79,30 +81,59 @@ function TrainingPlan() {
     }, [t]);
 
     return (
-        <main>
+        <main
+            style={{ padding: width <= 440 ? "2em 1em" : "2em"}}
+        >
             <BackButton
                 destiny="/trainers/me/training-plans"
             />
 
             <Stack
-                extraStyles={{ padding: "2em 0"}}
+                gap="5em"
             >
-                {trainingPlan.trainingDays.length > 1 && (
-                    <FilterItemsById
-                        items={trainingPlan.trainingDays}
-                        orderKey="orderInPlan"
-                        setShowedItems={setShowedDays}
+                <Stack>
+                    <Title
+                        headingNumber={1}
+                        text={t("trainingPlan")}
                     />
-                )}
 
-                <TrainingPlanExpandedCard
-                    planID={trainingPlan.ID}
-                    name={trainingPlan.name}
-                    trainingNote={trainingPlan.note}
-                    trainingDays={showedDays}
-                    width={width}
-                />
-            </Stack>     
+                    <p>
+                        {t("clientViewDescription")}
+                    </p>
+                </Stack>
+
+                <Stack
+                    gap="2em"
+                >
+                    {trainingPlan.trainingDays.length > 1 && (
+                        <FilterItemsById
+                            items={trainingPlan.trainingDays}
+                            orderKey="orderInPlan"
+                            setShowedItems={setShowedDays}
+                        />
+                    )}
+
+                    <Stack
+                        gap="2em"
+                    >
+                        {showedDays.map((day, index) => (
+                            <React.Fragment
+                                key={index}
+                            >
+                                <ClientTrainingDayCard
+                                    dayID={day.ID}
+                                    name={day.name}
+                                    isRestDay={day.isRestDay}
+                                    orderInPlan={day.orderInPlan}
+                                    note={day.note}
+                                    trainingSteps={day.trainingSteps}
+                                    cardioSessions={day.cardioSessions}
+                                />
+                            </React.Fragment>
+                        ))}
+                    </Stack>
+                </Stack>     
+            </Stack>
         </main>
     );
 }
