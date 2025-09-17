@@ -105,7 +105,9 @@ function ChatBot() {
     }, []);
 
     return (
-        <NavBarLayout>
+        <NavBarLayout
+            isClient={user.config.isClient}
+        >
             <main>
                 <ChatLayout
                     isChatBot
