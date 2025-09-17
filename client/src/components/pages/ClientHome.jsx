@@ -131,7 +131,7 @@ function ClientHome() {
     }, [activeTrainerFilter.value, handleOnChangeFilter, selectedSpecialtyID]);
 
     useEffect(() => {
-        if (hasRun.current) return;
+        if (hasRun.current || !user.ID) return;
                 
         hasRun.current = true;
         
