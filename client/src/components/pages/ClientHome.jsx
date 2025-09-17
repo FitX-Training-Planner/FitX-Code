@@ -131,11 +131,13 @@ function ClientHome() {
     }, [activeTrainerFilter.value, handleOnChangeFilter, selectedSpecialtyID]);
 
     useEffect(() => {
+        console.log("info:", hasRun.current, user)
         if (hasRun.current || !user.ID) return;
                 
         hasRun.current = true;
         
         const fetchData = async () => {
+            console.log("isclient")
             const success = await verifyIsClient(isClient, user, navigate, notify, t);
 
             if (!success) return;
