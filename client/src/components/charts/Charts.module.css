@@ -1,0 +1,13 @@
+.progress_bar {
+    position: relative;
+}
+
+.progress_bar > strong {
+    min-width: max-content;
+} 
+
+.progress_bar > .progress_numbers {
+    position: absolute;
+    height: 100%;
+    padding: 0.5em;
+}
