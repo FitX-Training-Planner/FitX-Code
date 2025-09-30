@@ -258,6 +258,24 @@ def serialize_contract(contract, is_client):
 
     return data
 
+def serialize_transaction(transaction):
+    return {
+        "ID": transaction.ID,
+        "mercadopagoTransactionID": serialize_field(transaction.mp_transaction_id),
+        "createDate": transaction.create_date,
+        "mpFee": serialize_field(transaction.mp_fee),
+        "trainerReceived": serialize_field(transaction.trainer_received),
+        "payerEmail": transaction.user.email if transaction.user else None 
+    }
+
+def serialize_user_mp_info(mp_info):
+    return {
+        "nickname": serialize_field(mp_info.nickname),
+        "firstName": serialize_field(mp_info.first_name),
+        "lastName": serialize_field(mp_info.last_name),
+        "email": serialize_field(mp_info.email)
+    }
+
 def serialize_trainer_in_trainers(trainer, has_saved = None, top3_specialties = None, extra_specialties_count = None):
     return {
         "ID": trainer.ID,
@@ -365,7 +383,6 @@ def serialize_trainer_base_info(trainer):
         "ratesNumber": serialize_field(trainer.rates_number),
         "contractsNumber": serialize_field(trainer.contracts_number),
         "complaintsNumber": serialize_field(trainer.complaints_number),
-        "hasConnectedMP": True if trainer.mp_user_id else False,
         "maxActiveContracts": serialize_field(trainer.max_active_contracts),
         "isContractsPaused": trainer.is_contracts_paused
     }
