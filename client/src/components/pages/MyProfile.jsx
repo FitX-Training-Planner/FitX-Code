@@ -22,7 +22,6 @@ import TrainerCRCInfo from "../layout/TrainerCRCInfo";
 import PhotoInput from "../form/fields/PhotoInput";
 import BackButton from "../layout/BackButton";
 import Alert from "../messages/Alert";
-import MercadopagoConnectButton from "../layout/MercadopagoConnectButton";
 import { getCacheData, setCacheData } from "../../utils/cache/operations";
 import { verifyIsClient, verifyIsTrainer } from "../../utils/requests/verifyUserType";
 import FooterLayout from "../containers/FooterLayout";
@@ -58,7 +57,6 @@ function MyProfile() {
     const { request: modifyConfigReq } = useRequest();
     const { request: modifyTrainerReq } = useRequest();
     const { request: modifyPhotoReq } = useRequest();
-    const { request: getIdReq } = useRequest();
     const { request: verifyEmailReq } = useRequest();
     const { request: toggleContractsPauseReq } = useRequest();
     const { request: isClient } = useRequest();
@@ -93,7 +91,6 @@ function MyProfile() {
         contractsNumber: "",
         complaintsNumber: "",
         maxActiveContracts: "",
-        hasConnectedMP: false,
         isContractsPaused: false
     });
     const [clientInfo, setClientInfo] = useState({
@@ -755,25 +752,6 @@ function MyProfile() {
         );
     }, [dispatch, modifyTrainerError, modifyTrainerReq, prevMaxActiveContracts, t, trainerInfo.description, trainerInfo.maxActiveContracts, trainerInfo.newCrefNumber, trainerInfo.newCrefUF, user.description]);
 
-    const handleOnConnectMP = useCallback(async () => {
-        const getId = () => {
-            return api.get(`/me/id`);
-        }
-    
-        const handleOnGetIdSuccess = (data) => {
-            window.location.href = `${import.meta.env.VITE_API_URL}/mercadopago/connect/${data.ID}`;
-        };
-
-        getIdReq(
-            getId, 
-            handleOnGetIdSuccess, 
-            () => undefined, 
-            undefined, 
-            undefined, 
-            t("errorGetId")
-        );
-    }, [getIdReq, t]);
-
     const userHasChanged = useMemo(() => {
         if (
             usedEmail !== changedUser.email ||
@@ -960,61 +938,6 @@ function MyProfile() {
                         gap="3em"
                         alignItems="end"
                     >
-                        {!user.config.isClient && (
-                            <Stack
-                                alignItems="start"
-                            >
-                                <hr/>
-
-                                {trainerInfo.hasConnectedMP ? (
-                                    <Stack
-                                        className={styles.mercadopago_img_container}
-                                        direction="row"
-                                        justifyContent="start"
-                                    >
-                                        <img
-                                            src="/images/icons/mercadopago.png"
-                                            alt=""
-                                        />
-
-                                        <p>
-                                            {t("alreadyMPConnected")}
-                                        </p>
-                                    </Stack>
-                                ) : (
-                                    <>
-                                        <MercadopagoConnectButton
-                                            handleConnect={handleOnConnectMP}
-                                        />
-
-                                        <Stack
-                                            gap="0.5em"
-                                        >
-                                            <Stack
-                                                direction="row"
-                                                justifyContent="start"
-                                            >
-                                                <Alert />
-                
-                                                {t("connectMPInstruction")}
-                                            </Stack>
-
-                                            <Stack
-                                                direction="row"
-                                                justifyContent="start"
-                                            >
-                                                <Alert />
-                
-                                                {t("merchantAccountInstruction")}
-                                            </Stack>
-                                        </Stack>
-                                    </>
-                                )}
-
-                                <hr/>
-                            </Stack>
-                        )}
-
                         <Stack
                             gap="3em"
                         >

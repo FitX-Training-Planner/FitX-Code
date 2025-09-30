@@ -1,10 +1,10 @@
-import { useTranslation } from "react-i18next";
 import Stack from "../containers/Stack";
 import styles from "./MercadopagoConnectButton.module.css";
 
-function MercadopagoConnectButton({ handleConnect }) {
-    const { t } = useTranslation();
-
+function MercadopagoConnectButton({ 
+    handleConnect,
+    text
+}) {
     return (
         <button
             type="button"
@@ -20,7 +20,7 @@ function MercadopagoConnectButton({ handleConnect }) {
                 />
 
                 <span>
-                    {t("mercadopagoConnect")}
+                    {text}
                 </span>
             </Stack>
         </button>
