@@ -102,3 +102,6 @@ Este repositório contém o código e documentos relacionados ao projeto FitX, u
 <a href="https://www.flaticon.com/br/icones-gratis/dumbell" title="dumbell ícones">Dumbell ícones criados por Vector Stall - Flaticon</a>
 <a href="https://www.flaticon.com/br/icones-gratis/emoji" title="emoji ícones">Emoji ícones criados por Freepik - Flaticon</a>
 <a href="https://www.flaticon.com/br/icones-gratis/triste" title="triste ícones">Triste ícones criados por Ilham Fitrotul Hayat - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/vencedora" title="vencedora ícones">Vencedora ícones criados por Good Ware - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/sorriso" title="sorriso ícones">Sorriso ícones criados por Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/br/icones-gratis/dias-do-calendario" title="dias do calendário ícones">Dias do calendário ícones criados por Md Tanvirul Haque - Flaticon</a>
