@@ -1,0 +1,18 @@
+
+.mp_user_name > span:first-of-type {
+    font-size: var(--large-text-size);
+}
+
+.mp_payments {
+    --border: 2px solid var(--light-theme-color);
+    max-height: 60dvh;
+    overflow-y: auto;
+    padding: 1em;
+    border-top: var(--border);
+    border-bottom: var(--border);
+}
+
+
+.descriptioned_item {
+    max-width: max-content;
+}
