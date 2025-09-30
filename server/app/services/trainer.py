@@ -2,7 +2,7 @@ from app.database.models import Trainer, TrainerSpecialty, TrainingPlan, Trainin
 from ..utils.trainer import is_cref_used
 from ..exceptions.api_error import ApiError
 from ..utils.formatters import safe_str, safe_int, safe_float, safe_bool, safe_time, format_date_to_extend
-from ..utils.serialize import serialize_specialty, serialize_training_plan, serialize_payment_plan, serialize_contract, serialize_trainer_in_trainers, serialize_rating, serialize_complaint, serialize_trainer_base_info, serialize_client_in_clients, serialize_training_plan_base
+from ..utils.serialize import serialize_specialty, serialize_training_plan, serialize_payment_plan, serialize_contract, serialize_trainer_in_trainers, serialize_rating, serialize_complaint, serialize_trainer_base_info, serialize_client_in_clients, serialize_training_plan_base, serialize_transaction, serialize_user_mp_info
 from sqlalchemy.orm import joinedload, subqueryload, selectinload
 from sqlalchemy import asc, desc, func, case, extract
 from ..utils.message_codes import MessageCodes
@@ -11,6 +11,7 @@ import requests
 from ..config import MercadopagoConfig, SendGridConfig
 from ..utils.user import encrypt_email, decrypt_email, calculate_age, send_email_with_template
 from ..utils.client import check_client_active_contract
+from ..utils.mercadopago import get_mp_user_info
 from zoneinfo import ZoneInfo
 import traceback
 
@@ -901,6 +902,57 @@ def get_partial_trainer_contracts(db, offset, limit, sort, full_date, month, yea
         print(f"Erro ao recuperar contratos do treinador: {e}")
 
         raise Exception(f"Erro ao recuperar os contratos do treinador: {e}")
+
+def get_partial_trainer_transactions(db, offset, limit, trainer_id):
+    try:
+        transactions = (
+            db.query(PaymentTransaction)
+            .options(
+                joinedload(PaymentTransaction.user)
+            )
+            .filter(PaymentTransaction.fk_trainer_ID == trainer_id)
+            .order_by(desc(PaymentTransaction.create_date))
+            .offset(offset)
+            .limit(limit)
+            .all()
+        )
+
+        for transaction in transactions:
+            if transaction.fk_user_ID:
+                transaction.user.email = decrypt_email(transaction.user.email_encrypted)
+
+        return [serialize_transaction(transaction) for transaction in transactions]
+
+    except ApiError as e:
+        print(f"Erro ao recuperar pagamentos do treinador: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao recuperar pagamentos do treinador: {e}")
+
+        raise Exception(f"Erro ao recuperar os pagamentos do treinador: {e}")
+    
+def get_trainer_user_mp_info(db, trainer_id):
+    try:
+        if not check_trainer_mp_connection(db, trainer_id):
+            return None
+        
+        valid_token = get_valid_mp_token(db, trainer_id)
+
+        info = get_mp_user_info(valid_token)
+
+        return serialize_user_mp_info(info)
+
+    except ApiError as e:
+        print(f"Erro ao recuperar dados do usuário do Mercado Pago do treinador: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao recuperar dados do usuário do Mercado Pago do treinador: {e}")
+
+        raise Exception(f"Erro ao recuperar os dados do usuário do Mercado Pago do treinador: {e}")
     
 def get_partial_trainers(db, offset, limit, sort, search, specialty_id, viewer_id):
     try:
@@ -1634,6 +1686,9 @@ def get_valid_mp_token(db, trainer_id):
         if trainer is None:
             raise ApiError(MessageCodes.TRAINER_NOT_FOUND, 404)
 
+        if trainer.mp_user_id is None:
+            raise ApiError(MessageCodes.ERROR_NOT_MP_CONNECT, 400)
+
         if datetime.now(timezone.utc) < trainer.mp_token_expiration.replace(tzinfo=timezone.utc):
             return decrypt_email(trainer.mp_access_token)
         
@@ -1707,6 +1762,36 @@ def insert_mercadopago_trainer_info(db, mp_user_id, access_token, refresh_token,
 
         raise Exception(f"Erro ao inserir as informações de autenticação do Mercado Pago do treinador: {e}")
 
+def delete_mercadopago_trainer_info(db, trainer_id):
+    try:
+        trainer = (
+            db.query(Trainer)
+            .filter(Trainer.ID == trainer_id)
+            .first()
+        )
+
+        if trainer is None:
+            raise ApiError(MessageCodes.TRAINER_NOT_FOUND, 404)
+
+        trainer.mp_user_id = None
+        trainer.mp_access_token = None
+        trainer.mp_refresh_token = None
+        trainer.mp_token_expiration = None
+
+        db.commit()
+       
+        return True
+
+    except ApiError as e:
+        print(f"Erro ao remover informações de autenticação do Mercado Pago do treinador: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao remover informações de autenticação do Mercado Pago do treinador: {e}")
+
+        raise Exception(f"Erro ao remover as informações de autenticação do Mercado Pago do treinador: {e}")
+    
 def update_mercadopago_trainer_token(db, new_access_token, new_refresh_token, new_expiration, trainer_id):
     try:
         trainer = (
@@ -2106,3 +2191,227 @@ def modify_client_training(db, trainer_id, client_id, contract_id, training_plan
         print(f"Erro ao cancelar contrato do treinador: {e}")
 
         raise Exception(f"Erro ao cancelar o contrato do treinador: {e}")
+
+def get_highlighted_trainer_ratings(db, trainer_id):
+    try:
+        result = {}
+
+        base_query = (
+            db.query(Rating)
+            .join(Rating.user)
+            .options(
+                subqueryload(Rating.user)
+                    .joinedload(Users.media)
+            )
+            .filter(Rating.fk_trainer_ID == trainer_id, Users.is_active == True)
+        )
+
+        top3_ratings = (
+            base_query
+            .order_by(Rating.likes_number.desc())
+            .limit(3)
+            .all()
+        )
+
+        result["top3"] = [serialize_rating(rating) for rating in top3_ratings]
+
+        last_30_days = datetime.now(brazil_tz) - timedelta(days=30)
+        
+        recent_top = (
+            base_query
+            .filter(Rating.create_date >= last_30_days)
+            .order_by(Rating.likes_number.desc())
+            .first()
+        )
+
+        result["recentTop"] = serialize_rating(recent_top) if recent_top else None
+
+        highest_score = (
+            base_query
+            .order_by((Rating.rating * Rating.likes_number).desc())
+            .first()
+        )
+
+        result["topHighestScore"] = serialize_rating(highest_score) if highest_score else None
+
+        lowest_score = (
+            base_query
+            .filter(Rating.rating > 0)
+            .order_by(((5.0 / Rating.rating) * Rating.likes_number).desc())
+            .first()
+        )
+
+        result["topLowestScore"] = serialize_rating(lowest_score) if lowest_score and lowest_score.ID != highest_score.ID else None
+
+        return result
+
+    except ApiError as e:
+        print(f"Erro ao recuperar melhores avaliações do treinador: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao recuperar melhores avaliações do treinador: {e}")
+
+        raise Exception(f"Erro ao recuperar as melhores avaliações do treinador: {e}")
+
+def get_highlighted_trainer_complaints(db, trainer_id):
+    try:
+        result = {}
+
+        base_query = (
+            db.query(Complaint)
+            .join(Complaint.user)
+            .options(
+                subqueryload(Complaint.user)
+                    .joinedload(Users.media)
+            )
+            .filter(Complaint.fk_trainer_ID == trainer_id, Users.is_active == True)
+        )
+
+        top3_complaints = (
+            base_query
+            .order_by(Complaint.likes_number.desc())
+            .limit(3)
+            .all()
+        )
+
+        result["top3"] = [serialize_complaint(complaint) for complaint in top3_complaints]
+
+        last_30_days = datetime.now(brazil_tz) - timedelta(days=30)
+        
+        recent_top = (
+            base_query
+            .filter(Complaint.create_date >= last_30_days)
+            .order_by(Complaint.likes_number.desc())
+            .first()
+        )
+
+        result["recentTop"] = serialize_complaint(recent_top) if recent_top else None
+
+        return result
+
+    except ApiError as e:
+        print(f"Erro ao recuperar melhores denúncias do treinador: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao recuperar melhores denúncias do treinador: {e}")
+
+        raise Exception(f"Erro ao recuperar as melhores denúncias do treinador: {e}")
+
+def get_trainer_contract_stats(db, trainer_id):
+    try:
+        query = (
+            db.query(PlanContract)
+            .join(PaymentTransaction, isouter=True)
+            .join(PaymentPlan, isouter=True)
+            .join(ContractStatus)
+            .options(
+                joinedload(PlanContract.payment_plan),
+                joinedload(PlanContract.payment_transaction),
+                joinedload(PlanContract.contract_status),
+                subqueryload(PlanContract.user)
+                    .joinedload(Users.media)
+            )
+            .filter(PlanContract.fk_trainer_ID == trainer_id)
+        )
+
+        trainer = (
+            db.query(Trainer)
+            .filter(Trainer.ID == trainer_id)    
+            .first()
+        )
+
+        now = datetime.now(brazil_tz).date()
+
+        last_180_days = now - timedelta(days=180)
+
+        total_active = query.filter(ContractStatus.name == "Ativo").count()
+
+        expireds_in_last_180_days = (
+            query
+            .filter(
+                ContractStatus.name == "Vencido",
+                PlanContract.end_date >= last_180_days
+            )
+            .count()
+        )
+
+        canceleds_in_last_180_days = (
+            query
+            .filter(
+                ContractStatus.name == "Cancelado",
+                PlanContract.canceled_or_rescinded_date >= last_180_days
+            )
+            .count()
+        )
+
+        rescindeds_in_last_180_days = (
+            query
+            .filter(
+                ContractStatus.name == "Rescindido",
+                PlanContract.canceled_or_rescinded_date >= last_180_days
+            )
+            .count()
+        )
+
+        effective_end_date = func.coalesce(
+            PlanContract.canceled_or_rescinded_date,
+            PlanContract.end_date
+        )
+
+        last_not_active = (
+            query
+            .filter(ContractStatus.name != "Ativo")
+            .order_by(effective_end_date.desc())
+            .first()
+        )
+
+        last_active = (
+            query
+            .filter(ContractStatus.name == "Ativo")
+            .order_by(PlanContract.start_date.desc())
+            .first()
+        )
+
+        next_to_expire = (
+            query
+            .filter(ContractStatus.name == "Ativo")
+            .order_by(PlanContract.end_date.asc())
+            .first()
+        )
+
+        last_to_expire = (
+            query
+            .filter(ContractStatus.name == "Ativo")
+            .order_by(PlanContract.end_date.desc())
+            .first()
+        )
+
+        return {
+            "counts": {
+                "actives": total_active,
+                "expiredsInLast180Days": expireds_in_last_180_days,
+                "canceledsInLast180Days": canceleds_in_last_180_days,
+                "rescindedsInLast180Days": rescindeds_in_last_180_days,
+                "totalInLast180Days": total_active + expireds_in_last_180_days + canceleds_in_last_180_days + rescindeds_in_last_180_days
+            },
+            "lastNotActive": serialize_contract(last_not_active, False) if last_not_active else None,
+            "lastActive": serialize_contract(last_active, False) if last_active else None,
+            "nextToExpire": serialize_contract(next_to_expire, False) if next_to_expire else None,
+            "lastToExpire": serialize_contract(last_to_expire, False) if last_to_expire else None,
+            "isContractsPaused": trainer.is_contracts_paused,
+            "maxActiveContracts": trainer.max_active_contracts
+        }
+
+    except ApiError as e:
+        print(f"Erro ao recuperar estatísticas simples dos contratos do treinador: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao recuperar estatísticas simples dos contratos do treinador: {e}")
+
+        raise Exception(f"Erro ao recuperar as estatísticas simples dos contratos do treinador: {e}")

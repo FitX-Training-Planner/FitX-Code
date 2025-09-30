@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from ..services.user import insert_user, insert_photo
-from ..services.trainer import insert_trainer, insert_training_plan, get_trainer_plans, get_training_plan, modify_training_plan, remove_training_plan, insert_payment_plan, modify_payment_plan, remove_payment_plan, get_trainer_payment_plans, get_partial_trainer_contracts, get_partial_trainers, get_partial_trainer_complaints, get_partial_trainer_ratings, like_complaint, like_rating, get_trainer_profile, insert_trainer_rating, insert_trainer_complaint, remove_complaint, remove_rating, get_trainer_info, modify_trainer_data, toggle_trainer_contracts_paused, get_all_specialties, get_trainer_specialties, modify_trainer_specialties, get_trainer_active_clients, get_trainer_clients_history, cancel_trainer_contract, get_trainer_plans_base, modify_client_training
+from ..services.trainer import insert_trainer, insert_training_plan, get_trainer_plans, get_training_plan, modify_training_plan, remove_training_plan, insert_payment_plan, modify_payment_plan, remove_payment_plan, get_trainer_payment_plans, get_partial_trainer_contracts, get_partial_trainers, get_partial_trainer_complaints, get_partial_trainer_ratings, like_complaint, like_rating, get_trainer_profile, insert_trainer_rating, insert_trainer_complaint, remove_complaint, remove_rating, get_trainer_info, modify_trainer_data, toggle_trainer_contracts_paused, get_all_specialties, get_trainer_specialties, modify_trainer_specialties, get_trainer_active_clients, get_trainer_clients_history, cancel_trainer_contract, get_trainer_plans_base, modify_client_training, get_trainer_user_mp_info, get_partial_trainer_transactions, get_highlighted_trainer_complaints, get_highlighted_trainer_ratings, get_trainer_contract_stats
 from ..services.user import get_user_by_id
 from ..database.context_manager import get_db
 from ..exceptions.api_error import ApiError
@@ -260,6 +260,30 @@ def remove_trainer_training_plan(plan_id):
 
             return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
 
+@trainer_bp.route("me/mercadopago/user", methods=["GET"])
+@jwt_required()
+@only_trainer
+def get_mp_user_info():
+    error_message = "Erro na rota de recuperação do usuário do Mercado Pago do treinador"
+
+    with get_db() as db:
+        try:
+            identity = get_jwt_identity()
+
+            user = get_trainer_user_mp_info(db, identity)
+        
+            return jsonify(user), 200
+        
+        except ApiError as e:
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": str(e)}), e.status_code
+
+        except Exception as e:
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
+
 @trainer_bp.route("me/payment-plans", methods=["POST"])
 @jwt_required()
 @only_trainer
@@ -423,6 +447,37 @@ def get_trainer_contracts():
                 params.get("fullDate"),
                 params.get("month"),
                 params.get("year"),
+                identity
+            )
+
+            return jsonify(contracts), 200
+        
+        except ApiError as e:
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": str(e)}), e.status_code
+
+        except Exception as e:
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
+
+@trainer_bp.route("me/transactions", methods=["GET"])
+@jwt_required()
+@only_trainer
+def get_trainer_transactions():
+    error_message = "Erro na rota de recuperação de pagamentos do treinador"
+
+    with get_db() as db:
+        try:        
+            params = request.args
+
+            identity = get_jwt_identity()
+
+            contracts = get_partial_trainer_transactions(
+                db, 
+                params.get("offset"), 
+                params.get("limit"), 
                 identity
             )
 
@@ -1097,6 +1152,78 @@ def change_client_training(client_id):
         except Exception as e:
             db.rollback()
 
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
+        
+@trainer_bp.route("me/contracts/stats", methods=["GET"])
+@jwt_required()
+@only_trainer
+def get_contract_stats():
+    error_message = "Erro na rota de recuperação de estatísticas dos contratos do treinador"
+
+    with get_db() as db:
+        try:        
+            identity = get_jwt_identity()
+
+            stats = get_trainer_contract_stats(db, identity)
+
+            return jsonify(stats), 200
+        
+        except ApiError as e:
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": str(e)}), e.status_code
+
+        except Exception as e:
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
+        
+@trainer_bp.route("me/ratings/stats", methods=["GET"])
+@jwt_required()
+@only_trainer
+def get_ratings_stats():
+    error_message = "Erro na rota de recuperação de estatísticas das avaliações do treinador"
+
+    with get_db() as db:
+        try:        
+            identity = get_jwt_identity()
+
+            stats = get_highlighted_trainer_ratings(db, identity)
+
+            return jsonify(stats), 200
+        
+        except ApiError as e:
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": str(e)}), e.status_code
+
+        except Exception as e:
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
+
+@trainer_bp.route("me/complaints/stats", methods=["GET"])
+@jwt_required()
+@only_trainer
+def get_complaints_stats():
+    error_message = "Erro na rota de recuperação de estatísticas das denúncias do treinador"
+
+    with get_db() as db:
+        try:        
+            identity = get_jwt_identity()
+
+            stats = get_highlighted_trainer_complaints(db, identity)
+
+            return jsonify(stats), 200
+        
+        except ApiError as e:
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": str(e)}), e.status_code
+
+        except Exception as e:
             print(f"{error_message}: {e}")
 
             return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
