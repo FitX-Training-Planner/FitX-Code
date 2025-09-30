@@ -28,3 +28,13 @@
     max-width: 100%;
     display: block;
 }
+
+.mp_payment_value {
+    font-size: var(--large-text-size);
+    font-weight: bold;
+}
+
+.small_item {
+    font-size: var(--small-text-size);
+    color: var(--gray-color);
+}

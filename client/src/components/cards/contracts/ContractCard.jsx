@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Stack from "../../containers/Stack";
 import ClickableIcon from "../../form/buttons/ClickableIcon";
 import PhotoInput from "../../form/fields/PhotoInput";
@@ -25,13 +25,20 @@ function ContractCard({
     transactionDate, 
     mercadoPagoTransactionId, 
     transactionReceiptUrl,
-    forClient
+    forClient,
+    hasOtherInLine = false
 }) {
     const { t, i18n } = useTranslation();
 
     const { width } = useWindowSize();
 
     const [viewPayment, setViewPayment] = useState(false);
+
+    const calculatedWidth = useMemo(() => {
+        if (hasOtherInLine) return (width / 2);
+
+        return width;
+    }, [hasOtherInLine, width]);
 
     return (
         <Stack
@@ -62,86 +69,95 @@ function ContractCard({
                         gap="2em"
                     >
                         <Stack
-                            gap="2em"
-                            direction={width <= 640 ? "column" : "row"}
+                            gap={calculatedWidth <= 840 && calculatedWidth > 640 ? "0.5em" : "2em"}
+                            direction={calculatedWidth <= 840 ? "column" : "row"}
                         >
                             <Stack
-                                className={styles.descriptioned_item}
-                                alignItems={width <= 640 ? "center" : "start"}
+                                direction={calculatedWidth <= 640 ? "column" : "row"}
+                                gap="2em"
+                                extraStyles={{ width: calculatedWidth <= 840 ? "100%" : "calc(200% + 2em)" }}
                             >
-                                <span>
-                                    {forClient ? t("contracted") : t("contractor")}:
-                                </span>
-
                                 <Stack
-                                    direction={width <= 440 ? "column" : "row"}
                                     className={styles.descriptioned_item}
-                                    justifyContent={width <= 640 ? "center" : "start"}
-                                    extraStyles={{ textAlign: "center" }}
-                                >
-                                    {userName ? (
-                                        <>
-                                            <PhotoInput
-                                                blobUrl={userPhoto}
-                                                disabled
-                                                size={width <= 840 ? "small" : "medium"}
-                                            />
-
-                                            <span>
-                                                {userName}
-                                            </span>
-                                        </>
-                                    ) : (
-                                        <p>
-                                            {t("deletedUser")}
-                                        </p>
-                                    )}
-                                </Stack>
-                            </Stack>
-
-                            <Stack>
-                                <Stack
-                                    gap="0.5em"
-                                    className={styles.descriptioned_item}
+                                    alignItems={calculatedWidth <= 640 ? "center" : "start"}
                                 >
                                     <span>
-                                        {t("value")}:
+                                        {forClient ? t("contracted") : t("contractor")}:
                                     </span>
 
-                                    <span>
-                                        {formatPriceToBR(transactionAmount)}
-                                    </span>
+                                    <Stack
+                                        direction={calculatedWidth <= 440 ? "column" : "row"}
+                                        className={styles.descriptioned_item}
+                                        justifyContent={calculatedWidth <= 640 ? "center" : "start"}
+                                        extraStyles={{ textAlign: "center" }}
+                                    >
+                                        {userName ? (
+                                            <>
+                                                <PhotoInput
+                                                    blobUrl={userPhoto}
+                                                    disabled
+                                                    size={calculatedWidth <= 840 ? "small" : "small"}
+                                                />
+
+                                                <span>
+                                                    {userName}
+                                                </span>
+                                            </>
+                                        ) : (
+                                            <p>
+                                                {t("deletedUser")}
+                                            </p>
+                                        )}
+                                    </Stack>
                                 </Stack>
 
-                                <Stack
-                                    gap="0.5em"
-                                    className={styles.descriptioned_item}
-                                    extraStyles={{ textAlign: "center" }}
-                                >
-                                    <span>
-                                        {t("paymentPlan")}:
-                                    </span>
-
-                                    {paymentPlanName ? (
+                                <Stack>
+                                    <Stack
+                                        gap="0.5em"
+                                        className={styles.descriptioned_item}
+                                    >
                                         <span>
-                                            {paymentPlanName}
+                                            {t("value")}:
                                         </span>
-                                    ) : (
-                                        <p>
-                                            {t("deletedPaymentPlanAlert")}
-                                        </p>
-                                    )}
+
+                                        <span>
+                                            {formatPriceToBR(transactionAmount)}
+                                        </span>
+                                    </Stack>
+
+                                    <Stack
+                                        gap="0.5em"
+                                        className={styles.descriptioned_item}
+                                        extraStyles={{ textAlign: "center" }}
+                                    >
+                                        <span>
+                                            {t("paymentPlan")}:
+                                        </span>
+
+                                        {paymentPlanName ? (
+                                            <span>
+                                                {paymentPlanName}
+                                            </span>
+                                        ) : (
+                                            <p>
+                                                {t("deletedPaymentPlanAlert")}
+                                            </p>
+                                        )}
+                                    </Stack>
                                 </Stack>
                             </Stack>
 
                             <Stack
-                                alignItems={width <= 640 ? "start" : "end"}
+                                alignItems={calculatedWidth <= 640 ? "start" : "end"}
+                                gap={calculatedWidth <= 840 ? "0.5em" : "1em"}
                             >
                                 <Stack
-                                    alignItems={width <= 640 ? "start" : "end"}
-                                    extraStyles={{ textAlign: width <= 640 ? "start" : "end" }}
+                                    alignItems={calculatedWidth <= 640 ? "start" : "end"}
+                                    extraStyles={{ textAlign: calculatedWidth <= 640 ? "start" : "end" }}
                                     gap="0.5em"
                                     className={styles.descriptioned_item}
+                                    direction={calculatedWidth <= 840 && calculatedWidth > 340 ? "row" : "column"}
+                                    justifyContent={calculatedWidth <= 840 ? "start" : undefined}
                                 >
                                     <span>
                                         {t("end")}:
@@ -154,10 +170,12 @@ function ContractCard({
 
                                 {canceledOrRescindedDate && (
                                     <Stack
-                                        alignItems={width <= 640 ? "start" : "end"}
-                                        extraStyles={{ textAlign: width <= 640 ? "start" : "end" }}
+                                        alignItems={calculatedWidth <= 640 ? "start" : "end"}
+                                        extraStyles={{ textAlign: calculatedWidth <= 640 ? "start" : "end" }}
                                         gap="0.5em"
                                         className={styles.descriptioned_item}
+                                        direction={calculatedWidth <= 840 && calculatedWidth > 340 ? "row" : "column"}
+                                        justifyContent={calculatedWidth <= 840 ? "start" : undefined}
                                     >
                                         <span>
                                             {status}:
@@ -191,6 +209,7 @@ function ContractCard({
                     mpFee={transactionMpFee}
                     paymentMethod={paymentMethod}
                     trainerReceived={transactionTrainerReceived}
+                    width={calculatedWidth}
                 />
             )}
         </Stack>

@@ -5,7 +5,6 @@ import Stack from "../../containers/Stack";
 import ClickableIcon from "../../form/buttons/ClickableIcon";
 import Alert from "../../messages/Alert";
 import styles from "./ContractCard.module.css";
-import useWindowSize from "../../../hooks/useWindowSize";
 
 function PaymentCard({
     amount,
@@ -16,10 +15,9 @@ function PaymentCard({
     appFee,
     mpFee,
     paymentMethod,
+    width
 }) {
     const { t, i18n } = useTranslation();
-
-    const { width } = useWindowSize();
     
     return (
         <Stack
