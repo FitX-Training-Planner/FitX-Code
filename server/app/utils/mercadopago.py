@@ -2,9 +2,39 @@ import mercadopago
 import os
 from zoneinfo import ZoneInfo
 from datetime import datetime, timedelta
-from ..config import MercadopagoConfig
+# from ..config import MercadopagoConfig
+from ..exceptions.api_error import ApiError
+from .message_codes import MessageCodes
 
 brazil_tz = ZoneInfo("America/Sao_Paulo")
+
+def get_mp_user_info(mp_trainer_token):
+    try:
+        sdk = mercadopago.SDK(mp_trainer_token)
+
+        response = sdk.get("/users/me")
+
+        if response.get("status") != 200:
+            message = (
+                f"Erro ao recuperar informações do usuário MP: "
+                f"{response.get('error')} - {response.get('message')} "
+            )
+
+            raise ApiError(message, response.get('status'))
+
+        data = response["response"]
+
+        return {
+            "nickname": data.get("nickname"),
+            "first_name": data.get("first_name"),
+            "last_name": data.get("last_name"),
+            "email": data.get("email")
+        }
+
+    except Exception as e:
+        print(f"Erro na função de recuperação dos dados do usuário do Mercado Pago: {e}")
+
+        raise 
 
 # def create_payment_preference(mp_user_id, item_id, title, description, price, app_fee, payer_email, payer_first_name, transaction_id, expiration_seconds):
 #     try:
@@ -56,7 +86,19 @@ brazil_tz = ZoneInfo("America/Sao_Paulo")
 
 #         preference_response = sdk.preference().create(preference_data)
 
-#         return preference_response["response"]
+#         if preference_response.get("status") != 201:
+#             if preference_response.get("error") == "invalid_collector_id":
+#                 raise ApiError(MessageCodes.INVALID_MERCHANT_TRAINER, 400)
+            
+#             else:
+#                 message = (
+#                     f"Erro ao criar preferência de pagamento: "
+#                     f"{preference_response.get("error")} - {preference_response.get("message")} "
+#                 )
+
+#                 raise ApiError(message, preference_response.get("status"))
+
+# #         return preference_response["response"]
 
 #     except Exception as e:
 #         print(f"Erro na função de criação da preferência de pagamento do Mercado Pago: {e}")
@@ -111,11 +153,16 @@ def create_payment_preference(mp_trainer_token, item_id, title, description, pri
         preference_response = sdk.preference().create(preference_data)
 
         if preference_response.get("status") != 201:
-            raise Exception(
-                f"Erro ao criar preferência de pagamento: "
-                f"{preference_response.get('error')} - {preference_response.get('message')} "
-                f"(status {preference_response.get('status')})"
-            )
+            if preference_response.get("error") == "invalid_collector_id":
+                raise ApiError(MessageCodes.INVALID_MERCHANT_TRAINER, 400)
+            
+            else:
+                message = (
+                    f"Erro ao criar preferência de pagamento: "
+                    f"{preference_response.get("error")} - {preference_response.get("message")} "
+                )
+
+                raise ApiError(message, preference_response.get("status"))
 
         return preference_response["response"]
 
