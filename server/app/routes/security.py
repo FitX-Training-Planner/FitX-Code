@@ -13,8 +13,7 @@ from ..utils.trainer import release_trainer_lock
 from ..utils.client import release_client_lock
 from ..utils.formatters import format_date_to_extend
 from ..config import MercadopagoConfig, SendGridConfig
-from ..services.trainer import insert_mercadopago_trainer_info
-from ..services.trainer import get_valid_mp_token
+from ..services.trainer import insert_mercadopago_trainer_info, get_valid_mp_token, delete_mercadopago_trainer_info
 import requests
 import os
 from sqlalchemy.orm import joinedload, subqueryload
@@ -217,12 +216,40 @@ def logout():
         print(f"{error_message}: {e}")
 
         return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
+    
+@security_bp.route("/mercadopago/disconnect", methods=["DELETE"])
+@jwt_required()
+@only_trainer
+def disconnect_mercado_pago():
+    error_message = "Erro na rota de desconexão com o Mercado Pago"
+
+    with get_db() as db:
+        try:
+            identity = get_jwt_identity()
+
+            delete_mercadopago_trainer_info(db, identity)
+
+            return "", 204
+
+        except ApiError as e:
+            db.rollback()
+
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": str(e)}), e.status_code
+
+        except Exception as e:
+            db.rollback()
+
+            print(f"{error_message}: {e}")
+
+            return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
 
 @security_bp.route("/mercadopago/connect/<int:trainer_id>", methods=["GET"])
 @jwt_required()
 @only_trainer
 def connect_mercado_pago(trainer_id):
-    error_message = "Erro na rota de conexão com o mercado pago"
+    error_message = "Erro na rota de conexão com o Mercado Pago"
 
     try:
         authorization_url = (
@@ -387,7 +414,6 @@ def mercadopago_webhook():
             transaction_details = payment_info.get("transaction_details", {})
             fee_details = payment_info.get("fee_details", [])
 
-            total_paid = transaction_details.get("total_paid_amount", 0)
             trainer_received = transaction_details.get("net_received_amount", 0)
 
             ticket_url = payment_info.get("point_of_interaction", {}).get("transaction_data", {}).get("ticket_url")
@@ -495,7 +521,6 @@ def mercadopago_webhook():
 
                 except Exception as e:
                     print(f"Erro ao enviar e-mail após falha na criação de contrato no webhook do Mercado Pago: {e}")
-
 
             return "", 201
             
