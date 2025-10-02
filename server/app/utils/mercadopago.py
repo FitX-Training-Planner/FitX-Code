@@ -12,7 +12,7 @@ def get_mp_user_info(mp_trainer_token):
     try:
         sdk = mercadopago.SDK(mp_trainer_token)
 
-        response = sdk.get("/users/me")
+        response = sdk.user().get()
 
         if response.get("status") != 200:
             message = (
