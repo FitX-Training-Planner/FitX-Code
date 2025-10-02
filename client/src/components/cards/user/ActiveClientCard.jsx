@@ -10,6 +10,8 @@ import { handleOnChangeSelect } from "../../../utils/handlers/changeHandlers";
 import SubmitFormButton from "../../form/buttons/SubmitFormButton";
 import { formatDateToExtend } from "../../../utils/formatters/text/formatDate";
 import Alert from "../../messages/Alert";
+import { useState } from "react";
+import BodyMuscles from "../../layout/BodyMuscles";
 
 function ActiveClientCard({
     isActive,
@@ -21,6 +23,7 @@ function ActiveClientCard({
     weight,
     limitationsDescription,
     availableDays,
+    weekMuscles,
     trainingPlanID,
     trainingPlanName,
     paymentPlanName,
@@ -38,309 +41,147 @@ function ActiveClientCard({
 
     const { width } = useWindowSize();
 
-    const PaymentPlanContainer = () => {
-        return (
-            <Stack>
-                <hr/>
-
-                <Stack
-                    direction="column-reverse"
-                    className={styles.descriptioned_item}
-                    gap="2em"
-                >
-                    <Stack
-                        justifyContent="center"
-                    >
-                        {trainingPlans.length === 0 ? (
-                            <p
-                                style={{ textAlign: "center" }}
-                            >
-                                {t("noTrainerTrainingPlans")}
-                            </p>
-                        ) : (
-                            <>
-                                {trainingPlanID ? (    
-                                    <Stack
-                                        direction="row"
-                                        alignItems="end"
-                                    >
-                                        <span>
-                                            ID {trainingPlanID}
-                                        </span>
-
-                                        <span
-                                            style={{ textAlign: "end" }}
-                                        >
-                                            {trainingPlanName}
-                                        </span>
-                                    </Stack>
-                                ) : (
-                                    <p
-                                        style={{ textAlign: "center" }}
-                                    >
-                                        {t("noTrainingSendedTrainer")}
-                                    </p>
-                                )}
-
-                                {isActive ? (
-                                    <form
-                                        onSubmit={handleOnModifyClientTrainingPlan}
-                                    >
-                                        <Stack
-                                            alignItems="end"
-                                        >
-                                            <Select
-                                                name="trainingPlan"
-                                                placeholder={t("selectATrainingPlan")}
-                                                value={trainingPlans.find(plan => String(plan.ID) === String(trainingPlanID))?.name}
-                                                handleChange={(e) => handleOnChangeSelect(e, trainingPlans, "name", client, setClient)}
-                                                options={trainingPlans.map(plan => plan.name)}
-                                            />
-
-                                            <SubmitFormButton
-                                                text={t("modify")}
-                                            />
-                                        </Stack>
-                                    </form>
-                                ) : (
-                                    <p
-                                        style={{ textAlign: "center" }}
-                                    >
-                                        {t("clientDeactivateProfile")}
-                                    </p>
-                                )}
-                            </>
-                        )}
-                    </Stack>
-
-                    <span
-                        style={{ 
-                            textAlign: "center", 
-                            hyphens: "none", 
-                            fontSize: width <= 640 ? "var(--large-text-size)" : "var(--small-title-size)",
-                            color: "var(--light-theme-color)"   
-                        }}
-                    >
-                        {t("trainingPlan")} 
-                    </span>
-                </Stack>
-
-                <hr/>
-            </Stack>
-        )
-    }
+    const [isExpanded, setIsExpanded] = useState(false);
 
     return (
         <Stack
-            gap="2em"
             className={styles.client_card}
         >
             <Stack
-                direction="row"
                 className={styles.client_main_info}
-                gap="2em"
+                direction={width <= 440 ? "column" : "row"}
+                alignItems={width <= 440 ? "center" : "end"}
             >
                 <Stack
-                    direction={width <= 440 ? "column" : "row"}
                     justifyContent="start"
-                    alignItems={width <= 440 ? "start" : "center"}
+                    className={styles.descriptioned_item}
+                    direction={width <= 440 ? "column" : "row"}
+                    gap={width <= 440 ? "0.5em" : "1em"}
                 >
                     <PhotoInput
                         blobUrl={photoUrl}
                         disabled
-                        size={width <= 640 ? (width <= 440 ? "tiny" : "small") : "medium"}
-                    />         
+                        size="small"
+                    />     
 
-                    <Stack
-                        direction="column-reverse"
-                        alignItems="start"
-                        gap="0.5em"
-                        className={`${styles.descriptioned_item} ${styles.client_name_container}`}
+                    <span
+                        style={{ fontSize: "var(--large-text-size)" }}
                     >
-                        <ClickableIcon
-                            iconSrc={`/images/icons/${sex === "male" ? "male" : "female"}.png`}
-                            name={t(sex)}
-                            hasTheme={false}
-                            size={width <= 440 ? "small" : "medium"}
-                        />
-
-                        <span
-                            style={{ fontSize: width <= 840 ? (width <= 440 ? "var(--text-size)" : "var(--large-text-size)") : "var(--small-title-size)" }}
-                        >
-                            {name}
-                        </span>
-                    </Stack>
+                        {name}
+                    </span>
                 </Stack>
-
-                {age && (
-                    <Stack
-                        direction="column-reverse"
-                        gap="0.5em"
-                        alignItems="end"
-                        className={styles.descriptioned_item}
-                    >
-                        <span>
-                            {t("years")}
-                        </span>
-                        
-                        <span>
-                            {age}
-                        </span>
-                    </Stack>
+                
+                {!["male", "female"].includes(sex) && (
+                    <ClickableIcon
+                        iconSrc={`/images/icons/${sex === "male" ? "male" : "female"}.png`}
+                        name={t(sex)}
+                        hasTheme={false}
+                        size={width <= 440 ? "small" : "medium"}
+                    />
                 )}
+
+                <ClickableIcon
+                    iconSrc="/images/icons/expand.png"
+                    handleClick={() => setIsExpanded(prevIsExpanded => !prevIsExpanded)}
+                    size="tiny"
+                    name={t("expand")}
+                />
+                
+                <span
+                    className={`${isActive ? styles.active : undefined} ${styles.active_badge}`}
+                    title={isActive ? t("active") : t("deactive")}
+                ></span>
             </Stack>
 
-            <Stack
-                gap="2em"
-            >
+            {!isExpanded ? (
                 <Stack
-                    gap="2em"
+                    direction="row"
+                    alignItems="start"
                 >
-                    <Stack
-                        direction="row"
-                    >
+                    {(weight || height || age) && (
                         <Stack>
+                            {age && (
+                                <Stack
+                                    direction="row"
+                                    justifyContent="start"
+                                >
+                                    <ClickableIcon
+                                        iconSrc={`/images/icons/age.png`}
+                                        size="small"
+                                    />
+
+                                    <span>
+                                        {age} {t("years")}
+                                    </span>
+                                </Stack>
+                            )}
+
                             {height && (
                                 <Stack
-                                    gap="0.5em"
-                                    alignItems="start"
-                                    className={styles.descriptioned_item}
+                                    direction="row"
+                                    justifyContent="start"
                                 >
+                                    <ClickableIcon
+                                        iconSrc={`/images/icons/height.png`}
+                                        size="small"
+                                    />
+
                                     <span>
-                                        {t("height")}:
-                                    </span>
-    
-                                    <span
-                                        style={{ fontSize: width <= 640 ? "var(--large-text-size)" : "var(--small-title-size)" }}
-                                    >
-                                        {height}
+                                        {height} cm
                                     </span>
                                 </Stack>
                             )}
-    
+
                             {weight && (
                                 <Stack
-                                    gap="0.5em"
-                                    alignItems="start"
-                                    className={styles.descriptioned_item}
+                                    direction="row"
+                                    justifyContent="start"
                                 >
+                                    <ClickableIcon
+                                        iconSrc={`/images/icons/weight.png`}
+                                        size="small"
+                                    />
+
                                     <span>
-                                        {t("weight")}:
-                                    </span>
-    
-                                    <span
-                                        style={{ fontSize: width <= 640 ? "var(--large-text-size)" : "var(--small-title-size)" }}
-                                    >
-                                        {weight}
+                                        {weight} Kg
                                     </span>
                                 </Stack>
                             )}
-    
-                            {availableDays && (
-                                <Stack
-                                    gap="0.5em"
-                                    alignItems="start"
-                                    className={styles.descriptioned_item}
-                                >
-                                    <span>
-                                        {t("availableDays")}:
-                                    </span>
-    
-                                    <span
-                                        style={{ fontSize: width <= 640 ? "var(--large-text-size)" : "var(--small-title-size)" }}
-                                    >
-                                        {availableDays}
-                                    </span>
-                                </Stack>
-                            )}
-                        </Stack>
-
-                        {width > 640 && (
-                            <PaymentPlanContainer/>
-                        )}
-                    </Stack>
-
-                    {limitationsDescription && (
-                        <Stack
-                            className={styles.limitations_description}
-                            alignItems="start"
-                            gap="0.5em"
-                        >
-                            <span>
-                                {t("limitations")}:
-                            </span>
-
-                            <p>
-                                {limitationsDescription}
-                            </p>
                         </Stack>
                     )}
-                </Stack>
-
-                {width <= 640 && (
-                    <PaymentPlanContainer/>
-                )}
-
-                <Stack>
-                    <hr/>
 
                     <Stack
-                        direction="column-reverse"
-                        className={styles.descriptioned_item}
-                    >
+                        extraStyles={{ textAlign: "end" }}
+                    > 
                         <Stack
-                            direction="row"
-                            justifyContent="center"
-                            className={styles.payment_plan_data}
+                            gap="0.2em"
+                            alignItems="end"
+                            className={styles.descriptioned_item}
                         >
-                            {paymentPlanName && paymentPlanFullPrice ? (                        
+                            <span>
+                                {t("paymentPlan")}:
+                            </span>
+                            
+                            {paymentPlanName ? (                        
                                 <span>
-                                    {formatPriceToBR(paymentPlanFullPrice)}
-                                </span>
+                                    {paymentPlanName}
+                                </span> 
                             ) : (
-                                t("deletedPaymentPlanAlert")
+                                <p>
+                                    {t("deletedPaymentPlanAlert")}
+                                </p>
                             )}
                         </Stack>
 
-                        <span
-                            style={{ 
-                                textAlign: "center", 
-                                hyphens: "none", 
-                                fontSize: width <= 640 ? "var(--large-text-size)" : "var(--small-title-size)"   
-                            }}
-                        >
-                            {t("paymentPlan")} 
-                            
-                            {paymentPlanName && ` "${paymentPlanName}"`}
-                        </span>
-                    </Stack>
-
-                    <hr/>
-                </Stack>
-
-                <Stack>
-                    <Stack>
                         <Stack
-                            gap="0.5em"
+                            gap="0.2em"
                             alignItems="end"
                             className={styles.descriptioned_item}
                         >
-                            <span>
-                                {t("startingOn")}
-                            </span>
-                            
-                            <span>
-                                {formatDateToExtend(contractStartDate)}
-                            </span>
-                        </Stack>
-
-                        <Stack
-                            gap="0.5em"
-                            alignItems="end"
-                            className={styles.descriptioned_item}
-                        >
-                            <span>
-                                {t("endingOn")}
+                            <span
+                                style={{ fontSize: width < 440 ? "var(--text-size)" : undefined }}
+                            >
+                                {t("endingOn")}:
                             </span>
                             
                             <span>
@@ -348,66 +189,302 @@ function ActiveClientCard({
                             </span>
                         </Stack>
                     </Stack>
-
-                    <Stack>
-                        <hr/>
-
+                </Stack>
+            ) : (
+                <Stack
+                    gap="3em"
+                >
+                    <Stack
+                        gap="2em"
+                    >
                         <Stack
-                            direction="column-reverse"
-                            className={styles.descriptioned_item}
+                            direction={width <= 440 ? "column" : "row"}
+                            gap="2em"
+                            alignItems="start"
+                            justifyContent="center"
                         >
-                            <Stack
-                                justifyContent="center"
-                                className={styles.payment_plan_data}
-                                gap="2em"
-                            >
-                                <Stack
-                                    direction="row"
-                                    gap="0.5em"
-                                >
-                                    <Alert/>
+                            {(availableDays || limitationsDescription) && (
+                                <Stack>
+                                    {availableDays && (
+                                        <Stack
+                                            direction="row"
+                                            justifyContent="start"
+                                        >
+                                            <ClickableIcon
+                                                iconSrc={`/images/icons/calendar.png`}
+                                                size="small"
+                                            />
 
-                                    <p
-                                        style={{ textAlign: "left", fontSize: "var(--small-text-size)" }}
-                                    >
-                                        {t("cancelContractTrainerAlert")}
-                                    </p>
+                                            <span
+                                                style={{ hyphens: "none" }}
+                                            >
+                                                {availableDays} {t("availableDays")}
+                                            </span>
+                                        </Stack>
+                                    )}
+
+                                    {limitationsDescription && (
+                                        <Stack
+                                            className={styles.limitations_description}
+                                            alignItems="start"
+                                            gap="0.5em"
+                                        >
+                                            <span>
+                                                {t("limitations")}:
+                                            </span>
+
+                                            <p
+                                                style={{ textAlign: "left", hyphens: "none" }}
+                                            >
+                                                {limitationsDescription}
+                                            </p>
+                                        </Stack>
+                                    )}
                                 </Stack>
+                            )}
 
+                            {weekMuscles.length !== 0 && (
                                 <Stack
-                                    direction="row"
+                                    className={styles.descriptioned_item}
                                 >
                                     <span>
-                                        {formatPriceToBR(String(Number(paymentPlanFullPrice) + Number(paymentPlanAppFee)))}
+                                        {t("weaknesses")}
                                     </span>
 
-                                    <form
-                                        onSubmit={handleRefund}
-                                        style={{ width: "max-content" }}
-                                    >
-                                        <SubmitFormButton
-                                            text={t("refundClient")}
-                                            varBgColor="--alert-color"
-                                        />
-                                    </form>
+                                    <BodyMuscles
+                                        muscleGroups={weekMuscles}
+                                        isMale={sex === "male"}
+                                        figuresDirection="row"
+                                    />
                                 </Stack>
-                            </Stack>
+                            )}
+                        </Stack>
+                    </Stack>
 
+                    <hr/>
+
+                    <Stack
+                        className={styles.descriptioned_item}
+                        gap="2em"
+                    >
+                        <span
+                            style={{ 
+                                textAlign: "center", 
+                                fontSize: width <= 640 ? "var(--large-text-size)" : "var(--small-title-size)",
+                                color: "var(--light-theme-color)"   
+                            }}
+                        >
+                            {t("trainingPlan")} 
+                        </span>
+
+                        <Stack
+                            justifyContent="center"
+                        >
+                            {trainingPlans.length === 0 ? (
+                                <p
+                                    style={{ textAlign: "center" }}
+                                >
+                                    {t("noTrainerTrainingPlans")}
+                                </p>
+                            ) : (
+                                <>
+                                    {trainingPlanID ? (    
+                                        <Stack
+                                            gap="0.5em"
+                                            extraStyles={{ textAlign: "center" }}
+                                        >
+                                            <span>
+                                                {trainingPlanName}
+                                            </span>
+
+                                            <span
+                                                style={{ fontWeight: "bold" }}
+                                            >
+                                                ID {trainingPlanID}
+                                            </span>
+                                        </Stack>
+                                    ) : (
+                                        <p
+                                            style={{ textAlign: "center" }}
+                                        >
+                                            {t("noTrainingSendedTrainer")}
+                                        </p>
+                                    )}
+
+                                    {isActive ? (
+                                        <form
+                                            onSubmit={handleOnModifyClientTrainingPlan}
+                                        >
+                                            <Stack
+                                                alignItems="end"
+                                            >
+                                                <Select
+                                                    name="trainingPlan"
+                                                    placeholder={t("selectATrainingPlan")}
+                                                    value={trainingPlans.find(plan => String(plan.ID) === String(trainingPlanID))?.name}
+                                                    handleChange={(e) => handleOnChangeSelect(e, trainingPlans, "name", client, setClient)}
+                                                    options={trainingPlans.map(plan => plan.name)}
+                                                />
+
+                                                <SubmitFormButton
+                                                    text={t("modify")}
+                                                />
+                                            </Stack>
+                                        </form>
+                                    ) : (
+                                        <p
+                                            style={{ textAlign: "center" }}
+                                        >
+                                            {t("clientDeactivateProfile")}
+                                        </p>
+                                    )}
+                                </>
+                            )}
+                        </Stack>
+                    </Stack>
+
+                    <hr/>
+
+                    <Stack
+                        direction={width <= 440 ? "column" : "row"}
+                        gap="3em"
+                        alignItems="start"
+                    >
+                        <Stack
+                            className={styles.descriptioned_item}
+                            extraStyles={{ textAlign: "center", hyphens: "none" }}
+                            gap="2em"
+                        >
                             <span
                                 style={{ 
                                     textAlign: "center", 
-                                    hyphens: "none", 
-                                    fontSize: width <= 640 ? "var(--large-text-size)" : "var(--small-title-size)"   
+                                    fontSize: width <= 640 ? "var(--large-text-size)" : "var(--small-title-size)",
+                                    color: "var(--light-theme-color)"   
                                 }}
                             >
-                                {t("refundAndCancellation")} 
+                                {t("paymentPlan")} 
                             </span>
+
+                            {(paymentPlanName && paymentPlanFullPrice) ? (                        
+                                <Stack
+                                    className={styles.payment_plan_data}
+                                >
+                                    <span>
+                                        {paymentPlanName}
+                                    </span>
+
+                                    <span>
+                                        {formatPriceToBR(paymentPlanFullPrice)}
+                                    </span>
+                                </Stack>
+                            ) : (
+                                t("deletedPaymentPlanAlert")
+                            )}
                         </Stack>
 
-                        <hr/>
+                        <Stack
+                            className={styles.descriptioned_item}
+                            gap="2em"
+                        >
+                            <span
+                                style={{ 
+                                    textAlign: "center", 
+                                    fontSize: width <= 640 ? "var(--large-text-size)" : "var(--small-title-size)",
+                                    color: "var(--light-theme-color)"   
+                                }}
+                            >
+                                {t("contract")} 
+                            </span>
+
+                            <Stack
+                                extraStyles={{ textAlign: "center" }}
+                            >
+                                <Stack
+                                    gap="0.2em"
+                                    className={styles.descriptioned_item}
+                                >
+                                    <span
+                                        style={{ fontSize: width < 440 ? "var(--text-size)" : undefined }}
+                                    >
+                                        {t("startingOn")}
+                                    </span>
+                                    
+                                    <span>
+                                        {formatDateToExtend(contractStartDate)}
+                                    </span>
+                                </Stack>
+
+                                <Stack
+                                    gap="0.2em"
+                                    className={styles.descriptioned_item}
+                                >
+                                    <span
+                                        style={{ fontSize: width < 440 ? "var(--text-size)" : undefined }}
+                                    >
+                                        {t("endingOn")}:
+                                    </span>
+                                    
+                                    <span>
+                                        {formatDateToExtend(contractEndDate)}
+                                    </span>
+                                </Stack>
+                            </Stack>
+                        </Stack>
+                    </Stack>
+
+                    <hr/>
+
+                    <Stack
+                        className={styles.descriptioned_item}
+                        gap="2em"
+                    >
+                        <span
+                            style={{ 
+                                textAlign: "center", 
+                                fontSize: width <= 640 ? "var(--large-text-size)" : "var(--small-title-size)"
+                            }}
+                        >
+                            {t("refundAndCancellation")} 
+                        </span>
+                        
+                        <Stack
+                            gap="2em"
+                        >
+                            <Stack
+                                direction="row"
+                            >
+                                <Alert/>
+
+                                <p
+                                    style={{ textAlign: "left", fontSize: "var(--small-text-size)" }}
+                                >
+                                    {t("cancelContractTrainerAlert")}
+                                </p>
+                            </Stack>
+
+                            <Stack
+                                direction="row"
+                            >
+                                <span
+                                    style={{ fontSize: "var(--large-text-size)" }}
+                                >
+                                    {formatPriceToBR(String(Number(paymentPlanFullPrice) + Number(paymentPlanAppFee)))}
+                                </span>
+
+                                <form
+                                    onSubmit={handleRefund}
+                                    style={{ width: "max-content" }}
+                                >
+                                    <SubmitFormButton
+                                        text={t("refundClient")}
+                                        varBgColor="--alert-color"
+                                    />
+                                </form>
+                            </Stack>
+                        </Stack>
                     </Stack>
                 </Stack>
-            </Stack>
+            )}
         </Stack>
     );
 }

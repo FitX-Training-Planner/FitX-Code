@@ -4,9 +4,9 @@
     padding: 1em;
 }
 
-.descriptioned_item > span:last-of-type {
-    font-size: var(--small-title-size);
+.descriptioned_item > span:first-of-type {
     font-family: var(--fonts-1);
+    font-weight: bold;
 }
 
 .days_in_contract > span:last-of-type {
@@ -15,10 +15,31 @@
 }
 
 .client_main_info {
+    position: relative;
     padding: 1em;
     background-color: var(--light-theme-color);
     font-weight: bold;
     border-radius: 10px;
+}
+
+.client_main_info > button:last-of-type {
+    position: absolute;
+    top: 1em;
+    right: 1em;
+}
+
+.active_badge {
+    position: absolute;
+    top: 0.5em;
+    left: 0.5em;
+    background-color: var(--alert-color);
+    border-radius: 50%;
+    height: 0.7em;
+    width: 0.7em;
+}
+
+.active_badge.active {
+    background-color: var(--success-color);
 }
 
 .amount_paid_container,
@@ -31,13 +52,8 @@
 }
 
 .payment_plan_data > span:last-of-type {
-    color: var(--theme-color);
-    font-size: var(--title-size);
-}
-
-.payment_plan_data {
-    text-align: center;
-    hyphens: none;
+    font-size: var(--small-title-size);
+    font-family: var(--fonts-1);
 }
 
 .limitations_description > span {

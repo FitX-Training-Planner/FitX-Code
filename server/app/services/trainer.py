@@ -2,7 +2,7 @@ from app.database.models import Trainer, TrainerSpecialty, TrainingPlan, Trainin
 from ..utils.trainer import is_cref_used
 from ..exceptions.api_error import ApiError
 from ..utils.formatters import safe_str, safe_int, safe_float, safe_bool, safe_time, format_date_to_extend
-from ..utils.serialize import serialize_specialty, serialize_training_plan, serialize_payment_plan, serialize_contract, serialize_trainer_in_trainers, serialize_rating, serialize_complaint, serialize_trainer_base_info, serialize_client_in_clients, serialize_training_plan_base, serialize_transaction, serialize_user_mp_info
+from ..utils.serialize import serialize_specialty, serialize_training_plan, serialize_payment_plan, serialize_contract, serialize_trainer_in_trainers, serialize_rating, serialize_complaint, serialize_trainer_base_info, serialize_client_in_clients, serialize_training_plan_base, serialize_transaction, serialize_user_mp_info, serialize_muscle_group
 from sqlalchemy.orm import joinedload, subqueryload, selectinload
 from sqlalchemy import asc, desc, func, case, extract
 from ..utils.message_codes import MessageCodes
@@ -2000,10 +2000,18 @@ def get_trainer_active_clients(db, trainer_id):
             .all()
         )
 
+        serialized_data = []
+
         for client in clients:
             client.age = calculate_age(client.birth_date)
 
-        return [serialize_client_in_clients(client, True) for client in clients]
+            serialized = serialize_client_in_clients(client, True)
+
+            serialized["weekMuscles"] = [serialize_muscle_group(cmg.muscle_group, True) for cmg in client.muscle_groups]
+
+            serialized_data.append(serialized)
+
+        return serialized_data
     
     except ApiError as e:
         print(f"Erro ao recuperar clientes ativos do treinador: {e}")

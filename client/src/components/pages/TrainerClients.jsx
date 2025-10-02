@@ -147,6 +147,7 @@ function TrainerClients() {
         
             const handleOnGetClientsSuccess = (data) => {
                 setActiveClients(data);
+
                 setShowedActiveClients(data);
             };
             
@@ -335,6 +336,7 @@ function TrainerClients() {
                                                                         weight={client.weight}
                                                                         limitationsDescription={client.limitationsDescription}
                                                                         availableDays={client.availableDays}
+                                                                        weekMuscles={client.weekMuscles}
                                                                         trainingPlanID={client.trainingPlan?.ID}
                                                                         trainingPlanName={client.trainingPlan?.name}
                                                                         paymentPlanName={client.paymentPlan?.name}
