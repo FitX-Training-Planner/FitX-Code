@@ -6,7 +6,6 @@ from zoneinfo import ZoneInfo
 
 brazil_tz = ZoneInfo("America/Sao_Paulo")
 
-
 def run():
     try:
         with get_db() as db:
@@ -42,4 +41,10 @@ def run():
             db.commit()
 
     except Exception as e:
+        try:
+            db.rollback()
+            
+        except:
+            pass
+
         print(f"Erro ao atualizar contratos vencidos: {e}")

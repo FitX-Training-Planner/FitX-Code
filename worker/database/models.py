@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, ForeignKey, DATE, Boolean, VARBINARY, CHAR, TEXT
+from sqlalchemy import Column, String, ForeignKey, DATE, Boolean, VARBINARY, CHAR, TEXT, DATETIME
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.mysql import INTEGER
 from database.database_connection import Base
@@ -33,6 +33,13 @@ class TrainingPlan(Base):
     ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     name = Column(String(50), nullable=False)
     note = Column(TEXT)
+
+class PaymentTransaction(Base):
+    __tablename__ = "payment_transaction"
+
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
+    is_finished = Column(Boolean, nullable=False, default=False)
+    expires_at = Column(DATETIME, nullable=False)
     
 class ContractStatus(Base):
     __tablename__ = "contract_status"
