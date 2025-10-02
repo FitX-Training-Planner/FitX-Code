@@ -10,7 +10,7 @@ from ..utils.trainer import acquire_trainer_lock, release_trainer_lock
 from ..utils.client import acquire_client_lock, release_client_lock, check_client_active_contract
 from .trainer import get_top3_specialties_data, check_trainer_can_be_contracted, get_valid_mp_token
 from ..utils.formatters import safe_date, safe_int, safe_str, format_date_to_extend
-from datetime import datetime
+from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 from ..utils.user import send_email_with_template, decrypt_email
 from ..config import SendGridConfig
@@ -171,13 +171,16 @@ def create_payment(db, client_id, payment_plan_id):
                 print(f"Erro ao enviar e-mail após verificação da possibilidade de contratar treinador ao criar pagamento: {e}")
 
             raise ApiError(MessageCodes.TRAINER_CANNOT_BE_CONTRACTED, 409)
+        
+        expiration_seconds = 300
 
         transaction = PaymentTransaction(
             amount=payment_plan.full_price + payment_plan.app_fee,
             app_fee=payment_plan.app_fee,
             fk_payment_plan_ID=payment_plan.ID,
             fk_user_ID=client_id,
-            fk_trainer_ID=payment_plan.fk_trainer_ID
+            fk_trainer_ID=payment_plan.fk_trainer_ID,
+            expires_at=datetime.now(brazil_tz) + timedelta(seconds=expiration_seconds)
         )
 
         db.add(transaction)
@@ -189,7 +192,7 @@ def create_payment(db, client_id, payment_plan_id):
         
         if not acquire_client_lock(client_id, 600):
             raise ApiError(MessageCodes.CLIENT_IS_IN_HIRING, 409)
-                
+                        
         try:
             description = f"Plano '{payment_plan.name}' de {payment_plan.duration_days} dias do FitX"
 
@@ -203,7 +206,7 @@ def create_payment(db, client_id, payment_plan_id):
             #     decrypt_email(client.email_encrypted),
             #     client.name.split()[0],
             #     transaction.ID,
-            #     300
+            #     expiration_seconds
             # )
             preference = create_payment_preference(
                 get_valid_mp_token(db, payment_plan.trainer.ID),
@@ -214,7 +217,7 @@ def create_payment(db, client_id, payment_plan_id):
                 decrypt_email(client.email_encrypted),
                 client.name.split()[0],
                 transaction.ID,
-                300
+                expiration_seconds
             )
 
             if preference.get("error") == "invalid_collector_id":

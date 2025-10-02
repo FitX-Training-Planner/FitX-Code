@@ -465,6 +465,7 @@ class PaymentTransaction(Base):
     mp_preference_id = Column(String(100), unique=True)
     mp_transaction_id = Column(String(100), unique=True)
     receipt_url = Column(TEXT)
+    expires_at = Column(DATETIME, nullable=False)
     fk_payment_plan_ID = Column(INTEGER(unsigned=True), ForeignKey("payment_plan.ID", ondelete="SET NULL"), index=True)
     fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="SET NULL"), index=True)
     fk_trainer_ID = Column(INTEGER(unsigned=True), ForeignKey("trainer.ID", ondelete="SET NULL"), index=True)

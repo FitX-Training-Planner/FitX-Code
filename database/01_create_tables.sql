@@ -406,6 +406,7 @@ CREATE TABLE IF NOT EXISTS payment_transaction (
     mp_preference_id VARCHAR(100) UNIQUE,
     mp_transaction_id VARCHAR(100) UNIQUE,
     receipt_url TEXT,
+    expires_at DATETIME NOT NULL,
     fk_payment_plan_ID INT UNSIGNED,
     fk_user_ID INT UNSIGNED,
     fk_trainer_ID INT UNSIGNED,

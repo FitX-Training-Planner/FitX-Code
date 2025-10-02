@@ -910,7 +910,7 @@ def get_partial_trainer_transactions(db, offset, limit, trainer_id):
             .options(
                 joinedload(PaymentTransaction.user)
             )
-            .filter(PaymentTransaction.fk_trainer_ID == trainer_id)
+            .filter(PaymentTransaction.fk_trainer_ID == trainer_id, PaymentTransaction.is_finished.is_(True))
             .order_by(desc(PaymentTransaction.create_date))
             .offset(offset)
             .limit(limit)
