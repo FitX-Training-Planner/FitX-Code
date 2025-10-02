@@ -10,6 +10,7 @@ import convertTime from "../../../utils/formatters/text/convertTime";
 import ClientTrainingItem from "./ClientTrainingItem";
 import Alert from "../../messages/Alert";
 import { translateDatabaseData } from "../../../utils/formatters/text/translate";
+import BodyMuscles from "../../layout/BodyMuscles";
 
 function ClientTrainingExerciseCard({
     exerciseName,
@@ -475,51 +476,12 @@ function ClientTrainingExerciseCard({
 
                 <Stack>
                     {isMusclesVisible && (
-                        <Stack
-                            direction="row"
-                            gap="0"
-                        >
-                            <Stack
-                                className={styles.muscle_groups_select}
-                            >
-                                <img
-                                    src={`/images/body/${user.sex !== "female" ? "male" : "female"}/anterior_view.png`}
-                                    alt={t("anteriorBodyView")}
-                                    title={t("anteriorBodyView")}
-                                    style={{ filter: user.config.isDarkTheme ? "invert(1)" : "none" }}
-                                />
-
-                                {exerciseMuscleGroups?.filter(group => !group.isPosteriorMuscle).map((group, index) => (
-                                    <img
-                                        key={index}
-                                        src={`/${user.sex !== "female" ? group.maleMedia?.url : group.femaleMedia?.url}${group.isPrimary ? "primary" : "secondary"}.png`}
-                                        title={translateDatabaseData(group, "muscleGroups", "name", user, t)}
-                                        alt={translateDatabaseData(group, "muscleGroups", "name", user, t)}
-                                    />                    
-                                ))}
-                            </Stack>
-
-                            <Stack
-                                className={styles.muscle_groups_select}
-                            >
-                                <img
-                                    src={`/images/body/${user.sex !== "female" ? "male" : "female"}/posterior_view.png`}
-                                    alt={t("posteriorBodyView")}
-                                    title={t("posteriorBodyView")}
-                                    style={{ filter: user.config.isDarkTheme ? "invert(1)" : "none" }}
-                                />
-
-                                {exerciseMuscleGroups?.filter(group => group.isPosteriorMuscle).map((group, index) => (
-                                    <img
-                                        key={index}
-                                        src={`/${user.sex !== "female" ? group.maleMedia?.url : group.femaleMedia?.url}${group.isPrimary ? "primary" : "secondary"}.png`}
-                                        title={translateDatabaseData(group, "muscleGroups", "name", user, t)}
-                                        alt={translateDatabaseData(group, "muscleGroups", "name", user, t)}
-                                        style={{ zIndex: !user.sex !== "female" && group.name === "Glúteos" ? "2" : "1"}}
-                                    />                    
-                                ))}
-                            </Stack>
-                        </Stack>
+                        <BodyMuscles
+                            muscleGroups={exerciseMuscleGroups}
+                            isMale={user.sex === "male"}
+                            figuresDirection="row"
+                            hasSecondaryMuscles
+                        />
                     )}
 
                     <Stack

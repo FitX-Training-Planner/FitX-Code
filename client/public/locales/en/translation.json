@@ -815,7 +815,7 @@
     "firstContract": "First Contract",
     "lastContract": "Last Contract",
     "daysInContract": "Days in Contract",
-    "activeClientsDeactiveProfileAlert": "Clients who have deactivated their profile cannot receive your services and aren't displayed in this section, but the contract remains in effect and you will still receive your payment as normal.",
+    "activeClientsDeactiveProfileAlert": "Clients who have deactivated their profile cannot receive your services, but the contract remains in effect and you will still receive your payment as normal.",
     "clientsHistoryDeactiveProfileAlert": "Clients who delete or deactivate their profile aren't displayed in this section, but their payment, contract, and work data can still be viewed on your contracts page or in your dashboard.",
     "years": "Years",
     "limitations": "Limitations",
@@ -894,6 +894,9 @@
     "lastActiveContract": "Last Active Contract",
     "nextContractToExpire": "Next Contract to Expire",
     "lastContractToExpire": "Last Contract to Expire",
+    "deactive": "Deactive",
+    "active": "Active",
+    "characteristics": "Characteristics",
     "databaseData": {
         "muscleGroups": {
             "1": {

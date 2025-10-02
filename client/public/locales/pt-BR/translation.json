@@ -815,7 +815,7 @@
     "firstContract": "Primeiro Contrato",
     "lastContract": "Último Contrato",
     "daysInContract": "Dias em Contrato",
-    "activeClientsDeactiveProfileAlert": "Os clientes que desativaram o perfi não podem receber os seus serviços e não são exibidos nessa seção, mas o contrato continua em andamento e você ainda recebe o seu pagamento normalmente.",
+    "activeClientsDeactiveProfileAlert": "Os clientes que desativaram o perfi não podem receber os seus serviços, mas o contrato continua em andamento e você ainda recebe o seu pagamento normalmente.",
     "clientsHistoryDeactiveProfileAlert": "Os clientes que excluírem ou desativarem o perfil não são exibidos nessa seção, mas os dados de pagamento, contrato e trabalho ainda podem ser consltados em sua página de contratos ou na sua central.",
     "years": "Anos",
     "limitations": "Limitações",
@@ -840,7 +840,7 @@
     "viewOtherSteps": "Visualizar outros exercícios",
     "notReceiptAlert": "O Mercado Pago não envia recibos nas notificações para o nosso app quando a compra é feita com crédito da conta. Você pode consultar os detalhes da transação diretamente no aplicativo do Mercado Pago.",
     "modifiedPaymentPlanAlert": "Esse plano de pagamento pode ter sido modificado. Sempre consulte os dados do contrato para receber as informações corretas dos valores.",
-    "clientDeactivateProfile": "Esse cliente desativou o seu perfil e não pode mais receber qualquer serviço. Você está livre da responsabilidade de prestação de serviço para este cliente enquanto seu perfil está desativado.",
+    "clientDeactivateProfile": "Esse cliente desativou o seu perfil e não pode mais receber qualquer serviço. Você está livre da responsabilidade de prestação de serviço para este cliente enquanto seu perfil estiver desativado.",
     "clientViewDescription": "Veja abaixo como os seus cliente visualizam o plano de treino enviado a eles",
     "loadingDisconnectMp": "Desconectando do Mercado Pago",
     "errorDisconnectMp": "Falha ao desconectar do Mercado Pago!",
@@ -893,5 +893,8 @@
     "lastFinishedContract": "Último Contrato Finalizado",
     "lastActiveContract": "Último Contrato Ativo",
     "nextContractToExpire": "Próximo Contrato a Vencer",
-    "lastContractToExpire": "Último Contrato a Vencer"
+    "lastContractToExpire": "Último Contrato a Vencer",
+    "deactive": "Desativado",
+    "active": "Ativo",
+    "characteristics": "Características"
 }
