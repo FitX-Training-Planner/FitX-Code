@@ -49,6 +49,8 @@ export default function useRequest() {
         if (!navigator.onLine) {
             notify(t("errorConnection"), "error", "network");
 
+            navigate("/introduction");
+
             return;
         }
 

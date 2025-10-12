@@ -36,7 +36,16 @@ export function formatDateTime(dateTime, t, isDateCorrect = false) {
         date = utcToZonedTime(new Date(dateTime));
     }
 
-    const formattedDate = formatDate(dateTime, t);
+    const now = getToday();
+    const diffMs = now - date;
+
+    const diffMinutes = diffMs / (1000 * 60);
+
+    if (diffMinutes >= -1 && diffMinutes <= 1) {
+        return t("now");
+    }
+
+    const formattedDate = formatDate(date, t);
 
     const hour = String(date.getHours()).padStart(2, "0");
     const minutes = String(date.getMinutes()).padStart(2, "0");
