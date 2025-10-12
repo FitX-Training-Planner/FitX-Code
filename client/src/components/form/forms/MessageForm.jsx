@@ -11,7 +11,8 @@ function MessageForm({
     setChatFormContext,
     isChatBot,
     setMessageError,
-    handleSubmit
+    handleSubmit,
+    handleTyping
 }) {
     const { t } = useTranslation();
     
@@ -26,7 +27,11 @@ function MessageForm({
                 <MessageInput
                     name="message"
                     value={chatFormContext.message}
-                    handleChange={(e) => handleOnChangeTextField(e, formattNameAndNote, undefined, chatFormContext, setChatFormContext, setMessageError)}
+                    handleChange={(e) => {
+                        handleOnChangeTextField(e, formattNameAndNote, undefined, chatFormContext, setChatFormContext, setMessageError);
+
+                        if (handleTyping) handleTyping();
+                    }}
                     maxLength={isChatBot ? 100 : 1000}
                     varTextColor="--white-color"
                     placeholder={t("messagePlaceholder")}

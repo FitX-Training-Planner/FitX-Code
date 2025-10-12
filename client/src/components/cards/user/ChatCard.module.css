@@ -1,0 +1,27 @@
+.chat_card {
+    transition: var(--fast-transition);
+    cursor: pointer;
+}
+
+.chat_card:hover {
+    background-color: var(--gray-color) !important;
+}
+
+.new_messages {
+    background-color: var(--light-theme-color);
+    border-radius: 50%;
+    padding: 0.3em;
+    font-weight: bold;
+    font-size: var(--small-text-size);
+    aspect-ratio: 1 / 1;
+    text-align: center;
+    color: var(--white-color);
+}
+
+.message_content {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+    font-size: var(--small-text-size);
+}
