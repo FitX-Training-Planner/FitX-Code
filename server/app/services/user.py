@@ -1,9 +1,10 @@
-from ..database.models import Users, Media, Trainer, ContractStatus, ClientMuscleGroups
+from ..database.models import Users, Media, Trainer, ContractStatus, ClientMuscleGroups, Message, Chat
 from ..utils.user import is_email_used, hash_email, encrypt_email, hash_password, decrypt_email, send_email_with_template
 from ..utils.cloudinary import upload_file
 from sqlalchemy.orm import joinedload
+from sqlalchemy import desc, func
 from ..exceptions.api_error import ApiError
-from ..utils.serialize import serialize_user
+from ..utils.serialize import serialize_user, serialize_message, serialize_chat, serialize_chat_in_chats
 from ..utils.message_codes import MessageCodes
 from ..utils.client import check_client_active_contract
 from .trainer import count_trainer_active_contract
@@ -509,3 +510,213 @@ def modify_user_password(db, user_id, new_password):
         print(f"Erro ao modificar senha do usuário: {e}")
 
         raise Exception(f"Erro ao modificar a senha do usuário: {e}")
+    
+def insert_message(db, content, is_client, chat_id, user_id, is_viewed):
+    try:
+        chat = db.query(Chat).filter(Chat.ID == chat_id).first()
+
+        if not chat:
+            raise ApiError(MessageCodes.CHAT_NOT_FOUND, 404)
+        
+        if int(user_id) not in [chat.fk_user_ID, chat.fk_trainer_ID]:
+            raise ApiError(MessageCodes.ERROR_CHAT_PARTICIPANTS, 403)
+
+        new_message = Message(
+            content=content,
+            is_from_trainer=(not is_client),
+            fk_chat_ID=chat_id,
+            is_viewed=is_viewed
+        )
+
+        chat.update_date = datetime.now(brazil_tz)
+
+        db.add(new_message)
+
+        db.commit()
+        
+        db.refresh(new_message)
+
+        return serialize_message(new_message, is_client)
+
+    except ApiError as e:
+        print(f"Erro ao inserir mensagem no chat entre treinador e cliente: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao inserir mensagem no chat entre treinador e cliente: {e}")
+
+        raise Exception(f"Erro ao inserir a mensagem no chat entre treinador e cliente: {e}")
+    
+def mark_messages_viewed(db, is_client, chat_id, user_id):
+    try:
+        chat = db.query(Chat).filter(Chat.ID == chat_id).first()
+
+        if not chat:
+            raise ApiError(MessageCodes.CHAT_NOT_FOUND, 404)
+        
+        if int(user_id) not in [chat.fk_user_ID, chat.fk_trainer_ID]:
+            raise ApiError(MessageCodes.ERROR_CHAT_PARTICIPANTS, 403)
+
+        messages = (
+            db.query(Message)
+            .filter(
+                Message.fk_chat_ID == chat_id,
+                Message.is_viewed == False,
+                Message.is_from_trainer == is_client
+            )
+            .all()
+        )
+
+        for msg in messages:
+            msg.is_viewed = True
+
+        db.commit()
+
+        return [msg.ID for msg in messages]
+
+    except ApiError as e:
+        print(f"Erro ao marcar mensagens visualizadas ao entrar no chat entre treinador e cliente: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao marcar mensagens visualizadas ao entrar no chat entre treinador e cliente: {e}")
+
+        raise Exception(f"Erro ao marcar as mensagens visualizadas ao entrar no chat entre treinador e cliente: {e}")
+
+def get_user_chat(db, is_client, chat_id, user_id):
+    try:
+        if is_client:
+            chat = (
+                db.query(Chat)
+                .options(
+                    joinedload(Chat.trainer)
+                        .joinedload(Trainer.user)
+                )
+                .filter(Chat.ID == chat_id)
+                .first()
+            )
+
+        else:
+            chat = (
+                db.query(Chat)
+                .options(
+                    joinedload(Chat.user)
+                )
+                .filter(Chat.ID == chat_id)
+                .first()
+            )
+
+        if not chat:
+            raise ApiError(MessageCodes.CHAT_NOT_FOUND, 404)
+                
+        if int(user_id) not in [chat.fk_user_ID, chat.fk_trainer_ID]:
+            raise ApiError(MessageCodes.ERROR_CHAT_PARTICIPANTS, 403)
+
+        last_message = (
+            db.query(Message)
+            .filter(
+                Message.fk_chat_ID == chat_id,
+                Message.is_from_trainer == is_client
+            )
+            .order_by(Message.create_date.desc())
+            .first()
+        )
+
+        chat.last_message = last_message
+
+        return serialize_chat(chat, is_client)
+
+    except ApiError as e:
+        print(f"Erro ao recuperar chat de mensagens: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao recuperar chat de mensagens: {e}")
+
+        raise Exception(f"Erro ao recuperar o chat de mensagens: {e}")
+
+def get_chat_messages(db, offset, limit, is_client, chat_id,):
+    try:
+        messages = (
+            db.query(Message)
+            .filter(Message.fk_chat_ID == chat_id)
+            .order_by(Message.create_date.desc())
+            .offset(offset)
+            .limit(limit)
+            .all()
+        )
+
+        return [serialize_message(message, is_client) for message in messages]
+
+    except ApiError as e:
+        print(f"Erro ao recuperar mensagens do chat: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao recuperar mensagens do chat: {e}")
+
+        raise Exception(f"Erro ao recuperar as mensagens do chat: {e}")
+
+def get_user_chats(db, user_id, is_client):
+    try:
+        if is_client:
+            chats = (
+                db.query(Chat)
+                .options(
+                    joinedload(Chat.trainer)
+                        .joinedload(Trainer.user)
+                )
+                .filter(Chat.fk_user_ID == user_id)
+                .all()
+            )
+
+        else:
+            chats = (
+                db.query(Chat)
+                .options(
+                    joinedload(Chat.user)
+                )
+                .filter(Chat.fk_trainer_ID == user_id)
+                .all()
+            )
+
+        result = []
+
+        for chat in chats:
+            last_message = (
+                db.query(Message)
+                .filter(Message.fk_chat_ID == chat.ID)
+                .order_by(desc(Message.create_date))
+                .first()
+            )
+
+            new_messages = (
+                db.query(func.count(Message.ID))
+                .filter(
+                    Message.fk_chat_ID == chat.ID,
+                    Message.is_viewed == False,
+                    Message.is_from_trainer == is_client
+                )
+                .scalar()
+            )
+            
+            chat.last_message = last_message
+            chat.new_messages = new_messages or 0
+
+            result.append(serialize_chat_in_chats(chat, is_client))
+
+        return result
+
+    except ApiError as e:
+        print(f"Erro ao recuperar chats de mensagens do usuário: {e}")
+
+        raise
+
+    except Exception as e:
+        print(f"Erro ao recuperar chats de mensagens do usuário: {e}")
+
+        raise Exception(f"Erro ao recuperar os chats de mensagens do usuário: {e}")
