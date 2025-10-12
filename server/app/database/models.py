@@ -554,8 +554,8 @@ class Chat(Base):
 
     ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     update_date = Column(DATETIME, nullable=False, default=lambda: datetime.now(brazil_tz), onupdate=func.now())
-    fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="SET NULL"), index=True)
-    fk_trainer_ID = Column(INTEGER(unsigned=True), ForeignKey("trainer.ID", ondelete="SET NULL"), index=True)
+    fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="CASCADE"), index=True, nullable=False)
+    fk_trainer_ID = Column(INTEGER(unsigned=True), ForeignKey("trainer.ID", ondelete="CASCADE"), index=True, nullable=False)
     
     user = relationship("Users", back_populates="chats")
     trainer = relationship("Trainer", back_populates="chats")
@@ -572,7 +572,7 @@ class Message(Base):
     ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     content = Column(TEXT, nullable=False)
     is_from_trainer = Column(Boolean, nullable=False)
-    is_viewed = Column(Boolean, nullable=False)
+    is_viewed = Column(Boolean, nullable=False, default=False)
     create_date = Column(DATETIME, nullable=False, default=lambda: datetime.now(brazil_tz))
     fk_chat_ID = Column(INTEGER(unsigned=True), ForeignKey("chat.ID", ondelete="CASCADE"), index=True, nullable=False)
     
