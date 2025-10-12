@@ -483,3 +483,45 @@ def serialize_training_plan_base(plan):
         "ID": plan.ID,
         "name": plan.name
     }
+
+def serialize_message(message, is_client):
+    return {
+        "ID": message.ID,
+        "content": message.content,
+        "isFromMe": message.is_from_trainer == (not is_client),
+        "isViewed": message.is_viewed,
+        "createDate": message.create_date.isoformat(),
+        "chatID": message.fk_chat_ID
+    }
+
+def serialize_chat(chat, is_client):
+    return {
+        "ID": chat.ID,
+        "contact": {
+            "ID": chat.user.ID if not is_client else chat.trainer.fk_user_ID,
+            "name": chat.user.name if not is_client else chat.trainer.user.name,
+            "photoUrl": (
+                chat.user.media.url if not is_client and chat.user.fk_media_ID and chat.user.media
+                else chat.trainer.user.media.url if chat.trainer.user.fk_media_ID and chat.trainer.user.media
+                else None
+            )
+        },
+        "lastMessage": chat.last_message.create_date if chat.last_message else None 
+    }
+
+def serialize_chat_in_chats(chat, is_client):
+    return {
+        "ID": chat.ID,
+        "contact": {
+            "ID": chat.user.ID if not is_client else chat.trainer.user.ID,
+            "name": chat.user.name if not is_client else chat.trainer.user.name,
+            "photoUrl": ( 
+                (chat.user.media.url if chat.user.fk_media_ID and chat.user.media else None) 
+                if not is_client 
+                else (chat.trainer.user.media.url if chat.trainer.user.fk_media_ID and chat.trainer.user.media else None)
+            )
+        },
+        "updateDate": chat.update_date,
+        "newMessages": serialize_field(chat.new_messages),
+        "lastMessage": serialize_message(chat.last_message, is_client) if chat.last_message else None 
+    }
