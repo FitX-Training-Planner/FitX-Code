@@ -3,10 +3,12 @@ import styles from "./ChatLayout.module.css";
 import PhotoInput from "../form/fields/PhotoInput";
 import { formatDateTime } from "../../utils/formatters/text/formatDate";
 import MessageForm from "../form/forms/MessageForm";
-import SendDocumentForm from "../form/forms/SendDocumentForm";
+// import SendDocumentForm from "../form/forms/SendDocumentForm";
 import React, { useEffect, useRef } from "react";
-import useWindowSize from "../../hooks/useWindowSize";
 import { useTranslation } from "react-i18next";
+import ChatMessage from "./ChatMessage";
+import Loader from "./Loader";
+import { Virtuoso } from "react-virtuoso";
 
 function ChatLayout({
     isChatBot = true,
@@ -14,23 +16,48 @@ function ChatLayout({
     chatFormContext,
     setChatFormContext,
     setMessageError,
-    setDocumentError,
-    handleSendDocument,
+    // setDocumentError,
+    // handleSendDocument,
     handleSendMessage,
-    chatbotLoading
+    chatbotLoading,
+    loadMessages,
+    handleTyping,
+    messagesError,
+    messagesLoading,
+    firstItemIndex
 }) {
     const { t } = useTranslation();
 
-    const { width } = useWindowSize();
-
-    const messagesEndRef = useRef(null);
+    const virtuosoRef = useRef(null);
+    const previousLengthRef = useRef(0);
 
     useEffect(() => {
-        if (messagesEndRef.current) {
-            messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+        if (!virtuosoRef.current || chat.messages.length === 0) return;
+
+        const previousLength = previousLengthRef.current || 0;
+        const hasNewMessage = chat.messages.length > previousLength;
+        const hasLoadMessage = previousLengthRef.currentFirstID !== undefined && chat.messages[0]?.ID !== previousLengthRef.currentFirstID;
+
+        if (hasNewMessage && !hasLoadMessage) {
+            const lastMessage = chat.messages[chat.messages.length - 1];
+
+            if (lastMessage.isFromMe) {
+                setTimeout(() => {
+                    virtuosoRef.current.scrollToIndex({
+                        index: chat.messages.length - 1,
+                        align: "end",
+                        behavior: "auto"
+                    });
+
+                    virtuosoRef.current.scrollTo({ top: Number.MAX_SAFE_INTEGER, behavior: "auto" });
+                }, 50);
+            }
         }
+
+        previousLengthRef.current = chat.messages.length;
+        previousLengthRef.currentFirstID = chat.messages[0]?.ID;
     }, [chat.messages]);
-    
+
     return (
         <Stack 
             className={styles.chat_container}
@@ -63,7 +90,18 @@ function ChatLayout({
                             {
                                 isChatBot 
                                 ? (chatbotLoading ? `${t("thinking")}...` : "Online") 
-                                : `${t("lastUpdate")}: ${formatDateTime(chat.updateDate, t)}`
+                                : (
+                                    chat.contact.isOnline
+                                    ? (
+                                        chat.contact.isPresent 
+                                        ? (
+                                            chat.contact.isTyping
+                                            ? t("typing")
+                                            : t("inChat")
+                                        )
+                                        : "Online"
+                                    ) : chat.lastMessage ? formatDateTime(chat.lastMessage, t, true) : "Offline"
+                                )
                             }
                         </span>
                     </Stack>
@@ -72,7 +110,7 @@ function ChatLayout({
                 <Stack
                     className={styles.chat_actions}
                 >
-                    {!isChatBot && (
+                    {/* {!isChatBot && (
                         <Stack>
                             <SendDocumentForm
                                 chatFormContext={chatFormContext}
@@ -81,63 +119,59 @@ function ChatLayout({
                                 handleSubmit={handleSendDocument}
                             />
                         </Stack>
-                    )}
+                    )} */}
                 </Stack>
             </Stack>
 
-            <Stack
-                className={styles.messages}
-                gap="2em"
-            >
-                {chat.messages
-                    .sort((a, b) => new Date(a.createDate) - new Date(b.createDate))
-                    .map((message, index) => (
-                        <React.Fragment
-                            key={index}
+            <Virtuoso
+                ref={virtuosoRef}
+                style={{ height: "100%", width: "100%" }}
+                data={chat.messages}
+                followOutput={true}
+                increaseViewportBy={{ top: 25, bottom: 300 }}
+                firstItemIndex={firstItemIndex || 0}
+                initialTopMostItemIndex={chat.messages?.length - 1}
+                atTopStateChange={(atTop) => {
+                    if (!isChatBot && atTop && !messagesLoading && !messagesError) {
+                        loadMessages(); 
+                    }
+                }}
+                components={{
+                    Header: () => (
+                        <Stack
+                            extraStyles={{ marginBottom: "3em" }}
                         >
-                            <Stack
-                                className={`${styles.message} ${message.isFromMe ? styles.from_me : undefined}`}
-                                extraStyles={{ maxWidth: width <= 440 ? "90%" : "60%" }}
-                                direction="row"
-                                alignItems="start"
-                            >
-                                <Stack
-                                    alignItems="start"
-                                    className={styles.message_content}
-                                >
-                                    <p>
-                                        {message.content}
+                            {messagesError ? (
+                                <p>{t("errorMessagesAlert")}</p>
+                            ) : (
+                                messagesLoading ? (
+                                    <Loader />
+                                ) : (
+                                    <p style={{ color: "var(--light-theme-color)" }}>
+                                        {t("chatStart")}
                                     </p>
-
-                                    <Stack
-                                        className={styles.message_info}
-                                        direction="row"
-                                    >
-                                        <span>
-                                            {formatDateTime(message.createDate, t, true)}
-                                        </span>
-
-                                        <span>
-                                            {!message.isFromMe ? (isChatBot ? "Coachy" : chat.contact?.name) : t("you")}
-                                        </span>
-                                    </Stack>
-                                </Stack>
-
-                                {!isChatBot && (
-                                    <span
-                                        className={`${styles.view_indicator} ${message.isViewed ? styles.viewed : undefined}`}
-                                        title={message.isViewed ? t("viewed") : t("notViewed")}
-                                    ></span>
-                                )}
-                            </Stack>
-                        </React.Fragment>
-                    ))
-                }
-
-                <div 
-                    ref={messagesEndRef} 
-                />
-            </Stack>
+                                )
+                            )}
+                        </Stack>
+                    )
+                }}
+                itemContent={(_, message) => (
+                    <Stack
+                        key={message.ID}
+                        className={styles.message_container}
+                        gap="0"
+                    >
+                        <ChatMessage
+                            content={message.content}
+                            createDate={message.createDate}
+                            isFromMe={message.isFromMe}
+                            isChatBot={isChatBot}
+                            isViewed={message.isViewed}
+                            isPending={message.isPending}
+                        />
+                    </Stack>
+                )}
+            />
 
             <Stack
                 className={styles.message_form}
@@ -148,6 +182,7 @@ function ChatLayout({
                     isChatBot={isChatBot}
                     setMessageError={setMessageError}
                     handleSubmit={handleSendMessage}
+                    handleTyping={handleTyping}
                 />
             </Stack>
         </Stack>
