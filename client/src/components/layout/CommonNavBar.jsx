@@ -87,6 +87,31 @@ function CommonNavBar({
                     {children}
 
                     <li
+                        onClick={() => navigate("/me/chats")}
+                        className={isActive("/me/chats") || isActive("/me/chats/:id") ? styles.selected : undefined}
+                    >
+                        <Stack
+                            justifyContent="start"
+                            direction="row"
+                            className={styles.nav_bar_item}
+                        >
+                            <Stack
+                                alignItems="center"
+                                className={styles.nav_bar_item_icon}
+                            >
+                                <ClickableIcon
+                                    iconSrc="/images/icons/chat.png"
+                                    name={t("chats")}
+                                />
+                            </Stack>
+
+                            <span>
+                                {t("chats")}
+                            </span>
+                        </Stack>
+                    </li>
+
+                    <li
                         onClick={() => navigate("/questions-chatbot")}
                         className={isActive("/questions-chatbot") ? styles.selected : undefined}
                     >

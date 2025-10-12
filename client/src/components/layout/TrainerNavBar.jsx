@@ -40,31 +40,6 @@ function TrainerNavBar({
             </li>
 
             <li
-                onClick={() => navigate("/trainers/me/clients")}
-                className={isActive("/trainers/me/clients") ? styles.selected : undefined}
-            >
-                <Stack
-                    justifyContent="start"
-                    direction="row"
-                    className={styles.nav_bar_item}
-                >
-                    <Stack
-                        alignItems="center"
-                        className={styles.nav_bar_item_icon}
-                    >
-                        <ClickableIcon
-                            iconSrc="/images/icons/clients.png"
-                            name={t("clients")}
-                        />
-                    </Stack>
-
-                    <span>
-                        {t("clients")}
-                    </span>
-                </Stack>
-            </li>
-
-            <li
                 onClick={() => navigate("/trainers/me/payments")}
                 className={isActive("/trainers/me/payments") ? styles.selected : undefined}
             >
@@ -90,8 +65,8 @@ function TrainerNavBar({
             </li>
 
             <li
-                onClick={() => navigate("/trainers/me/dashboard")}
-                className={isActive("/trainers/me/dashboard") ? styles.selected : undefined}
+                onClick={() => navigate("/trainers/me/clients")}
+                className={isActive("/trainers/me/clients") ? styles.selected : undefined}
             >
                 <Stack
                     justifyContent="start"
@@ -103,13 +78,13 @@ function TrainerNavBar({
                         className={styles.nav_bar_item_icon}
                     >
                         <ClickableIcon
-                            iconSrc="/images/icons/dashboard.png"
-                            name={t("dashboard")}
+                            iconSrc="/images/icons/clients.png"
+                            name={t("clients")}
                         />
                     </Stack>
 
                     <span>
-                        {t("dashboard")}
+                        {t("clients")}
                     </span>
                 </Stack>
             </li>

@@ -39,7 +39,7 @@ function ClientContract() {
 
     const navigate = useNavigate();
 
-    const hasRun = useRef();
+    const hasRun = useRef(false);
 
     const { request: getUserEmailReq } = useRequest();
     const { request: cancelClientContract } = useRequest();

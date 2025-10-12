@@ -81,10 +81,10 @@ function ActiveClientCard({
                 )}
 
                 <ClickableIcon
-                    iconSrc="/images/icons/expand.png"
+                    iconSrc={`/images/icons/${isExpanded ? "exit" : "expand"}.png`}
                     handleClick={() => setIsExpanded(prevIsExpanded => !prevIsExpanded)}
                     size="tiny"
-                    name={t("expand")}
+                    name={t(isExpanded ? "close" : "expand")}
                 />
                 
                 <span

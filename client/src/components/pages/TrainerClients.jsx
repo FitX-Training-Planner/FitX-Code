@@ -18,13 +18,17 @@ import { getCacheData, setCacheData } from "../../utils/cache/operations";
 import SearchInput from "../form/fields/SearchInput";
 import useWindowSize from "../../hooks/useWindowSize";
 import Alert from "../messages/Alert";
+import { verifyIsTrainer } from "../../utils/requests/verifyUserType";
+import { useSelector } from "react-redux";
 
 function TrainerClients() {
     const { t } = useTranslation();
 
     const { notify,confirm } = useSystemMessage();
 
-    const hasRun = useRef();
+    const hasRun = useRef(false);
+
+    const user = useSelector(state => state.user);
 
     const { width } = useWindowSize();
     
@@ -33,6 +37,7 @@ function TrainerClients() {
     const navigate = useNavigate();
 
     const { request: getUserEmailReq } = useRequest();
+    const { request: isTrainer } = useRequest();
     const { request: getActiveClients, loading: activeClientsLoading } = useRequest();
     const { request: getClientsHistory, loading: clientsHistoryLoading } = useRequest();
     const { request: getTrainingPlans } = useRequest();
@@ -116,6 +121,10 @@ function TrainerClients() {
         hasRun.current = true;
         
         const fetchData = async () => {
+            const success = await verifyIsTrainer(isTrainer, user, navigate, notify, t);
+            
+            if (!success) return;
+
             const cachedEmailData = getCacheData(emailStorageKey);
 
             if (cachedEmailData) {
@@ -185,7 +194,7 @@ function TrainerClients() {
         }
 
         fetchData();
-    }, [clientsHistory, clientsHistoryError, clientsHistoryFilter.value, clientsHistoryOffset, getActiveClients, getTrainingPlans, getUserEmailReq, loadClients, t]);
+    }, [clientsHistory, clientsHistoryError, clientsHistoryFilter.value, clientsHistoryOffset, getActiveClients, getTrainingPlans, getUserEmailReq, isTrainer, loadClients, navigate, notify, t, user]);
 
     const handleOnChangeClientsFilter = useCallback((filter) => {
         setClientsHistory([]);
@@ -289,6 +298,7 @@ function TrainerClients() {
                                     <Stack
                                         direction="row"
                                         gap="0.5em"
+                                        justifyContent="center"
                                     >
                                         <Alert/>
 

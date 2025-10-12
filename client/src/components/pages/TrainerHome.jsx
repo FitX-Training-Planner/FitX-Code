@@ -232,7 +232,7 @@ function TrainerHome() {
 
     const handleOnConnectMP = useCallback(async () => {
         const getId = () => {
-            return api.get(`/me/id`);
+            return api.get(`/me/used-id`);
         }
     
         const handleOnGetIdSuccess = (data) => {

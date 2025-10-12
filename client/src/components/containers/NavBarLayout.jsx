@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { matchPath, useLocation, useNavigate } from "react-router-dom";
 import ClientNavBar from "../layout/ClientNavBar";
 import TrainerNavBar from "../layout/TrainerNavBar";
 import styles from "./NavBarLayout.module.css";
@@ -13,7 +13,7 @@ const NavBarLayout = ({
     const location = useLocation();
 
     const isActive = useCallback((path) => {
-        return location.pathname === path;
+        return matchPath({ path, end: true }, location.pathname);
     }, [location.pathname]);
     
     return (

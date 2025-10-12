@@ -14,7 +14,7 @@ function GenericCard({
 
     return (
         <div
-            className={`${className || undefined}`}
+            className={className || undefined}
             style={{ 
                 border,
                 borderRadius,
