@@ -3,11 +3,11 @@ import CodeConfirmation from "./components/pages/CodeConfirmation";
 import CreateConfig from "./components/pages/CreateConfig";
 import CreateTrainer from "./components/pages/CreateTrainer";
 import Login from "./components/pages/Login";
-import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
+import { Routes, Route, useLocation, useNavigate, matchPath } from "react-router-dom";
 import api from "./api/axios";
 import useRequest from "./hooks/useRequest";
 import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "./slices/user/userSlice";
+import { resetUser, setUser } from "./slices/user/userSlice";
 import ClientHome from "./components/pages/ClientHome";
 import TrainerHome from "./components/pages/TrainerHome";
 import RecoverPassword from "./components/pages/RecoverPassword";
@@ -39,6 +39,9 @@ import CreateClient from "./components/pages/CreateClient";
 import ClientContract from "./components/pages/ClientContract";
 import TrainerClients from "./components/pages/TrainerClients";
 import ClientTrainingPlan from "./components/pages/ClientTrainingPlan";
+import { SocketProvider } from "./app/SocketProvider";
+import ChatClientTrainer from "./components/pages/ChatClientTrainer";
+import Chats from "./components/pages/Chats";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -82,10 +85,14 @@ function App() {
       "/checkout/:planId",
       "/me/contract",
       "/me/training-plan",
-      "/trainers/me/clients"
+      "/trainers/me/clients",
+      "/me/chats/:id",
+      "/me/chats"
     ];
 
-    const shouldSkip = !validPaths.includes(location.pathname);
+    const shouldSkip = !validPaths.some(path =>
+      matchPath({ path, end: true }, location.pathname)
+    );
 
     if (shouldSkip) setCanRender(true);
 
@@ -106,6 +113,8 @@ function App() {
       
       const handleOnGetUserError = (err) => {
         hasRun.current = false;
+
+        dispatch(resetUser());
 
         if (err?.response?.status === 404) {
           navigate("/introduction");
@@ -138,11 +147,12 @@ function App() {
   }, [user.config.isEnglish, i18n]);
 
   return (
-    <>
+    <SocketProvider
+      userID={user.ID}
+    >
       <ChangeLanguageAndThemeButton />
 
       <Routes>
-        {/* me/trainer-chat */}
         <Route
           path="/error"
           element={<ErrorPage />}
@@ -306,6 +316,16 @@ function App() {
               path="/checkout/:planId"
               element={<PaymentPage />}
             />
+            
+            <Route 
+              path="/me/chats/:id"
+              element={<ChatClientTrainer />}
+            />
+
+            <Route 
+              path="/me/chats"
+              element={<Chats />}
+            />
               
             <Route
               path="*"
@@ -322,7 +342,7 @@ function App() {
       {!canRender && (
         <Loader />
       )}
-    </>
+    </SocketProvider>
   );
 }
 
