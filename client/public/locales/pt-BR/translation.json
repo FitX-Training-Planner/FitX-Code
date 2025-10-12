@@ -68,7 +68,9 @@
         "INVALID_CLIENTS_FILTER": "Filtro de clientes inválido",
         "ACTIVE_CONTRACT_NOT_MATCH_DATA": "A sua identidade ou a do contrato são diferentes da identidade do contrato ativo do cliente.",
         "CLIENT_DEACTIVATED": "O cliente desativou seu perfil.",
-        "TRAINER_DEACTIVATED": "O treinador desativou seu perfil."
+        "TRAINER_DEACTIVATED": "O treinador desativou seu perfil.",
+        "CHAT_NOT_FOUND": "Conversa não encontrada.",
+        "ERROR_CHAT_PARTICIPANTS": "Você só pode enviar mensagens em conversas que você participa."
     },
     "loadingCheckData": "Checando dados",
     "errorLogin": "Falha ao logar!",
@@ -294,7 +296,6 @@
     "lastUpdate": "Última modificação",
     "you": "Você",
     "viewed": "Vista",
-    "notViewed": "Não vista",
     "sendMessage": "Enviar Mensagem",
     "messagePlaceholder": "Insira sua mensagem",
     "limitAlertPaymentPlanBenefits": "Você pode exibir até 8 benefícios no plano de pagamento.",
@@ -896,5 +897,20 @@
     "lastContractToExpire": "Último Contrato a Vencer",
     "deactive": "Desativado",
     "active": "Ativo",
-    "characteristics": "Características"
+    "characteristics": "Características",
+    "chatWith": "Conversa com",
+    "errorJoinChat": "Falha ao entrar na conversa!",
+    "errorGetChat": "Falha ao recuperar informações da conversa!",
+    "errorChatMessages": "Falha ao carregar mensagens da conversa!",
+    "lastMessageAt": "Última mensagem em",
+    "typing": "Digitando",
+    "inChat": "Na conversa",
+    "errorMessagesAlert": "Não foi possível carregar as suas mensagens.",
+    "chatStart": "Início da conversa",
+    "messagePending": "Pendente",
+    "messageDelivered": "Entregue",
+    "chats": "Conversas",
+    "loadingChats": "Recuperando as suas conversas",
+    "errorChats": "Falha ao recuperar as suas conversas!",
+    "now": "Agora"
 }

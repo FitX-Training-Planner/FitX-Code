@@ -68,7 +68,9 @@
         "INVALID_CLIENTS_FILTER": "Invalid clients filter",
         "ACTIVE_CONTRACT_NOT_MATCH_DATA": "Your or the contract's identity is different from the client's active contract identity.",
         "CLIENT_DEACTIVATED": "The client has deactivated your profile.",
-        "TRAINER_DEACTIVATED": "The trainer has deactivate your profile."
+        "TRAINER_DEACTIVATED": "The trainer has deactivate your profile.",
+        "CHAT_NOT_FOUND": "Chat not found.",
+        "ERROR_CHAT_PARTICIPANTS": "You can only send messages in chats you participate in."
     },
     "loadingCheckData": "Checking data",
     "errorLogin": "Login failed!",
@@ -294,7 +296,6 @@
     "lastUpdate": "Last modified",
     "you": "You",
     "viewed": "Viewed",
-    "notViewed": "Not viewed",
     "sendMessage": "Send Message",
     "messagePlaceholder": "Enter your message",
     "limitAlertPaymentPlanBenefits": "You can display up to 8 benefits in the payment plan.",
@@ -897,6 +898,21 @@
     "deactive": "Deactive",
     "active": "Active",
     "characteristics": "Characteristics",
+    "chatWith": "Chat with",
+    "errorJoinChat": "Failed to join the chat!",
+    "errorGetChat": "Failed to load chat information!",
+    "errorChatMessages": "Failed to load chat messages!",
+    "lastMessageAt": "Last message at",
+    "typing": "Typing",
+    "inChat": "In chat",
+    "errorMessagesAlert": "Unable to load your messages.",
+    "chatStart": "Start of chat",
+    "messagePending": "Pending",
+    "messageDelivered": "Delivered",
+    "chats": "Chats",
+    "loadingChats": "Loading your chats",
+    "errorChats": "Failed to load your chats!",
+    "now": "Now",
     "databaseData": {
         "muscleGroups": {
             "1": {
