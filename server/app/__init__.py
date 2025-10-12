@@ -1,4 +1,5 @@
 from flask import Flask, jsonify
+from .database.seed_data.generate_all_seed_data import generate_all_seed_data
 from .config import AppConfig, CloudinaryConfig, FernetConfig, RedisConfig, CORSConfig, OpenaiConfig, SendGridConfig
 import cloudinary
 from flask_bcrypt import Bcrypt
@@ -11,7 +12,8 @@ from openai import OpenAI
 from .utils.message_codes import MessageCodes
 import json
 from sendgrid import SendGridAPIClient
-from .chatbot.scripts.generate_embeddings import process_language
+# from .chatbot.scripts.generate_embeddings import process_language
+from .socketio.instance import socket_io
 
 bcrypt = Bcrypt()
 
@@ -37,8 +39,6 @@ EN_EMBEDDINGS_PATH = os.path.join(BASE_DIR, "chatbot", "data", "embeddings", "en
 
 pt_embeddings = load_embeddings(PT_EMBEDDINGS_PATH)
 en_embeddings = load_embeddings(EN_EMBEDDINGS_PATH)
-# pt_embeddings = None
-# en_embeddings = None
 
 @jwt.unauthorized_loader
 def custom_unauthorized_response(callback):
@@ -67,6 +67,12 @@ def create_app():
 
     jwt.init_app(app)
 
+    print("-" * 25)
+    print(">>> antes de init_app:", id(socketio))
+    socket_io.init_app(app)
+    print(">>> depois de init_app:", id(socketio))
+    print("-" * 25)
+
     cloudinary.config(**CloudinaryConfig.settings)
 
     bcrypt.init_app(app)
@@ -82,5 +88,12 @@ def create_app():
   
     # Base.metadata.drop_all(bind=engine)
     # Base.metadata.create_all(bind=engine)
+
+    # generate_all_seed_data()
+
+    # from .database.examples.generate_all_example_data import generate_all_example_data
+    # generate_all_example_data()
+
+    from .socketio import socketio_app
 
     return app
