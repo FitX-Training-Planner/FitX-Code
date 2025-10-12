@@ -1,6 +1,6 @@
-from app.database.models import Users, PlanContract, ContractStatus, PaymentPlan, PaymentTransaction, Trainer, SaveTrainer, ClientMuscleGroups, MuscleGroup
+from ..database.models import Users, PlanContract, ContractStatus, PaymentPlan, PaymentTransaction, Trainer, SaveTrainer, ClientMuscleGroups, MuscleGroup, Chat
 from ..exceptions.api_error import ApiError
-from ..utils.serialize import serialize_training_contract, serialize_trainer_in_trainers, serialize_muscle_group, serialize_field, serialize_client_base_info, serialize_date, serialize_contract, serialize_payment_plan
+from ..utils.serialize import serialize_training_contract, serialize_trainer_in_trainers, serialize_muscle_group, serialize_field, serialize_client_base_info, serialize_date, serialize_contract
 from sqlalchemy.orm import joinedload, subqueryload
 from sqlalchemy import desc, extract
 from ..utils.message_codes import MessageCodes
@@ -64,6 +64,18 @@ def cancel_contract(db, client_id):
         contract.canceled_or_rescinded_date = datetime.now(brazil_tz).date()
 
         contract.user.fk_training_plan_ID = None
+
+        chat = (
+            db.query(Chat)
+            .filter(
+                Chat.fk_user_ID == client_id,
+                Chat.fk_trainer_ID == contract.fk_trainer_ID
+            )
+            .first()
+        )
+
+        if chat:
+            db.delete(chat)
         
         db.commit()
 
@@ -180,7 +192,7 @@ def create_payment(db, client_id, payment_plan_id):
             fk_payment_plan_ID=payment_plan.ID,
             fk_user_ID=client_id,
             fk_trainer_ID=payment_plan.fk_trainer_ID,
-            expires_at=datetime.now(brazil_tz) + timedelta(seconds=expiration_seconds)
+            expires_at=datetime.now(brazil_tz) + timedelta(seconds=expiration_seconds + 60)
         )
 
         db.add(transaction)

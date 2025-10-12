@@ -1,4 +1,4 @@
-from app.database.models import Trainer, TrainerSpecialty, TrainingPlan, TrainingDay, TrainingDayStep, StepExercise, ExerciseSet, CardioSession, PaymentPlan, PaymentPlanBenefit, PlanContract, Users, PaymentTransaction, Rating, Complaint, ComplaintLike, RatingLike, ContractStatus, SaveTrainer, Specialty, Exercise
+from ..database.models import Trainer, TrainerSpecialty, TrainingPlan, TrainingDay, TrainingDayStep, StepExercise, ExerciseSet, CardioSession, PaymentPlan, PaymentPlanBenefit, PlanContract, Users, PaymentTransaction, Rating, Complaint, ComplaintLike, RatingLike, ContractStatus, SaveTrainer, Specialty, Exercise, Chat
 from ..utils.trainer import is_cref_used
 from ..exceptions.api_error import ApiError
 from ..utils.formatters import safe_str, safe_int, safe_float, safe_bool, safe_time, format_date_to_extend
@@ -2117,6 +2117,18 @@ def cancel_trainer_contract(db, trainer_id, client_id, contract_id):
         contract.canceled_or_rescinded_date = datetime.now(brazil_tz).date()
 
         contract.user.fk_training_plan_ID = None
+
+        chat = (
+            db.query(Chat)
+            .filter(
+                Chat.fk_user_ID == client_id,
+                Chat.fk_trainer_ID == trainer_id
+            )
+            .first()
+        )
+
+        if chat:
+            db.delete(chat)
         
         db.commit()
 
