@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request, make_response, redirect
 from ..database.context_manager import get_db
-from ..database.models import PaymentTransaction, PlanContract, ContractStatus, Trainer
+from ..database.models import PaymentTransaction, PlanContract, ContractStatus, Trainer, Chat
 from ..exceptions.api_error import ApiError
 from ..utils.security import check_login, generate_code, verify_code, set_jwt_cookies, set_jwt_access_cookies, unset_jwt_cookies
 from ..utils.user import is_email_used, send_email_with_template, decrypt_email
@@ -17,7 +17,7 @@ from ..services.trainer import insert_mercadopago_trainer_info, get_valid_mp_tok
 import requests
 import os
 from sqlalchemy.orm import joinedload, subqueryload
-from datetime import datetime, timedelta, timezone, date
+from datetime import datetime, timedelta, timezone
 import mercadopago
 from zoneinfo import ZoneInfo
 
@@ -141,22 +141,22 @@ def auth():
 
     with get_db() as db:
         try:
-            ID = request.form.get("ID")
+            used_id = request.form.get("ID")
             is_client = request.form.get("isClient")
 
-            if not ID or is_client is None:
+            if not used_id or is_client is None:
                 raise ApiError(MessageCodes.AUTH_INSUFFICIENT_DATA, 400)
 
             is_client = is_client.lower() == "true"
 
-            user = get_user_by_id(db, ID, is_client)
+            user = get_user_by_id(db, used_id, is_client)
 
             response = jsonify(user)
             response.status_code = 200
 
-            toggle_activate_profile(db, ID, is_client, True)
+            toggle_activate_profile(db, used_id, is_client, True)
 
-            return set_jwt_cookies(ID, is_client, response)
+            return set_jwt_cookies(used_id, user["ID"], is_client, response)
             
         except ApiError as e:
             print(f"{error_message}: {e}")
@@ -182,10 +182,11 @@ def refresh_token():
         jwt_data = get_jwt()
 
         is_client = str(jwt_data.get("isClient")).lower() == "true"
+        user_id = jwt_data.get("userID")
 
         response = jsonify({"success": "success"})
 
-        return set_jwt_access_cookies(identity, {"isClient": is_client}, response), 200
+        return set_jwt_access_cookies(identity, {"isClient": is_client, "userID": user_id}, response), 200
 
     except ApiError as e:
         print(f"{error_message}: {e}")
@@ -333,8 +334,8 @@ def mercadopago_webhook():
 
     with get_db() as db:
         transaction = None
-        trainer_ID = None
-        client_ID = None
+        trainer_id = None
+        client_id = None
 
         try:
             args = request.args
@@ -395,10 +396,10 @@ def mercadopago_webhook():
             if not transaction:
                 raise ApiError(MessageCodes.TRANSACTION_NOT_FOUND, 404)
             
-            trainer_ID = transaction.fk_trainer_ID
-            client_ID = transaction.fk_user_ID
+            trainer_id = transaction.fk_trainer_ID
+            client_id = transaction.fk_user_ID
             
-            sdk = mercadopago.SDK(get_valid_mp_token(db, trainer_ID))
+            sdk = mercadopago.SDK(get_valid_mp_token(db, trainer_id))
             
             result = sdk.payment().get(payment_id)
 
@@ -462,8 +463,8 @@ def mercadopago_webhook():
                         end_date = end_date,
                         last_day_full_refund = start_date + timedelta(days=7),
                         last_day_allowed_refund = end_date - timedelta(days=10),
-                        fk_user_ID = client_ID,
-                        fk_trainer_ID = trainer_ID,
+                        fk_user_ID = client_id,
+                        fk_trainer_ID = trainer_id,
                         fk_payment_plan_ID = transaction.fk_payment_plan_ID,
                         fk_payment_transaction_ID = transaction.ID,
                         fk_contract_status_ID = contract_status.ID
@@ -472,6 +473,13 @@ def mercadopago_webhook():
                     transaction.trainer.contracts_number += 1
 
                     db.add(new_contract)
+
+                    chat = Chat(
+                        fk_user_ID=client_id,
+                        fk_trainer_ID=trainer_id           
+                    )
+
+                    db.add(chat)
 
                 db.commit() 
 
@@ -540,16 +548,16 @@ def mercadopago_webhook():
             return jsonify({"message": MessageCodes.ERROR_SERVER}), 500
 
         finally:
-            if trainer_ID:
-                release_trainer_lock(trainer_ID)
+            if trainer_id:
+                release_trainer_lock(trainer_id)
 
-            if client_ID:
-                release_client_lock(client_ID)
+            if client_id:
+                release_client_lock(client_id)
         
-@security_bp.route("/me/id", methods=["GET"])
+@security_bp.route("/me/used-id", methods=["GET"])
 @jwt_required()
 def get_id():
-    error_message = "Erro na rota de recuperação do id do usuário"
+    error_message = "Erro na rota de recuperação do id cliente ou treinador"
 
     try:
         identity = get_jwt_identity()

@@ -58,9 +58,9 @@ def verify_code(email, code):
 
     return True
 
-def set_jwt_cookies(ID, is_client, response):
-    set_jwt_refresh_cookies(str(ID), {"isClient": is_client}, response)
-    set_jwt_access_cookies(str(ID), {"isClient": is_client}, response)
+def set_jwt_cookies(used_id, user_id, is_client, response):
+    set_jwt_refresh_cookies(str(used_id), {"isClient": is_client, "userID": str(user_id)}, response)
+    set_jwt_access_cookies(str(used_id), {"isClient": is_client, "userID": str(user_id)}, response)
 
     return response
 
