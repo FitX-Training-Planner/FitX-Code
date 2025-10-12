@@ -1,5 +1,5 @@
 from datetime import datetime
-from database.models import ContractStatus, PlanContract
+from database.models import ContractStatus, PlanContract, Chat
 from database.context_manager import get_db
 from sqlalchemy.orm import joinedload
 from zoneinfo import ZoneInfo
@@ -37,6 +37,18 @@ def run():
                 contract.fk_contract_status_ID = expired_Status.ID
 
                 contract.user.fk_training_plan_ID = None
+
+                chat = (
+                    db.query(Chat)
+                    .filter(
+                        Chat.fk_user_ID == contract.fk_user_ID,
+                        Chat.fk_trainer_ID == contract.fk_trainer_ID
+                    )
+                    .first()
+                )
+
+                if chat:
+                    db.delete(chat)
 
             db.commit()
 

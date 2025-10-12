@@ -24,8 +24,20 @@ class Users(Base):
     is_english = Column(Boolean, nullable=False, default=False)
     fk_training_plan_ID = Column(INTEGER(unsigned=True), ForeignKey("training_plan.ID", ondelete="SET NULL", name="fk_user_training_plan"), index=True)  
 
+    trainer = relationship("Trainer", back_populates="user", uselist=False, passive_deletes=True)
     plan_contracts = relationship("PlanContract", back_populates="user", passive_deletes=True)
     training_plan = relationship("TrainingPlan")
+    chats = relationship("Chat", back_populates="user", passive_deletes=True)
+
+class Trainer(Base):
+    __tablename__ = "trainer"
+
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
+    fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="CASCADE", name="fk_trainer_user"), index=True, nullable=False, unique=True)
+
+    user = relationship("Users", back_populates="trainer")
+    chats = relationship("Chat", back_populates="trainer", passive_deletes=True)
+    plan_contracts = relationship("PlanContract", back_populates="trainer", passive_deletes=True)
 
 class TrainingPlan(Base):
     __tablename__ = "training_plan"
@@ -57,7 +69,18 @@ class PlanContract(Base):
     last_day_allowed_refund = Column(DATE, nullable=False)
     fk_contract_status_ID = Column(INTEGER(unsigned=True), ForeignKey("contract_status.ID"), index=True, nullable=False)
     fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="CASCADE"), index=True, nullable=False)
+    fk_trainer_ID = Column(INTEGER(unsigned=True), ForeignKey("trainer.ID", ondelete="SET NULL"), index=True)
 
     contract_status = relationship("ContractStatus")
     user = relationship("Users", back_populates="plan_contracts")
-  
+    trainer = relationship("Trainer", back_populates="plan_contracts")
+
+class Chat(Base):
+    __tablename__ = "chat"
+
+    ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
+    fk_user_ID = Column(INTEGER(unsigned=True), ForeignKey("users.ID", ondelete="CASCADE"), index=True, nullable=False)
+    fk_trainer_ID = Column(INTEGER(unsigned=True), ForeignKey("trainer.ID", ondelete="CASCADE"), index=True, nullable=False)
+    
+    user = relationship("Users", back_populates="chats")
+    trainer = relationship("Trainer", back_populates="chats")
