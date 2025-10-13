@@ -59,7 +59,7 @@ def handle_disconnect():
 
         sid = request.sid
 
-        user_id, _ = remove_online_user(sid)            
+        user_id = remove_online_user(sid)            
 
         if user_id:
             emit("presence_update", {"userID": user_id, "status": "offline"}, broadcast=True, include_self=False)

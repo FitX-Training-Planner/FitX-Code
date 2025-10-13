@@ -131,9 +131,13 @@ function ChatLayout({
                 increaseViewportBy={{ top: 25, bottom: 300 }}
                 firstItemIndex={firstItemIndex || 0}
                 initialTopMostItemIndex={chat.messages?.length - 1}
-                atTopStateChange={(atTop) => {
-                    if (!isChatBot && atTop && !messagesLoading && !messagesError) {
-                        loadMessages(); 
+                rangeChanged={({ startIndex }) => {
+                    if (!isChatBot) {
+                        const diff = startIndex - firstItemIndex;
+                        
+                        if (diff < 4 && !messagesLoading && !messagesError) {
+                            loadMessages(); 
+                        }
                     }
                 }}
                 components={{

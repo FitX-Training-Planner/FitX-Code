@@ -27,17 +27,12 @@ def remove_online_user(sid):
     user_id = redis_client.get(f"sid:{sid}")
 
     if not user_id:
-        return None, False
+        return None
     
     redis_client.delete(f"sid:{sid}")
-    redis_client.srem(f"online:{user_id}", sid)
+    redis_client.delete(f"online:{user_id}")
 
-    is_offline = redis_client.scard(f"online:{user_id}") == 0
-
-    if is_offline:
-        redis_client.delete(f"online:{user_id}")
-
-    return user_id, is_offline
+    return user_id
 
 def remove_user_from_all_chats(user_id):
     chat_ids = []
