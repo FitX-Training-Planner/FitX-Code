@@ -41,9 +41,13 @@ def send_email_with_template(to_email, template_id, dynamic_data = {}):
         message.dynamic_template_data = dynamic_data
 
         sg.send(message)
+
+        return True
        
     except Exception as e:
         print(f"Erro ao enviar e-mail: {e}")
+        
+        return False
 
 def calculate_age(birth_date):
     if not birth_date:

@@ -114,13 +114,16 @@ def identity_confirmation():
         else:
             generated_code = generate_code(email)
 
-            send_email_with_template(
+            success = send_email_with_template(
                 email,
                 SendGridConfig.SENDGRID_TEMPLATE_CONFIRMATION,
                 {
                     "code": generated_code
                 }
             )
+
+            if not success:
+                raise Exception("Erro ao enviar e-mail de confirmação de identidade.")
 
         return "", 204 
         
