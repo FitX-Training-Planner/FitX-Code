@@ -16,9 +16,29 @@ def insert_client_examples():
                     "muscle_group_ids": [1, 3, 8]
                 },
                 {
-                    "name": "Guilherme Mattoso Augusto",
+                    "name": "Barbosa",
                     "email": ExamplesData.EXAMPLE_SECOND_CLIENT_EMAIL,
-                    "muscle_group_ids": [7, 9, 10]
+                    "muscle_group_ids": [2, 3, 4]
+                },
+                {
+                    "name": "Miguel Campos",
+                    "email": ExamplesData.EXAMPLE_THIRD_CLIENT_EMAIL,
+                    "muscle_group_ids": [3, 8, 10, 11]
+                },
+                {
+                    "name": "Letícia Brandão",
+                    "email": ExamplesData.EXAMPLE_FOURTH_CLIENT_EMAIL,
+                    "muscle_group_ids": [1]
+                },
+                {
+                    "name": "Rodrigo Mariano",
+                    "email": ExamplesData.EXAMPLE_FIFTH_CLIENT_EMAIL,
+                    "muscle_group_ids": []
+                },
+                {
+                    "name": "Johnata Santicioli",
+                    "email": ExamplesData.EXAMPLE_SIXTH_CLIENT_EMAIL,
+                    "muscle_group_ids": [1, 2, 3, 6, 7, 8]
                 }
             ]
 
@@ -45,9 +65,19 @@ def insert_trainer_examples():
         try:
             trainer_examples = [
                 {
-                    "name": "Paulo Henrique",
+                    "name": "Pereira Paulo",
                     "email": ExamplesData.EXAMPLE_FIRST_TRAINER_EMAIL,
                     "specialty_ids": [1, 5, 9]
+                },
+                {
+                    "name": "Leonardo Motta",
+                    "email": ExamplesData.EXAMPLE_SECOND_TRAINER_EMAIL,
+                    "specialty_ids": [10]
+                },
+                {
+                    "name": "Trô Armen",
+                    "email": ExamplesData.EXAMPLE_THIRD_TRAINER_EMAIL,
+                    "specialty_ids": [6, 7, 8]
                 }
             ]
 
