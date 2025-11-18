@@ -99,38 +99,38 @@ function CodeConfirmation() {
 
         confirmCodeFormData.append("code", formattedCode);
 
-        const postConfirmCode = () => {
-            return api.post("/identity-confirmation", confirmCodeFormData);
-        }
+        // const postConfirmCode = () => {
+        //     return api.post("/identity-confirmation", confirmCodeFormData);
+        // }
 
-        const handleOnConfirmCodeSuccess = () => {
-            if (origin === "login") {
+        // const handleOnConfirmCodeSuccess = () => {
+        //     if (origin === "login") {
                 handleOnConfirmed(localUser.ID, dispatch, navigate, authRequest, setUser);
-            } else if (origin === "signUp") {
+            // } else if (origin === "signUp") {
                 handleOnConfirmed();
-            } else if (origin === "recoverPassword") {
+            // } else if (origin === "recoverPassword") {
                 handleOnConfirmed();
-            } else if (origin === "deleteAccount") {
+            // } else if (origin === "deleteAccount") {
                 handleOnConfirmed();
-            } else if (origin === "modifyEmail") {
+            // } else if (origin === "modifyEmail") {
                 handleOnConfirmed();
-            } else if (origin === "cancelContract") {
+            // } else if (origin === "cancelContract") {
                 handleOnConfirmed();
-            }
-        }
+        //     }
+        // }
 
-        const handleOnConfirmCodeError = () => {
-            setError(true);
-        }
+        // const handleOnConfirmCodeError = () => {
+        //     setError(true);
+        // }
 
-        confirmIdentityRequest(
-            postConfirmCode, 
-            handleOnConfirmCodeSuccess, 
-            handleOnConfirmCodeError, 
-            t("loadingSendCode"), 
-            t("successConfirmIdentity"), 
-            t("errorConfirmIdentity")
-        );
+        // confirmIdentityRequest(
+        //     postConfirmCode, 
+        //     handleOnConfirmCodeSuccess, 
+        //     handleOnConfirmCodeError, 
+        //     t("loadingSendCode"), 
+        //     t("successConfirmIdentity"), 
+        //     t("errorConfirmIdentity")
+        // );
     }, [error, code, localUser.email, localUser.ID, confirmIdentityRequest, t, origin, handleOnConfirmed, dispatch, navigate, authRequest]);
 
     useEffect(() => {
