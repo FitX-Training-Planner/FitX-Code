@@ -100,7 +100,7 @@ function ChatLayout({
                                             : t("inChat")
                                         )
                                         : "Online"
-                                    ) : chat.lastMessage ? formatDateTime(chat.lastMessage, t, true) : "Offline"
+                                    ) : chat.lastMessage ? formatDateTime(chat.lastMessage, t) : "Offline"
                                 )
                             }
                         </span>

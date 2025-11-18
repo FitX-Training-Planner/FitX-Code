@@ -11,6 +11,7 @@ import { useSystemMessage } from "../../app/useSystemMessage";
 import FooterLayout from "../containers/FooterLayout";
 import ChatCard from "../cards/user/ChatCard";
 import Stack from "../containers/Stack";
+import { formatDateTime } from "../../utils/formatters/text/formatDate";
 
 function Chats() {
     const { t } = useTranslation();
@@ -72,7 +73,8 @@ function Chats() {
                         ...chat,
                         newMessages: Number(chat.newMessages) + 1,
                         lastMessage: { ...message, isFromMe: false },
-                        updateDate: message.createDate
+                        updateDate: message.createDate,
+                        formattedDate: formatDateTime(message.createDate, t, true)
                     } 
                     : chat
                 )
@@ -84,7 +86,7 @@ function Chats() {
         return () => {
             socket.off("new_message", handleOnNewMessage);
         };
-    }, [socket]);
+    }, [socket, t]);
 
     useEffect(() => {
         document.title = t("chats");
@@ -110,6 +112,7 @@ function Chats() {
                                         contactName={chat.contact?.name}
                                         contactPhotoUrl={chat.contact?.photoUrl}
                                         updateDate={chat.updateDate}
+                                        formattedDate={chat.formattedDate}
                                         newMessages={chat.newMessages}
                                         lastMessageContent={chat.lastMessage?.content}
                                         lastMessageIsFromMe={chat.lastMessage?.isFromMe}

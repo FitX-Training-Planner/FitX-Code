@@ -9,6 +9,7 @@ function ChatCard({
     contactName,
     contactPhotoUrl,
     updateDate,
+    formattedDate,
     newMessages,
     lastMessageContent,
     lastMessageIsFromMe,
@@ -64,10 +65,17 @@ function ChatCard({
                 
                     <Stack
                         gap="0.2em"
+                        extraStyles={{
+                            width: "max-content"
+                        }}
                         alignItems="end"
                     >
-                        <span>
-                            {formatDateTime(updateDate, t)}
+                        <span
+                            style={{
+                                width: "max-content"
+                            }}
+                        >
+                            {formattedDate || formatDateTime(updateDate, t)}
                         </span>
 
                         {newMessages > 0 && (
