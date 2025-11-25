@@ -9,7 +9,7 @@ function getSocket(userID) {
     
     socketInstance = io(import.meta.env.VITE_API_URL, {
         query: { userID },
-        transports: ["websocket"]
+        transports: ["websocket", "polling"]
     });
     
     return socketInstance;

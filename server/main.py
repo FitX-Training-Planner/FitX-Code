@@ -26,7 +26,7 @@ app = create_app()
 if __name__ == "__main__":
     socket_io.run(
         app,
-        host=host,
+        host="0.0.0.0",
         port=port,
         debug=True
     )
