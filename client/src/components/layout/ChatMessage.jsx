@@ -40,6 +40,7 @@ function ChatMessage({
                     extraStyles={{
                         width: "max-content"
                     }}
+                    gap="0.2em"
                 > 
                     <span
                         className={`${styles.view_indicator} ${isPending ? styles.pending : (isViewed || isChatBot ? styles.viewed : undefined)}`}
