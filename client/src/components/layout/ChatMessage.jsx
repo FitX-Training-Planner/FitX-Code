@@ -35,10 +35,24 @@ function ChatMessage({
                     {formatDateTime(createDate, t, true)}
                 </span>
         
-                <span
-                    className={`${styles.view_indicator} ${isPending ? styles.pending : (isViewed || isChatBot ? styles.viewed : undefined)}`}
-                    title={isPending ? t("messagePending") : (isViewed || isChatBot ? t("viewed") : t("messageDelivered"))}
-                ></span>
+                <Stack
+                    direction="row"
+                    extraStyles={{
+                        width: "max-content"
+                    }}
+                >
+                    <span
+                        className={`${styles.view_indicator} ${isPending ? styles.pending : (isViewed || isChatBot ? styles.viewed : undefined)}`}
+                        title={isPending ? t("messagePending") : (isViewed || isChatBot ? t("viewed") : t("messageDelivered"))}
+                    ></span>
+
+                    {(isViewed || isChatBot) && (
+                        <span
+                            className={`${styles.view_indicator} ${styles.viewed}`}
+                            title={t("viewed")}
+                        ></span>
+                    )}
+                </Stack>
             </Stack>
         </Stack>
     )
