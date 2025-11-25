@@ -1,5 +1,6 @@
 from datetime import date, timedelta
 import random
+from ...database.models import Users
 from .generate_example_data import insert_client_muscle_groups_example, insert_complaint_example, insert_complaint_likes_example, insert_full_contract_example, insert_full_training_plan_example, insert_payment_plan_example, insert_rating_example, insert_rating_likes_example, insert_trainer_saves_example, insert_trainer_specialties_example, insert_trainer_user_example, insert_user_example
 from ...config import ExamplesData
 from ..context_manager import get_db
@@ -219,6 +220,9 @@ def generate_all_example_data():
 
     with get_db() as db:
         try:
+            if check_has_user(db):
+                return
+            
             client_ids = insert_client_examples(db)
             trainers = insert_trainer_examples(db)
 
@@ -237,3 +241,19 @@ def generate_all_example_data():
             db.rollback()
 
             print(f"{error_message}: {e}")
+
+def check_has_user(db):
+    error_message = "Erro ao verificar se já existe um usuário no banco de dados"
+
+    try:
+        users = db.query(Users).first()
+
+        if users:
+            return True
+        
+        return False
+
+    except Exception as e:
+        print(f"{error_message}: {e}")
+
+        return False
